@@ -20,6 +20,8 @@ public class StatInsertion extends JPanel{
 		
 		this.tipo = tipo;
 		
+		System.out.println("hello");
+		
 	}
 	
 }
