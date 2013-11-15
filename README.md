@@ -8,18 +8,18 @@ tropas disponíveis e velocidade do mundo sendo levadas em conta.
 
 Atualmente possui 5 ferramentas prontas. São elas:
 
-- Tempo de recrutamento
+- Tempo de recrutamento:
     Calcula o tempo necessário para recrutar tropas em cada edifício.
 
-- Cálculo de unidades
+- Cálculo de unidades:
     Informa o ataque, defesa, saque e custos de uma certa quantidade de tropas, individualmente e em conjunto.
     
-- Cálculo de pontos
+- Cálculo de pontos:
     Calcula a quantidade de pontos de um aldeia conforme os edifícios, além de informar quanto de população resta para
     a produção de tropas.
     
-- Cálculo de distância
+- Cálculo de distância:
     Informa o tempo necessário para o deslocamento entre duas aldeias para cada tropa.
     
-- Cálculo de OD
+- Cálculo de OD:
     Calcula o ODA ou ODD para um certo número de tropas derrotadas.
