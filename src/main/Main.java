@@ -39,7 +39,7 @@ public class Main {
 		
 		selecionar.dispose();
 		
-		World_Reader.save();
+//		World_Reader.save();
 		
 		mainFrame = new MainWindow();
 		//Adicionando todas as ferramentas criadas
