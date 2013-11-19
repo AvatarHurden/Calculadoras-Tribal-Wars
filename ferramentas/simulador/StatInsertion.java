@@ -3,8 +3,6 @@ package simulador;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,10 +17,14 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 import config.World_Reader;
-
 import database.Cores;
 import database.MundoSelecionado;
 import database.Unidade;
@@ -57,7 +59,32 @@ public class StatInsertion extends JPanel{
 		
 		this.tipo = tipo;
 		
-		add(addUnitPanel());
+		setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		add(addUnitPanel(), c);
+		
+		c.insets = new Insets(5,5,0,5);
+		c.gridy++;
+		add(addReligião(), c);
+		
+		c.insets = new Insets(0,5,0,5);
+		c.gridy++;
+		add(addNoite(), c);
+		
+		c.gridy++;
+		add(addSorte(), c);
+		
+		c.gridy++;
+		add(addMoral(), c);
+		
+		c.gridy++;
+		add(addMuralha(), c);
 		
 	}
 	
@@ -65,6 +92,7 @@ public class StatInsertion extends JPanel{
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.FUNDO_ESCURO);
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};
@@ -77,6 +105,7 @@ public class StatInsertion extends JPanel{
 		c.insets = new Insets(5,5,5,5);
 		c.gridx = 0;
 		c.gridy = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		if (MundoSelecionado.isPesquisaDeNíveis())
 			c.gridwidth = 1;
 		else
@@ -90,8 +119,8 @@ public class StatInsertion extends JPanel{
 			c.gridx = 1;
 			panel.add(new JLabel("Nível"), c);
 		}
-		
-		
+			
+		// Setting the constraints for the unit panels
 		c.insets = new Insets(0,0,0,0);
 		c.gridwidth = 2;
 		c.gridx = 0;
@@ -103,6 +132,7 @@ public class StatInsertion extends JPanel{
 			JPanel tropaPanel = new JPanel();
 			tropaPanel.setLayout(layout);
 			tropaPanel.setBackground(Cores.getAlternar(loop));
+			tropaPanel.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
 			
 			GridBagConstraints tropaC = new GridBagConstraints();
 			tropaC.insets = new Insets(5,5,5,5);
@@ -113,8 +143,9 @@ public class StatInsertion extends JPanel{
 			else
 				tropaC.gridwidth = 2;
 			
+			// Creating the TextField for the quantity of troops
 			JTextField txt = new JTextField(6);
-			
+			// Adding the text to a map with the units
 			mapQuantidades.put(i, txt);
 			
 			tropaPanel.add(txt, tropaC);
@@ -150,6 +181,9 @@ public class StatInsertion extends JPanel{
 					    }	
 					});
 					
+					// Adding the comboBox to the map with units
+					mapNiveis.put(i, nível);
+					
 					tropaC.gridx = 1;
 					tropaPanel.add(nível, tropaC);
 					
@@ -169,27 +203,271 @@ public class StatInsertion extends JPanel{
 	}
 	
 	private JPanel addReligião() {
-		return null;
+		
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Religioso"), c);
+		
+		// Creating the checkbox to select option
+		religião = new JCheckBox();
+		religião.setBackground(Cores.getAlternar(loop));
+		
+		c.gridx++;
+		panel.add(religião, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;
+		
 	}
 	
 	private JPanel addNoite() {
-		return null;
+
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Bônus Noturno"), c);
+		
+		// Creating the checkbox to select option
+		noite = new JCheckBox();
+		noite.setBackground(Cores.getAlternar(loop));
+		
+		c.gridx++;
+		panel.add(noite, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;
+		
 	}
 	
 	private JPanel addSorte() {
-		return null;
+
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Sorte"), c);
+		
+		// Creating the checkbox to select option
+		sorte = new JTextField(3);
+		sorte.setHorizontalAlignment(SwingConstants.CENTER);
+		sorte.setDocument(new PlainDocument() {
+			
+			@Override
+			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+				    if (str == null)
+				      return;
+				    
+				    //Permite a entrada somente de números e sinais e no máximo 3 dígitos
+				    if ((getLength() + str.length()) <= 3 && ( Character.isDigit(str.charAt(0)) || str.charAt(0) == '-')) {
+				    	if (getLength() == 0)
+				    		 super.insertString(offset, str, attr);
+				    	else if (Math.abs(Integer.parseInt(getText(0, getLength())+str)) <= 100 )
+				    		 super.insertString(offset, str, attr);
+				     
+				    }
+				  }
+		});
+		
+		c.gridx++;
+		panel.add(sorte, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;		
+		
 	}
 	
 	private JPanel addMoral() {
-		return null;
+
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Moral"), c);
+		
+		// Creating the checkbox to select option
+		moral = new JTextField(3);
+		moral.setHorizontalAlignment(SwingConstants.CENTER);
+		moral.setDocument(new PlainDocument() {
+			
+			@Override
+			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+				    if (str == null)
+				      return;
+				    
+				    //Permite a entrada somente de números e no máximo 3 dígitos
+				    if ((getLength() + str.length()) <= 3 && ( Character.isDigit(str.charAt(0)))) {
+				    	if (Math.abs(Integer.parseInt(getText(0, getLength())+str)) <= 100 )
+				    		 super.insertString(offset, str, attr);
+				     
+				    }
+				  }
+		});
+		
+		c.gridx++;
+		panel.add(moral, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;
+		
 	}
 	
 	private JPanel addMuralha() {
-		return null;
+
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Muralha"), c);
+		
+		// Creating the checkbox to select option
+		muralha = new JTextField(3);
+		muralha.setHorizontalAlignment(SwingConstants.CENTER);
+		muralha.setDocument(new PlainDocument() {
+			
+			@Override
+			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+				    if (str == null)
+				      return;
+				    
+				    //Permite a entrada somente de números e no máximo 3 dígitos
+				    if ((getLength() + str.length()) <= 2 && ( Character.isDigit(str.charAt(0)))) 
+				    	super.insertString(offset, str, attr);
+				     
+				  }
+		});
+		
+		c.gridx++;
+		panel.add(muralha, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;
+		
 	}
 	
 	private JPanel addEdifício() {
-		return null;
+		
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Edifício"), c);
+		
+		// Creating the checkbox to select option
+		edifício = new JTextField(3);
+		edifício.setHorizontalAlignment(SwingConstants.CENTER);
+		edifício.setDocument(new PlainDocument() {
+			
+			@Override
+			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+				    if (str == null)
+				      return;
+				    
+				    //Permite a entrada somente de números e no máximo 3 dígitos
+				    if ((getLength() + str.length()) <= 2 && ( Character.isDigit(str.charAt(0)))) 
+				    	super.insertString(offset, str, attr);
+				     
+				  }
+		});
+		
+		c.gridx++;
+		panel.add(edifício, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;
+		
 	}
 	
 	private JPanel addItemPaladino() {
