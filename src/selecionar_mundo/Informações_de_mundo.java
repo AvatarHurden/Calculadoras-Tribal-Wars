@@ -91,6 +91,9 @@ public class Informações_de_mundo extends JPanel {
 		add(panelProperty("paladino",prop.getProperty("paladino")), gbc);
 		
 		gbc.gridy++;
+		add(panelProperty("itensAprimorados",prop.getProperty("itensAprimorados")), gbc);
+		
+		gbc.gridy++;
 		add(panelProperty("igreja",prop.getProperty("igreja")), gbc);
 		
 		gbc.gridy++;
@@ -123,6 +126,8 @@ public class Informações_de_mundo extends JPanel {
 			return "Milícia";
 		case "paladino":
 			return "Paladino";
+		case "itensAprimorados":
+			return "Itens Aprimorados";
 		case "igreja":
 			return "Igreja";
 		case "academiaDeNiveis":
@@ -168,6 +173,11 @@ public class Informações_de_mundo extends JPanel {
 				return "Ativado";
 			else
 				return "Desativado";
+		case "itensAprimorados":
+			if (propertyValue.equals("true"))
+				return "Ativados";
+			else
+				return "Desativados";
 		case "igreja":
 			if (propertyValue.equals("true"))
 				return "Ativado";

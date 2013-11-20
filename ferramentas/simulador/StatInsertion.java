@@ -26,6 +26,7 @@ import javax.swing.text.PlainDocument;
 
 import config.World_Reader;
 import database.Cores;
+import database.ItemPaladino;
 import database.MundoSelecionado;
 import database.Unidade;
 
@@ -67,9 +68,12 @@ public class StatInsertion extends JPanel{
 		c.gridx = 0;
 		c.gridy = 0;
 		
+		
 		add(addUnitPanel(), c);
 		
 		c.insets = new Insets(5,5,0,5);
+		
+		
 		c.gridy++;
 		add(addReligião(), c);
 		
@@ -85,6 +89,15 @@ public class StatInsertion extends JPanel{
 		
 		c.gridy++;
 		add(addMuralha(), c);
+		
+		c.gridy++;
+		add(addEdifício(), c);
+		
+		c.gridy++;
+		add(addItemPaladino(), c);
+		
+		c.gridy++;
+		add(addBandeira(), c);
 		
 	}
 	
@@ -471,11 +484,71 @@ public class StatInsertion extends JPanel{
 	}
 	
 	private JPanel addItemPaladino() {
-		return null;
+		
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Item Paladino"), c);
+		
+		// Creating the checkbox to select option
+		item = new JComboBox<ItemPaladino>();
+		
+		c.gridx++;
+		panel.add(item, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;
+		
 	}
 	
 	private JPanel addBandeira() {
-		return null;
+		
+		// Setting the background and borders for the panel
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.getAlternar(loop));
+		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {80,30};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		panel.add(new JLabel("Bandeira"), c);
+		
+		// Creating the checkbox to select option
+		bandeira = new JComboBox<ItemPaladino>();
+		
+		c.gridx++;
+		panel.add(bandeira, c);
+		
+		// setting variable for next panel
+		loop++;
+		
+		return panel;
+		
 	}
 	
 	public static void main (String args[]) {

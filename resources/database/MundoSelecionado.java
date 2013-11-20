@@ -1,8 +1,6 @@
 package database;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -15,6 +13,7 @@ public class MundoSelecionado {
 	private static boolean hasArqueiro;
 	private static boolean hasMilícia;
 	private static boolean hasPaladino;
+	private static boolean hasItensAprimorados;
 	private static boolean hasIgreja;
 	private static boolean academiaDeNíveis;
 	private static boolean pesquisaDeNíveis;
@@ -32,6 +31,7 @@ public class MundoSelecionado {
 		MundoSelecionado.hasArqueiro = mundo.hasArqueiro();
 		MundoSelecionado.hasMilícia = mundo.hasMilícia();
 		MundoSelecionado.hasPaladino = mundo.hasPaladino();
+		MundoSelecionado.hasItensAprimorados = mundo.hasItensAprimorados();
 		MundoSelecionado.hasIgreja = mundo.hasIgreja();
 		MundoSelecionado.academiaDeNíveis = mundo.isAcademiaDeNíveis();
 		MundoSelecionado.pesquisaDeNíveis = mundo.isPesquisaDeNíveis();
@@ -55,13 +55,14 @@ public class MundoSelecionado {
 	 * @param BigDecimal velocidade do mundo
 	 * @param BigDecimal modificar de unidades
 	 */
-	public static void setDados(boolean hasArqueiro, boolean hasMilícia, boolean hasPaladino,
-			boolean hasIgreja, boolean academiaDeNíveis,
+	public static void setDados(boolean hasArqueiro, boolean hasMilícia, boolean hasPaladino, 
+			boolean hasItensAprimorados, boolean hasIgreja, boolean academiaDeNíveis,
 			boolean pesquisaDeNíveis, boolean hasMoral, BigDecimal velocidade,
 			BigDecimal modificarUnidaes) {
 		MundoSelecionado.hasArqueiro = hasArqueiro;
 		MundoSelecionado.hasMilícia = hasMilícia;
 		MundoSelecionado.hasPaladino = hasPaladino;
+		MundoSelecionado.hasItensAprimorados = hasItensAprimorados;
 		MundoSelecionado.hasIgreja = hasIgreja;
 		MundoSelecionado.academiaDeNíveis = academiaDeNíveis;
 		MundoSelecionado.pesquisaDeNíveis = pesquisaDeNíveis;
@@ -182,6 +183,13 @@ public class MundoSelecionado {
 	 */
 	public static boolean hasPaladino() {
 		return hasPaladino;
+	}
+	
+	/**
+	 * @return boolean possui itens aprimorados
+	 */
+	public static boolean hasItensAprimorados() {
+		return hasItensAprimorados;
 	}
 
 	/**

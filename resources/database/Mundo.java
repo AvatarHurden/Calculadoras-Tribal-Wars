@@ -14,6 +14,7 @@ public class Mundo {
 	private boolean hasArqueiro;
 	private boolean hasMilícia;
 	private boolean hasPaladino;
+	private boolean hasItensAprimorados;
 	private boolean hasIgreja;
 	private boolean academiaDeNíveis;
 	private boolean pesquisaDeNíveis;
@@ -39,6 +40,8 @@ public class Mundo {
 		hasMilícia = Boolean.parseBoolean(prop.getProperty("milicia"));
 		
 		hasPaladino = Boolean.parseBoolean(prop.getProperty("paladino"));
+		
+		hasItensAprimorados = Boolean.parseBoolean(prop.getProperty("itensAprimorados"));
 		
 		hasIgreja = Boolean.parseBoolean(prop.getProperty("igreja"));
 		
@@ -68,6 +71,7 @@ public class Mundo {
 		System.out.println("Milícia: "+hasMilícia);
 		System.out.println("Moral: "+hasMoral);
 		System.out.println("Paladino: "+hasPaladino);
+		System.out.println("Itens Aprimorados: "+hasItensAprimorados);
 		System.out.println("Igreja: "+hasIgreja);
 		System.out.println("Academia de Níveis: "+academiaDeNíveis);
 		System.out.println("Pesquisa de Níveis: "+pesquisaDeNíveis);
@@ -95,6 +99,12 @@ public class Mundo {
 	 */
 	public void setHasPaladino(boolean hasPaladino) {
 		this.hasPaladino = hasPaladino;
+	}
+	/**
+	 * @param boolean possui itens aprimorados
+	 */
+	public void setHasItemnsprimorados(boolean hasItemAprimorado) {
+		this.hasItensAprimorados = hasItemAprimorado;
 	}
 	/**
 	 * @param  boolean possui igreja
@@ -147,6 +157,10 @@ public class Mundo {
 
 	public boolean hasPaladino() {
 		return hasPaladino;
+	}
+	
+	public boolean hasItensAprimorados() {
+		return hasItensAprimorados;
 	}
 
 	public boolean hasIgreja() {
