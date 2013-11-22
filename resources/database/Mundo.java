@@ -19,6 +19,7 @@ public class Mundo {
 	private boolean academiaDeNíveis;
 	private boolean pesquisaDeNíveis;
 	private boolean hasMoral;
+	private boolean hasBandeira;
 	private BigDecimal velocidade;
 	private BigDecimal modificarUnidaes;
 	
@@ -51,6 +52,8 @@ public class Mundo {
 		
 		hasMoral = Boolean.parseBoolean(prop.getProperty("moral"));
 		
+		hasBandeira = Boolean.parseBoolean(prop.getProperty("bandeira"));
+		
 		String speed = prop.getProperty("velocidade");
 		speed = speed.replaceAll(",", ".");
 		velocidade = new BigDecimal(speed);
@@ -75,6 +78,7 @@ public class Mundo {
 		System.out.println("Igreja: "+hasIgreja);
 		System.out.println("Academia de Níveis: "+academiaDeNíveis);
 		System.out.println("Pesquisa de Níveis: "+pesquisaDeNíveis);
+		System.out.println("Bandeira: "+hasBandeira);
 		
 	}
 	
@@ -131,6 +135,13 @@ public class Mundo {
 	}
 	
 	/**
+	 * @param boolean possui bandeira
+	 */
+	public void setHasBandeira(boolean hasBandeira) {
+		this.hasBandeira = hasBandeira;
+	}
+	
+	/**
 	 * @param BigDecimal velocidade do mundo
 	 */
 	public void setVelocidade(BigDecimal velocidade) {
@@ -177,6 +188,10 @@ public class Mundo {
 
 	public boolean hasMoral() {
 		return hasMoral;
+	}
+	
+	public boolean hasBandeira() {
+		return hasBandeira;
 	}
 
 	public BigDecimal getVelocidade() {

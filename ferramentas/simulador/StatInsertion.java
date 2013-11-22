@@ -1,8 +1,12 @@
 package simulador;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +34,7 @@ import database.ItemPaladino;
 import database.MundoSelecionado;
 import database.Unidade;
 
+@SuppressWarnings("serial")
 public class StatInsertion extends JPanel{
 
 	// Enum com os tipos diferentes que o panel pode possuir
@@ -42,13 +47,14 @@ public class StatInsertion extends JPanel{
 	private Tipo tipo;
 	
 	private Map<Unidade, JTextField> mapQuantidades = new HashMap<Unidade, JTextField>();
-	private Map<Unidade, JComboBox> mapNiveis = new HashMap<Unidade, JComboBox>();
+	private Map<Unidade, JComboBox<Integer>> mapNiveis = new HashMap<Unidade, JComboBox<Integer>>();
 	
 	private JCheckBox religião, noite;
 	
 	private JTextField sorte, moral, muralha, edifício;
 	
-	private JComboBox item, bandeira;
+	private JComboBox<ItemPaladino> item;
+	private JComboBox bandeira;
 	
 	// variável para a cor dos panels
 	int loop = 0;
@@ -60,7 +66,12 @@ public class StatInsertion extends JPanel{
 		
 		this.tipo = tipo;
 		
-		setLayout(new GridBagLayout());
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {110};
+		layout.rowHeights = new int[] {0};
+		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		setLayout(layout);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5,5,5,5);
@@ -118,7 +129,6 @@ public class StatInsertion extends JPanel{
 		c.insets = new Insets(5,5,5,5);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.fill = GridBagConstraints.HORIZONTAL;
 		if (MundoSelecionado.isPesquisaDeNíveis())
 			c.gridwidth = 1;
 		else
@@ -126,7 +136,7 @@ public class StatInsertion extends JPanel{
 		
 		// Adding the headers
 		
-		panel.add(new JLabel("Quantidade"),c);
+		panel.add(new JLabel("Quantidade"), c);
 		
 		if (MundoSelecionado.isPesquisaDeNíveis()){
 			c.gridx = 1;
@@ -134,6 +144,7 @@ public class StatInsertion extends JPanel{
 		}
 			
 		// Setting the constraints for the unit panels
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(0,0,0,0);
 		c.gridwidth = 2;
 		c.gridx = 0;
@@ -157,7 +168,7 @@ public class StatInsertion extends JPanel{
 				tropaC.gridwidth = 2;
 			
 			// Creating the TextField for the quantity of troops
-			JTextField txt = new JTextField(6);
+			JTextField txt = new JTextField(9);
 			// Adding the text to a map with the units
 			mapQuantidades.put(i, txt);
 			
@@ -182,7 +193,6 @@ public class StatInsertion extends JPanel{
 					
 					// Zera a largura do botão
 					nível.setUI(new BasicComboBoxUI() {
-					    @SuppressWarnings("serial")
 						@Override
 					    protected JButton createArrowButton() {
 					    	return new JButton() {
@@ -491,7 +501,7 @@ public class StatInsertion extends JPanel{
 		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
 		
 		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] {80,30};
+		layout.columnWidths = new int[] {110};
 		layout.rowHeights = new int[] {0};
 		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
@@ -504,10 +514,27 @@ public class StatInsertion extends JPanel{
 		
 		panel.add(new JLabel("Item Paladino"), c);
 		
-		// Creating the checkbox to select option
-		item = new JComboBox<ItemPaladino>();
+		// Coloca a cor padrão para os comboBox
+		UIManager.put("ComboBox.selectionBackground", new Color(163, 184, 204)); 
+		UIManager.put("ComboBox.background", Color.white); 
 		
-		c.gridx++;
+		// Creating the checkbox to select option
+		item = new JComboBox<ItemPaladino>(ItemPaladino.values());
+		
+		item.setFont(new Font(getFont().getName(), getFont().getStyle(), 11));
+		
+		//TODO Adicionar tooltip para cada item.
+		
+		item.addActionListener(new ActionListener() {
+		
+			public void actionPerformed(ActionEvent arg0) {
+				item.setToolTipText(((ItemPaladino) item.getSelectedItem()).getDescription()); 
+				
+			}
+		});
+		
+		
+		c.gridy++;
 		panel.add(item, c);
 		
 		// setting variable for next panel
@@ -555,7 +582,7 @@ public class StatInsertion extends JPanel{
 		
 		World_Reader.read();
 		
-		MundoSelecionado.setMundo(World_Reader.getMundo(2));
+		MundoSelecionado.setMundo(World_Reader.getMundo(22));
 		
 		JFrame test = new JFrame();
 		

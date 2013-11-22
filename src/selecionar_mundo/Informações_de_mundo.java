@@ -1,5 +1,6 @@
 package selecionar_mundo;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -54,9 +55,6 @@ public class Informações_de_mundo extends JPanel {
 		
 		setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
 		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridy = 0;
-				
 		addProperties();
 		
 	}
@@ -70,37 +68,42 @@ public class Informações_de_mundo extends JPanel {
 		gbc.gridy = 0;
 		
 		gbc.gridy++;
-		add(panelProperty("nome",prop.getProperty("nome")), gbc);
+		add(panelProperty("nome"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("velocidade",prop.getProperty("velocidade")), gbc);
+		add(panelProperty("velocidade"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("modificador",prop.getProperty("modificador")), gbc);
+		add(panelProperty("modificador"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("moral",prop.getProperty("moral")), gbc);
+		add(panelProperty("moral"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("arqueiro",prop.getProperty("arqueiro")), gbc);
+		add(panelProperty("arqueiro"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("milicia",prop.getProperty("milicia")), gbc);
+		add(panelProperty("milicia"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("paladino",prop.getProperty("paladino")), gbc);
+		add(panelProperty("paladino"), gbc);
+		
+		if (Boolean.parseBoolean(prop.getProperty("paladino")) == true) {
+			gbc.gridy++;
+			add(panelProperty("itensAprimorados"), gbc);
+		}
 		
 		gbc.gridy++;
-		add(panelProperty("itensAprimorados",prop.getProperty("itensAprimorados")), gbc);
+		add(panelProperty("igreja"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("igreja",prop.getProperty("igreja")), gbc);
+		add(panelProperty("academiaDeNiveis"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("academiaDeNiveis",prop.getProperty("academiaDeNiveis")), gbc);
+		add(panelProperty("pesquisaDeNiveis"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("pesquisaDeNiveis",prop.getProperty("pesquisaDeNiveis")), gbc);
+		add(panelProperty("bandeira"), gbc);
 		
 		
 	}
@@ -134,6 +137,8 @@ public class Informações_de_mundo extends JPanel {
 			return "Cunhagem de Moedas";
 		case "pesquisaDeNiveis":
 			return "Sistema de Pesquisa";
+		case "bandeira":
+			return "Bandeiras";
 		default:
 			return null;
 		}
@@ -193,6 +198,11 @@ public class Informações_de_mundo extends JPanel {
 				return "Pesquisa de 3 Níveis";
 			else
 				return "Pesquisa Simples";
+		case "bandeira":
+			if (propertyValue.equals("true"))
+				return "Ativado";
+			else
+				return "Desativado";
 		default:
 			return null;
 		}
@@ -205,7 +215,7 @@ public class Informações_de_mundo extends JPanel {
 	 * @param propValue Valor da propriedade
 	 * @return Panel criado
 	 */
-	private JPanel panelProperty(String propName, String propValue) {
+	private JPanel panelProperty(String propName) {
 		
 		JPanel returnPanel = new JPanel();
 		
@@ -227,7 +237,7 @@ public class Informações_de_mundo extends JPanel {
 		gbc_panel.gridy = 0;
 		returnPanel.add(lblName, gbc_panel);
 		
-		JLabel lblValue = new JLabel(getPropertyValue(propName, propValue));
+		JLabel lblValue = new JLabel(getPropertyValue(propName, prop.getProperty(propName)));
 		
 		gbc_panel.gridx = 2;
 		gbc_panel.gridy = 0;

@@ -18,6 +18,7 @@ public class MundoSelecionado {
 	private static boolean academiaDeNíveis;
 	private static boolean pesquisaDeNíveis;
 	private static boolean hasMoral;
+	private static boolean hasBandeira;
 	private static BigDecimal velocidade;
 	private static BigDecimal modificarUnidaes;
 	
@@ -36,6 +37,7 @@ public class MundoSelecionado {
 		MundoSelecionado.academiaDeNíveis = mundo.isAcademiaDeNíveis();
 		MundoSelecionado.pesquisaDeNíveis = mundo.isPesquisaDeNíveis();
 		MundoSelecionado.hasMoral = mundo.hasMoral();
+		MundoSelecionado.hasBandeira = mundo.hasBandeira();
 		MundoSelecionado.velocidade = mundo.getVelocidade();
 		MundoSelecionado.modificarUnidaes = mundo.getModificarUnidaes();
 		
@@ -57,7 +59,7 @@ public class MundoSelecionado {
 	 */
 	public static void setDados(boolean hasArqueiro, boolean hasMilícia, boolean hasPaladino, 
 			boolean hasItensAprimorados, boolean hasIgreja, boolean academiaDeNíveis,
-			boolean pesquisaDeNíveis, boolean hasMoral, BigDecimal velocidade,
+			boolean pesquisaDeNíveis, boolean hasMoral, boolean hasBandeira, BigDecimal velocidade,
 			BigDecimal modificarUnidaes) {
 		MundoSelecionado.hasArqueiro = hasArqueiro;
 		MundoSelecionado.hasMilícia = hasMilícia;
@@ -67,6 +69,7 @@ public class MundoSelecionado {
 		MundoSelecionado.academiaDeNíveis = academiaDeNíveis;
 		MundoSelecionado.pesquisaDeNíveis = pesquisaDeNíveis;
 		MundoSelecionado.hasMoral = hasMoral;
+		MundoSelecionado.hasBandeira = hasBandeira;
 		MundoSelecionado.velocidade = velocidade;
 		MundoSelecionado.modificarUnidaes = modificarUnidaes;
 		
@@ -218,6 +221,13 @@ public class MundoSelecionado {
 	 */
 	public static boolean hasMoral() {
 		return hasMoral;
+	}
+	
+	/**
+	 * @return boolean possui bandeira
+	 */
+	public static boolean hasBandeira() {
+		return hasBandeira;
 	}
 
 	/**

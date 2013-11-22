@@ -46,13 +46,14 @@ public class GUI extends JFrame{
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{546, 1, 350};
-		gridBagLayout.rowHeights = new int[]{92};
+		gridBagLayout.rowHeights = new int[]{0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.insets = new Insets(5, 5, 5, 5);
+		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		
@@ -106,6 +107,8 @@ public class GUI extends JFrame{
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		panelMundo.setLayout(gridBagLayout);
+		
+		//TODO set size to not change for less information
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = 0;
