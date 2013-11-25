@@ -29,10 +29,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import config.World_Reader;
+import database.Bandeira;
 import database.Cores;
 import database.ItemPaladino;
 import database.MundoSelecionado;
 import database.Unidade;
+import database.Bandeira.CategoriaBandeira;
 
 @SuppressWarnings("serial")
 public class StatInsertion extends JPanel{
@@ -54,7 +56,7 @@ public class StatInsertion extends JPanel{
 	private JTextField sorte, moral, muralha, edifício;
 	
 	private JComboBox<ItemPaladino> item;
-	private JComboBox bandeira;
+	private JComboBox<Bandeira> bandeira;
 	
 	// variável para a cor dos panels
 	int loop = 0;
@@ -84,31 +86,69 @@ public class StatInsertion extends JPanel{
 		
 		c.insets = new Insets(5,5,0,5);
 		
+		// Diferenciando os diferentes tipos de inserção
 		
-		c.gridy++;
-		add(addReligião(), c);
-		
-		c.insets = new Insets(0,5,0,5);
-		c.gridy++;
-		add(addNoite(), c);
-		
-		c.gridy++;
-		add(addSorte(), c);
-		
-		c.gridy++;
-		add(addMoral(), c);
-		
-		c.gridy++;
-		add(addMuralha(), c);
-		
-		c.gridy++;
-		add(addEdifício(), c);
-		
-		c.gridy++;
-		add(addItemPaladino(), c);
-		
-		c.gridy++;
-		add(addBandeira(), c);
+		if (tipo == Tipo.atacante) {
+			
+			// Todos possuem a mudança dos insets para garantir que seja mudado,
+			// não importando a configuração do mundo em questão
+			if (MundoSelecionado.hasIgreja()) {
+				c.gridy++;
+				add(addReligião(), c);
+				c.insets = new Insets(0,5,0,5);
+			}
+			
+			if (MundoSelecionado.hasPaladino()) {
+				c.gridy++;
+				add(addItemPaladino(), c);
+				c.insets = new Insets(0,5,0,5);
+			}
+			
+			if (MundoSelecionado.hasBandeira()) {
+				c.gridy++;
+				add(addBandeira(), c);
+				c.insets = new Insets(0,5,0,5);
+			}
+			
+			if (MundoSelecionado.hasMoral()) {
+				c.gridy++;
+				add(addMoral(), c);
+				c.insets = new Insets(0,5,0,5);
+			}
+			
+			c.gridy++;
+			add(addSorte(), c);
+			
+		} else {
+			
+			if (MundoSelecionado.hasIgreja()) {
+				c.gridy++;
+				add(addReligião(), c);
+				c.insets = new Insets(0,5,0,5);
+			}
+			
+			if (MundoSelecionado.hasPaladino()) {
+				c.gridy++;
+				add(addItemPaladino(), c);
+				c.insets = new Insets(0,5,0,5);
+			}
+			
+			if (MundoSelecionado.hasBandeira()) {
+				c.gridy++;
+				add(addBandeira(), c);
+				c.insets = new Insets(0,5,0,5);
+			}
+			
+			c.gridy++;
+			add(addMuralha(), c);
+			
+			c.gridy++;
+			add(addEdifício(), c);
+			
+			c.gridy++;
+			add(addNoite(), c);
+			
+		}
 		
 	}
 	
@@ -300,7 +340,8 @@ public class StatInsertion extends JPanel{
 		// Setting the background and borders for the panel
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.getAlternar(loop));
-		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		// Por ser sempre o último nos atacantes, fecha as bordas inteiramente
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};
@@ -552,7 +593,7 @@ public class StatInsertion extends JPanel{
 		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
 		
 		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] {80,30};
+		layout.columnWidths = new int[] {110};
 		layout.rowHeights = new int[] {0};
 		layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
@@ -560,15 +601,27 @@ public class StatInsertion extends JPanel{
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5,5,5,5);
+		c.anchor = GridBagConstraints.CENTER;
 		c.gridx = 0;
 		c.gridy = 0;
 		
 		panel.add(new JLabel("Bandeira"), c);
 		
 		// Creating the checkbox to select option
-		bandeira = new JComboBox<ItemPaladino>();
+		bandeira = new JComboBox<Bandeira>();
 		
-		c.gridx++;
+		bandeira.setFont(new Font(getFont().getName(), getFont().getStyle(), 11));
+		
+		for (Bandeira.CategoriaBandeira b : Bandeira.CategoriaBandeira.values()) {
+			
+			if (!b.getTipo().equals(CategoriaBandeira.Tipo.Produtivo)) {
+				for(int i = 0; i<9; i++)
+					bandeira.addItem(new Bandeira(b, i));
+			}
+			
+		}
+		
+		c.gridy++;
 		panel.add(bandeira, c);
 		
 		// setting variable for next panel
@@ -586,11 +639,16 @@ public class StatInsertion extends JPanel{
 		
 		JFrame test = new JFrame();
 		
+		test.setLayout(new GridBagLayout());
+		
 		test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		StatInsertion stat = new StatInsertion(Tipo.atacante);
 		
+		StatInsertion stat2 = new StatInsertion(Tipo.defensor);
+		
 		test.add(stat);
+		test.add(stat2);
 		test.pack();
 		test.setVisible(true);
 		
