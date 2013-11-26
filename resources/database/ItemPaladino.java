@@ -12,7 +12,8 @@ public enum ItemPaladino {
 	ARCO_COMPOSTO	("Arco Composto de Nimrod", 	  "Aumenta ataque de arqueiro a cavalo em %.0f%% e defesa em %.0f%%",  Unidade.ARCOCAVALO,   1.3, 1.2, 1.3, 1.2),
 	ESTRELA			("Estrela de Manhã de Carol", 	  "Aumenta ataque de aríetes em %.0f%%", 							   Unidade.ARÍETE,       2.0, 1.0, 2.0, 1.0),
 	FOGUEIRA		("Fogueira de Aletheia", 		  "Aumenta ataque de catapultas em %.0f%% e defesa em %.0f%%", 	 	   Unidade.CATAPULTA,    2.0, 1.0, 2.0, 11.0),
-	CETRO			("Cetro de Vasco", 				  "Nobres reduzem a lealdade por, no mínimo, 30", 		 	   		   Unidade.NOBRE,        1.0, 1.0, 1.0, 1.0);
+	CETRO			("Cetro de Vasco", 				  "Nobres reduzem a lealdade por, no mínimo, 30", 		 	   		   Unidade.NOBRE,        1.0, 1.0, 1.0, 1.0),
+	NULL			("", 							  "", 																   null,				 1.0, 1.0, 1.0, 1.0);	
 	
 	private final String name;
 	private final String description;

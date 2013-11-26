@@ -8,7 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.math.BigInteger;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -508,16 +509,16 @@ public class PanelUnidade{
 					.parse(quantidade.getText()).toString();
 		} catch (ParseException e) {}
 		
-		BigInteger quantia = new BigInteger(formated);
+		BigDecimal quantia = new BigDecimal(formated);
 		
-		dano.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.ataque()))));
-		defGeral.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.defGeral()))));
-		defCavalo.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.defCav()))));
-		defArqueiro.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.defArq()))));
+		dano.setText(quantia.multiply(unidade.ataque((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
+		defGeral.setText(quantia.multiply(unidade.defGeral((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
+		defCavalo.setText(quantia.multiply(unidade.defCav((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
+		defArqueiro.setText(quantia.multiply(unidade.defArq((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
 		
 		saque.setText(String.format("%,d",quantia.multiply(unidade.saque()).intValue()));
 		

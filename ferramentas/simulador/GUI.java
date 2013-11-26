@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 
 import config.World_Reader;
 import database.Ferramenta;
+import database.ItemPaladino;
 import database.MundoSelecionado;
 import database.Unidade;
 
@@ -28,8 +29,10 @@ public class GUI extends Ferramenta {
 	
 	private Map<Unidade, BigDecimal> tropasDefensor;
 	
+	private ItemPaladino itemAtacante, itemDefensor;
+	
 	public GUI(Map<Unidade, BigDecimal> tropasAtacante, Map<Unidade, BigDecimal> tropasDefensor, int moral, int muralha, int sorte,
-			boolean religiãoAtacante, boolean religiãoDefensor) {
+			boolean religiãoAtacante, boolean religiãoDefensor, ItemPaladino itemAtacante, ItemPaladino itemDefensor) {
 		
 		txtMoral = new JTextField(String.valueOf(moral));
 		
@@ -45,6 +48,9 @@ public class GUI extends Ferramenta {
 		
 		this.tropasAtacante = tropasAtacante;
 		this.tropasDefensor = tropasDefensor;
+		
+		this.itemAtacante = itemAtacante;
+		this.itemDefensor = itemDefensor;
 		
 //		Calculadora_de_perdas test = new Calculadora_de_perdas(this);
 		
@@ -79,6 +85,22 @@ public class GUI extends Ferramenta {
 		return checkReligiãoDefensor.isSelected();
 	}
 	
+	
+	
+	/**
+	 * @return the itemAtacante
+	 */
+	public ItemPaladino getItemAtacante() {
+		return itemAtacante;
+	}
+
+	/**
+	 * @return the itemDefensor
+	 */
+	public ItemPaladino getItemDefensor() {
+		return itemDefensor;
+	}
+
 	/**
 	 * @return nível da muralha do defensor
 	 */
@@ -104,7 +126,9 @@ public class GUI extends Ferramenta {
 		
 		World_Reader.read();
 		
-		MundoSelecionado.setMundo(World_Reader.getMundo(0));
+		MundoSelecionado.setMundo(World_Reader.getMundo(29));
+		
+		System.out.println(World_Reader.getMundo(29).getNome());
 		
 		Map<Unidade, BigDecimal> tropasAtacante = new HashMap<Unidade, BigDecimal>();
 		
@@ -113,18 +137,18 @@ public class GUI extends Ferramenta {
 		tropasAtacante.put(Unidade.LANCEIRO, new BigDecimal(0));
 		tropasAtacante.put(Unidade.ESPADACHIM, new BigDecimal(0));
 		tropasAtacante.put(Unidade.ARQUEIRO, new BigDecimal(0));
-		tropasAtacante.put(Unidade.BÁRBARO, new BigDecimal(1000));
+		tropasAtacante.put(Unidade.BÁRBARO, new BigDecimal(100));
 		tropasAtacante.put(Unidade.EXPLORADOR, new BigDecimal(0));
 		tropasAtacante.put(Unidade.CAVALOLEVE, new BigDecimal(0));
 		tropasAtacante.put(Unidade.ARCOCAVALO, new BigDecimal(0));
 		tropasAtacante.put(Unidade.CAVALOPESADO, new BigDecimal(0));
 		tropasAtacante.put(Unidade.ARÍETE, new BigDecimal(0));
 		tropasAtacante.put(Unidade.CATAPULTA, new BigDecimal(0));
-		tropasAtacante.put(Unidade.PALADINO, new BigDecimal(0));
+		tropasAtacante.put(Unidade.PALADINO, new BigDecimal(1));
 		tropasAtacante.put(Unidade.NOBRE, new BigDecimal(0));
 		
-		tropasDefensor.put(Unidade.LANCEIRO, new BigDecimal(1000));
-		tropasDefensor.put(Unidade.ESPADACHIM, new BigDecimal(0));
+		tropasDefensor.put(Unidade.LANCEIRO, new BigDecimal(0));
+		tropasDefensor.put(Unidade.ESPADACHIM, new BigDecimal(100));
 		tropasDefensor.put(Unidade.ARQUEIRO, new BigDecimal(0));
 		tropasDefensor.put(Unidade.BÁRBARO, new BigDecimal(0));
 		tropasDefensor.put(Unidade.EXPLORADOR, new BigDecimal(0));
@@ -144,9 +168,12 @@ public class GUI extends Ferramenta {
 		boolean religiãoAtacante = true;
 		boolean religiãoDefensor = true;
 		
-		int sorte = -25;
+		ItemPaladino itemAtacante = ItemPaladino.NULL;
+		ItemPaladino itemDefensor = ItemPaladino.ESPADA;
 		
-		GUI test = new GUI(tropasAtacante, tropasDefensor, moral, muralha, sorte, religiãoAtacante, religiãoDefensor);
+		int sorte = 0	;
+		
+		GUI test = new GUI(tropasAtacante, tropasDefensor, moral, muralha, sorte, religiãoAtacante, religiãoDefensor, itemAtacante, itemDefensor);
 		
 		
 		

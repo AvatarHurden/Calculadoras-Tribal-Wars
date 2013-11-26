@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import database.BigOperation;
 import database.Edifício;
+import database.ItemPaladino;
 import database.Unidade;
 import database.Unidade.Type;
 
@@ -44,6 +45,8 @@ public class Cálculo {
 		private int edifícioInicial;
 		
 		private int moral;
+		
+		private ItemPaladino itemAtacante, itemDefensor;
 		
 		private boolean religiãoAtacante, religiãoDefensor;
 		
@@ -112,6 +115,10 @@ public class Cálculo {
 		
 		religiãoDefensor = gui.getReligiãoDefensores();
 		
+		itemAtacante = gui.getItemAtacante();
+		
+		itemDefensor = gui.getItemDefensor();
+		
 		for (Unidade i : tropasAtacantes.keySet())
 			tropasPerdidasAtaque.put(i, BigDecimal.ZERO);
 		
@@ -124,7 +131,7 @@ public class Cálculo {
 		
 		// max = #rams*attackOfRams / (8* 1.09^wallLevel)
 		
-		BigDecimal levelsLowered = tropasAtacantes.get(Unidade.ARÍETE).multiply(new BigDecimal(Unidade.ARÍETE.ataque(nívelTropasAtaque.get(Unidade.ARÍETE))));
+		BigDecimal levelsLowered = tropasAtacantes.get(Unidade.ARÍETE).multiply(Unidade.ARÍETE.ataque(nívelTropasAtaque.get(Unidade.ARÍETE)));
 		
 		levelsLowered = levelsLowered.divide(new BigDecimal("8").multiply(
 				BigOperation.pow(new BigDecimal("1.09"), new BigDecimal(muralhaInicial))), 30, RoundingMode.HALF_EVEN);
@@ -173,10 +180,12 @@ public class Cálculo {
 		
 		for (Entry<Unidade, BigDecimal> i : tropas.entrySet()) {
 			
-			ataqueTipos.put( i.getKey().type() , 
-					ataqueTipos.get( i.getKey().type() ).add( i.getValue().multiply(new BigDecimal(i.getKey().ataque(nívelTropasAtaque.get(i.getKey()))) ) ));
+			BigDecimal ataque = i.getKey().ataque(nívelTropasAtaque.get(i.getKey()), itemAtacante);
 			
-			ataqueTotal = ataqueTotal.add( i.getValue().multiply( new BigDecimal(i.getKey().ataque(nívelTropasAtaque.get(i.getKey()))) ) );
+			ataqueTipos.put( i.getKey().type() , 
+					ataqueTipos.get( i.getKey().type() ).add( i.getValue().multiply(ataque) ) );
+			
+			ataqueTotal = ataqueTotal.add( i.getValue().multiply(ataque) );
 		
 		}
 		
@@ -212,13 +221,13 @@ public class Cálculo {
 			// I don't even know
 			
 			defesaTipos.put(Type.Geral, 
-					defesaTipos.get(Type.Geral).add( i.getValue().multiply(new BigDecimal(i.getKey().defGeral(nívelTropasDefesa.get(i.getKey()))) ) ));
+					defesaTipos.get(Type.Geral).add( i.getValue().multiply(i.getKey().defGeral(nívelTropasDefesa.get(i.getKey()), itemDefensor) ) ));
 			
 			defesaTipos.put(Type.Cavalo, 
-					defesaTipos.get(Type.Cavalo).add( i.getValue().multiply(new BigDecimal(i.getKey().defCav(nívelTropasDefesa.get(i.getKey()))) ) ));
+					defesaTipos.get(Type.Cavalo).add( i.getValue().multiply(i.getKey().defCav(nívelTropasDefesa.get(i.getKey()), itemDefensor) ) ));
 			
 			defesaTipos.put(Type.Arqueiro, 
-					defesaTipos.get(Type.Arqueiro).add( i.getValue().multiply(new BigDecimal(i.getKey().defArq(nívelTropasDefesa.get(i.getKey()))) ) ));
+					defesaTipos.get(Type.Arqueiro).add( i.getValue().multiply(i.getKey().defArq(nívelTropasDefesa.get(i.getKey()), itemDefensor) ) ));
 			
 		}
 
@@ -435,7 +444,7 @@ public class Cálculo {
 		
 		if (tropasAtacantes.get(Unidade.CATAPULTA).compareTo(BigDecimal.ZERO) > 0 && edifícioInicial > 0 ) {
 			
-			BigDecimal levelsLowered = tropasAtacantes.get(Unidade.CATAPULTA).multiply(new BigDecimal(Unidade.CATAPULTA.ataque(nívelTropasAtaque.get(Unidade.CATAPULTA))));
+			BigDecimal levelsLowered = tropasAtacantes.get(Unidade.CATAPULTA).multiply(Unidade.CATAPULTA.ataque(nívelTropasAtaque.get(Unidade.CATAPULTA)));
 			
 			levelsLowered = levelsLowered.divide(new BigDecimal("600").multiply(
 					BigOperation.pow(new BigDecimal("1.09"), new BigDecimal(edifícioInicial))), 30, RoundingMode.HALF_EVEN);

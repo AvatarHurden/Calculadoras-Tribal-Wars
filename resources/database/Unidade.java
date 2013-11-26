@@ -28,16 +28,16 @@ public enum Unidade{
 	
 	private final String nome;
 	private final Type type;
-	private final BigInteger madeira;
-	private final BigInteger argila;
-	private final BigInteger ferro;
-	private final BigInteger população;
-	private final BigInteger ataque;
-	private final BigInteger defGeral;
-	private final BigInteger defCav;
-	private final BigInteger defArq;
+	private final BigDecimal madeira;
+	private final BigDecimal argila;
+	private final BigDecimal ferro;
+	private final BigDecimal população;
+	private final BigDecimal ataque;
+	private final BigDecimal defGeral;
+	private final BigDecimal defCav;
+	private final BigDecimal defArq;
 	private final BigDecimal velocidade;
-	private final BigInteger saque;
+	private final BigDecimal saque;
 	private final BigDecimal tempoProdução;
 
 	public enum Type {
@@ -63,25 +63,25 @@ public enum Unidade{
 			int saque, int tempo) {
 		this.nome = nome;
 		this.type = tipo;
-		this.madeira = new BigInteger(String.valueOf(madeira));
-		this.argila = new BigInteger(String.valueOf(argila));
-		this.ferro = new BigInteger(String.valueOf(ferro));
-		this.população = new BigInteger(String.valueOf(população));
-		this.ataque = new BigInteger(String.valueOf(ataque));
-		this.defGeral = new BigInteger(String.valueOf(defGeral));
+		this.madeira = new BigDecimal(String.valueOf(madeira));
+		this.argila = new BigDecimal(String.valueOf(argila));
+		this.ferro = new BigDecimal(String.valueOf(ferro));
+		this.população = new BigDecimal(String.valueOf(população));
+		this.ataque = new BigDecimal(String.valueOf(ataque));
+		this.defGeral = new BigDecimal(String.valueOf(defGeral));
 		// Def cavalo
-		this.defArq = new BigInteger(String.valueOf(defArq));
+		this.defArq = new BigDecimal(String.valueOf(defArq));
 		this.velocidade = new BigDecimal(String.valueOf(velocidade));
-		this.saque = new BigInteger(String.valueOf(saque));
+		this.saque = new BigDecimal(String.valueOf(saque));
 		tempoProdução = new BigDecimal(String.valueOf(tempo));
 		
 		// Alterações para unidades específicas
 		// As características flutuantes são adicionadas depois, visto que são final
 		
 		if (!MundoSelecionado.hasArqueiro() && nome.equals("Espadachim"))
-			this.defCav = new BigInteger("25");
+			this.defCav = new BigDecimal("25");
 		else	
-			this.defCav = new BigInteger(String.valueOf(defCav));
+			this.defCav = new BigDecimal(String.valueOf(defCav));
 	}
 
 	/**
@@ -92,50 +92,87 @@ public enum Unidade{
 	/**
 	 * @return custo de madeira da unidade
 	 */
-	public BigInteger madeira() { return madeira; }
+	public BigDecimal madeira() { return madeira; }
 
 	/**
 	 * @return custo de argila da unidade
 	 */
-	public BigInteger argila() { return argila; }
+	public BigDecimal argila() { return argila; }
 
 	/**
 	 * @return custo de ferro da unidade
 	 */
-	public BigInteger ferro() { return ferro; }
+	public BigDecimal ferro() { return ferro; }
 
 	/**
 	 * @return custo de população da unidade
 	 */
-	public BigInteger população() { return população; }	
+	public BigDecimal população() { return população; }	
 
 	/**
 	 * @return força de ataque da unidade
 	 */
-	public BigInteger ataque() { return ataque; }
+	public BigDecimal ataque() { return ataque; }
 
-	public BigInteger ataque(int nível) { return upgrade( nível, ataque ); }
+	public BigDecimal ataque(int nível) { return upgrade( nível, ataque ); }
+	
+	public BigDecimal ataque(int nível, ItemPaladino item) {
+		
+		if (item.getUnit() == this )
+			return upgrade( nível, ataque ).multiply(new BigDecimal(item.getModifierAtk()));
+		else
+			return upgrade( nível, ataque );
+		
+		}
 	
 	/**
 	 * @return defesa geral da unidade
 	 */
-	public BigInteger defGeral() { return defGeral; }
+	public BigDecimal defGeral() { return defGeral; }
 
-	public BigInteger defGeral(int nível) { return upgrade( nível, defGeral ); }
+	public BigDecimal defGeral(int nível) { return upgrade( nível, defGeral ); }
+	
+	public BigDecimal defGeral(int nível, ItemPaladino item) {
+		
+		if (item.getUnit() == this )
+			return upgrade( nível, defGeral ).multiply(new BigDecimal(item.getModifierDef())); 
+		else
+			return upgrade( nível, defGeral );
+		
+		}
 	
 	/**
 	 * @return defesa de cavalaria da unidade
 	 */
-	public BigInteger defCav() { return defCav; }
+	public BigDecimal defCav() { return defCav; }
 
-	public BigInteger defCav(int nível) { return upgrade( nível, defCav ); }
+	public BigDecimal defCav(int nível) { return upgrade( nível, defCav ); }
+	
+	public BigDecimal defCav(int nível, ItemPaladino item) { 
+		
+		if (item.getUnit() == this )
+			return upgrade( nível, defCav ).multiply(new BigDecimal(item.getModifierDef())); 
+		else
+			return upgrade( nível, defCav );
+					
+		}
 	
 	/**
 	 * @return defesa de arqueiro da unidade
 	 */
-	public BigInteger defArq() { return defArq; }
+	public BigDecimal defArq() { return defArq; }
 
-	public BigInteger defArq(int nível) { return upgrade( nível, defArq ); }
+	public BigDecimal defArq(int nível) { return upgrade( nível, defArq ); }
+	
+	public BigDecimal defArq(int nível, ItemPaladino item) { 
+		
+		if (item.getUnit() == this ){
+			return upgrade( nível, defArq ).multiply(new BigDecimal(item.getModifierDef()));
+		}
+		else
+			return upgrade( nível, defArq );
+					
+		}
 	
 	/**
 	 * @return velocidade base da unidade
@@ -145,7 +182,7 @@ public enum Unidade{
 	/**
 	 * @return capacidade de saque da unidade
 	 */
-	public BigInteger saque() { return saque; }
+	public BigDecimal saque() { return saque; }
 	
 	/**
 	 * @return tempo de produção da unidade em segundos (100%)
@@ -161,7 +198,7 @@ public enum Unidade{
 	 * Aumenta a quantidade dada pela razão do nível fornecido. 
 	 * Se o nível for diferente de 2 ou 3, retorna o valor dado
 	 */
-	public BigInteger upgrade(int lvl, BigInteger value) {
+	public BigDecimal upgrade(int lvl, BigDecimal value) {
 		
 		BigDecimal total = new BigDecimal(value.toString());
 		
@@ -172,7 +209,7 @@ public enum Unidade{
 		else
 			return value;
 		
-		return total.setScale(0,RoundingMode.HALF_UP).toBigInteger();
+		return total.setScale(0,RoundingMode.HALF_UP);
 
 	}
 	
