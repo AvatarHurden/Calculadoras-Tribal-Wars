@@ -8,10 +8,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 import config.World_Reader;
+import database.Bandeira;
 import database.Ferramenta;
 import database.ItemPaladino;
 import database.MundoSelecionado;
 import database.Unidade;
+import database.Bandeira.CategoriaBandeira;
 
 public class GUI extends Ferramenta {
 
@@ -31,8 +33,13 @@ public class GUI extends Ferramenta {
 	
 	private ItemPaladino itemAtacante, itemDefensor;
 	
-	public GUI(Map<Unidade, BigDecimal> tropasAtacante, Map<Unidade, BigDecimal> tropasDefensor, int moral, int muralha, int sorte,
-			boolean religiãoAtacante, boolean religiãoDefensor, ItemPaladino itemAtacante, ItemPaladino itemDefensor) {
+	private Bandeira bandeiraAtacante, bandeiraDefensor;
+	
+	private boolean noite;
+	
+	public GUI(Map<Unidade, BigDecimal> tropasAtacante, Map<Unidade, BigDecimal> tropasDefensor, int moral, boolean noite, int muralha, int sorte,
+			boolean religiãoAtacante, boolean religiãoDefensor, ItemPaladino itemAtacante, ItemPaladino itemDefensor, Bandeira bandeiraAtacante,
+			Bandeira bandeiraDefensor) {
 		
 		txtMoral = new JTextField(String.valueOf(moral));
 		
@@ -52,11 +59,30 @@ public class GUI extends Ferramenta {
 		this.itemAtacante = itemAtacante;
 		this.itemDefensor = itemDefensor;
 		
+		this.bandeiraAtacante = bandeiraAtacante;
+		this.bandeiraDefensor = bandeiraDefensor;
+		
+		this.noite = noite;
+		
 //		Calculadora_de_perdas test = new Calculadora_de_perdas(this);
 		
 		Cálculo teste = new Cálculo(this);
 	}
 	
+	/**
+	 * @return the bandeiraAtacante
+	 */
+	public Bandeira getBandeiraAtacante() {
+		return bandeiraAtacante;
+	}
+
+	/**
+	 * @return the bandeiraDefensor
+	 */
+	public Bandeira getBandeiraDefensor() {
+		return bandeiraDefensor;
+	}
+
 	/**
 	 * @return sorte, do ponto de visto do atacante
 	 */
@@ -69,6 +95,13 @@ public class GUI extends Ferramenta {
 	 */
 	protected int getMoral() {
 		return Integer.parseInt(txtMoral.getText());
+	}
+	
+	/**
+	 * @return noite
+	 */
+	protected boolean getNoite() {
+		return noite;
 	}
 	
 	/**
@@ -136,8 +169,8 @@ public class GUI extends Ferramenta {
 		
 		tropasAtacante.put(Unidade.LANCEIRO, new BigDecimal(0));
 		tropasAtacante.put(Unidade.ESPADACHIM, new BigDecimal(0));
-		tropasAtacante.put(Unidade.ARQUEIRO, new BigDecimal(0));
-		tropasAtacante.put(Unidade.BÁRBARO, new BigDecimal(100));
+		tropasAtacante.put(Unidade.ARQUEIRO, new BigDecimal(100));
+		tropasAtacante.put(Unidade.BÁRBARO, new BigDecimal(0));
 		tropasAtacante.put(Unidade.EXPLORADOR, new BigDecimal(0));
 		tropasAtacante.put(Unidade.CAVALOLEVE, new BigDecimal(0));
 		tropasAtacante.put(Unidade.ARCOCAVALO, new BigDecimal(0));
@@ -147,8 +180,8 @@ public class GUI extends Ferramenta {
 		tropasAtacante.put(Unidade.PALADINO, new BigDecimal(1));
 		tropasAtacante.put(Unidade.NOBRE, new BigDecimal(0));
 		
-		tropasDefensor.put(Unidade.LANCEIRO, new BigDecimal(0));
-		tropasDefensor.put(Unidade.ESPADACHIM, new BigDecimal(100));
+		tropasDefensor.put(Unidade.LANCEIRO, new BigDecimal(100));
+		tropasDefensor.put(Unidade.ESPADACHIM, new BigDecimal(0));
 		tropasDefensor.put(Unidade.ARQUEIRO, new BigDecimal(0));
 		tropasDefensor.put(Unidade.BÁRBARO, new BigDecimal(0));
 		tropasDefensor.put(Unidade.EXPLORADOR, new BigDecimal(0));
@@ -161,7 +194,7 @@ public class GUI extends Ferramenta {
 		tropasDefensor.put(Unidade.NOBRE, new BigDecimal(0));
 		tropasDefensor.put(Unidade.MILÍCIA, new BigDecimal(0));
 		
-		int muralha = 0;
+		int muralha = 20;
 		
 		int moral = 100;
 		
@@ -169,11 +202,20 @@ public class GUI extends Ferramenta {
 		boolean religiãoDefensor = true;
 		
 		ItemPaladino itemAtacante = ItemPaladino.NULL;
-		ItemPaladino itemDefensor = ItemPaladino.ESPADA;
+		ItemPaladino itemDefensor = ItemPaladino.NULL;
+		
+		Bandeira bandeiraAtacante = new Bandeira(CategoriaBandeira.ATAQUE, 8);
+		Bandeira bandeiraDefensor = new Bandeira(CategoriaBandeira.NULL, 8);
+		
+//		Bandeira bandeiraAtacante = null;
+//		Bandeira bandeiraDefensor = null;
 		
 		int sorte = 0	;
 		
-		GUI test = new GUI(tropasAtacante, tropasDefensor, moral, muralha, sorte, religiãoAtacante, religiãoDefensor, itemAtacante, itemDefensor);
+		boolean noite = false;
+		
+		GUI test = new GUI(tropasAtacante, tropasDefensor, moral, noite, muralha, sorte, religiãoAtacante, religiãoDefensor, itemAtacante, itemDefensor
+				, bandeiraAtacante, bandeiraDefensor);
 		
 		
 		

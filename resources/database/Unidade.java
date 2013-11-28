@@ -1,7 +1,6 @@
 package database;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 
 public enum Unidade{
@@ -118,8 +117,9 @@ public enum Unidade{
 	
 	public BigDecimal ataque(int nível, ItemPaladino item) {
 		
-		if (item.getUnit() == this )
-			return upgrade( nível, ataque ).multiply(new BigDecimal(item.getModifierAtk()));
+		if (item.getUnit() == this ) {
+			return upgrade( nível, ataque ).multiply(new BigDecimal(item.getModifierAtk())).setScale(0,RoundingMode.HALF_UP);
+		}
 		else
 			return upgrade( nível, ataque );
 		
@@ -135,7 +135,7 @@ public enum Unidade{
 	public BigDecimal defGeral(int nível, ItemPaladino item) {
 		
 		if (item.getUnit() == this )
-			return upgrade( nível, defGeral ).multiply(new BigDecimal(item.getModifierDef())); 
+			return upgrade( nível, defGeral ).multiply(new BigDecimal(item.getModifierDef())).setScale(0,RoundingMode.HALF_UP); 
 		else
 			return upgrade( nível, defGeral );
 		
@@ -151,7 +151,7 @@ public enum Unidade{
 	public BigDecimal defCav(int nível, ItemPaladino item) { 
 		
 		if (item.getUnit() == this )
-			return upgrade( nível, defCav ).multiply(new BigDecimal(item.getModifierDef())); 
+			return upgrade( nível, defCav ).multiply(new BigDecimal(item.getModifierDef())).setScale(0,RoundingMode.HALF_UP); 
 		else
 			return upgrade( nível, defCav );
 					
@@ -167,7 +167,7 @@ public enum Unidade{
 	public BigDecimal defArq(int nível, ItemPaladino item) { 
 		
 		if (item.getUnit() == this ){
-			return upgrade( nível, defArq ).multiply(new BigDecimal(item.getModifierDef()));
+			return upgrade( nível, defArq ).multiply(new BigDecimal(item.getModifierDef())).setScale(0,RoundingMode.HALF_UP);
 		}
 		else
 			return upgrade( nível, defArq );

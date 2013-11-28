@@ -86,6 +86,8 @@ public class StatInsertion extends JPanel{
 		
 		c.insets = new Insets(5,5,0,5);
 		
+		loop = MundoSelecionado.getNúmeroDeTropas();
+		
 		// Diferenciando os diferentes tipos de inserção
 		
 		if (tipo == Tipo.atacante) {
@@ -574,7 +576,7 @@ public class StatInsertion extends JPanel{
 			}
 		});
 		
-		
+		c.insets = new Insets(0,5,5,5);
 		c.gridy++;
 		panel.add(item, c);
 		
@@ -612,15 +614,17 @@ public class StatInsertion extends JPanel{
 		
 		bandeira.setFont(new Font(getFont().getName(), getFont().getStyle(), 11));
 		
-		for (Bandeira.CategoriaBandeira b : Bandeira.CategoriaBandeira.values()) {
-			
-			if (!b.getTipo().equals(CategoriaBandeira.Tipo.Produtivo)) {
-				for(int i = 0; i<9; i++)
-					bandeira.addItem(new Bandeira(b, i));
-			}
-			
-		}
+		bandeira.addItem(new Bandeira(CategoriaBandeira.NULL,0));
 		
+		if (tipo == Tipo.atacante)
+			for(int i = 0; i<9; i++)
+				bandeira.addItem(new Bandeira(CategoriaBandeira.ATAQUE, i));
+		else
+			for(int i = 0; i<9; i++)
+				bandeira.addItem(new Bandeira(CategoriaBandeira.DEFESA, i));
+		
+		
+		c.insets = new Insets(0,5,5,5);
 		c.gridy++;
 		panel.add(bandeira, c);
 		
@@ -635,7 +639,7 @@ public class StatInsertion extends JPanel{
 		
 		World_Reader.read();
 		
-		MundoSelecionado.setMundo(World_Reader.getMundo(22));
+		MundoSelecionado.setMundo(World_Reader.getMundo(29));
 		
 		JFrame test = new JFrame();
 		

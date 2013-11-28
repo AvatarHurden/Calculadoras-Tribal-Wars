@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import database.Bandeira;
 import database.BigOperation;
 import database.Edifício;
 import database.ItemPaladino;
@@ -48,9 +49,13 @@ public class Cálculo {
 		
 		private ItemPaladino itemAtacante, itemDefensor;
 		
+		private Bandeira bandeiraAtacante, bandeiraDefensor;
+		
 		private boolean religiãoAtacante, religiãoDefensor;
 		
 		private int sorte;
+		
+		private boolean noite;
 		
 	// Calculated Values that are maintaned during all combat
 		
@@ -69,10 +74,12 @@ public class Cálculo {
 	
 		// níveis dos edifícios depois de serem destruídos
 		
-		int maxLevelLowered;
+		BigDecimal maxLevelLowered;
 		
 		private int muralhaFinal;
 		private int edifícioFinal;
+		
+		private int rounding = 10;
 		
 	public Cálculo(GUI gui) {
 		
@@ -83,6 +90,11 @@ public class Cálculo {
 		damageWall();
 		
 		scoutBattle();
+		
+		if (itemAtacante == ItemPaladino.ESTRELA || itemAtacante == ItemPaladino.FOGUEIRA)
+			itemAtacante = ItemPaladino.NULL;
+		
+		//TODO deactivate ram and catapult item during combat, only using them on destruction (MUAHAHAHA)
 		
 //		if (MundoSelecionado.hasArqueiro())
 			BattleArcherWorld();
@@ -119,6 +131,12 @@ public class Cálculo {
 		
 		itemDefensor = gui.getItemDefensor();
 		
+		bandeiraAtacante = gui.getBandeiraAtacante();
+		
+		bandeiraDefensor = gui.getBandeiraDefensor();
+		
+		noite = gui.getNoite();
+		
 		for (Unidade i : tropasAtacantes.keySet())
 			tropasPerdidasAtaque.put(i, BigDecimal.ZERO);
 		
@@ -129,17 +147,31 @@ public class Cálculo {
 	
 	private void damageWall() {
 		
-		// max = #rams*attackOfRams / (8* 1.09^wallLevel)
+		// max = #rams*religion*attackOfRams / (8* 1.09^wallLevel)
 		
-		BigDecimal levelsLowered = tropasAtacantes.get(Unidade.ARÍETE).multiply(Unidade.ARÍETE.ataque(nívelTropasAtaque.get(Unidade.ARÍETE)));
+		BigDecimal attack = Unidade.ARÍETE.ataque(nívelTropasAtaque.get(Unidade.ARÍETE), itemAtacante);
+		
+		BigDecimal levelsLowered = tropasAtacantes.get(Unidade.ARÍETE).multiply(attack);
+		
+		if (religiãoAtacante == false)
+			levelsLowered = levelsLowered.divide(new BigDecimal("2"));
 		
 		levelsLowered = levelsLowered.divide(new BigDecimal("8").multiply(
-				BigOperation.pow(new BigDecimal("1.09"), new BigDecimal(muralhaInicial))), 30, RoundingMode.HALF_EVEN);
+				BigOperation.pow(new BigDecimal("1.09"), new BigDecimal(muralhaInicial))), rounding, RoundingMode.HALF_EVEN);
 		
-		maxLevelLowered = levelsLowered.setScale(0, RoundingMode.HALF_DOWN).intValue();
+		maxLevelLowered = levelsLowered;
 		
-		muralhaBônusFlat = muralhaInicial - maxLevelLowered;
+		muralhaBônusFlat = muralhaInicial - maxLevelLowered.setScale(0, RoundingMode.HALF_EVEN).intValue();
+		
+		if (muralhaBônusFlat < new BigDecimal(muralhaInicial).divide(attack).setScale(0, RoundingMode.HALF_UP).intValue() )
+			muralhaBônusFlat = new BigDecimal(muralhaInicial).divide(attack).setScale(0, RoundingMode.HALF_UP).intValue();
+		
+		if (muralhaBônusFlat < 0)
+			muralhaBônusFlat = 0;
+		
 		muralhaBônusPercentual = muralhaBônusFlat;
+		
+		muralhaFinal = muralhaInicial;
 		
 	}
 	
@@ -150,13 +182,13 @@ public class Cálculo {
 		
 		if (atacantes.compareTo(BigDecimal.ZERO) > 0){
 			
-			if (defensores.divide(atacantes, 30, RoundingMode.HALF_EVEN).compareTo(new BigDecimal("2")) > 0)
+			if (defensores.divide(atacantes, rounding, RoundingMode.HALF_EVEN).compareTo(new BigDecimal("2")) > 0)
 				tropasAtacantes.put(Unidade.EXPLORADOR, BigDecimal.ZERO);
 			else {
 				// remaining = initial - round (initial * (defenders / 2*initial)^1.5 )
 				
 				BigDecimal remaining = atacantes.multiply(
-						BigOperation.pow(defensores.divide(new BigDecimal("2").multiply(atacantes), 30, RoundingMode.HALF_EVEN), new BigDecimal("1.5")));
+						BigOperation.pow(defensores.divide(new BigDecimal("2").multiply(atacantes), rounding, RoundingMode.HALF_EVEN), new BigDecimal("1.5")));
 				
 				remaining = atacantes.subtract(remaining.setScale(0, RoundingMode.HALF_EVEN));		
 						
@@ -185,27 +217,28 @@ public class Cálculo {
 			ataqueTipos.put( i.getKey().type() , 
 					ataqueTipos.get( i.getKey().type() ).add( i.getValue().multiply(ataque) ) );
 			
-			ataqueTotal = ataqueTotal.add( i.getValue().multiply(ataque) );
-		
 		}
 		
 		// Calculando os modificadores (moral, sorte e religião)
 		
-		double religião;
+		String religião;
 		
 		if (religiãoAtacante == true)
-			religião = 1;
+			religião = "1";
 		else
-			religião = 0.5;
+			religião = "0.5";
 			
 		for (Type i : Type.values())
 			ataqueTipos.put(i, ataqueTipos.get(i).multiply(new BigDecimal(moral).divide(new BigDecimal("100")))
 												 .multiply(BigDecimal.ONE.add(new BigDecimal(sorte).divide(new BigDecimal("100")))
 												 .multiply(new BigDecimal(religião))));
 		
-		ataqueTotal = ataqueTotal.multiply(new BigDecimal(moral).divide(new BigDecimal("100")))
-								 .multiply(BigDecimal.ONE.add(new BigDecimal(sorte).divide(new BigDecimal("100")))
-								 .multiply(new BigDecimal(religião)));
+		if (bandeiraAtacante != null)
+			for (Type i : Type.values())
+				ataqueTipos.put(i, ataqueTipos.get(i).multiply(new BigDecimal(bandeiraAtacante.getValue())));
+		
+		for (Type i : Type.values())
+			ataqueTotal = ataqueTotal.add(ataqueTipos.get(i));
 		
 	}
 	
@@ -231,18 +264,19 @@ public class Cálculo {
 			
 		}
 
-		// Calculando os modificadores (moral, sorte e religião)
+		// Calculando os modificadores (religião e noite)
+				
+		if (religiãoDefensor == false)
+			for (Type i : Type.values())
+				defesaTipos.put(i, defesaTipos.get(i).divide(new BigDecimal("2"), rounding, RoundingMode.HALF_EVEN));
 		
-		double religião;
-				
-		if (religiãoDefensor == true)
-			religião = 1;
-		else
-			religião = 0.5;
-				
-		for (Type i : Type.values())
-			defesaTipos.put(i, defesaTipos.get(i).multiply(new BigDecimal(religião)));
-				
+		if (noite == true)
+			for (Type i : Type.values())
+				defesaTipos.put(i, defesaTipos.get(i).multiply(new BigDecimal("2")));
+		
+		if (bandeiraDefensor != null)
+			for (Type i : Type.values())
+				defesaTipos.put(i, defesaTipos.get(i).multiply(new BigDecimal(bandeiraDefensor.getValue())));
 
 	}
 		
@@ -263,7 +297,7 @@ public class Cálculo {
 		for (Entry<Unidade, BigDecimal> i : tropasDefensoras.entrySet())
 			defensoresSobrando.put(i.getKey(), i.getValue());
 		
-		while (hasUnits(atacantesSobrando) && hasUnits(defensoresSobrando)) {
+		do {
 			
 			// Define o valor do ataque de cada tipo presente no exército, além do ataque total (soma dos 3 tipos)
 			setAtaques(atacantesSobrando);
@@ -280,8 +314,9 @@ public class Cálculo {
 			for (Type i : Type.values()) {
 				
 				// Adiciona o bônus de muralha na defesa
-				defesaTipos.put(i, defesaTipos.get(i).multiply(Edifício.MURALHA.bônusPercentual(muralhaBônusPercentual))
-						.add(Edifício.MURALHA.bônusFlat(muralhaBônusFlat)));
+				defesaTipos.put(i, defesaTipos.get(i).multiply(Edifício.MURALHA.bônusPercentual(muralhaBônusPercentual)));
+				
+				defesaTipos.put(i, defesaTipos.get(i).add(Edifício.MURALHA.bônusFlat(muralhaBônusFlat)));
 				
 				// ratio loss defesa = ( ataque total / defesa ) ^ 3/2
 				
@@ -291,11 +326,11 @@ public class Cálculo {
 					ataqueRatioLoss.put(i, BigDecimal.ZERO);
 					defenseRatioLoss.put(i, BigDecimal.ZERO);
 				} else if (ataqueTotal.compareTo(defesaTipos.get(i)) == 1 ){
-					ataqueRatioLoss.put(i, BigOperation.pow(defesaTipos.get(i).divide(ataqueTotal, 30, RoundingMode.HALF_EVEN), new BigDecimal("1.5")));
+					ataqueRatioLoss.put(i, BigOperation.pow(defesaTipos.get(i).divide(ataqueTotal, rounding, RoundingMode.HALF_EVEN), new BigDecimal("1.5")));
 					defenseRatioLoss.put(i, BigDecimal.ONE);
 				} else {
 					ataqueRatioLoss.put(i, BigDecimal.ONE);
-					defenseRatioLoss.put(i, BigOperation.pow(ataqueTotal.divide(defesaTipos.get(i), 30, RoundingMode.HALF_EVEN), new BigDecimal("1.5")));
+					defenseRatioLoss.put(i, BigOperation.pow(ataqueTotal.divide(defesaTipos.get(i), rounding, RoundingMode.HALF_EVEN), new BigDecimal("1.5")));
 				}
 					
 			}
@@ -303,7 +338,7 @@ public class Cálculo {
 			for (Entry<Unidade, BigDecimal> i : atacantesSobrando.entrySet()) {
 				// Colocar as tropas perdidas na batalha num map para poder usar depois
 				tropasPerdidasAtaque.put(i.getKey(), tropasPerdidasAtaque.get(i.getKey()).add(i.getValue().
-						multiply(ataqueRatioLoss.get(i.getKey().type())).setScale(0, RoundingMode.HALF_UP)));
+						multiply(ataqueRatioLoss.get(i.getKey().type()))).setScale(0, RoundingMode.HALF_UP));
 				// remover as tropas perdidas do mapa adequado
 				i.setValue(i.getValue().multiply(BigDecimal.ONE.subtract(ataqueRatioLoss.get(i.getKey().type()))).setScale(0, RoundingMode.HALF_UP));
 			}
@@ -315,7 +350,7 @@ public class Cálculo {
 			for (Type i : Type.values())
 				defenseTotalLoss = defenseTotalLoss.add(ataqueTipos.get(i).multiply(defenseRatioLoss.get(i)));
 				
-			defenseTotalLoss = defenseTotalLoss.divide(ataqueTotal, 30, RoundingMode.HALF_EVEN);
+			defenseTotalLoss = defenseTotalLoss.divide(ataqueTotal, rounding, RoundingMode.HALF_EVEN);
 			
 			
 			for (Entry<Unidade, BigDecimal> i : defensoresSobrando.entrySet()) {
@@ -326,11 +361,13 @@ public class Cálculo {
 				i.setValue(i.getValue().multiply(BigDecimal.ONE.subtract(defenseTotalLoss)).setScale(0, RoundingMode.HALF_UP));
 			}
 			
-			// After first round of attacks, wall becomes 0
+			// After first round of attacks, wall becomes 0 and religions become true
 			
 			muralhaBônusFlat = 0;
+			religiãoAtacante = true;
+			religiãoDefensor = true;
 			
-		}
+		} while (hasUnits(atacantesSobrando) && hasUnits(defensoresSobrando));
 		
 	}
 	
@@ -350,7 +387,7 @@ public class Cálculo {
 		for (Type i : Type.values())
 			defesaTotal = defesaTotal.add(defesaTipos.get(i).multiply(ataqueTipos.get(i)));
 		
-		defesaTotal = defesaTotal.divide(ataqueTotal, 30, RoundingMode.HALF_EVEN);
+		defesaTotal = defesaTotal.divide(ataqueTotal, rounding, RoundingMode.HALF_EVEN);
 		
 		// Adicionar bônus de muralha
 		defesaTotal = defesaTotal.multiply(Edifício.MURALHA.bônusPercentual(muralhaBônusPercentual));
@@ -370,11 +407,11 @@ public class Cálculo {
 			ataqueRatioLoss = BigDecimal.ZERO;
 			defenseRatioLoss = BigDecimal.ZERO;
 		} else if (ataqueTotal.compareTo(defesaTotal) == 1 ){
-			ataqueRatioLoss = BigOperation.pow(defesaTotal.divide(ataqueTotal, 30, RoundingMode.HALF_EVEN), new BigDecimal("1.5"));
+			ataqueRatioLoss = BigOperation.pow(defesaTotal.divide(ataqueTotal, rounding, RoundingMode.HALF_EVEN), new BigDecimal("1.5"));
 			defenseRatioLoss = BigDecimal.ONE;
 		} else {
 			ataqueRatioLoss = BigDecimal.ONE;
-			defenseRatioLoss = BigOperation.pow(ataqueTotal.divide(defesaTotal, 30, RoundingMode.HALF_EVEN), new BigDecimal("1.5"));
+			defenseRatioLoss = BigOperation.pow(ataqueTotal.divide(defesaTotal, rounding, RoundingMode.HALF_EVEN), new BigDecimal("1.5"));
 		}
 		
 		for (Entry<Unidade, BigDecimal> i : tropasDefensoras.entrySet()) {
@@ -420,34 +457,32 @@ public class Cálculo {
 		
 		if (tropasAtacantes.get(Unidade.ARÍETE).compareTo(BigDecimal.ZERO) > 0 && muralhaInicial > 0) {
 			
-			
-			if (tropasPerdidasDefesa.equals(tropasDefensoras))   // Defensor perdeu
+			if (somaTropasDefensorasPerdidas.compareTo(somaTropasDefensoras) == 0)   // Defensor perdeu
 				
 				// final = initial - round(max * (2- lostAttackers/totalAttackers))
 				
-				muralhaFinal = muralhaInicial - new BigDecimal(maxLevelLowered).multiply((new BigDecimal("2").subtract( 
-						somaTropasAtacantesPerdidas.divide(somaTropasAtacantes, 30, RoundingMode.HALF_EVEN)))).setScale(0, RoundingMode.HALF_DOWN).intValue();
+				muralhaFinal = muralhaInicial - maxLevelLowered.multiply((new BigDecimal("2").subtract( 
+						somaTropasAtacantesPerdidas.divide(somaTropasAtacantes, rounding, RoundingMode.HALF_EVEN)))).intValue();
 			else												// Atacante perdeu
 				
 				// final = initial - round(max * lostDefenders/totalDefenders)
 				
-				muralhaFinal = muralhaInicial - new BigDecimal(maxLevelLowered).multiply(somaTropasDefensorasPerdidas)
-						.divide(somaTropasDefensoras, 30 , RoundingMode.HALF_EVEN).setScale(0, RoundingMode.HALF_DOWN).intValue();
+				muralhaFinal = muralhaInicial - maxLevelLowered.multiply(somaTropasDefensorasPerdidas)
+						.divide(somaTropasDefensoras, rounding , RoundingMode.HALF_EVEN).setScale(0, RoundingMode.HALF_DOWN).intValue();
 			
 			if (muralhaFinal < 0 )
 				muralhaFinal = 0;
 			
 		} 
 		
-		
 		// Downgrading Building
 		
 		if (tropasAtacantes.get(Unidade.CATAPULTA).compareTo(BigDecimal.ZERO) > 0 && edifícioInicial > 0 ) {
 			
-			BigDecimal levelsLowered = tropasAtacantes.get(Unidade.CATAPULTA).multiply(Unidade.CATAPULTA.ataque(nívelTropasAtaque.get(Unidade.CATAPULTA)));
+			BigDecimal levelsLowered = tropasAtacantes.get(Unidade.CATAPULTA).multiply(Unidade.CATAPULTA.ataque(nívelTropasAtaque.get(Unidade.CATAPULTA), itemAtacante));
 			
 			levelsLowered = levelsLowered.divide(new BigDecimal("600").multiply(
-					BigOperation.pow(new BigDecimal("1.09"), new BigDecimal(edifícioInicial))), 30, RoundingMode.HALF_EVEN);
+					BigOperation.pow(new BigDecimal("1.09"), new BigDecimal(edifícioInicial))), rounding, RoundingMode.HALF_EVEN);
 			
 			
 			if (tropasPerdidasDefesa.equals(tropasDefensoras))   // Defensor perdeu
@@ -455,13 +490,13 @@ public class Cálculo {
 				// final = initial - round(max * (2- lostAttackers/totalAttackers))
 				
 				edifícioFinal = edifícioInicial - levelsLowered.multiply((new BigDecimal("2").subtract( 
-						somaTropasAtacantesPerdidas.divide(somaTropasAtacantes, 30, RoundingMode.HALF_EVEN)))).setScale(0, RoundingMode.HALF_DOWN).intValue();
+						somaTropasAtacantesPerdidas.divide(somaTropasAtacantes, rounding, RoundingMode.HALF_EVEN)))).setScale(0, RoundingMode.HALF_DOWN).intValue();
 			else												// Atacante perdeu
 				
 				// final = initial - round(max * lostDefenders/totalDefenders)
 				
 				edifícioFinal = edifícioInicial - levelsLowered.multiply(somaTropasDefensorasPerdidas)
-						.divide(somaTropasDefensoras, 30 , RoundingMode.HALF_EVEN).setScale(0, RoundingMode.HALF_DOWN).intValue();
+						.divide(somaTropasDefensoras, rounding , RoundingMode.HALF_EVEN).setScale(0, RoundingMode.HALF_DOWN).intValue();
 			
 			if (edifícioFinal < 0 )
 				edifícioFinal = 0;

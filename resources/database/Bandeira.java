@@ -6,6 +6,10 @@ public class Bandeira {
 	private CategoriaBandeira categoria;
 	private int nível;
 	
+	/**
+	 * @param categoria
+	 * @param nível de 0 a 8
+	 */
 	public Bandeira(CategoriaBandeira categoria, int nível) {
 		
 		this.categoria = categoria;
@@ -37,7 +41,7 @@ public class Bandeira {
 			else 
 				return categoria.inicial+nível*categoria.aumento;
 			
-		} else return ((categoria.inicial+nível*categoria.aumento)+100)/100;
+		} else return (double)((categoria.inicial+(nível*categoria.aumento))+100)/100;
 		
 	}
 	
@@ -60,10 +64,11 @@ public class Bandeira {
 		SORTE	 	 (Tipo.Sorte,     "", 							6, 	  2),
 		POPULAÇÃO 	 (Tipo.Produtivo, "população", 					2,    1),
 		MOEDAS 		 (Tipo.Produtivo, "custo de moedas",			-10, -2),
-		SAQUE 		 (Tipo.Produtivo, "capacidade de saque", 		2,    1);
+		SAQUE 		 (Tipo.Produtivo, "capacidade de saque", 		2,    1),
+		NULL		 (Tipo.Null,	  "",							0,	  0);
 		
 		public enum Tipo {
-			Militar, Produtivo, Sorte;
+			Militar, Produtivo, Sorte, Null;
 		}
 		
 		private final Tipo tipo;
@@ -87,8 +92,11 @@ public class Bandeira {
 		
 		public String toString(int nível) {
 			
-			// Novamente, sorte é bastante confusa
-			if (tipo.equals(Tipo.Sorte)){
+			if (this == NULL) {
+				
+				return "Nenhuma";
+				
+			} else if (tipo.equals(Tipo.Sorte)){
 				
 				if (nível == 7)
 					return "Equilibra a sorte em 19%";
