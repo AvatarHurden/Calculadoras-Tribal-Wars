@@ -33,7 +33,7 @@ public class Cálculo {
 
 	// Values taken directly from GUI
 	
-		private GUI gui;
+		private GUI_old gui;
 	
 		private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
 		private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
@@ -81,7 +81,7 @@ public class Cálculo {
 		
 		private int rounding = 10;
 		
-	public Cálculo(GUI gui) {
+	public Cálculo(GUI_old gui) {
 		
 		this.gui = gui;
 		
@@ -106,7 +106,7 @@ public class Cálculo {
 		printLostUnits();	
 	}
 	
-	private void setVariables(GUI gui) {
+	private void setVariables(GUI_old gui) {
 		
 		tropasAtacantes = gui.getListaAtacante();
 		tropasDefensoras = gui.getListaDefensor();

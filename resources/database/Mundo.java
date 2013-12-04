@@ -20,6 +20,7 @@ public class Mundo {
 	private boolean pesquisaDeNíveis;
 	private boolean hasMoral;
 	private boolean hasBandeira;
+	private boolean hasBonusNoturno;
 	private BigDecimal velocidade;
 	private BigDecimal modificarUnidaes;
 	
@@ -54,6 +55,8 @@ public class Mundo {
 		
 		hasBandeira = Boolean.parseBoolean(prop.getProperty("bandeira"));
 		
+		hasBonusNoturno = Boolean.parseBoolean(prop.getProperty("bonusNoturno"));
+		
 		String speed = prop.getProperty("velocidade");
 		speed = speed.replaceAll(",", ".");
 		velocidade = new BigDecimal(speed);
@@ -79,6 +82,7 @@ public class Mundo {
 		System.out.println("Academia de Níveis: "+academiaDeNíveis);
 		System.out.println("Pesquisa de Níveis: "+pesquisaDeNíveis);
 		System.out.println("Bandeira: "+hasBandeira);
+		System.out.println("Bônus Noturno: "+hasBonusNoturno);
 		
 	}
 	
@@ -142,6 +146,13 @@ public class Mundo {
 	}
 	
 	/**
+	 * @param boolean possui bônus noturno
+	 */
+	public void setHasBonusNoturno(boolean hasBonusNoturno) {
+		this.hasBonusNoturno = hasBonusNoturno;
+	}
+	
+	/**
 	 * @param BigDecimal velocidade do mundo
 	 */
 	public void setVelocidade(BigDecimal velocidade) {
@@ -192,6 +203,10 @@ public class Mundo {
 	
 	public boolean hasBandeira() {
 		return hasBandeira;
+	}
+	
+	public boolean hasBonusNoturno() {
+		return hasBonusNoturno;
 	}
 
 	public BigDecimal getVelocidade() {

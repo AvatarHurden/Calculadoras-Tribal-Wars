@@ -1,6 +1,7 @@
 package database;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 
 /**
@@ -19,6 +20,7 @@ public class MundoSelecionado {
 	private static boolean pesquisaDeNíveis;
 	private static boolean hasMoral;
 	private static boolean hasBandeira;
+	private static boolean hasBonusNoturno;
 	private static BigDecimal velocidade;
 	private static BigDecimal modificarUnidaes;
 	
@@ -38,6 +40,7 @@ public class MundoSelecionado {
 		MundoSelecionado.pesquisaDeNíveis = mundo.isPesquisaDeNíveis();
 		MundoSelecionado.hasMoral = mundo.hasMoral();
 		MundoSelecionado.hasBandeira = mundo.hasBandeira();
+		MundoSelecionado.hasBonusNoturno = mundo.hasBonusNoturno();
 		MundoSelecionado.velocidade = mundo.getVelocidade();
 		MundoSelecionado.modificarUnidaes = mundo.getModificarUnidaes();
 		
@@ -59,8 +62,8 @@ public class MundoSelecionado {
 	 */
 	public static void setDados(boolean hasArqueiro, boolean hasMilícia, boolean hasPaladino, 
 			boolean hasItensAprimorados, boolean hasIgreja, boolean academiaDeNíveis,
-			boolean pesquisaDeNíveis, boolean hasMoral, boolean hasBandeira, BigDecimal velocidade,
-			BigDecimal modificarUnidaes) {
+			boolean pesquisaDeNíveis, boolean hasMoral, boolean hasBandeira, boolean hasBonusNoturno,
+			BigDecimal velocidade, BigDecimal modificarUnidaes) {
 		MundoSelecionado.hasArqueiro = hasArqueiro;
 		MundoSelecionado.hasMilícia = hasMilícia;
 		MundoSelecionado.hasPaladino = hasPaladino;
@@ -70,6 +73,7 @@ public class MundoSelecionado {
 		MundoSelecionado.pesquisaDeNíveis = pesquisaDeNíveis;
 		MundoSelecionado.hasMoral = hasMoral;
 		MundoSelecionado.hasBandeira = hasBandeira;
+		MundoSelecionado.hasBonusNoturno = hasBonusNoturno;
 		MundoSelecionado.velocidade = velocidade;
 		MundoSelecionado.modificarUnidaes = modificarUnidaes;
 		
@@ -229,6 +233,13 @@ public class MundoSelecionado {
 	public static boolean hasBandeira() {
 		return hasBandeira;
 	}
+	
+	/**
+	 * @return boolean possui bandeira
+	 */
+	public static boolean hasBonusNoturno() {
+		return hasBonusNoturno;
+	}
 
 	/**
 	 * @return BigDecimal velocidade do mundo
@@ -258,6 +269,13 @@ public class MundoSelecionado {
 	 */
 	public static Unidade[] getUnidades() {
 		return unidades;
+	}
+	
+	public static boolean containsUnidade(Unidade unidade) {
+		if (Arrays.asList(unidades).contains(unidade))
+			return true;
+		else
+			return false;
 	}
 	
 	/**

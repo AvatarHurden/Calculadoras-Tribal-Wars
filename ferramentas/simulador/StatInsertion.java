@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,13 +29,14 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import simulador.GUI.InputInfo;
 import config.World_Reader;
 import database.Bandeira;
+import database.Bandeira.CategoriaBandeira;
 import database.Cores;
 import database.ItemPaladino;
 import database.MundoSelecionado;
 import database.Unidade;
-import database.Bandeira.CategoriaBandeira;
 
 @SuppressWarnings("serial")
 public class StatInsertion extends JPanel{
@@ -47,6 +49,8 @@ public class StatInsertion extends JPanel{
 	}
 	
 	private Tipo tipo;
+	
+	private InputInfo info;
 	
 	private Map<Unidade, JTextField> mapQuantidades = new HashMap<Unidade, JTextField>();
 	private Map<Unidade, JComboBox<Integer>> mapNiveis = new HashMap<Unidade, JComboBox<Integer>>();
@@ -64,9 +68,11 @@ public class StatInsertion extends JPanel{
 	/**
 	 * @param tipo Se o panel é de atacante ou defensor
 	 */
-	public StatInsertion(Tipo tipo) {
+	public StatInsertion(Tipo tipo, InputInfo info) {
 		
 		this.tipo = tipo;
+		
+		this.info = info;
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {110};
@@ -81,6 +87,8 @@ public class StatInsertion extends JPanel{
 		c.gridx = 0;
 		c.gridy = 0;
 		
+		if (tipo == Tipo.atacante && MundoSelecionado.hasMilícia())
+			c.insets = new Insets(5,5,37,5);
 		
 		add(addUnitPanel(), c);
 		
@@ -151,6 +159,8 @@ public class StatInsertion extends JPanel{
 			add(addNoite(), c);
 			
 		}
+		
+		setInputInfo();
 		
 	}
 	
@@ -635,24 +645,160 @@ public class StatInsertion extends JPanel{
 		
 	}
 	
+	private void setInputInfo() {
+		
+		// Quantidade de tropas 
+		
+		Map<Unidade, BigDecimal> tropas = new HashMap<Unidade, BigDecimal>();
+		
+		for (Unidade i : Unidade.values())
+			if (MundoSelecionado.containsUnidade(i) && !mapQuantidades.get(i).getText().equals(""))
+				tropas.put(i, new BigDecimal(mapQuantidades.get(i).getText()));
+			else
+				tropas.put(i, BigDecimal.ZERO);
+		
+		
+		if (tipo == Tipo.atacante)
+			info.setTropasAtacantes(tropas);
+		else
+			info.setTropasDefensoras(tropas);
+		
+		// Nivel de tropas
+		
+		Map<Unidade, Integer> níveis = new HashMap<Unidade, Integer>();
+		
+		for (Unidade i : Unidade.values()) {
+			if (MundoSelecionado.isPesquisaDeNíveis()) 
+				níveis.put(i, ((int)mapNiveis.get(i).getSelectedItem()));
+			else
+				níveis.put(i, 1);
+		}
+			
+		if (tipo == Tipo.atacante)
+			info.setNívelTropasAtaque(níveis);
+		else
+			info.setNívelTropasDefesa(níveis);
+		
+		// Religião
+		
+		if (MundoSelecionado.hasIgreja()) {
+			
+			if (tipo == Tipo.atacante)
+				info.setReligiãoAtacante(religião.isSelected());
+			else
+				info.setReligiãoDefensor(religião.isSelected());
+			
+		} else {
+			
+			if (tipo == Tipo.atacante)
+				info.setReligiãoAtacante(true);
+			else
+				info.setReligiãoDefensor(true);
+			
+		}
+		
+		// Item do Paladino
+		
+		if (MundoSelecionado.hasPaladino()) {
+			
+			if (tipo == Tipo.atacante)
+				info.setItemAtacante((ItemPaladino)item.getSelectedItem());
+			else
+				info.setItemDefensor((ItemPaladino)item.getSelectedItem());
+			
+		} else {
+			
+			if (tipo == Tipo.atacante)
+				info.setItemAtacante(ItemPaladino.NULL);
+			else
+				info.setItemDefensor(ItemPaladino.NULL);
+			
+		}
+		
+		// Bandeira
+		
+		if (MundoSelecionado.hasBandeira()) {
+			
+			if (tipo == Tipo.atacante)
+				info.setBandeiraAtacante((Bandeira)bandeira.getSelectedItem());
+			else
+				info.setBandeiraDefensor((Bandeira)bandeira.getSelectedItem());
+			
+		} else {
+			
+			if (tipo == Tipo.atacante)
+				info.setBandeiraAtacante(new Bandeira(CategoriaBandeira.NULL, 0));
+			else
+				info.setBandeiraDefensor(new Bandeira(CategoriaBandeira.NULL, 0));
+			
+		}
+		
+		// Moral e Sorte
+		
+		if (tipo == Tipo.atacante) {
+			
+			if (MundoSelecionado.hasMoral() && !moral.getText().equals(""))
+				info.setMoral(Integer.parseInt(moral.getText()));
+			else
+				info.setMoral(100);
+			
+			if (!sorte.getText().equals(""))
+				info.setSorte(Integer.parseInt(sorte.getText()));
+			else
+				info.setSorte(0);
+			
+		}
+		
+		// Muralha, Edifício e Noite
+		
+		if (tipo == Tipo.defensor) {
+			
+			if (!muralha.getText().equals(""))
+				info.setMuralha(Integer.parseInt(muralha.getText()));
+			else
+				info.setMuralha(0);
+			
+			if (!edifício.getText().equals(""))
+				info.setEdifício(Integer.parseInt(edifício.getText()));
+			else
+				info.setEdifício(0);
+			
+			
+			
+			
+		}
+			
+		
+		
+	}
+	
 	public static void main (String args[]) {
 		
 		World_Reader.read();
 		
-		MundoSelecionado.setMundo(World_Reader.getMundo(29));
+		MundoSelecionado.setMundo(World_Reader.getMundo(0));
 		
 		JFrame test = new JFrame();
 		
 		test.setLayout(new GridBagLayout());
 		
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.NORTH;
+		
 		test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		StatInsertion stat = new StatInsertion(Tipo.atacante);
+		GUI gui = new GUI();
 		
-		StatInsertion stat2 = new StatInsertion(Tipo.defensor);
+		StatInsertion stat = new StatInsertion(Tipo.atacante, gui.input);
 		
-		test.add(stat);
-		test.add(stat2);
+		StatInsertion stat2 = new StatInsertion(Tipo.defensor, gui.input);
+		
+		System.out.println(gui.input.getNívelTropasDefesa());
+		
+		System.out.println(gui.input.getNívelTropasAtaque());
+		
+		test.add(stat,c);
+		test.add(stat2,c);
 		test.pack();
 		test.setVisible(true);
 		
