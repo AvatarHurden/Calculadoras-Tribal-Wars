@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import simulador.GUI.InputInfo;
+
 import database.Bandeira;
 import database.BigOperation;
 import database.Edifício;
@@ -33,7 +35,7 @@ public class Cálculo {
 
 	// Values taken directly from GUI
 	
-		private GUI_old gui;
+		private InputInfo input;
 	
 		private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
 		private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
@@ -56,6 +58,7 @@ public class Cálculo {
 		private int sorte;
 		
 		private boolean noite;
+	
 		
 	// Calculated Values that are maintaned during all combat
 		
@@ -81,11 +84,11 @@ public class Cálculo {
 		
 		private int rounding = 10;
 		
-	public Cálculo(GUI_old gui) {
+	public Cálculo(InputInfo input) {
 		
-		this.gui = gui;
+		this.input = input;
 		
-		setVariables(gui);
+		setVariables();
 		
 		damageWall();
 		
@@ -106,36 +109,36 @@ public class Cálculo {
 		printLostUnits();	
 	}
 	
-	private void setVariables(GUI_old gui) {
+	private void setVariables() {
 		
-		tropasAtacantes = gui.getListaAtacante();
-		tropasDefensoras = gui.getListaDefensor();
+		tropasAtacantes = input.getTropasAtacantes();
+		tropasDefensoras = input.getTropasDefensoras();
 		
-		for (Unidade i : tropasAtacantes.keySet())
-			nívelTropasAtaque.put(i, 1);
+		nívelTropasAtaque = input.getNívelTropasAtaque();
+		nívelTropasDefesa = input.getNívelTropasDefesa();
 		
 		for (Unidade i : tropasDefensoras.keySet())
 			nívelTropasDefesa.put(i, 1);
 		
-		muralhaInicial = gui.getNívelMuralha();
+		muralhaInicial = input.getMuralha();
 		
-		moral = gui.getMoral();
+		moral = input.getMoral();
 		
-		sorte = gui.getSorte();
+		sorte = input.getSorte();
 		
-		religiãoAtacante = gui.getReligiãoAtacante();
+		religiãoAtacante = input.getReligiãoAtacante();
 		
-		religiãoDefensor = gui.getReligiãoDefensores();
+		religiãoDefensor = input.getReligiãoDefensor();
 		
-		itemAtacante = gui.getItemAtacante();
+		itemAtacante = input.getItemAtacante();
 		
-		itemDefensor = gui.getItemDefensor();
+		itemDefensor = input.getItemDefensor();
 		
-		bandeiraAtacante = gui.getBandeiraAtacante();
+		bandeiraAtacante = input.getBandeiraAtacante();
 		
-		bandeiraDefensor = gui.getBandeiraDefensor();
+		bandeiraDefensor = input.getBandeiraDefensor();
 		
-		noite = gui.getNoite();
+		noite = input.getNoite();
 		
 		for (Unidade i : tropasAtacantes.keySet())
 			tropasPerdidasAtaque.put(i, BigDecimal.ZERO);

@@ -5,9 +5,18 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.Scanner;
 
+/**
+ * Classe para pegar dados de um mundo através de texto extraído do site do tribal wars.
+ * Atualmente não pode ser usado no programa, servindo apenas para teste. 
+ * 
+ * @author Arthur
+ *
+ */
 public class InfoFinder {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) {	
+		
+		while (true) {
 		
 		Scanner input = new Scanner(System.in);
 
@@ -123,6 +132,10 @@ public class InfoFinder {
 					academiaDeNíveis = true;
 		}
 		
+		input.close();
+		
+		string.close();
+		
 		System.out.println();
 		
 		String output = "";
@@ -146,6 +159,8 @@ public class InfoFinder {
 		
 		System.out.println(output);
 		
+		}
+		
 	}
-
+	
 }

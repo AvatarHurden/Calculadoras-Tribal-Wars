@@ -141,13 +141,13 @@ public class MundoSelecionado {
 		
 		unidades[0] = Unidade.LANCEIRO;
 		unidades[1] = Unidade.ESPADACHIM;
+		unidades[2] = Unidade.BÁRBARO;
 		
 		if (hasArqueiro)
-			unidades[2] = Unidade.ARQUEIRO;
+			unidades[3] = Unidade.ARQUEIRO;
 		else
-			unidades[2] = null;
+			unidades[3] = null;
 		
-		unidades[3] = Unidade.BÁRBARO;
 		unidades[4] = Unidade.EXPLORADOR;
 		unidades[5] = Unidade.CAVALOLEVE;
 		

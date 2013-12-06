@@ -28,7 +28,7 @@ public class GUI extends JPanel{
 		private Map<Unidade, Integer> nívelTropasDefesa = new HashMap<Unidade, Integer>();
 		
 		private int muralha;
-	
+		
 		private int edifício;
 		
 		private int moral;
@@ -100,6 +100,11 @@ public class GUI extends JPanel{
 		 * @param nível da muralha (se for maior do que o máximo ou menor do que o mínimo, ele arruma)
 		 */
 		protected void setMuralha(int muralha) {
+			
+			if (muralha > 20) {
+				muralha = 20;
+			}
+			
 			this.muralha = muralha;
 		}
 
@@ -125,6 +130,11 @@ public class GUI extends JPanel{
 		 * @param moral, em porcentagem (e.g 80)
 		 */
 		protected void setMoral(int moral) {
+			
+			if (moral > 100) {
+				moral = 100;
+			}
+			
 			this.moral = moral;
 		}
 
@@ -187,7 +197,7 @@ public class GUI extends JPanel{
 		/**
 		 * @return religião do atacante
 		 */
-		protected boolean isReligiãoAtacante() {
+		protected boolean getReligiãoAtacante() {
 			return religiãoAtacante;
 		}
 
@@ -201,7 +211,7 @@ public class GUI extends JPanel{
 		/**
 		 * @return religião do defensor
 		 */
-		protected boolean isReligiãoDefensor() {
+		protected boolean getReligiãoDefensor() {
 			return religiãoDefensor;
 		}
 
@@ -223,13 +233,21 @@ public class GUI extends JPanel{
 		 * @param sorte do atacante, em porcetagem (e.g 20)
 		 */
 		protected void setSorte(int sorte) {
+			
+			if (Math.abs(sorte) > 25) {
+				if (Integer.signum(sorte) == -1)
+					sorte = -25;
+				else
+					sorte = 25;
+			}
+			
 			this.sorte = sorte;
 		}
 
 		/**
 		 * @return se possui bônus noturno
 		 */
-		protected boolean isNoite() {
+		protected boolean getNoite() {
 			return noite;
 		}
 

@@ -1,6 +1,5 @@
 package selecionar_mundo;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -80,10 +79,19 @@ public class Informações_de_mundo extends JPanel {
 		add(panelProperty("moral"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("arqueiro"), gbc);
+		add(panelProperty("pesquisaDeNiveis"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("milicia"), gbc);
+		add(panelProperty("igreja"), gbc);
+		
+		gbc.gridy++;
+		add(panelProperty("bonusNoturno"), gbc);
+		
+		gbc.gridy++;
+		add(panelProperty("bandeira"), gbc);
+		
+		gbc.gridy++;
+		add(panelProperty("arqueiro"), gbc);
 		
 		gbc.gridy++;
 		add(panelProperty("paladino"), gbc);
@@ -94,17 +102,10 @@ public class Informações_de_mundo extends JPanel {
 		}
 		
 		gbc.gridy++;
-		add(panelProperty("igreja"), gbc);
+		add(panelProperty("milicia"), gbc);
 		
 		gbc.gridy++;
 		add(panelProperty("academiaDeNiveis"), gbc);
-		
-		gbc.gridy++;
-		add(panelProperty("pesquisaDeNiveis"), gbc);
-		
-		gbc.gridy++;
-		add(panelProperty("bandeira"), gbc);
-		
 		
 	}
 
@@ -123,22 +124,24 @@ public class Informações_de_mundo extends JPanel {
 			return "Modificador de Unidade";
 		case "moral":
 			return "Moral";
+		case "pesquisaDeNiveis":
+			return "Sistema de Pesquisa";
+		case "igreja":
+			return "Igreja";
+		case "bonusNoturno":
+			return "Bônus Noturno";
+		case "bandeira":
+			return "Bandeiras";
 		case "arqueiro":
 			return "Arqueiros";
-		case "milicia":
-			return "Milícia";
 		case "paladino":
 			return "Paladino";
 		case "itensAprimorados":
 			return "Itens Aprimorados";
-		case "igreja":
-			return "Igreja";
+		case "milicia":
+			return "Milícia";
 		case "academiaDeNiveis":
-			return "Cunhagem de Moedas";
-		case "pesquisaDeNiveis":
-			return "Sistema de Pesquisa";
-		case "bandeira":
-			return "Bandeiras";
+			return "Cunhagem de Moedas";	
 		default:
 			return null;
 		}
@@ -163,12 +166,27 @@ public class Informações_de_mundo extends JPanel {
 				return "Ativado";
 			else
 				return "Desativado";
-		case "arqueiro":
+		case "pesquisaDeNiveis":
+			if (propertyValue.equals("true"))
+				return "Pesquisa de 3 Níveis";
+			else
+				return "Pesquisa Simples";
+		case "igreja":
 			if (propertyValue.equals("true"))
 				return "Ativado";
 			else
 				return "Desativado";
-		case "milicia":
+		case "bonusNoturno":
+			if (propertyValue.equals("true"))
+				return "Ativado";
+			else
+				return "Desativado";
+		case "bandeira":
+			if (propertyValue.equals("true"))
+				return "Ativado";
+			else
+				return "Desativado";
+		case "arqueiro":
 			if (propertyValue.equals("true"))
 				return "Ativado";
 			else
@@ -183,7 +201,7 @@ public class Informações_de_mundo extends JPanel {
 				return "Ativados";
 			else
 				return "Desativados";
-		case "igreja":
+		case "milicia":
 			if (propertyValue.equals("true"))
 				return "Ativado";
 			else
@@ -193,16 +211,6 @@ public class Informações_de_mundo extends JPanel {
 				return "Desativado";
 			else
 				return "Ativado";
-		case "pesquisaDeNiveis":
-			if (propertyValue.equals("true"))
-				return "Pesquisa de 3 Níveis";
-			else
-				return "Pesquisa Simples";
-		case "bandeira":
-			if (propertyValue.equals("true"))
-				return "Ativado";
-			else
-				return "Desativado";
 		default:
 			return null;
 		}

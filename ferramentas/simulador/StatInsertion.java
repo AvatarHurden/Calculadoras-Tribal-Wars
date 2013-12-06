@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -159,8 +160,6 @@ public class StatInsertion extends JPanel{
 			add(addNoite(), c);
 			
 		}
-		
-		setInputInfo();
 		
 	}
 	
@@ -763,12 +762,13 @@ public class StatInsertion extends JPanel{
 			else
 				info.setEdifício(0);
 			
-			
+			if (MundoSelecionado.hasBonusNoturno())
+				info.setNoite(noite.isSelected());
+			else
+				info.setNoite(false);
 			
 			
 		}
-			
-		
 		
 	}
 	
@@ -793,14 +793,19 @@ public class StatInsertion extends JPanel{
 		
 		StatInsertion stat2 = new StatInsertion(Tipo.defensor, gui.input);
 		
-		System.out.println(gui.input.getNívelTropasDefesa());
-		
-		System.out.println(gui.input.getNívelTropasAtaque());
-		
 		test.add(stat,c);
 		test.add(stat2,c);
 		test.pack();
 		test.setVisible(true);
+		
+		Scanner input = new Scanner(System.in);
+		
+		String test2 = input.next();
+		
+		stat.setInputInfo();
+		stat2.setInputInfo();
+		
+		Cálculo cálculo = new Cálculo(gui.input);
 		
 	}
 	

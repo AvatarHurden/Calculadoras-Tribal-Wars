@@ -21,7 +21,6 @@ public class World_Reader {
 	// Lista dos mundos
 	static List<Mundo> mundoList = new ArrayList<Mundo>();
 	
-	 
 	/**
 	 * Reads the configuration file for the world informations
 	 * If the file is corrupt, for any reason, use the default world configurations, which has the worlds
@@ -106,7 +105,7 @@ public class World_Reader {
 				}
 					
 				in.close();
-			
+				
 			// In case the default file is corrupt, game over
 			} catch (IOException exp){
 				System.out.println("No worlds for you");

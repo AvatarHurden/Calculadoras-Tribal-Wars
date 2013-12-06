@@ -10,8 +10,8 @@ public enum Unidade{
 	
 	LANCEIRO	  ("Lanceiro", 			Type.Geral,        50,    30,	  10,	 1,	  10,   15,   45,   20,	  18,   25,  680),
 	ESPADACHIM	  ("Espadachim",		Type.Geral,        30,    30,	  70,	 1,	  25,   50,   15,   40,	  22,   15,  1000),
-	ARQUEIRO	  ("Arqueiro",			Type.Arqueiro,     100,   30,	  60,	 1,	  15,   50,   40,   5, 	  18,   10,  1200),
 	BÁRBARO		  ("Bárbaro", 			Type.Geral,        60,    30,	  40,	 1,	  40,   10,   5,    10,	  18,   10,  880),
+	ARQUEIRO	  ("Arqueiro",			Type.Arqueiro,     100,   30,	  60,	 1,	  15,   50,   40,   5, 	  18,   10,  1200),
 	EXPLORADOR	  ("Explorador",		Type.unspecified,  50,    50,	  20,	 2,	  0,	2,    1,    2,    9,    0,   600),
 	CAVALOLEVE	  ("Cavalaria Leve",	Type.Cavalo,       125,   100,	  250,	 4,	  130,  30,   40,   30,   10,   80,  1200),
 	ARCOCAVALO	  ("Arqueiro a Cavalo", Type.Arqueiro,     250,   100,	  150,	 5,	  120,  40,   30,   50,   10,   50,  1800),
