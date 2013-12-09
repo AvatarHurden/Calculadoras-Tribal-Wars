@@ -1,6 +1,7 @@
 package simulador;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,12 +15,26 @@ public class GUI extends JPanel{
 	
 	InputInfo input = new InputInfo();
 	
+	OutputInfo output = new OutputInfo();
+	
 	public GUI() {
 		
+		Map<Unidade,BigDecimal> map = new HashMap<Unidade,BigDecimal>();
+		
+		for (Unidade i : Unidade.values())
+			map.put(i, new BigDecimal(Math.random()*1000).setScale(0,RoundingMode.HALF_EVEN));
+		
+		output.setTropasAtacantesPerdidas(map);
+		
+		output.setTropasDefensorasPerdidas(map);
+		
+		output.setEdifício(24);
+		
+		output.setMuralha(15);
 		
 	}
 	
-	public class InputInfo {
+	protected class InputInfo {
 		
 		private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
 		private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
@@ -262,6 +277,61 @@ public class GUI extends JPanel{
 	}
 	
 	protected class OutputInfo {
+		
+		private Map<Unidade, BigDecimal> tropasAtacantesPerdidas = new HashMap<Unidade, BigDecimal>();
+		private Map<Unidade, BigDecimal> tropasDefensorasPerdidas = new HashMap<Unidade, BigDecimal>();
+	
+		private int muralha;
+		
+		private int edifício;
+
+		/**
+		 * @return Map com tropas atacantes perdidas
+		 */
+		protected Map<Unidade, BigDecimal> getTropasAtacantesPerdidas() {
+			return tropasAtacantesPerdidas;
+		}
+
+		protected void setTropasAtacantesPerdidas(
+				Map<Unidade, BigDecimal> tropasAtacantesPerdidas) {
+			this.tropasAtacantesPerdidas = tropasAtacantesPerdidas;
+		}
+
+		/**
+		 * @return Map com tropas defensoras perdidas
+		 */
+		protected Map<Unidade, BigDecimal> getTropasDefensorasPerdidas() {
+			return tropasDefensorasPerdidas;
+		}
+
+		protected void setTropasDefensorasPerdidas(
+				Map<Unidade, BigDecimal> tropasDefensorasPerdidas) {
+			this.tropasDefensorasPerdidas = tropasDefensorasPerdidas;
+		}
+
+		/**
+		 * @return nível final da muralha
+		 */
+		protected int getMuralha() {
+			return muralha;
+		}
+
+		protected void setMuralha(int muralha) {
+			this.muralha = muralha;
+		}
+
+		/**
+		 * @return nível final do edifício
+		 */
+		protected int getEdifício() {
+			return edifício;
+		}
+
+		protected void setEdifício(int edifício) {
+			this.edifício = edifício;
+		}
+		
+		
 		
 	}
 

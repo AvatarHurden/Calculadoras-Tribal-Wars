@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import simulador.GUI.InputInfo;
+import simulador.GUI.OutputInfo;
 
 import database.Bandeira;
 import database.BigOperation;
@@ -37,6 +38,8 @@ public class Cálculo {
 	
 		private InputInfo input;
 	
+		private OutputInfo output;
+		
 		private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
 		private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
 	
@@ -84,11 +87,13 @@ public class Cálculo {
 		
 		private int rounding = 10;
 		
-	public Cálculo(InputInfo input) {
+	public Cálculo(InputInfo input, OutputInfo output) {
 		
 		this.input = input;
 		
-		setVariables();
+		this.output = output;
+		
+		setInputVariables();
 		
 		damageWall();
 		
@@ -105,11 +110,13 @@ public class Cálculo {
 //			BattleNonArcherWorld();
 			
 		destroyBuildingAndWall();	
-			
+		
+		setOutputVariables();
+		
 		printLostUnits();	
 	}
 	
-	private void setVariables() {
+	private void setInputVariables() {
 		
 		tropasAtacantes = input.getTropasAtacantes();
 		tropasDefensoras = input.getTropasDefensoras();
@@ -145,6 +152,16 @@ public class Cálculo {
 		
 		for (Unidade i : tropasDefensoras.keySet())
 			tropasPerdidasDefesa.put(i, BigDecimal.ZERO);
+		
+	}
+	
+	private void setOutputVariables() {
+		
+		output.setTropasAtacantesPerdidas(tropasPerdidasAtaque);
+		output.setTropasDefensorasPerdidas(tropasPerdidasDefesa);
+		
+		output.setMuralha(muralhaFinal);
+		output.setEdifício(edifícioFinal);
 		
 	}
 	

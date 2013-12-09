@@ -207,7 +207,7 @@ public class StatInsertion extends JPanel{
 			JPanel tropaPanel = new JPanel();
 			tropaPanel.setLayout(layout);
 			tropaPanel.setBackground(Cores.getAlternar(loop));
-			tropaPanel.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+//			tropaPanel.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
 			
 			GridBagConstraints tropaC = new GridBagConstraints();
 			tropaC.insets = new Insets(5,5,5,5);
@@ -805,7 +805,7 @@ public class StatInsertion extends JPanel{
 		stat.setInputInfo();
 		stat2.setInputInfo();
 		
-		Cálculo cálculo = new Cálculo(gui.input);
+		Cálculo cálculo = new Cálculo(gui.input, gui.output);
 		
 	}
 	
