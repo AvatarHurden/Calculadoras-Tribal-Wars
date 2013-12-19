@@ -35,6 +35,8 @@ public class ResultTroopDisplay extends JPanel{
 		
 		this.output = output;
 		
+		setOpaque(false);
+		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {};
 		layout.rowHeights = new int[] {0};
@@ -43,27 +45,29 @@ public class ResultTroopDisplay extends JPanel{
 		setLayout(layout);
 	
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5,0,5,0);
+		c.insets = new Insets(0,0,5,0);
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 1;
 		
-		c.insets = new Insets(5,5,5,5);
+		c.insets = new Insets(0,5,5,5);
 		add(addUnitNames(), c);
 		
 		// Panel to store both attack and defense unit panels
 		JPanel unitPanels = new JPanel(new GridBagLayout());
-		unitPanels.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+//		unitPanels.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
+		unitPanels.setOpaque(false);
 		
 		GridBagConstraints unitC = new GridBagConstraints();
 		unitC.insets = new Insets(0,0,0,0);
+		unitC.anchor = GridBagConstraints.NORTH;
 		
 		unitPanels.add(addAttackUnitPanel(),unitC);
 		unitC.gridy++;
 		unitPanels.add(addDefenseUnitPanel(),unitC);
 		
 		c.gridx++;
-		c.insets = new Insets(5,0,5,0);
+		c.insets = new Insets(0,0,5,0);
 		c.gridwidth = 2;
 		add(unitPanels,c);
 		
@@ -72,6 +76,7 @@ public class ResultTroopDisplay extends JPanel{
 		
 		// Panel to store the wall and building panels, so they center nicely
 		JPanel bottomPanels = new JPanel();
+		bottomPanels.setOpaque(false);
 		
 		bottomPanels.add(addWall());
 		bottomPanels.add(addBuilding());
@@ -131,8 +136,6 @@ public class ResultTroopDisplay extends JPanel{
 			
 			// Creating the TextField for the quantity of troops
 			JLabel lbl = new JLabel(i.nome());
-			// Adding the text to a map with the units
-			tropasAtacantesPerdidas.put(i, lbl);
 			
 			tropaPanel.add(lbl, tropaC);
 			
@@ -151,7 +154,8 @@ public class ResultTroopDisplay extends JPanel{
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new MatteBorder(0,0,0,1, Cores.SEPARAR_ESCURO));
+		panel.setBorder(new MatteBorder(1,1,1,0, Cores.SEPARAR_ESCURO));
+//		panel.setOpaque(false);
 		
 		panel.setLayout(new GridBagLayout());
 		
@@ -214,7 +218,7 @@ public class ResultTroopDisplay extends JPanel{
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.FUNDO_ESCURO);
-//		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
 		
 		panel.setLayout(new GridBagLayout());
 		

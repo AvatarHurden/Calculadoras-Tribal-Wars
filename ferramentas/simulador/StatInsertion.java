@@ -1,6 +1,7 @@
 package simulador;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -45,8 +46,8 @@ public class StatInsertion extends JPanel{
 	// Enum com os tipos diferentes que o panel pode possuir
 	// Eles diferem na presença ou não de milícia e nas informações adicionais
 	// que podem receber
-	private enum Tipo {
-		atacante, defensor;
+	protected enum Tipo {
+		Atacante, Defensor;
 	}
 	
 	private Tipo tipo;
@@ -82,49 +83,52 @@ public class StatInsertion extends JPanel{
 		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		setLayout(layout);
 		
+		setOpaque(false);
+		
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5,5,5,5);
+		c.insets = new Insets(0,0,5,0);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
 		
-		if (tipo == Tipo.atacante && MundoSelecionado.hasMilícia())
-			c.insets = new Insets(5,5,37,5);
+		// Adding the space to allow for militia on defensive side
+		if (tipo == Tipo.Atacante && MundoSelecionado.hasMilícia())
+			c.insets = new Insets(0,0,30,0);
 		
 		add(addUnitPanel(), c);
 		
-		c.insets = new Insets(5,5,0,5);
+		c.insets = new Insets(5,0,0,0);
 		
 		loop = MundoSelecionado.getNúmeroDeTropas();
 		
 		// Diferenciando os diferentes tipos de inserção
 		
-		if (tipo == Tipo.atacante) {
+		if (tipo == Tipo.Atacante) {
 			
 			// Todos possuem a mudança dos insets para garantir que seja mudado,
 			// não importando a configuração do mundo em questão
 			if (MundoSelecionado.hasIgreja()) {
 				c.gridy++;
 				add(addReligião(), c);
-				c.insets = new Insets(0,5,0,5);
+				c.insets = new Insets(0,0,0,0);
 			}
 			
 			if (MundoSelecionado.hasPaladino()) {
 				c.gridy++;
 				add(addItemPaladino(), c);
-				c.insets = new Insets(0,5,0,5);
+				c.insets = new Insets(0,0,0,0);
 			}
 			
 			if (MundoSelecionado.hasBandeira()) {
 				c.gridy++;
 				add(addBandeira(), c);
-				c.insets = new Insets(0,5,0,5);
+				c.insets = new Insets(0,0,0,0);
 			}
 			
 			if (MundoSelecionado.hasMoral()) {
 				c.gridy++;
 				add(addMoral(), c);
-				c.insets = new Insets(0,5,0,5);
+				c.insets = new Insets(0,0,0,0);
 			}
 			
 			c.gridy++;
@@ -135,29 +139,32 @@ public class StatInsertion extends JPanel{
 			if (MundoSelecionado.hasIgreja()) {
 				c.gridy++;
 				add(addReligião(), c);
-				c.insets = new Insets(0,5,0,5);
+				c.insets = new Insets(0,0,0,0);
 			}
 			
 			if (MundoSelecionado.hasPaladino()) {
 				c.gridy++;
 				add(addItemPaladino(), c);
-				c.insets = new Insets(0,5,0,5);
+				c.insets = new Insets(0,0,0,0);
 			}
 			
 			if (MundoSelecionado.hasBandeira()) {
 				c.gridy++;
 				add(addBandeira(), c);
-				c.insets = new Insets(0,5,0,5);
+				c.insets = new Insets(0,0,0,0);
 			}
 			
 			c.gridy++;
 			add(addMuralha(), c);
+			c.insets = new Insets(0,0,0,0);
 			
 			c.gridy++;
 			add(addEdifício(), c);
 			
-			c.gridy++;
-			add(addNoite(), c);
+			if (MundoSelecionado.hasBonusNoturno()){
+				c.gridy++;
+				add(addNoite(), c);
+			}
 			
 		}
 		
@@ -167,7 +174,7 @@ public class StatInsertion extends JPanel{
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};
@@ -177,22 +184,41 @@ public class StatInsertion extends JPanel{
 		panel.setLayout(layout);
 		
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5,5,5,5);
+		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
-		if (MundoSelecionado.isPesquisaDeNíveis())
-			c.gridwidth = 1;
-		else
-			c.gridwidth = 2;
 		
 		// Adding the headers
 		
-		panel.add(new JLabel("Quantidade"), c);
+		JLabel lblTipo = new JLabel(tipo.toString());
+		lblTipo.setPreferredSize(new Dimension(lblTipo.getPreferredSize().width+10, 26));
+		lblTipo.setBackground(Cores.FUNDO_ESCURO);
+		lblTipo.setOpaque(true);
+		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		// Caso o mundo possua nível de tropas, torna a borda mais grossa para
+		// facilitar a visualização da separação.
+		if (MundoSelecionado.isPesquisaDeNíveis())
+			lblTipo.setBorder(new MatteBorder(0, 0, 2, 0, Cores.SEPARAR_ESCURO));
+		else
+			lblTipo.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
+		
+		c.gridwidth = 2;
+		c.insets = new Insets(0,0,0,0);
+		panel.add(lblTipo, c);
 		
 		if (MundoSelecionado.isPesquisaDeNíveis()){
+			
+			c.fill = GridBagConstraints.NONE;
+			c.insets = new Insets(5,5,5,5);
+			c.gridwidth = 1;
+			c.gridy++;
+			panel.add(new JLabel("Quantidade"), c);
+			
 			c.gridx = 1;
 			panel.add(new JLabel("Nível"), c);
-		}
+			
+		} 
 			
 		// Setting the constraints for the unit panels
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -202,7 +228,7 @@ public class StatInsertion extends JPanel{
 			
 		for (Unidade i : MundoSelecionado.getUnidades()) {
 			
-			if (i != null && (!i.equals(Unidade.MILÍCIA) || tipo == Tipo.defensor)) {
+			if (i != null && (!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
 				
 			JPanel tropaPanel = new JPanel();
 			tropaPanel.setLayout(layout);
@@ -210,7 +236,7 @@ public class StatInsertion extends JPanel{
 //			tropaPanel.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
 			
 			GridBagConstraints tropaC = new GridBagConstraints();
-			tropaC.insets = new Insets(5,5,5,5);
+			tropaC.insets = new Insets(3,5,3,5);
 			tropaC.gridx = 0;
 			tropaC.gridy = 0;
 			if (MundoSelecionado.isPesquisaDeNíveis())
@@ -316,7 +342,9 @@ public class StatInsertion extends JPanel{
 		// Setting the background and borders for the panel
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.getAlternar(loop));
-		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		// Como o painel de edifício fecha embaixo, este não possui em cima para não
+		// criar uma borda dupla
+		panel.setBorder(new MatteBorder(0,1,1,1,Cores.SEPARAR_ESCURO));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};
@@ -502,7 +530,7 @@ public class StatInsertion extends JPanel{
 		// Setting the background and borders for the panel
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.getAlternar(loop));
-		panel.setBorder(new MatteBorder(1,1,0,1,Cores.SEPARAR_ESCURO));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};
@@ -625,7 +653,7 @@ public class StatInsertion extends JPanel{
 		
 		bandeira.addItem(new Bandeira(CategoriaBandeira.NULL,0));
 		
-		if (tipo == Tipo.atacante)
+		if (tipo == Tipo.Atacante)
 			for(int i = 0; i<9; i++)
 				bandeira.addItem(new Bandeira(CategoriaBandeira.ATAQUE, i));
 		else
@@ -644,20 +672,23 @@ public class StatInsertion extends JPanel{
 		
 	}
 	
-	private void setInputInfo() {
+	protected void setInputInfo() {
 		
 		// Quantidade de tropas 
 		
 		Map<Unidade, BigDecimal> tropas = new HashMap<Unidade, BigDecimal>();
 		
 		for (Unidade i : Unidade.values())
-			if (MundoSelecionado.containsUnidade(i) && !mapQuantidades.get(i).getText().equals(""))
-				tropas.put(i, new BigDecimal(mapQuantidades.get(i).getText()));
+			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor))
+				if (MundoSelecionado.containsUnidade(i) && !mapQuantidades.get(i).getText().equals(""))
+					tropas.put(i, new BigDecimal(mapQuantidades.get(i).getText()));
+				else
+					tropas.put(i, BigDecimal.ZERO);
 			else
 				tropas.put(i, BigDecimal.ZERO);
 		
 		
-		if (tipo == Tipo.atacante)
+		if (tipo == Tipo.Atacante)
 			info.setTropasAtacantes(tropas);
 		else
 			info.setTropasDefensoras(tropas);
@@ -673,7 +704,7 @@ public class StatInsertion extends JPanel{
 				níveis.put(i, 1);
 		}
 			
-		if (tipo == Tipo.atacante)
+		if (tipo == Tipo.Atacante)
 			info.setNívelTropasAtaque(níveis);
 		else
 			info.setNívelTropasDefesa(níveis);
@@ -682,14 +713,14 @@ public class StatInsertion extends JPanel{
 		
 		if (MundoSelecionado.hasIgreja()) {
 			
-			if (tipo == Tipo.atacante)
+			if (tipo == Tipo.Atacante)
 				info.setReligiãoAtacante(religião.isSelected());
 			else
 				info.setReligiãoDefensor(religião.isSelected());
 			
 		} else {
 			
-			if (tipo == Tipo.atacante)
+			if (tipo == Tipo.Atacante)
 				info.setReligiãoAtacante(true);
 			else
 				info.setReligiãoDefensor(true);
@@ -700,14 +731,14 @@ public class StatInsertion extends JPanel{
 		
 		if (MundoSelecionado.hasPaladino()) {
 			
-			if (tipo == Tipo.atacante)
+			if (tipo == Tipo.Atacante)
 				info.setItemAtacante((ItemPaladino)item.getSelectedItem());
 			else
 				info.setItemDefensor((ItemPaladino)item.getSelectedItem());
 			
 		} else {
 			
-			if (tipo == Tipo.atacante)
+			if (tipo == Tipo.Atacante)
 				info.setItemAtacante(ItemPaladino.NULL);
 			else
 				info.setItemDefensor(ItemPaladino.NULL);
@@ -718,14 +749,14 @@ public class StatInsertion extends JPanel{
 		
 		if (MundoSelecionado.hasBandeira()) {
 			
-			if (tipo == Tipo.atacante)
+			if (tipo == Tipo.Atacante)
 				info.setBandeiraAtacante((Bandeira)bandeira.getSelectedItem());
 			else
 				info.setBandeiraDefensor((Bandeira)bandeira.getSelectedItem());
 			
 		} else {
 			
-			if (tipo == Tipo.atacante)
+			if (tipo == Tipo.Atacante)
 				info.setBandeiraAtacante(new Bandeira(CategoriaBandeira.NULL, 0));
 			else
 				info.setBandeiraDefensor(new Bandeira(CategoriaBandeira.NULL, 0));
@@ -734,7 +765,7 @@ public class StatInsertion extends JPanel{
 		
 		// Moral e Sorte
 		
-		if (tipo == Tipo.atacante) {
+		if (tipo == Tipo.Atacante) {
 			
 			if (MundoSelecionado.hasMoral() && !moral.getText().equals(""))
 				info.setMoral(Integer.parseInt(moral.getText()));
@@ -750,7 +781,7 @@ public class StatInsertion extends JPanel{
 		
 		// Muralha, Edifício e Noite
 		
-		if (tipo == Tipo.defensor) {
+		if (tipo == Tipo.Defensor) {
 			
 			if (!muralha.getText().equals(""))
 				info.setMuralha(Integer.parseInt(muralha.getText()));
@@ -789,9 +820,9 @@ public class StatInsertion extends JPanel{
 		
 		GUI gui = new GUI();
 		
-		StatInsertion stat = new StatInsertion(Tipo.atacante, gui.input);
+		StatInsertion stat = new StatInsertion(Tipo.Atacante, gui.input);
 		
-		StatInsertion stat2 = new StatInsertion(Tipo.defensor, gui.input);
+		StatInsertion stat2 = new StatInsertion(Tipo.Defensor, gui.input);
 		
 		test.add(stat,c);
 		test.add(stat2,c);

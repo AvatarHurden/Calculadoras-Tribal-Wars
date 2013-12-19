@@ -48,6 +48,7 @@ public class Main {
 		mainFrame.addPanel(new pontos.GUI());
 		mainFrame.addPanel(new distância.GUI());
 		mainFrame.addPanel(new oponentes_derrotados.GUI());
+		mainFrame.addPanel(new simulador.GUI());
 		
 		mainFrame.selectFirst();
 		

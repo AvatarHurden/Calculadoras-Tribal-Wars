@@ -4,8 +4,8 @@ public enum ItemPaladino {
 
 	NULL			("Nenhum item",					  "", 																   null,				 1.0, 1.0, 1.0, 1.0),
 	ALABARDA		("Alabarda de Guan Yu", 		  "Aumenta ataque de lanceiros em %.0f%% e defesa em %.0f%%",		   Unidade.LANCEIRO,     1.3, 1.2, 1.3, 1.2),
-	MACHADO			("Machado de Guerra de Thogard",  "Aumenta ataque de bárbaros em %.0f%% e defesa em %.0f%%",   		   Unidade.BÁRBARO,      1.3, 1.2, 1.4, 1.3),
 	ESPADA			("Espada Longa de Ullrich", 	  "Aumenta ataque de espadachins em %.0f%% e defesa em %.0f%%", 	   Unidade.ESPADACHIM,   1.3, 1.2, 1.4, 1.3),
+	MACHADO			("Machado de Guerra de Thogard",  "Aumenta ataque de bárbaros em %.0f%% e defesa em %.0f%%",   		   Unidade.BÁRBARO,      1.3, 1.2, 1.4, 1.3),
 	ARCO			("Arco Longo de Nimrod", 		  "Aumenta ataque de arqueiros em %.0f%% e defesa em %.0f%%", 		   Unidade.ARQUEIRO,     1.3, 1.2, 1.3, 1.2),
 	TELESCÓPIO		("Telescópio de Kalid", 	 	  "Exploradores sempre veem as tropas de uma aldeia",			       Unidade.EXPLORADOR,   1.0, 1.0, 1.0, 1.0),
 	LANÇA			("Lança de Miesko", 			  "Aumenta ataque de cavalaria leve em %.0f%% e defesa em %.0f%%", 	   Unidade.CAVALOLEVE,   1.3, 1.2, 1.3, 1.2),

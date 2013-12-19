@@ -1,36 +1,151 @@
 package simulador;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 import database.Bandeira;
+import database.Cores;
+import database.Ferramenta;
 import database.ItemPaladino;
+import database.MundoSelecionado;
 import database.Unidade;
 
-public class GUI extends JPanel{
+public class GUI extends Ferramenta{
 	
 	InputInfo input = new InputInfo();
 	
 	OutputInfo output = new OutputInfo();
 	
+	Cálculo cálculo = new Cálculo(input, output);
+	
+	StatInsertion stat = new StatInsertion(StatInsertion.Tipo.Atacante, input);
+	
+	StatInsertion stat2 = new StatInsertion(StatInsertion.Tipo.Defensor, input);	
+	
+	ResultTroopDisplay display = new ResultTroopDisplay(output);
+	
 	public GUI() {
 		
-		Map<Unidade,BigDecimal> map = new HashMap<Unidade,BigDecimal>();
+		super("Simulador");
 		
-		for (Unidade i : Unidade.values())
-			map.put(i, new BigDecimal(Math.random()*1000).setScale(0,RoundingMode.HALF_EVEN));
+		setBackground(Cores.FUNDO_CLARO);
 		
-		output.setTropasAtacantesPerdidas(map);
+		setLayout(new GridBagLayout());
 		
-		output.setTropasDefensorasPerdidas(map);
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.anchor = GridBagConstraints.NORTH;
+		c.gridx = 0;
+		c.gridy = 0;
 		
-		output.setEdifício(24);
+		add(addUnitNames(),c);
 		
-		output.setMuralha(15);
+		
+		
+		c.gridx++;
+		add(stat,c);
+		
+		c.gridx++;
+		add(stat2,c);
+
+		
+		c.gridx++;
+		add(display, c);
+		
+		JButton button = new JButton("Go");
+		button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				stat.setInputInfo();
+				
+				stat2.setInputInfo();
+		
+				cálculo.calculate();
+				
+				display.setValues();
+				
+			}
+		});
+		
+		c.gridy++;
+		add(button, c);
+		
+		
+	}
+	
+	public JPanel addUnitNames() {
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		
+		panel.setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(0,0,0,0);
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		
+		// Adding the headers
+		
+		JLabel lblNome = new JLabel("Unidade");
+		lblNome.setPreferredSize(new Dimension(lblNome.getPreferredSize().width+10, 26));
+		lblNome.setBackground(Cores.FUNDO_ESCURO);
+		lblNome.setOpaque(true);
+		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
+		
+		panel.add(lblNome, c);
+			
+		// Setting the constraints for the unit panels
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		
+		int loop = 0;
+		
+		for (Unidade i : MundoSelecionado.getUnidades()) {
+			
+			if (i != null) {
+				
+			JPanel tropaPanel = new JPanel();
+			tropaPanel.setLayout(new GridBagLayout());
+			tropaPanel.setBackground(Cores.getAlternar(loop));
+//			tropaPanel.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+			
+			GridBagConstraints tropaC = new GridBagConstraints();
+			tropaC.insets = new Insets(5,5,5,5);
+			tropaC.gridx = 0;
+			tropaC.gridy = 0;
+			
+			// Creating the TextField for the quantity of troops
+			JLabel lbl = new JLabel(i.nome());
+			
+			tropaPanel.add(lbl, tropaC);
+			
+			loop++;
+			c.gridy++;
+			panel.add(tropaPanel, c);
+			
+			}
+		}
+		
+		return panel;
 		
 	}
 	

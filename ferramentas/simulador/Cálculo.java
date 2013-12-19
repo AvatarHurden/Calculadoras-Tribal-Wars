@@ -8,11 +8,11 @@ import java.util.Map.Entry;
 
 import simulador.GUI.InputInfo;
 import simulador.GUI.OutputInfo;
-
 import database.Bandeira;
 import database.BigOperation;
 import database.Edifício;
 import database.ItemPaladino;
+import database.MundoSelecionado;
 import database.Unidade;
 import database.Unidade.Type;
 
@@ -93,6 +93,10 @@ public class Cálculo {
 		
 		this.output = output;
 		
+	}
+	
+	public void calculate() {
+		
 		setInputVariables();
 		
 		damageWall();
@@ -104,16 +108,16 @@ public class Cálculo {
 		
 		//TODO deactivate ram and catapult item during combat, only using them on destruction (MUAHAHAHA)
 		
-//		if (MundoSelecionado.hasArqueiro())
+		if (MundoSelecionado.hasArqueiro())
 			BattleArcherWorld();
-//		else
-//			BattleNonArcherWorld();
+		else
+			BattleNonArcherWorld();
 			
 		destroyBuildingAndWall();	
 		
 		setOutputVariables();
 		
-		printLostUnits();	
+		
 	}
 	
 	private void setInputVariables() {
@@ -482,7 +486,8 @@ public class Cálculo {
 				// final = initial - round(max * (2- lostAttackers/totalAttackers))
 				
 				muralhaFinal = muralhaInicial - maxLevelLowered.multiply((new BigDecimal("2").subtract( 
-						somaTropasAtacantesPerdidas.divide(somaTropasAtacantes, rounding, RoundingMode.HALF_EVEN)))).intValue();
+						somaTropasAtacantesPerdidas.divide(somaTropasAtacantes, rounding, RoundingMode.HALF_EVEN))))
+						.setScale(0, RoundingMode.HALF_EVEN).intValue();
 			else												// Atacante perdeu
 				
 				// final = initial - round(max * lostDefenders/totalDefenders)
@@ -492,6 +497,7 @@ public class Cálculo {
 			
 			if (muralhaFinal < 0 )
 				muralhaFinal = 0;
+			
 			
 		} 
 		
