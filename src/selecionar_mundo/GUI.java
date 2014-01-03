@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -62,8 +63,19 @@ public class GUI extends JFrame{
 		
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		constraints.insets = new Insets(30, 5, 30, 5);
+		constraints.insets = new Insets(30, 5, 20, 5);
 		addWorldPanel(constraints);
+		
+		JTextPane lblAuthor = new JTextPane();
+		lblAuthor.setContentType("text/html");
+		lblAuthor.setText("<html><div align=right width=100px>" +
+				"Criado por Arthur Vedana<br>agieselvedana@gmail.com</div></html>");
+		lblAuthor.setEditable(false);
+		lblAuthor.setOpaque(false);
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.EAST;
+		constraints.insets = new Insets(0, 5, 5, 5);
+		add(lblAuthor, constraints);
 		
 		changeInformationPanel();
 		

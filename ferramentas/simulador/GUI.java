@@ -40,7 +40,7 @@ public class GUI extends Ferramenta{
 	
 	public GUI() {
 		
-		super("Simulador");
+		super("Simulador - Beta");
 		
 		setBackground(Cores.FUNDO_CLARO);
 		
