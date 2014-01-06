@@ -1,6 +1,7 @@
 package database;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -23,6 +24,10 @@ public class Mundo {
 	private boolean hasBonusNoturno;
 	private BigDecimal velocidade;
 	private BigDecimal modificarUnidaes;
+	
+	private Unidade[] unidades = new Unidade[13];
+	
+	private BigDecimal[] porcentagemDeProdução = new BigDecimal[26];
 	
 	
 	public Mundo(String nome) {
@@ -85,6 +90,97 @@ public class Mundo {
 		System.out.println("Bônus Noturno: "+hasBonusNoturno);
 		
 	}
+	
+	/**
+	 * Define a diferença entre o tempo padrão de produção de cada unidade e o tempo real, levando em consideração o nível do edifício e a velocidade do mundo.
+	 * 
+	 * Tempo real = tempo padrão * fator de tempo (nível do edifício) / velocidade do mundo
+	 */
+	public void setTemposDeProdução() {
+
+		// Os números representam o tempo, em segundos, que leva para criar 10.000 lanceiros em cada nível do quartel
+		// Esses valores serão dividos pelo tempo teórico, no nível 0, dando assim a redução do tempo de produção causada
+		// pelo nível do edificio.
+		
+		porcentagemDeProdução[0] = new BigDecimal(6800000);
+		porcentagemDeProdução[1] = new BigDecimal(6414094);
+		porcentagemDeProdução[2] = new BigDecimal(6051976);
+		porcentagemDeProdução[3] = new BigDecimal(5709411);
+		porcentagemDeProdução[4] = new BigDecimal(5386237);
+		porcentagemDeProdução[5] = new BigDecimal(5081356);
+		porcentagemDeProdução[6] = new BigDecimal(4793732);
+		porcentagemDeProdução[7] = new BigDecimal(4522388);
+		porcentagemDeProdução[8] = new BigDecimal(4266404);
+		porcentagemDeProdução[9] = new BigDecimal(4024910);
+		
+		porcentagemDeProdução[10] = new BigDecimal(3797084);
+		porcentagemDeProdução[11] = new BigDecimal(3582155);
+		porcentagemDeProdução[12] = new BigDecimal(3379392);
+		porcentagemDeProdução[13] = new BigDecimal(3188105);
+		porcentagemDeProdução[14] = new BigDecimal(3007647);
+		porcentagemDeProdução[15] = new BigDecimal(2837402);
+		porcentagemDeProdução[16] = new BigDecimal(2676795);
+		porcentagemDeProdução[17] = new BigDecimal(2525278);
+		porcentagemDeProdução[18] = new BigDecimal(2382338);
+		porcentagemDeProdução[19] = new BigDecimal(2247488);
+		
+		porcentagemDeProdução[20] = new BigDecimal(2120272);
+		porcentagemDeProdução[21] = new BigDecimal(2000257);
+		porcentagemDeProdução[22] = new BigDecimal(1887035);
+		porcentagemDeProdução[23] = new BigDecimal(1780221);
+		porcentagemDeProdução[24] = new BigDecimal(1679454);
+		porcentagemDeProdução[25] = new BigDecimal(1584391);
+		
+		for (int i = 0; i < 26; i++)
+			porcentagemDeProdução[i] = 
+			porcentagemDeProdução[i].divide(new BigDecimal(6800000), 30, BigDecimal.ROUND_HALF_EVEN);
+		
+		// Dividindo a redução de tempo pela velocidade do mundo, haverá o real tempo de produção para cada situação.
+		
+		for (int i = 0; i < 26; i++)
+			porcentagemDeProdução[i] = 
+			porcentagemDeProdução[i].divide(velocidade, 30, BigDecimal.ROUND_HALF_EVEN);
+
+	}
+	
+	
+	/**
+	 * Cria uma lista com todas as unidades presentes no mundo
+	 */
+	public void setUnidadeList() {
+		
+		unidades[0] = Unidade.LANCEIRO;
+		unidades[1] = Unidade.ESPADACHIM;
+		unidades[2] = Unidade.BÁRBARO;
+		
+		if (hasArqueiro)
+			unidades[3] = Unidade.ARQUEIRO;
+		else
+			unidades[3] = null;
+		
+		unidades[4] = Unidade.EXPLORADOR;
+		unidades[5] = Unidade.CAVALOLEVE;
+		
+		if (hasArqueiro)
+			unidades[6] = Unidade.ARCOCAVALO;
+		else
+			unidades[6] = null;
+		
+		unidades[7] = Unidade.CAVALOPESADO;
+		unidades[8] = Unidade.ARÍETE;
+		unidades[9] = Unidade.CATAPULTA;
+		
+		if (hasPaladino)
+			unidades[10] = Unidade.PALADINO;
+		
+		unidades[11] = Unidade.NOBRE;
+		
+		if (hasMilícia)
+		unidades[12] = Unidade.MILÍCIA;
+		
+	}
+	
+	
 	
 	public void setNome(String nome) {
 		this.nome = nome;
@@ -216,7 +312,43 @@ public class Mundo {
 	public BigDecimal getModificarUnidaes() {
 		return modificarUnidaes;
 	}
+	
+	/**
+	 * @param i int nível do edifício
+	 * @return porcentagem de tempo total de produção no nível dado
+	 */
+	public BigDecimal getPorcentagemDeProdução(int i) {
+		return porcentagemDeProdução[i];
+	}
 
+	/**
+	 * @return Array com todas as unidades presentes no mundo. Sempre com tamanho 13,
+	 *  retorna null para a posição da unidade se ela não estiver ligada no mundo.
+	 */
+	public Unidade[] getUnidades() {
+		return unidades;
+	}
+	
+	public boolean containsUnidade(Unidade unidade) {
+		if (Arrays.asList(unidades).contains(unidade))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * @return Número de tropas disponíveis no mundo.
+	 */
+	public int getNúmeroDeTropas(){
+		
+		int i = 0;
+		for (Unidade u : unidades)
+			if (u != null) 
+				i++;
+		
+		return i;
+	}
+	
 
 	
 }

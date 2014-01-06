@@ -3,6 +3,8 @@ package database;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import config.Mundo_Reader;
+
 public enum Unidade{
 
 
@@ -77,7 +79,7 @@ public enum Unidade{
 		// Alterações para unidades específicas
 		// As características flutuantes são adicionadas depois, visto que são final
 		
-		if (!MundoSelecionado.hasArqueiro() && nome.equals("Espadachim"))
+		if (!Mundo_Reader.MundoSelecionado.hasArqueiro() && nome.equals("Espadachim"))
 			this.defCav = new BigDecimal("25");
 		else	
 			this.defCav = new BigDecimal(String.valueOf(defCav));

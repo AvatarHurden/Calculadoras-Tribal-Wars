@@ -2,7 +2,7 @@ package main;
 
 import javax.swing.JFrame;
 
-import config.World_Reader;
+import config.Mundo_Reader;
 import frames.MainWindow;
 
 public class Main {
@@ -12,7 +12,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		World_Reader.read();
+		Mundo_Reader.read();
 		
 		openSelection();
 		
@@ -39,7 +39,7 @@ public class Main {
 		
 		selecionar.dispose();
 		
-//		World_Reader.save();
+//		Mundo_Reader.save();
 		
 		mainFrame = new MainWindow();
 		//Adicionando todas as ferramentas criadas

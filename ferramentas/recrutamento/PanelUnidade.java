@@ -20,8 +20,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import config.Mundo_Reader;
 import database.Cores;
-import database.MundoSelecionado;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -129,9 +129,9 @@ public class PanelUnidade extends JPanel {
 		// Caso não tenha edifício (paladino ou nobre)
 		if (edifício == null)
 			if (unidade.equals(Unidade.PALADINO))
-				setTempoUnitário(unidade.tempoDeProdução().multiply(MundoSelecionado.getPorcentagemDeProdução(0)));
+				setTempoUnitário(unidade.tempoDeProdução().multiply(Mundo_Reader.MundoSelecionado.getPorcentagemDeProdução(0)));
 			else
-				setTempoUnitário(unidade.tempoDeProdução().multiply(MundoSelecionado.getPorcentagemDeProdução(1)));
+				setTempoUnitário(unidade.tempoDeProdução().multiply(Mundo_Reader.MundoSelecionado.getPorcentagemDeProdução(1)));
 		
 	}
 

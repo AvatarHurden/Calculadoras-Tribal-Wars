@@ -16,9 +16,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import simulador.GUI.OutputInfo;
-import config.World_Reader;
+import config.Mundo_Reader;
 import database.Cores;
-import database.MundoSelecionado;
 import database.Unidade;
 
 public class ResultTroopDisplay extends JPanel{
@@ -120,7 +119,7 @@ public class ResultTroopDisplay extends JPanel{
 		
 		int loop = 0;
 		
-		for (Unidade i : MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 			
 			if (i != null) {
 				
@@ -182,7 +181,7 @@ public class ResultTroopDisplay extends JPanel{
 		
 		int loop = 0;
 		
-		for (Unidade i : MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 			
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
 				
@@ -246,7 +245,7 @@ public class ResultTroopDisplay extends JPanel{
 		
 		int loop = 0;
 		
-		for (Unidade i : MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 			
 			if (i != null) {
 				
@@ -283,7 +282,7 @@ public class ResultTroopDisplay extends JPanel{
 		// Setting the background and borders for the panel
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
-		panel.setBackground(Cores.getAlternar(MundoSelecionado.getNúmeroDeTropas()));
+		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado.getNúmeroDeTropas()));
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
 		
 		GridBagLayout layout = new GridBagLayout();
@@ -314,7 +313,7 @@ public class ResultTroopDisplay extends JPanel{
 		// Setting the background and borders for the panel
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
-		panel.setBackground(Cores.getAlternar(MundoSelecionado.getNúmeroDeTropas()));
+		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado.getNúmeroDeTropas()));
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
 		
 		GridBagLayout layout = new GridBagLayout();
@@ -356,9 +355,9 @@ public class ResultTroopDisplay extends JPanel{
 	
 	public static void main (String args[]) {
 		
-		World_Reader.read();
+		Mundo_Reader.read();
 		
-		MundoSelecionado.setMundo(World_Reader.getMundo(0));
+		Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(0));
 		
 		
 		JFrame test = new JFrame();

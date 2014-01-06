@@ -10,10 +10,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Mundo_Reader;
 import database.BigOperation;
 import database.Cores;
 import database.Ferramenta;
-import database.MundoSelecionado;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -76,7 +76,7 @@ public class GUI extends Ferramenta{
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.LANCEIRO));
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.ESPADACHIM));
 		
-		if (MundoSelecionado.hasArqueiro())
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
 			unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.ARQUEIRO));
 
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.BÁRBARO));
@@ -84,7 +84,7 @@ public class GUI extends Ferramenta{
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.EXPLORADOR));
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.CAVALOLEVE));
 		
-		if (MundoSelecionado.hasArqueiro())
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
 			unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.ARCOCAVALO));
 		
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.CAVALOPESADO));
@@ -92,7 +92,7 @@ public class GUI extends Ferramenta{
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.ARÍETE));
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.CATAPULTA));
 		
-		if (MundoSelecionado.hasPaladino())
+		if (Mundo_Reader.MundoSelecionado.hasPaladino())
 			unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.PALADINO));
 		
 		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), Unidade.NOBRE));

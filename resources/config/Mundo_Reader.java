@@ -13,13 +13,16 @@ import java.util.Properties;
 
 import database.Mundo;
 
-public class World_Reader {
+public class Mundo_Reader {
 
 	// Lista das propriedades lidas
 	static List<Properties> propertyList = new ArrayList<Properties>();
 	
 	// Lista dos mundos
 	static List<Mundo> mundoList = new ArrayList<Mundo>();
+	
+	// Mundo Selecionado
+	public static Mundo MundoSelecionado;
 	
 	/**
 	 * Reads the configuration file for the world informations
@@ -75,7 +78,7 @@ public class World_Reader {
 			try {
 			
 				BufferedReader in = new BufferedReader(
-							new InputStreamReader(World_Reader.class.getResourceAsStream("default_mundos")));
+							new InputStreamReader(Mundo_Reader.class.getResourceAsStream("default_mundos")));
 				
 				String total = "";
 				
@@ -146,7 +149,20 @@ public class World_Reader {
 		}
 		
 	}
-
+	
+	public static Mundo setMundoSelecionado(Mundo mundo) {
+		
+		MundoSelecionado = mundo;
+		
+		MundoSelecionado.setTemposDeProdução();
+		
+		MundoSelecionado.setUnidadeList();
+		
+		
+		return null;
+		
+	}
+	
 	public static Properties getProperties(int index) { return propertyList.get(index); }
 
 	public static List<Properties> getPropertiesList() { return propertyList; }

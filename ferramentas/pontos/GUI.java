@@ -12,10 +12,10 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Mundo_Reader;
 import database.Cores;
 import database.Edifício;
 import database.Ferramenta;
-import database.MundoSelecionado;
 
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
@@ -163,12 +163,12 @@ public class GUI extends Ferramenta {
 		edifíciosUtilizados.add(Edifício.ESTÁBULO);
 		edifíciosUtilizados.add(Edifício.OFICINA);
 		
-		if (MundoSelecionado.hasIgreja()) {
+		if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
 			edifíciosUtilizados.add(Edifício.IGREJA);
 			edifíciosUtilizados.add(Edifício.PRIMEIRA_IGREJA);
 		}
 		
-		if (MundoSelecionado.isAcademiaDeNíveis())
+		if (Mundo_Reader.MundoSelecionado.isAcademiaDeNíveis())
 			edifíciosUtilizados.add(Edifício.ACADEMIA_3NÍVEIS);
 		else
 			edifíciosUtilizados.add(Edifício.ACADEMIA_1NÍVEL);
@@ -176,7 +176,7 @@ public class GUI extends Ferramenta {
 		edifíciosUtilizados.add(Edifício.FERREIRO);
 		edifíciosUtilizados.add(Edifício.PRAÇA_DE_REUNIÃO);
 		
-		if (MundoSelecionado.hasPaladino())
+		if (Mundo_Reader.MundoSelecionado.hasPaladino())
 			edifíciosUtilizados.add(Edifício.ESTÁTUA);
 		
 		edifíciosUtilizados.add(Edifício.MERCADO);

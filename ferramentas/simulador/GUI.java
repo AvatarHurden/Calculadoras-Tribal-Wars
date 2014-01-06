@@ -17,13 +17,14 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import config.Mundo_Reader;
 import database.Bandeira;
 import database.Cores;
 import database.Ferramenta;
 import database.ItemPaladino;
-import database.MundoSelecionado;
 import database.Unidade;
 
+@SuppressWarnings("serial")
 public class GUI extends Ferramenta{
 	
 	InputInfo input = new InputInfo();
@@ -119,7 +120,7 @@ public class GUI extends Ferramenta{
 		
 		int loop = 0;
 		
-		for (Unidade i : MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 			
 			if (i != null) {
 				

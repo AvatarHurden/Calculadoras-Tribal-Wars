@@ -8,11 +8,11 @@ import java.util.Map.Entry;
 
 import simulador.GUI.InputInfo;
 import simulador.GUI.OutputInfo;
+import config.Mundo_Reader;
 import database.Bandeira;
 import database.BigOperation;
 import database.Edifício;
 import database.ItemPaladino;
-import database.MundoSelecionado;
 import database.Unidade;
 import database.Unidade.Type;
 
@@ -53,6 +53,8 @@ public class Cálculo {
 		private int moral;
 		
 		private ItemPaladino itemAtacante, itemDefensor;
+		
+		private boolean itemCatapulta;
 		
 		private Bandeira bandeiraAtacante, bandeiraDefensor;
 		
@@ -103,16 +105,22 @@ public class Cálculo {
 		
 		scoutBattle();
 		
+		if (itemAtacante == ItemPaladino.FOGUEIRA)
+			itemCatapulta = true;
+		
+		// Removes ram and catapult item during combat
 		if (itemAtacante == ItemPaladino.ESTRELA || itemAtacante == ItemPaladino.FOGUEIRA)
 			itemAtacante = ItemPaladino.NULL;
 		
-		//TODO deactivate ram and catapult item during combat, only using them on destruction (MUAHAHAHA)
-		
-		if (MundoSelecionado.hasArqueiro())
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
 			BattleArcherWorld();
 		else
 			BattleNonArcherWorld();
-			
+		
+		// adds catapult item back to destroy buildings
+		if (itemCatapulta == true)
+			itemAtacante = ItemPaladino.FOGUEIRA;
+		
 		destroyBuildingAndWall();	
 		
 		setOutputVariables();

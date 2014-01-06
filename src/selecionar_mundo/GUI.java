@@ -18,7 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import config.World_Reader;
+import config.Mundo_Reader;
 import database.Cores;
 
 @SuppressWarnings("serial")
@@ -41,7 +41,7 @@ public class GUI extends JFrame{
 	 */
 	public GUI() {
 		
-		propertyList = World_Reader.getPropertiesList();
+		propertyList = Mundo_Reader.getPropertiesList();
 		
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		

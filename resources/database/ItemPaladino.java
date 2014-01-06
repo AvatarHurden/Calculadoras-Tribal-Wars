@@ -1,5 +1,8 @@
 package database;
 
+import config.Mundo_Reader;
+
+
 public enum ItemPaladino {
 
 	NULL			("Nenhum item",					  "", 																   null,				 1.0, 1.0, 1.0, 1.0),
@@ -27,7 +30,7 @@ public enum ItemPaladino {
 		
 		this.name = nome;
 		this.unit = unidade;
-		if (MundoSelecionado.hasItensAprimorados()) {
+		if (Mundo_Reader.MundoSelecionado.hasItensAprimorados()) {
 			this.modifierAtk = advancedAtk;
 			this.modifierDef = advancedDef;
 		} else {

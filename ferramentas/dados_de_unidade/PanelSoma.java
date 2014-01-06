@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import config.Mundo_Reader;
 import database.Cores;
-import database.MundoSelecionado;
 
 public class PanelSoma {
 
@@ -63,7 +63,7 @@ public class PanelSoma {
 		GridBagLayout gbl = new GridBagLayout();
 		
 		// Caso o mundo tenha arqueiros, coloca lugar para a defesa de arqueiro
-		if (MundoSelecionado.hasArqueiro())
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
 			gbl.columnWidths = new int[] {75, 1, 75, 1, 75, 1, 75, 1, 75};
 		else
 			gbl.columnWidths = new int[] {75, 1, 75, 1, 75, 1, 75};
@@ -99,7 +99,7 @@ public class PanelSoma {
 		
 		defArqueiro = new JLabel();
 		
-		if (MundoSelecionado.hasArqueiro()) {
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
 			
 			constraints.insets = new Insets(5, 0, 5, 5);
 			constraints.gridx++;

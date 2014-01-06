@@ -7,11 +7,11 @@ import java.util.Map;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
-import config.World_Reader;
+import config.MundoSelecionado;
+import config.Mundo_Reader;
 import database.Bandeira;
 import database.Ferramenta;
 import database.ItemPaladino;
-import database.MundoSelecionado;
 import database.Unidade;
 import database.Bandeira.CategoriaBandeira;
 
@@ -157,11 +157,11 @@ public class GUI_old extends Ferramenta {
 	
 	public static void main (String args[]) {
 		
-		World_Reader.read();
+		Mundo_Reader.read();
 		
-		MundoSelecionado.setMundo(World_Reader.getMundo(29));
+		MundoSelecionado.setMundo(Mundo_Reader.getMundo(29));
 		
-		System.out.println(World_Reader.getMundo(29).getNome());
+		System.out.println(Mundo_Reader.getMundo(29).getNome());
 		
 		Map<Unidade, BigDecimal> tropasAtacante = new HashMap<Unidade, BigDecimal>();
 		

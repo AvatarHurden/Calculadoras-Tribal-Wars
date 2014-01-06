@@ -32,12 +32,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import simulador.GUI.InputInfo;
-import config.World_Reader;
+import config.Mundo_Reader;
 import database.Bandeira;
 import database.Bandeira.CategoriaBandeira;
 import database.Cores;
 import database.ItemPaladino;
-import database.MundoSelecionado;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -92,14 +91,14 @@ public class StatInsertion extends JPanel{
 		c.gridy = 0;
 		
 		// Adding the space to allow for militia on defensive side
-		if (tipo == Tipo.Atacante && MundoSelecionado.hasMilícia())
+		if (tipo == Tipo.Atacante && Mundo_Reader.MundoSelecionado.hasMilícia())
 			c.insets = new Insets(0,0,30,0);
 		
 		add(addUnitPanel(), c);
 		
 		c.insets = new Insets(5,0,0,0);
 		
-		loop = MundoSelecionado.getNúmeroDeTropas();
+		loop = Mundo_Reader.MundoSelecionado.getNúmeroDeTropas();
 		
 		// Diferenciando os diferentes tipos de inserção
 		
@@ -107,25 +106,25 @@ public class StatInsertion extends JPanel{
 			
 			// Todos possuem a mudança dos insets para garantir que seja mudado,
 			// não importando a configuração do mundo em questão
-			if (MundoSelecionado.hasIgreja()) {
+			if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
 				c.gridy++;
 				add(addReligião(), c);
 				c.insets = new Insets(0,0,0,0);
 			}
 			
-			if (MundoSelecionado.hasPaladino()) {
+			if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
 				c.gridy++;
 				add(addItemPaladino(), c);
 				c.insets = new Insets(0,0,0,0);
 			}
 			
-			if (MundoSelecionado.hasBandeira()) {
+			if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
 				c.gridy++;
 				add(addBandeira(), c);
 				c.insets = new Insets(0,0,0,0);
 			}
 			
-			if (MundoSelecionado.hasMoral()) {
+			if (Mundo_Reader.MundoSelecionado.hasMoral()) {
 				c.gridy++;
 				add(addMoral(), c);
 				c.insets = new Insets(0,0,0,0);
@@ -136,19 +135,19 @@ public class StatInsertion extends JPanel{
 			
 		} else {
 			
-			if (MundoSelecionado.hasIgreja()) {
+			if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
 				c.gridy++;
 				add(addReligião(), c);
 				c.insets = new Insets(0,0,0,0);
 			}
 			
-			if (MundoSelecionado.hasPaladino()) {
+			if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
 				c.gridy++;
 				add(addItemPaladino(), c);
 				c.insets = new Insets(0,0,0,0);
 			}
 			
-			if (MundoSelecionado.hasBandeira()) {
+			if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
 				c.gridy++;
 				add(addBandeira(), c);
 				c.insets = new Insets(0,0,0,0);
@@ -161,7 +160,7 @@ public class StatInsertion extends JPanel{
 			c.gridy++;
 			add(addEdifício(), c);
 			
-			if (MundoSelecionado.hasBonusNoturno()){
+			if (Mundo_Reader.MundoSelecionado.hasBonusNoturno()){
 				c.gridy++;
 				add(addNoite(), c);
 			}
@@ -198,7 +197,7 @@ public class StatInsertion extends JPanel{
 		
 		// Caso o mundo possua nível de tropas, torna a borda mais grossa para
 		// facilitar a visualização da separação.
-		if (MundoSelecionado.isPesquisaDeNíveis())
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			lblTipo.setBorder(new MatteBorder(0, 0, 2, 0, Cores.SEPARAR_ESCURO));
 		else
 			lblTipo.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
@@ -207,7 +206,7 @@ public class StatInsertion extends JPanel{
 		c.insets = new Insets(0,0,0,0);
 		panel.add(lblTipo, c);
 		
-		if (MundoSelecionado.isPesquisaDeNíveis()){
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()){
 			
 			c.fill = GridBagConstraints.NONE;
 			c.insets = new Insets(5,5,5,5);
@@ -226,7 +225,7 @@ public class StatInsertion extends JPanel{
 		c.gridwidth = 2;
 		c.gridx = 0;
 			
-		for (Unidade i : MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 			
 			if (i != null && (!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
 				
@@ -239,7 +238,7 @@ public class StatInsertion extends JPanel{
 			tropaC.insets = new Insets(3,5,3,5);
 			tropaC.gridx = 0;
 			tropaC.gridy = 0;
-			if (MundoSelecionado.isPesquisaDeNíveis())
+			if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 				tropaC.gridwidth = 1;
 			else
 				tropaC.gridwidth = 2;
@@ -251,7 +250,7 @@ public class StatInsertion extends JPanel{
 			
 			tropaPanel.add(txt, tropaC);
 			
-				if (MundoSelecionado.isPesquisaDeNíveis()) {
+				if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 					
 					// Coloca a cor padrão para os comboBox
 					UIManager.put("ComboBox.selectionBackground", Cores.FUNDO_ESCURO); 
@@ -680,7 +679,7 @@ public class StatInsertion extends JPanel{
 		
 		for (Unidade i : Unidade.values())
 			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor))
-				if (MundoSelecionado.containsUnidade(i) && !mapQuantidades.get(i).getText().equals(""))
+				if (Mundo_Reader.MundoSelecionado.containsUnidade(i) && !mapQuantidades.get(i).getText().equals(""))
 					tropas.put(i, new BigDecimal(mapQuantidades.get(i).getText()));
 				else
 					tropas.put(i, BigDecimal.ZERO);
@@ -698,7 +697,7 @@ public class StatInsertion extends JPanel{
 		Map<Unidade, Integer> níveis = new HashMap<Unidade, Integer>();
 		
 		for (Unidade i : Unidade.values()) {
-			if (MundoSelecionado.isPesquisaDeNíveis()) 
+			if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) 
 				níveis.put(i, ((int)mapNiveis.get(i).getSelectedItem()));
 			else
 				níveis.put(i, 1);
@@ -711,7 +710,7 @@ public class StatInsertion extends JPanel{
 		
 		// Religião
 		
-		if (MundoSelecionado.hasIgreja()) {
+		if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
 			
 			if (tipo == Tipo.Atacante)
 				info.setReligiãoAtacante(religião.isSelected());
@@ -729,7 +728,7 @@ public class StatInsertion extends JPanel{
 		
 		// Item do Paladino
 		
-		if (MundoSelecionado.hasPaladino()) {
+		if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
 			
 			if (tipo == Tipo.Atacante)
 				info.setItemAtacante((ItemPaladino)item.getSelectedItem());
@@ -747,7 +746,7 @@ public class StatInsertion extends JPanel{
 		
 		// Bandeira
 		
-		if (MundoSelecionado.hasBandeira()) {
+		if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
 			
 			if (tipo == Tipo.Atacante)
 				info.setBandeiraAtacante((Bandeira)bandeira.getSelectedItem());
@@ -767,7 +766,7 @@ public class StatInsertion extends JPanel{
 		
 		if (tipo == Tipo.Atacante) {
 			
-			if (MundoSelecionado.hasMoral() && !moral.getText().equals(""))
+			if (Mundo_Reader.MundoSelecionado.hasMoral() && !moral.getText().equals(""))
 				info.setMoral(Integer.parseInt(moral.getText()));
 			else
 				info.setMoral(100);
@@ -793,7 +792,7 @@ public class StatInsertion extends JPanel{
 			else
 				info.setEdifício(0);
 			
-			if (MundoSelecionado.hasBonusNoturno())
+			if (Mundo_Reader.MundoSelecionado.hasBonusNoturno())
 				info.setNoite(noite.isSelected());
 			else
 				info.setNoite(false);
@@ -805,9 +804,9 @@ public class StatInsertion extends JPanel{
 	
 	public static void main (String args[]) {
 		
-		World_Reader.read();
+		Mundo_Reader.read();
 		
-		MundoSelecionado.setMundo(World_Reader.getMundo(0));
+		Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(0));
 		
 		JFrame test = new JFrame();
 		
