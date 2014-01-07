@@ -105,34 +105,15 @@ public class Mundo_Reader {
 	/**
 	 * Saves the configurations into the config files, creating the file if it does not exist
 	 */
-	public static void save() {
+	public static String getMundosConfig() {
 		
-		try {
-			
-			File configurações = new File("Configurações/configurações de mundo.txt");
-			
-			// In case the file does not exist, create it
-			if (!configurações.exists())
-				// In case the folder does not exist, create it
-				if (!new File("Configurações").exists())
-					new File("Configurações").mkdir();
-				configurações.createNewFile();
-			
-			FileWriter out = new FileWriter(configurações);
-			
-			for (Mundo i : mundoList) {
-				
-				out.write(i.getConfigText());
-				
-			}
-			
-			out.close();
-			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		String section ="";
 		
+		for (Mundo i : mundoList)
+			section += i.getConfigText();
+			
+		return section;	
+			
 	}
 	
 	public static Mundo setMundoSelecionado(Mundo mundo) {

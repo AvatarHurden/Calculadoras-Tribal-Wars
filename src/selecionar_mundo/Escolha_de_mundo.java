@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import main.Main;
+import config.File_Manager;
 import config.Mundo_Reader;
 
 @SuppressWarnings("serial")
@@ -46,6 +47,8 @@ public class Escolha_de_mundo extends JPanel{
 			nomeMundos[i] = Mundo_Reader.getMundo(i).getNome();
 		
 		selectionBox = new JComboBox<String>(nomeMundos);
+		
+		selectionBox.setSelectedItem(File_Manager.getMundoPadrão());
 		
 		selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {

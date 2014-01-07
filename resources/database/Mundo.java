@@ -74,22 +74,24 @@ public class Mundo {
 	
 	public String getConfigText() {
 		
+		// the "\t" is for indentation purposes
+		
 		String s = "\n";
 		
-		s+=("nome="+nome+"\n");
-		s+=("velocidade="+velocidade.toString()+"\n");
-		s+=("modificador="+modificarUnidaes.toString()+"\n");
+		s+=("\tnome="+nome+"\n");
+		s+=("\tvelocidade="+velocidade.toString()+"\n");
+		s+=("\tmodificador="+modificarUnidaes.toString()+"\n");
 		
-		s+=("moral="+hasMoral+"\n");
-		s+=("pesquisaDeNiveis="+pesquisaDeNíveis+"\n");
-		s+=("igreja="+hasIgreja+"\n");
-		s+=("bonusNoturno="+hasBonusNoturno+"\n");
-		s+=("bandeira="+hasBandeira+"\n");
-		s+=("arqueiro="+hasArqueiro+"\n");
-		s+=("paladino="+hasPaladino+"\n");
-		s+=("itensAprimorados="+hasItensAprimorados+"\n");
-		s+=("milicia="+hasMilícia+"\n");
-		s+=("academiaDeNiveis="+academiaDeNíveis+"\n");
+		s+=("\tmoral="+hasMoral+"\n");
+		s+=("\tpesquisaDeNiveis="+pesquisaDeNíveis+"\n");
+		s+=("\tigreja="+hasIgreja+"\n");
+		s+=("\tbonusNoturno="+hasBonusNoturno+"\n");
+		s+=("\tbandeira="+hasBandeira+"\n");
+		s+=("\tarqueiro="+hasArqueiro+"\n");
+		s+=("\tpaladino="+hasPaladino+"\n");
+		s+=("\titensAprimorados="+hasItensAprimorados+"\n");
+		s+=("\tmilicia="+hasMilícia+"\n");
+		s+=("\tacademiaDeNiveis="+academiaDeNíveis+"\n");
 		
 		return s;
 		

@@ -2,7 +2,7 @@ package main;
 
 import javax.swing.JFrame;
 
-import config.File_Reader;
+import config.File_Manager;
 import config.Mundo_Reader;
 import frames.MainWindow;
 
@@ -13,7 +13,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		File_Reader.read();
+		File_Manager.read();
 		
 		openSelection();
 		
@@ -40,7 +40,9 @@ public class Main {
 		
 		selecionar.dispose();
 		
-//		Mundo_Reader.save();
+		File_Manager.setMundoPadrão(Mundo_Reader.MundoSelecionado.getNome());
+		
+//		File_Manager.save();
 		
 		mainFrame = new MainWindow();
 		//Adicionando todas as ferramentas criadas
