@@ -10,10 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Mundo_Reader;
 import database.Cores;
 import database.Edifício;
 import database.Ferramenta;
-import database.MundoSelecionado;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -62,7 +62,7 @@ public class GUI extends Ferramenta {
 		PanelUnidade espadachim = new PanelUnidade(getNextColor(), Unidade.ESPADACHIM, quartel);
 		quartel.addPanel(espadachim);
 
-		if (MundoSelecionado.hasArqueiro()) {
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
 			PanelUnidade arqueiro = new PanelUnidade(getNextColor(), Unidade.ARQUEIRO, quartel);
 			quartel.addPanel(arqueiro);
 		}
@@ -90,7 +90,7 @@ public class GUI extends Ferramenta {
 		PanelUnidade cavalariaLeve = new PanelUnidade(getNextColor(), Unidade.CAVALOLEVE, estábulo);
 		estábulo.addPanel(cavalariaLeve);
 
-		if (MundoSelecionado.hasArqueiro()) {
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
 			PanelUnidade arqueiroCavalo = new PanelUnidade(getNextColor(), Unidade.ARCOCAVALO, estábulo);
 			estábulo.addPanel(arqueiroCavalo);
 		}
@@ -123,7 +123,7 @@ public class GUI extends Ferramenta {
 		
 		PanelEdifício academia;
 		
-		if (MundoSelecionado.isAcademiaDeNíveis()) {
+		if (Mundo_Reader.MundoSelecionado.isAcademiaDeNíveis()) {
 			
 			academia = new PanelEdifício(Edifício.ACADEMIA_3NÍVEIS);
 			mapaEdifício.put(Edifício.ACADEMIA_3NÍVEIS, academia);
@@ -156,7 +156,7 @@ public class GUI extends Ferramenta {
 		}
 		
 		
-		if (MundoSelecionado.hasPaladino()) {
+		if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
 			PanelUnidade paladino = new PanelUnidade(getNextColor(), Unidade.PALADINO, null);
 			paladino.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 			GridBagConstraints gbc_paladino = new GridBagConstraints();

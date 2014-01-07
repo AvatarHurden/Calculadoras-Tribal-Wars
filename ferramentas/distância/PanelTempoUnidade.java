@@ -13,8 +13,9 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import config.Mundo_Reader;
+
 import database.Cores;
-import database.MundoSelecionado;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -42,8 +43,8 @@ public class PanelTempoUnidade extends JPanel{
 		// é em minutos, não em segundos.
 		
 		velocidadeReal = unidade.velocidade()
-				.divide(MundoSelecionado.getVelocidade(), 30, BigDecimal.ROUND_HALF_EVEN)
-				.divide(MundoSelecionado.getModificarUnidaes(), 30, BigDecimal.ROUND_HALF_EVEN)
+				.divide(Mundo_Reader.MundoSelecionado.getVelocidade(), 30, BigDecimal.ROUND_HALF_EVEN)
+				.divide(Mundo_Reader.MundoSelecionado.getModificarUnidaes(), 30, BigDecimal.ROUND_HALF_EVEN)
 				.multiply(new BigDecimal(60));
 		
 		createUnitPanel();

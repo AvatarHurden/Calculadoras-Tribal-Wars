@@ -1,0 +1,26 @@
+- Criar listas de tropas, para adicionar em qualquer seção (nomes para listas)
+	- Listas de edifícios, com níveis pré-definidos
+	
+- Adicionar mais informações no simulador
+
+- Salvar mundo padrão
+
+- // tornar MundoSelecionado um static object de Mundo
+
+- // parar de usar Properties para escrever as configurações de mundo, imprimir de forma própria
+
+- usar somente um arquivo para todas as configurações 
+	
+	Ex.	Mundo_padrão=Mundo 21
+		
+		listas {
+		
+		...
+
+		}
+
+		mundos {
+
+		...
+
+		}	

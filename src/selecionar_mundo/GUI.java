@@ -13,11 +13,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import config.World_Reader;
+import config.Mundo_Reader;
 import database.Cores;
 
 @SuppressWarnings("serial")
@@ -40,19 +41,20 @@ public class GUI extends JFrame{
 	 */
 	public GUI() {
 		
-		propertyList = World_Reader.getPropertiesList();
+		propertyList = Mundo_Reader.getPropertiesList();
 		
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{546, 1, 350};
-		gridBagLayout.rowHeights = new int[]{92};
+		gridBagLayout.rowHeights = new int[]{0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.insets = new Insets(5, 5, 5, 5);
+		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		
@@ -61,8 +63,19 @@ public class GUI extends JFrame{
 		
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		constraints.insets = new Insets(30, 5, 30, 5);
+		constraints.insets = new Insets(30, 5, 20, 5);
 		addWorldPanel(constraints);
+		
+		JTextPane lblAuthor = new JTextPane();
+		lblAuthor.setContentType("text/html");
+		lblAuthor.setText("<html><div align=right width=100px>" +
+				"Criado por Arthur Vedana<br>agieselvedana@gmail.com</div></html>");
+		lblAuthor.setEditable(false);
+		lblAuthor.setOpaque(false);
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.EAST;
+		constraints.insets = new Insets(0, 5, 5, 5);
+		add(lblAuthor, constraints);
 		
 		changeInformationPanel();
 		
@@ -106,6 +119,8 @@ public class GUI extends JFrame{
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		panelMundo.setLayout(gridBagLayout);
+		
+		//TODO set size to not change for less information
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = 0;

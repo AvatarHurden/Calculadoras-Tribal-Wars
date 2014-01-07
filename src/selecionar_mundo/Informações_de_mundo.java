@@ -54,9 +54,6 @@ public class Informações_de_mundo extends JPanel {
 		
 		setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
 		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridy = 0;
-				
 		addProperties();
 		
 	}
@@ -70,35 +67,45 @@ public class Informações_de_mundo extends JPanel {
 		gbc.gridy = 0;
 		
 		gbc.gridy++;
-		add(panelProperty("nome",prop.getProperty("nome")), gbc);
+		add(panelProperty("nome"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("velocidade",prop.getProperty("velocidade")), gbc);
+		add(panelProperty("velocidade"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("modificador",prop.getProperty("modificador")), gbc);
+		add(panelProperty("modificador"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("moral",prop.getProperty("moral")), gbc);
+		add(panelProperty("moral"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("arqueiro",prop.getProperty("arqueiro")), gbc);
+		add(panelProperty("pesquisaDeNiveis"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("milicia",prop.getProperty("milicia")), gbc);
+		add(panelProperty("igreja"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("paladino",prop.getProperty("paladino")), gbc);
+		add(panelProperty("bonusNoturno"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("igreja",prop.getProperty("igreja")), gbc);
+		add(panelProperty("bandeira"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("academiaDeNiveis",prop.getProperty("academiaDeNiveis")), gbc);
+		add(panelProperty("arqueiro"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("pesquisaDeNiveis",prop.getProperty("pesquisaDeNiveis")), gbc);
+		add(panelProperty("paladino"), gbc);
 		
+		if (Boolean.parseBoolean(prop.getProperty("paladino")) == true) {
+			gbc.gridy++;
+			add(panelProperty("itensAprimorados"), gbc);
+		}
+		
+		gbc.gridy++;
+		add(panelProperty("milicia"), gbc);
+		
+		gbc.gridy++;
+		add(panelProperty("academiaDeNiveis"), gbc);
 		
 	}
 
@@ -117,18 +124,24 @@ public class Informações_de_mundo extends JPanel {
 			return "Modificador de Unidade";
 		case "moral":
 			return "Moral";
-		case "arqueiro":
-			return "Arqueiros";
-		case "milicia":
-			return "Milícia";
-		case "paladino":
-			return "Paladino";
-		case "igreja":
-			return "Igreja";
-		case "academiaDeNiveis":
-			return "Cunhagem de Moedas";
 		case "pesquisaDeNiveis":
 			return "Sistema de Pesquisa";
+		case "igreja":
+			return "Igreja";
+		case "bonusNoturno":
+			return "Bônus Noturno";
+		case "bandeira":
+			return "Bandeiras";
+		case "arqueiro":
+			return "Arqueiros";
+		case "paladino":
+			return "Paladino";
+		case "itensAprimorados":
+			return "Itens Aprimorados";
+		case "milicia":
+			return "Milícia";
+		case "academiaDeNiveis":
+			return "Cunhagem de Moedas";	
 		default:
 			return null;
 		}
@@ -153,12 +166,27 @@ public class Informações_de_mundo extends JPanel {
 				return "Ativado";
 			else
 				return "Desativado";
-		case "arqueiro":
+		case "pesquisaDeNiveis":
+			if (propertyValue.equals("true"))
+				return "Pesquisa de 3 Níveis";
+			else
+				return "Pesquisa Simples";
+		case "igreja":
 			if (propertyValue.equals("true"))
 				return "Ativado";
 			else
 				return "Desativado";
-		case "milicia":
+		case "bonusNoturno":
+			if (propertyValue.equals("true"))
+				return "Ativado";
+			else
+				return "Desativado";
+		case "bandeira":
+			if (propertyValue.equals("true"))
+				return "Ativado";
+			else
+				return "Desativado";
+		case "arqueiro":
 			if (propertyValue.equals("true"))
 				return "Ativado";
 			else
@@ -168,7 +196,12 @@ public class Informações_de_mundo extends JPanel {
 				return "Ativado";
 			else
 				return "Desativado";
-		case "igreja":
+		case "itensAprimorados":
+			if (propertyValue.equals("true"))
+				return "Ativados";
+			else
+				return "Desativados";
+		case "milicia":
 			if (propertyValue.equals("true"))
 				return "Ativado";
 			else
@@ -178,11 +211,6 @@ public class Informações_de_mundo extends JPanel {
 				return "Desativado";
 			else
 				return "Ativado";
-		case "pesquisaDeNiveis":
-			if (propertyValue.equals("true"))
-				return "Pesquisa de 3 Níveis";
-			else
-				return "Pesquisa Simples";
 		default:
 			return null;
 		}
@@ -195,7 +223,7 @@ public class Informações_de_mundo extends JPanel {
 	 * @param propValue Valor da propriedade
 	 * @return Panel criado
 	 */
-	private JPanel panelProperty(String propName, String propValue) {
+	private JPanel panelProperty(String propName) {
 		
 		JPanel returnPanel = new JPanel();
 		
@@ -217,7 +245,7 @@ public class Informações_de_mundo extends JPanel {
 		gbc_panel.gridy = 0;
 		returnPanel.add(lblName, gbc_panel);
 		
-		JLabel lblValue = new JLabel(getPropertyValue(propName, propValue));
+		JLabel lblValue = new JLabel(getPropertyValue(propName, prop.getProperty(propName)));
 		
 		gbc_panel.gridx = 2;
 		gbc_panel.gridy = 0;

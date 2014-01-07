@@ -15,9 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.LineBorder;
 
+import config.Mundo_Reader;
 import database.Cores;
 import database.Ferramenta;
-import database.MundoSelecionado;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -190,7 +190,7 @@ public class GUI extends Ferramenta {
  		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.LANCEIRO, this));
  		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.ESPADACHIM, this));
 		
-		if (MundoSelecionado.hasArqueiro()) 
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
 			panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.ARQUEIRO, this));
 		
 		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.BÁRBARO, this));
@@ -198,7 +198,7 @@ public class GUI extends Ferramenta {
 		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.EXPLORADOR, this));
 		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.CAVALOLEVE, this));
 		
-		if (MundoSelecionado.hasArqueiro())
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
 			panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.ARCOCAVALO, this));
 		
 		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.CAVALOPESADO, this));
@@ -207,10 +207,10 @@ public class GUI extends Ferramenta {
 		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.CATAPULTA, this));
 		panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.NOBRE, this));
 		
-		if (MundoSelecionado.hasMilícia())
+		if (Mundo_Reader.MundoSelecionado.hasMilícia())
 			panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.MILÍCIA, this));
 		
-		if (MundoSelecionado.hasPaladino())
+		if (Mundo_Reader.MundoSelecionado.hasPaladino())
 			panelUnidadeList.add(new PanelUnidade(getNextColor(),Unidade.PALADINO, this));
 		
 	}

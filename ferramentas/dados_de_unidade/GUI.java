@@ -14,8 +14,8 @@ import javax.swing.border.LineBorder;
 
 import database.Cores;
 import database.Ferramenta;
-import database.MundoSelecionado;
 import database.Unidade;
+import config.Mundo_Reader;;
 
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
@@ -168,7 +168,7 @@ public class GUI extends Ferramenta {
 		unidadesUtilizadas.add(Unidade.LANCEIRO);
 		unidadesUtilizadas.add(Unidade.ESPADACHIM);
 		
-		if (MundoSelecionado.hasArqueiro()) 
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
 			unidadesUtilizadas.add(Unidade.ARQUEIRO);
 		
 		unidadesUtilizadas.add(Unidade.BÁRBARO);
@@ -176,7 +176,7 @@ public class GUI extends Ferramenta {
 		unidadesUtilizadas.add(Unidade.EXPLORADOR);
 		unidadesUtilizadas.add(Unidade.CAVALOLEVE);
 		
-		if (MundoSelecionado.hasArqueiro()) 
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
 			unidadesUtilizadas.add(Unidade.ARCOCAVALO);
 		
 		unidadesUtilizadas.add(Unidade.CAVALOPESADO);
@@ -185,10 +185,10 @@ public class GUI extends Ferramenta {
 		unidadesUtilizadas.add(Unidade.CATAPULTA);
 		unidadesUtilizadas.add(Unidade.NOBRE);
 		
-		if (MundoSelecionado.hasMilícia())
+		if (Mundo_Reader.MundoSelecionado.hasMilícia())
 			unidadesUtilizadas.add(Unidade.MILÍCIA);
 		
-		if (MundoSelecionado.hasPaladino())
+		if (Mundo_Reader.MundoSelecionado.hasPaladino())
 			unidadesUtilizadas.add(Unidade.PALADINO);
 		
 		createPanelUnidade();

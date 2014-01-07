@@ -8,7 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.math.BigInteger;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -28,8 +29,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import config.Mundo_Reader;
 import database.Cores;
-import database.MundoSelecionado;
 import database.Unidade;
 
 public class PanelUnidade{
@@ -93,7 +94,7 @@ public class PanelUnidade{
 		identificadores.setBackground(Cores.FUNDO_ESCURO);
 		
 		GridBagLayout gbl_inserção = new GridBagLayout();
-		if (MundoSelecionado.isPesquisaDeNíveis())
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			gbl_inserção.columnWidths = new int[] {125, 1, 40, 1, 80};
 		else
 			gbl_inserção.columnWidths = new int[] {125, 80};
@@ -109,7 +110,7 @@ public class PanelUnidade{
 		gbc_inserção.gridx = 0;
 		identificadores.add(nome, gbc_inserção);
 		
-		if (MundoSelecionado.isPesquisaDeNíveis()) {
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			addSeparator(gbc_inserção, identificadores);
 		
 			JLabel nível = new JLabel("Nível");
@@ -132,7 +133,7 @@ public class PanelUnidade{
 		GridBagLayout gbl = new GridBagLayout();
 		
 		// Caso o mundo tenha arqueiros, coloca lugar para a defesa de arqueiro
-		if (MundoSelecionado.hasArqueiro())
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
 			gbl.columnWidths = new int[] {75, 1, 75, 1, 75, 1, 75, 1, 75};
 		else
 			gbl.columnWidths = new int[] {75, 1, 75, 1, 75, 1, 75};
@@ -169,7 +170,7 @@ public class PanelUnidade{
 		
 		defArqueiro = new JLabel("Def. Arq.");
 		
-		if (MundoSelecionado.hasArqueiro()) {
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
 		
 			constraints.insets = new Insets(5, 0, 5, 5);
 			constraints.gridx++;
@@ -234,7 +235,7 @@ public class PanelUnidade{
 	private void setInserção() {
 		
 		GridBagLayout gbl = new GridBagLayout();
-		if (MundoSelecionado.isPesquisaDeNíveis())
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			gbl.columnWidths = new int[] {125, 1, 40, 1, 80};
 		else
 			gbl.columnWidths = new int[] {125, 80};
@@ -252,7 +253,7 @@ public class PanelUnidade{
 		nome = new JLabel(unidade.nome());
 		identificadores.add(nome, constraints);
 		
-		if (MundoSelecionado.isPesquisaDeNíveis()) {
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			addSeparator(constraints, identificadores);
 			
 			if (unidade.equals(Unidade.PALADINO) || unidade.equals(Unidade.NOBRE) 
@@ -327,7 +328,7 @@ public class PanelUnidade{
 		GridBagLayout gbl = new GridBagLayout();
 		
 		// Caso o mundo tenha arqueiros, coloca lugar para a defesa de arqueiro
-		if (MundoSelecionado.hasArqueiro())
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
 			gbl.columnWidths = new int[] {75, 1, 75, 1, 75, 1, 75, 1, 75};
 		else
 			gbl.columnWidths = new int[] {75, 1, 75, 1, 75, 1, 75};
@@ -363,7 +364,7 @@ public class PanelUnidade{
 		
 		defArqueiro = new JLabel();
 		
-		if (MundoSelecionado.hasArqueiro()) {
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
 			
 			constraints.insets = new Insets(5, 0, 5, 5);
 			constraints.gridx++;
@@ -508,16 +509,16 @@ public class PanelUnidade{
 					.parse(quantidade.getText()).toString();
 		} catch (ParseException e) {}
 		
-		BigInteger quantia = new BigInteger(formated);
+		BigDecimal quantia = new BigDecimal(formated);
 		
-		dano.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.ataque()))));
-		defGeral.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.defGeral()))));
-		defCavalo.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.defCav()))));
-		defArqueiro.setText(String.format("%,d",quantia.multiply(
-				unidade.upgrade(nível.getSelectedIndex()+1, unidade.defArq()))));
+		dano.setText(quantia.multiply(unidade.ataque((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
+		defGeral.setText(quantia.multiply(unidade.defGeral((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
+		defCavalo.setText(quantia.multiply(unidade.defCav((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
+		defArqueiro.setText(quantia.multiply(unidade.defArq((nível.getSelectedIndex()+1)))
+				.setScale(0,RoundingMode.HALF_UP).toString());
 		
 		saque.setText(String.format("%,d",quantia.multiply(unidade.saque()).intValue()));
 		

@@ -1,155 +1,454 @@
 package simulador;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
-import config.World_Reader;
+import config.Mundo_Reader;
+import database.Bandeira;
+import database.Cores;
 import database.Ferramenta;
-import database.MundoSelecionado;
+import database.ItemPaladino;
 import database.Unidade;
 
-public class GUI extends Ferramenta {
+@SuppressWarnings("serial")
+public class GUI extends Ferramenta{
+	
+	InputInfo input = new InputInfo();
+	
+	OutputInfo output = new OutputInfo();
+	
+	Cálculo cálculo = new Cálculo(input, output);
+	
+	StatInsertion stat = new StatInsertion(StatInsertion.Tipo.Atacante, input);
+	
+	StatInsertion stat2 = new StatInsertion(StatInsertion.Tipo.Defensor, input);	
+	
+	ResultTroopDisplay display = new ResultTroopDisplay(output);
+	
+	public GUI() {
+		
+		super("Simulador - Beta");
+		
+		setBackground(Cores.FUNDO_CLARO);
+		
+		setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.anchor = GridBagConstraints.NORTH;
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		add(addUnitNames(),c);
+		
+		
+		
+		c.gridx++;
+		add(stat,c);
+		
+		c.gridx++;
+		add(stat2,c);
 
-	private JTextField txtSorte;
-	
-	private JTextField txtMoral;
-	
-	private JTextField txtMuralha;
-	
-	private JCheckBox checkReligiãoAtacante;
-	
-	private JCheckBox checkReligiãoDefensor;
-	
-	private Map<Unidade, BigDecimal> tropasAtacante;
-	
-	private Map<Unidade, BigDecimal> tropasDefensor;
-	
-	public GUI(Map<Unidade, BigDecimal> tropasAtacante, Map<Unidade, BigDecimal> tropasDefensor, int moral, int muralha, int sorte,
-			boolean religiãoAtacante, boolean religiãoDefensor) {
 		
-		txtMoral = new JTextField(String.valueOf(moral));
+		c.gridx++;
+		add(display, c);
 		
-		txtMuralha = new JTextField(String.valueOf(muralha));
+		JButton button = new JButton("Go");
+		button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				stat.setInputInfo();
+				
+				stat2.setInputInfo();
 		
-		txtSorte = new JTextField(String.valueOf(sorte));
+				cálculo.calculate();
+				
+				display.setValues();
+				
+			}
+		});
 		
-		checkReligiãoAtacante = new JCheckBox();
-		checkReligiãoAtacante.setSelected(religiãoAtacante);
-		
-		checkReligiãoDefensor = new JCheckBox();
-		checkReligiãoDefensor.setSelected(religiãoDefensor);
-		
-		this.tropasAtacante = tropasAtacante;
-		this.tropasDefensor = tropasDefensor;
-		
-//		Calculadora_de_perdas test = new Calculadora_de_perdas(this);
-		
-		Cálculo teste = new Cálculo(this);
-	}
-	
-	/**
-	 * @return sorte, do ponto de visto do atacante
-	 */
-	protected int getSorte() {
-		return Integer.parseInt(txtSorte.getText());
-	}
-	
-	/**
-	 * @return moral das tropas atacantes
-	 */
-	protected int getMoral() {
-		return Integer.parseInt(txtMoral.getText());
-	}
-	
-	/**
-	 * @return religião das tropas atacantes
-	 */
-	protected boolean getReligiãoAtacante() {
-		return checkReligiãoAtacante.isSelected();
-	}
-	
-	/**
-	 * @return religião das tropas defensoras
-	 */
-	protected boolean getReligiãoDefensores() {
-		return checkReligiãoDefensor.isSelected();
-	}
-	
-	/**
-	 * @return nível da muralha do defensor
-	 */
-	protected int getNívelMuralha() {
-		return Integer.parseInt(txtMuralha.getText());
-	}
-	
-	/**
-	 * @return lista de tropas atacantes
-	 */
-	protected Map<Unidade, BigDecimal> getListaAtacante() {
-		return tropasAtacante;
-	}
-	
-	/**
-	 * @return lista de tropas defensoras
-	 */
-	protected Map<Unidade, BigDecimal> getListaDefensor() {
-		return tropasDefensor;
-	}
-	
-	public static void main (String args[]) {
-		
-		World_Reader.read();
-		
-		MundoSelecionado.setMundo(World_Reader.getMundo(0));
-		
-		Map<Unidade, BigDecimal> tropasAtacante = new HashMap<Unidade, BigDecimal>();
-		
-		Map<Unidade, BigDecimal> tropasDefensor = new HashMap<Unidade, BigDecimal>();
-		
-		tropasAtacante.put(Unidade.LANCEIRO, new BigDecimal(0));
-		tropasAtacante.put(Unidade.ESPADACHIM, new BigDecimal(0));
-		tropasAtacante.put(Unidade.ARQUEIRO, new BigDecimal(0));
-		tropasAtacante.put(Unidade.BÁRBARO, new BigDecimal(1000));
-		tropasAtacante.put(Unidade.EXPLORADOR, new BigDecimal(0));
-		tropasAtacante.put(Unidade.CAVALOLEVE, new BigDecimal(0));
-		tropasAtacante.put(Unidade.ARCOCAVALO, new BigDecimal(0));
-		tropasAtacante.put(Unidade.CAVALOPESADO, new BigDecimal(0));
-		tropasAtacante.put(Unidade.ARÍETE, new BigDecimal(0));
-		tropasAtacante.put(Unidade.CATAPULTA, new BigDecimal(0));
-		tropasAtacante.put(Unidade.PALADINO, new BigDecimal(0));
-		tropasAtacante.put(Unidade.NOBRE, new BigDecimal(0));
-		
-		tropasDefensor.put(Unidade.LANCEIRO, new BigDecimal(1000));
-		tropasDefensor.put(Unidade.ESPADACHIM, new BigDecimal(0));
-		tropasDefensor.put(Unidade.ARQUEIRO, new BigDecimal(0));
-		tropasDefensor.put(Unidade.BÁRBARO, new BigDecimal(0));
-		tropasDefensor.put(Unidade.EXPLORADOR, new BigDecimal(0));
-		tropasDefensor.put(Unidade.CAVALOLEVE, new BigDecimal(0));
-		tropasDefensor.put(Unidade.ARCOCAVALO, new BigDecimal(0));
-		tropasDefensor.put(Unidade.CAVALOPESADO, new BigDecimal(0));
-		tropasDefensor.put(Unidade.ARÍETE, new BigDecimal(0));
-		tropasDefensor.put(Unidade.CATAPULTA, new BigDecimal(0));
-		tropasDefensor.put(Unidade.PALADINO, new BigDecimal(0));
-		tropasDefensor.put(Unidade.NOBRE, new BigDecimal(0));
-		tropasDefensor.put(Unidade.MILÍCIA, new BigDecimal(0));
-		
-		int muralha = 0;
-		
-		int moral = 100;
-		
-		boolean religiãoAtacante = true;
-		boolean religiãoDefensor = true;
-		
-		int sorte = -25;
-		
-		GUI test = new GUI(tropasAtacante, tropasDefensor, moral, muralha, sorte, religiãoAtacante, religiãoDefensor);
-		
+		c.gridy++;
+		add(button, c);
 		
 		
 	}
 	
+	public JPanel addUnitNames() {
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		
+		panel.setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(0,0,0,0);
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		
+		// Adding the headers
+		
+		JLabel lblNome = new JLabel("Unidade");
+		lblNome.setPreferredSize(new Dimension(lblNome.getPreferredSize().width+10, 26));
+		lblNome.setBackground(Cores.FUNDO_ESCURO);
+		lblNome.setOpaque(true);
+		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
+		
+		panel.add(lblNome, c);
+			
+		// Setting the constraints for the unit panels
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		
+		int loop = 0;
+		
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+			
+			if (i != null) {
+				
+			JPanel tropaPanel = new JPanel();
+			tropaPanel.setLayout(new GridBagLayout());
+			tropaPanel.setBackground(Cores.getAlternar(loop));
+//			tropaPanel.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+			
+			GridBagConstraints tropaC = new GridBagConstraints();
+			tropaC.insets = new Insets(5,5,5,5);
+			tropaC.gridx = 0;
+			tropaC.gridy = 0;
+			
+			// Creating the TextField for the quantity of troops
+			JLabel lbl = new JLabel(i.nome());
+			
+			tropaPanel.add(lbl, tropaC);
+			
+			loop++;
+			c.gridy++;
+			panel.add(tropaPanel, c);
+			
+			}
+		}
+		
+		return panel;
+		
+	}
+	
+	protected class InputInfo {
+		
+		private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
+		private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
+	
+		private Map<Unidade, Integer> nívelTropasAtaque = new HashMap<Unidade, Integer>();
+		private Map<Unidade, Integer> nívelTropasDefesa = new HashMap<Unidade, Integer>();
+		
+		private int muralha;
+		
+		private int edifício;
+		
+		private int moral;
+		
+		private ItemPaladino itemAtacante, itemDefensor;
+
+		private Bandeira bandeiraAtacante, bandeiraDefensor;
+		
+		private boolean religiãoAtacante, religiãoDefensor;
+		
+		private int sorte;
+		
+		private boolean noite;
+		
+		public InputInfo() {}
+
+		/**
+		 * @return Map com tropas atacantes
+		 */
+		protected Map<Unidade, BigDecimal> getTropasAtacantes() {
+			return tropasAtacantes;
+		}
+
+		protected void setTropasAtacantes(Map<Unidade, BigDecimal> tropasAtacantes) {
+			this.tropasAtacantes = tropasAtacantes;
+		}
+
+		/**
+		 * @return Map com tropas defensoras
+		 */
+		protected Map<Unidade, BigDecimal> getTropasDefensoras() {
+			return tropasDefensoras;
+		}
+
+		protected void setTropasDefensoras(Map<Unidade, BigDecimal> tropasDefensoras) {
+			this.tropasDefensoras = tropasDefensoras;
+		}
+
+		/**
+		 * @return Map com nível das tropas atacantes
+		 */
+		protected Map<Unidade, Integer> getNívelTropasAtaque() {
+			return nívelTropasAtaque;
+		}
+
+		protected void setNívelTropasAtaque(Map<Unidade, Integer> nívelTropasAtaque) {
+			this.nívelTropasAtaque = nívelTropasAtaque;
+		}
+
+		/**
+		 * @return Map com nível das tropas defensoras
+		 */
+		protected Map<Unidade, Integer> getNívelTropasDefesa() {
+			return nívelTropasDefesa;
+		}
+
+		protected void setNívelTropasDefesa(Map<Unidade, Integer> nívelTropasDefesa) {
+			this.nívelTropasDefesa = nívelTropasDefesa;
+		}
+
+		/**
+		 * @return nível da muralha
+		 */
+		protected int getMuralha() {
+			return muralha;
+		}
+
+		/**
+		 * @param nível da muralha (se for maior do que o máximo ou menor do que o mínimo, ele arruma)
+		 */
+		protected void setMuralha(int muralha) {
+			
+			if (muralha > 20) {
+				muralha = 20;
+			}
+			
+			this.muralha = muralha;
+		}
+
+		/**
+		 * @return nível do edifício
+		 */
+		protected int getEdifício() {
+			return edifício;
+		}
+
+		protected void setEdifício(int edifício) {
+			this.edifício = edifício;
+		}
+
+		/**
+		 * @return moral, em porcentagem (e.g 80)
+		 */
+		protected int getMoral() {
+			return moral;
+		}
+
+		/**
+		 * @param moral, em porcentagem (e.g 80)
+		 */
+		protected void setMoral(int moral) {
+			
+			if (moral > 100) {
+				moral = 100;
+			}
+			
+			this.moral = moral;
+		}
+
+		/**
+		 * @return item do paladino atacante
+		 */
+		protected ItemPaladino getItemAtacante() {
+			return itemAtacante;
+		}
+
+		/**
+		 * @param item do paladino atacante
+		 */
+		protected void setItemAtacante(ItemPaladino itemAtacante) {
+			this.itemAtacante = itemAtacante;
+		}
+
+		/**
+		 * @return item do paladino defensor
+		 */
+		protected ItemPaladino getItemDefensor() {
+			return itemDefensor;
+		}
+
+		/**
+		 * @param item do paladino defensor
+		 */
+		protected void setItemDefensor(ItemPaladino itemDefensor) {
+			this.itemDefensor = itemDefensor;
+		}
+
+		/**
+		 * @return bandeira atacante
+		 */
+		protected Bandeira getBandeiraAtacante() {
+			return bandeiraAtacante;
+		}
+
+		/**
+		 * @param bandeira atacante
+		 */
+		protected void setBandeiraAtacante(Bandeira bandeiraAtacante) {
+			this.bandeiraAtacante = bandeiraAtacante;
+		}
+
+		/**
+		 * @return bandeira defensor
+		 */
+		protected Bandeira getBandeiraDefensor() {
+			return bandeiraDefensor;
+		}
+
+		/**
+		 * @param bandeira defensor
+		 */
+		protected void setBandeiraDefensor(Bandeira bandeiraDefensor) {
+			this.bandeiraDefensor = bandeiraDefensor;
+		}
+
+		/**
+		 * @return religião do atacante
+		 */
+		protected boolean getReligiãoAtacante() {
+			return religiãoAtacante;
+		}
+
+		/**
+		 * @param religião do atacante
+		 */
+		protected void setReligiãoAtacante(boolean religiãoAtacante) {
+			this.religiãoAtacante = religiãoAtacante;
+		}
+
+		/**
+		 * @return religião do defensor
+		 */
+		protected boolean getReligiãoDefensor() {
+			return religiãoDefensor;
+		}
+
+		/**
+		 * @param religião do defensor
+		 */
+		protected void setReligiãoDefensor(boolean religiãoDefensor) {
+			this.religiãoDefensor = religiãoDefensor;
+		}
+
+		/**
+		 * @return sorte do atacante, em porcetagem (e.g 20)
+		 */
+		protected int getSorte() {
+			return sorte;
+		}
+
+		/**
+		 * @param sorte do atacante, em porcetagem (e.g 20)
+		 */
+		protected void setSorte(int sorte) {
+			
+			if (Math.abs(sorte) > 25) {
+				if (Integer.signum(sorte) == -1)
+					sorte = -25;
+				else
+					sorte = 25;
+			}
+			
+			this.sorte = sorte;
+		}
+
+		/**
+		 * @return se possui bônus noturno
+		 */
+		protected boolean getNoite() {
+			return noite;
+		}
+
+		/**
+		 * @param se possui bônus noturno
+		 */
+		protected void setNoite(boolean noite) {
+			this.noite = noite;
+		};
+		
+		
+	}
+	
+	protected class OutputInfo {
+		
+		private Map<Unidade, BigDecimal> tropasAtacantesPerdidas = new HashMap<Unidade, BigDecimal>();
+		private Map<Unidade, BigDecimal> tropasDefensorasPerdidas = new HashMap<Unidade, BigDecimal>();
+	
+		private int muralha;
+		
+		private int edifício;
+
+		/**
+		 * @return Map com tropas atacantes perdidas
+		 */
+		protected Map<Unidade, BigDecimal> getTropasAtacantesPerdidas() {
+			return tropasAtacantesPerdidas;
+		}
+
+		protected void setTropasAtacantesPerdidas(
+				Map<Unidade, BigDecimal> tropasAtacantesPerdidas) {
+			this.tropasAtacantesPerdidas = tropasAtacantesPerdidas;
+		}
+
+		/**
+		 * @return Map com tropas defensoras perdidas
+		 */
+		protected Map<Unidade, BigDecimal> getTropasDefensorasPerdidas() {
+			return tropasDefensorasPerdidas;
+		}
+
+		protected void setTropasDefensorasPerdidas(
+				Map<Unidade, BigDecimal> tropasDefensorasPerdidas) {
+			this.tropasDefensorasPerdidas = tropasDefensorasPerdidas;
+		}
+
+		/**
+		 * @return nível final da muralha
+		 */
+		protected int getMuralha() {
+			return muralha;
+		}
+
+		protected void setMuralha(int muralha) {
+			this.muralha = muralha;
+		}
+
+		/**
+		 * @return nível final do edifício
+		 */
+		protected int getEdifício() {
+			return edifício;
+		}
+
+		protected void setEdifício(int edifício) {
+			this.edifício = edifício;
+		}
+		
+		
+		
+	}
+
 }

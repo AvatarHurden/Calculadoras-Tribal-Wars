@@ -18,9 +18,9 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import config.Mundo_Reader;
 import database.Cores;
 import database.Edifício;
-import database.MundoSelecionado;
 
 @SuppressWarnings("serial")
 public class PanelEdifício extends JPanel {
@@ -136,7 +136,7 @@ public class PanelEdifício extends JPanel {
 						for (PanelUnidade panel : unidades) {
 
 							BigDecimal tempo = panel.getUnidade().tempoDeProdução().
-								multiply(MundoSelecionado.
+								multiply(Mundo_Reader.MundoSelecionado.
 										getPorcentagemDeProdução(Integer.parseInt(txtNível.getText())));
 						
 							panel.getTempoUnitário().setText(Cálculos.format(tempo));
@@ -157,7 +157,7 @@ public class PanelEdifício extends JPanel {
 		for (PanelUnidade panel : unidades) {
 
 			BigDecimal tempo = panel.getUnidade().tempoDeProdução().
-					multiply(MundoSelecionado.
+					multiply(Mundo_Reader.MundoSelecionado.
 							getPorcentagemDeProdução(Integer.parseInt(txtNível.getText())));
 			
 			panel.getTempoUnitário().setText(Cálculos.format(tempo));

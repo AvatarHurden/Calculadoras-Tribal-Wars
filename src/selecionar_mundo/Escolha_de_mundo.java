@@ -13,8 +13,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import main.Main;
-import config.World_Reader;
-import database.MundoSelecionado;
+import config.File_Manager;
+import config.Mundo_Reader;
 
 @SuppressWarnings("serial")
 public class Escolha_de_mundo extends JPanel{
@@ -39,14 +39,16 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		
-		String[] nomeMundos = new String[World_Reader.getMundoList().size()];
+		String[] nomeMundos = new String[Mundo_Reader.getMundoList().size()];
 	
 		// Adiciona o nome de todos os mundos para a lista que será utilizada
 		// no comboBox
-		for (int i = 0; i < World_Reader.getMundoList().size(); i++)
-			nomeMundos[i] = World_Reader.getMundo(i).getNome();
+		for (int i = 0; i < Mundo_Reader.getMundoList().size(); i++)
+			nomeMundos[i] = Mundo_Reader.getMundo(i).getNome();
 		
 		selectionBox = new JComboBox<String>(nomeMundos);
+		
+		selectionBox.setSelectedItem(File_Manager.getMundoPadrão());
 		
 		selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
@@ -67,7 +69,7 @@ public class Escolha_de_mundo extends JPanel{
 			
 				// Define as características da classe estática "MundoSelecionado", que será
 				// utilizado por todas as ferramentas
-				MundoSelecionado.setMundo(World_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
+				Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
 				
 				Main.openMainFrame();
 				

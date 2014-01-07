@@ -2,7 +2,8 @@ package main;
 
 import javax.swing.JFrame;
 
-import config.World_Reader;
+import config.File_Manager;
+import config.Mundo_Reader;
 import frames.MainWindow;
 
 public class Main {
@@ -12,7 +13,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		World_Reader.read();
+		File_Manager.read();
 		
 		openSelection();
 		
@@ -39,7 +40,9 @@ public class Main {
 		
 		selecionar.dispose();
 		
-//		World_Reader.save();
+		File_Manager.setMundoPadrão(Mundo_Reader.MundoSelecionado.getNome());
+		
+//		File_Manager.save();
 		
 		mainFrame = new MainWindow();
 		//Adicionando todas as ferramentas criadas
@@ -48,6 +51,7 @@ public class Main {
 		mainFrame.addPanel(new pontos.GUI());
 		mainFrame.addPanel(new distância.GUI());
 		mainFrame.addPanel(new oponentes_derrotados.GUI());
+		mainFrame.addPanel(new simulador.GUI());
 		
 		mainFrame.selectFirst();
 		
