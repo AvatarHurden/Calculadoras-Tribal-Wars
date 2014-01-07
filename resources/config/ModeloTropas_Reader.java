@@ -9,5 +9,4 @@ package config;
 public class ModeloTropas_Reader {
 
 	
-	
 }

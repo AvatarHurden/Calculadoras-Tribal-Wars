@@ -7,7 +7,7 @@
 
 - // tornar MundoSelecionado um static object de Mundo
 
-- parar de usar Properties para escrever as configurações de mundo, imprimir de forma própria
+- // parar de usar Properties para escrever as configurações de mundo, imprimir de forma própria
 
 - usar somente um arquivo para todas as configurações 
 	

@@ -2,6 +2,7 @@ package main;
 
 import javax.swing.JFrame;
 
+import config.File_Reader;
 import config.Mundo_Reader;
 import frames.MainWindow;
 
@@ -12,7 +13,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		Mundo_Reader.read();
+		File_Reader.read();
 		
 		openSelection();
 		

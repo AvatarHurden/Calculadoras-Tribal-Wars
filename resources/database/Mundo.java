@@ -72,22 +72,26 @@ public class Mundo {
 		
 	}
 	
-	public void printAll() {
+	public String getConfigText() {
 		
-		System.out.println("Nome: "+nome);
-		System.out.println("Velocidade: "+velocidade.toString());
-		System.out.println("Modificador: "+modificarUnidaes.toString());
+		String s = "\n";
 		
-		System.out.println("Arqueiros: "+hasArqueiro);
-		System.out.println("Milícia: "+hasMilícia);
-		System.out.println("Moral: "+hasMoral);
-		System.out.println("Paladino: "+hasPaladino);
-		System.out.println("Itens Aprimorados: "+hasItensAprimorados);
-		System.out.println("Igreja: "+hasIgreja);
-		System.out.println("Academia de Níveis: "+academiaDeNíveis);
-		System.out.println("Pesquisa de Níveis: "+pesquisaDeNíveis);
-		System.out.println("Bandeira: "+hasBandeira);
-		System.out.println("Bônus Noturno: "+hasBonusNoturno);
+		s+=("nome="+nome+"\n");
+		s+=("velocidade="+velocidade.toString()+"\n");
+		s+=("modificador="+modificarUnidaes.toString()+"\n");
+		
+		s+=("moral="+hasMoral+"\n");
+		s+=("pesquisaDeNiveis="+pesquisaDeNíveis+"\n");
+		s+=("igreja="+hasIgreja+"\n");
+		s+=("bonusNoturno="+hasBonusNoturno+"\n");
+		s+=("bandeira="+hasBandeira+"\n");
+		s+=("arqueiro="+hasArqueiro+"\n");
+		s+=("paladino="+hasPaladino+"\n");
+		s+=("itensAprimorados="+hasItensAprimorados+"\n");
+		s+=("milicia="+hasMilícia+"\n");
+		s+=("academiaDeNiveis="+academiaDeNíveis+"\n");
+		
+		return s;
 		
 	}
 	
@@ -186,39 +190,22 @@ public class Mundo {
 		this.nome = nome;
 	}
 	
-	/**
-	 * @param boolean possui arqueiros
-	 */
-	public void setHasArqueiro(boolean hasArqueiro) {
-		this.hasArqueiro = hasArqueiro;
-	}
-	/**
-	 * @param boolean possui milícia
-	 */
 	public void setHasMilícia(boolean hasMilícia) {
 		this.hasMilícia = hasMilícia;
 	}
-	/**
-	 * @param boolean possui paladino
-	 */
+	
 	public void setHasPaladino(boolean hasPaladino) {
 		this.hasPaladino = hasPaladino;
 	}
-	/**
-	 * @param boolean possui itens aprimorados
-	 */
+	
 	public void setHasItemnsprimorados(boolean hasItemAprimorado) {
 		this.hasItensAprimorados = hasItemAprimorado;
 	}
-	/**
-	 * @param  boolean possui igreja
-	 */
+	
 	public void setHasIgreja(boolean hasIgreja) {
 		this.hasIgreja = hasIgreja;
 	}
-	/**
-	 * @param boolean possui academia de níveis (armazenamento)
-	 */
+	
 	public void setAcademiaDeNíveis(boolean academiaDeNíveis) {
 		this.academiaDeNíveis = academiaDeNíveis;
 	}
@@ -227,36 +214,22 @@ public class Mundo {
 		this.pesquisaDeNíveis = pesquisaDeNíveis;
 	}
 
-	/**
-	 * @param boolean possui moral
-	 */
 	public void setHasMoral(boolean hasMoral) {
 		this.hasMoral = hasMoral;
 	}
 	
-	/**
-	 * @param boolean possui bandeira
-	 */
 	public void setHasBandeira(boolean hasBandeira) {
 		this.hasBandeira = hasBandeira;
 	}
 	
-	/**
-	 * @param boolean possui bônus noturno
-	 */
 	public void setHasBonusNoturno(boolean hasBonusNoturno) {
 		this.hasBonusNoturno = hasBonusNoturno;
 	}
 	
-	/**
-	 * @param BigDecimal velocidade do mundo
-	 */
 	public void setVelocidade(BigDecimal velocidade) {
 		this.velocidade = velocidade;
 	}
-	/**
-	 * @param BigDecimal modificador de unidades do mundo
-	 */
+
 	public void setModificarUnidaes(BigDecimal modificarUnidaes) {
 		this.modificarUnidaes = modificarUnidaes;
 	}

@@ -26,7 +26,7 @@ public class InfoFinder {
 		
 		do {
 			text += input.nextLine()+"\n";
-		} while (!text.contains("terminar"));
+		} while (!text.contains(""));
 		
 		Scanner string = new Scanner(text);
 		
