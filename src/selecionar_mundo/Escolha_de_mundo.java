@@ -23,6 +23,8 @@ public class Escolha_de_mundo extends JPanel{
 	
 	private JButton startButton;
 	
+	private JButton padrãoButton;
+	
 	/**
 	 * JPanel com um comboBox para escolher o mundo e um botão para iniciar o frame de ferramentas
 	 * 
@@ -56,10 +58,28 @@ public class Escolha_de_mundo extends JPanel{
 				// Cada vez que o mundo selecionado é alterado, altera as informações da tabela
 				gui.changeInformationPanel();
 				
+				changePadrãoButton();
+				
 			}
 		});
 		
 		add(selectionBox, constraints);
+		
+		padrãoButton = new JButton("Padrão");
+		
+		padrãoButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+			
+				// Define o mundo padrão a ser usado
+				File_Manager.setMundoPadrão(selectionBox.getSelectedItem().toString());
+				
+				changePadrãoButton();
+			}
+		});
+		
+		constraints.gridx = 1;
+		add(padrãoButton, constraints);
 		
 		startButton = new JButton("Iniciar");
 		
@@ -77,7 +97,20 @@ public class Escolha_de_mundo extends JPanel{
 		});
 		
 		constraints.gridy = 1;
+		constraints.gridx = 0;
 		add(startButton, constraints);
+		
+		changePadrãoButton();
+		
+	}
+	
+	private void changePadrãoButton() {
+		
+		if (selectionBox.getSelectedItem().toString()
+				.equals(File_Manager.getMundoPadrão()))
+			padrãoButton.setEnabled(false);
+		else
+			padrãoButton.setEnabled(true);
 		
 	}
 	

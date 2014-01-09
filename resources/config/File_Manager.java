@@ -2,10 +2,12 @@ package config;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 
 /**
  * Reads from the config file and stores separate parts for use
@@ -34,11 +36,17 @@ public class File_Manager {
 	
 		try {
 			
+			File config = new File("configurações_CalculadoraTribalWars.txt");
+			
+			Files.setAttribute(config.toPath(), "dos:hidden", false);
+			
 			// read the user-alterable config file
 			BufferedReader in = new BufferedReader(
-					new FileReader(new File("configurações_CalculadoraTribalWars.txt")));
-		
+					new FileReader(config));
+			
 			process(in);
+			
+			Files.setAttribute(config.toPath(), "dos:hidden", true);
 			
 		// in case the file is corrupt, for any reason (thus we generalize the exception), we use
 		// the default file
@@ -53,7 +61,7 @@ public class File_Manager {
 			System.out.println("O arquivo salvo está corrompido");
 			
 			BufferedReader in = new BufferedReader(
-						new InputStreamReader(File_Manager.class.getResourceAsStream("default_mundos")));
+						new InputStreamReader(File_Manager.class.getResourceAsStream("default_config")));
 			
 			try {
 				process(in);
@@ -123,7 +131,7 @@ public class File_Manager {
 		// In case the file does not exist, create it
 			if (!configurações.exists())
 				configurações.createNewFile();
-		
+			
 		FileWriter out = new FileWriter(configurações);
 			
 		// save mundoPadrão
@@ -159,6 +167,8 @@ public class File_Manager {
 		out.write("\n");
 		
 		out.close();
+		
+		Files.setAttribute(configurações.toPath(), "dos:hidden", true);
 		
 		} catch (IOException e) {
 			

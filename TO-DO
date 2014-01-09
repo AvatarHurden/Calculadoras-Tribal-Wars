@@ -3,13 +3,13 @@
 	
 - Adicionar mais informações no simulador
 
-- Salvar mundo padrão
+- // Salvar mundo padrão
 
 - // tornar MundoSelecionado um static object de Mundo
 
 - // parar de usar Properties para escrever as configurações de mundo, imprimir de forma própria
 
-- usar somente um arquivo para todas as configurações 
+- // usar somente um arquivo para todas as configurações 
 	
 	Ex.	Mundo_padrão=Mundo 21
 		

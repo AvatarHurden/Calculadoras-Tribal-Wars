@@ -40,9 +40,7 @@ public class Main {
 		
 		selecionar.dispose();
 		
-		File_Manager.setMundoPadrão(Mundo_Reader.MundoSelecionado.getNome());
-		
-//		File_Manager.save();
+		File_Manager.save();
 		
 		mainFrame = new MainWindow();
 		//Adicionando todas as ferramentas criadas
