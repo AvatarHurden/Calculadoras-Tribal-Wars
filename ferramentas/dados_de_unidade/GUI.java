@@ -90,16 +90,16 @@ public class GUI extends Ferramenta {
 		PanelUnidade header = new PanelUnidade();
 		
 		if (withIdentifiers) {
-			header.getIdentificadores().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,true));
+			header.getIdentificadores().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,false));
 			add(header.getIdentificadores(), gbc);
 		}
 		
 		gbc.gridx++;
-		header.getDadosPrincipais().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,true));
+		header.getDadosPrincipais().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,false));
 		add(header.getDadosPrincipais(), gbc);
 		
 		gbc.gridx++;
-		header.getDadosCusto().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,true));
+		header.getDadosCusto().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,false));
 		add(header.getDadosCusto(), gbc);
 		
 	}
@@ -114,7 +114,7 @@ public class GUI extends Ferramenta {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 0;
@@ -141,11 +141,11 @@ public class GUI extends Ferramenta {
 	private void addPanelTotal(GridBagConstraints gbc) {		
 		
 		gbc.gridx++;
-		total.getDadosPrincipais().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,true));
+		total.getDadosPrincipais().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,false));
 		add(total.getDadosPrincipais(), gbc);
 		
 		gbc.gridx++;
-		total.getDadosCusto().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,true));
+		total.getDadosCusto().setBorder(new LineBorder(Cores.SEPARAR_ESCURO,1,false));
 		add(total.getDadosCusto(), gbc);
 		
 	}

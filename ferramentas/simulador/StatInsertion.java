@@ -173,7 +173,7 @@ public class StatInsertion extends JPanel{
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};
@@ -190,7 +190,7 @@ public class StatInsertion extends JPanel{
 		// Adding the headers
 		
 		JLabel lblTipo = new JLabel(tipo.toString());
-		lblTipo.setPreferredSize(new Dimension(lblTipo.getPreferredSize().width+10, 26));
+		lblTipo.setPreferredSize(new Dimension(lblTipo.getPreferredSize().width, 26));
 		lblTipo.setBackground(Cores.FUNDO_ESCURO);
 		lblTipo.setOpaque(true);
 		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -799,43 +799,6 @@ public class StatInsertion extends JPanel{
 			
 			
 		}
-		
-	}
-	
-	public static void main (String args[]) {
-		
-		Mundo_Reader.read();
-		
-		Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(0));
-		
-		JFrame test = new JFrame();
-		
-		test.setLayout(new GridBagLayout());
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
-		
-		test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		GUI gui = new GUI();
-		
-		StatInsertion stat = new StatInsertion(Tipo.Atacante, gui.input);
-		
-		StatInsertion stat2 = new StatInsertion(Tipo.Defensor, gui.input);
-		
-		test.add(stat,c);
-		test.add(stat2,c);
-		test.pack();
-		test.setVisible(true);
-		
-		Scanner input = new Scanner(System.in);
-		
-		String test2 = input.next();
-		
-		stat.setInputInfo();
-		stat2.setInputInfo();
-		
-		Cálculo cálculo = new Cálculo(gui.input, gui.output);
 		
 	}
 	

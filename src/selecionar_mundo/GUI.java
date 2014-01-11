@@ -45,6 +45,9 @@ public class GUI extends JFrame{
 		
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+						GUI.class.getResource("/images/Sem título.png")));
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{546, 1, 350};
 		gridBagLayout.rowHeights = new int[]{0, 0};

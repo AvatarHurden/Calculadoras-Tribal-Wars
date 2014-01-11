@@ -91,7 +91,7 @@ public class ResultTroopDisplay extends JPanel{
 		
 		JPanel panel = new JPanel();
 //		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		panel.setLayout(new GridBagLayout());
 		
@@ -217,7 +217,7 @@ public class ResultTroopDisplay extends JPanel{
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		panel.setLayout(new GridBagLayout());
 		
@@ -283,7 +283,7 @@ public class ResultTroopDisplay extends JPanel{
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
 		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado.getNúmeroDeTropas()));
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};
@@ -314,7 +314,7 @@ public class ResultTroopDisplay extends JPanel{
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
 		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado.getNúmeroDeTropas()));
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {80,30};

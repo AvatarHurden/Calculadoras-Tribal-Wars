@@ -1,7 +1,12 @@
 - Criar listas de tropas, para adicionar em qualquer seção (nomes para listas)
 	- Listas de edifícios, com níveis pré-definidos
 	
+- Create improved JTextField to add all funcionality to format numbers
+	to see the code, go to dados_de_unidade and PanelUnidade
+	
 - Adicionar mais informações no simulador
+
+- Permitir configurações de cor ou outras coisas
 
 - // Salvar mundo padrão
 

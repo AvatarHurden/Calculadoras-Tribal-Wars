@@ -137,7 +137,7 @@ public class GUI extends Ferramenta{
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 0;

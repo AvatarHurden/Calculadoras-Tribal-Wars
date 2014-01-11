@@ -6,12 +6,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.DefaultListCellRenderer;
@@ -24,7 +26,10 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -279,39 +284,103 @@ public class PanelUnidade{
 				    if ((getLength() + str.length()) <= 9 && Character.isDigit(str.charAt(0))) {
 				      super.insertString(offset, str, attr);
 				    }
-				  }
+				    
+				    if (getLength() > 3 && !str.contains(".")) 
+				    quantidade.setText(getFormattedNumber(
+				    		getUnformattedNumber(getText(0, getLength()))));
+				    
+			}
+			
+			@Override
+			public void removeUpdate(AbstractDocument.DefaultDocumentEvent chng) {
+				
+				quantidade.setFocusable(false);	
+				quantidade.setFocusable(true);
+				quantidade.requestFocus();
+
+				
+			}
 			
 		});
 		
-		quantidade.addKeyListener(new KeyListener() {
+		quantidade.getDocument().addDocumentListener(new DocumentListener() {
 			
-			public void keyTyped(KeyEvent arg0) {}
-			
-			public void keyReleased(KeyEvent e) {
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				go();
 				
-				// Apenas fazer modificações caso a key seja um número ou o backspace
-				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE )
-				try {
-					String formated = NumberFormat.getNumberInstance(Locale.GERMANY)
-							.parse(quantidade.getText()).toString();
-					
-					//Caso a quantidade seja vazia, não tenta mudar os valores, mas sim zerá-los
-					if (formated.equals(""))
-						resetValues();
-					else
-						changeValues();
-					
-					quantidade.setText(NumberFormat.getNumberInstance(Locale.GERMANY)
-							.format(Integer.parseInt(formated)));
-					
-				} catch (ParseException exc) {}
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				go();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				go();
+				
+			}
+			
+			private void go() {
+				
+				if (quantidade.getText().equals(""))
+					resetValues();
+				else
+					changeValues();
 				
 				soma.setTotal();
 				
 			}
 			
-			public void keyPressed(KeyEvent arg0) {}
 		});
+		
+		quantidade.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				
+				if (!isFormatted(quantidade.getText()))
+					quantidade.setText(getFormattedNumber(getUnformattedNumber(
+							quantidade.getText())));
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent arg0) {}
+		});
+		
+//		quantidade.addKeyListener(new KeyListener() {
+//			
+//			public void keyTyped(KeyEvent arg0) {}
+//			
+//			public void keyReleased(KeyEvent e) {
+//				
+//				// Apenas fazer modificações caso a key seja um número ou o backspace
+//				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE )
+//				try {
+//					String formated = NumberFormat.getNumberInstance(Locale.GERMANY)
+//							.parse(quantidade.getText()).toString();
+//					
+//					//Caso a quantidade seja vazia, não tenta mudar os valores, mas sim zerá-los
+//					if (formated.equals(""))
+//						resetValues();
+//					else
+//						changeValues();
+//					
+////					quantidade.setText(NumberFormat.getNumberInstance(Locale.GERMANY)
+////							.format(Integer.parseInt(formated)));
+//					
+//					soma.setTotal();
+//					
+//				} catch (ParseException exc) {}
+//				
+//				soma.setTotal();
+//				
+//			}
+//			
+//			public void keyPressed(KeyEvent arg0) {}
+//		});
 		
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.gridx++;
@@ -511,21 +580,21 @@ public class PanelUnidade{
 		
 		BigDecimal quantia = new BigDecimal(formated);
 		
-		dano.setText(quantia.multiply(unidade.ataque((nível.getSelectedIndex()+1)))
-				.setScale(0,RoundingMode.HALF_UP).toString());
-		defGeral.setText(quantia.multiply(unidade.defGeral((nível.getSelectedIndex()+1)))
-				.setScale(0,RoundingMode.HALF_UP).toString());
-		defCavalo.setText(quantia.multiply(unidade.defCav((nível.getSelectedIndex()+1)))
-				.setScale(0,RoundingMode.HALF_UP).toString());
-		defArqueiro.setText(quantia.multiply(unidade.defArq((nível.getSelectedIndex()+1)))
-				.setScale(0,RoundingMode.HALF_UP).toString());
+		dano.setText(getFormattedNumber(quantia.multiply(unidade.ataque((
+				nível.getSelectedIndex()+1))).setScale(0,RoundingMode.HALF_UP).toString()));
+		defGeral.setText(getFormattedNumber(quantia.multiply(unidade.defGeral((
+				nível.getSelectedIndex()+1))).setScale(0,RoundingMode.HALF_UP).toString()));
+		defCavalo.setText(getFormattedNumber(quantia.multiply(unidade.defCav((
+				nível.getSelectedIndex()+1))).setScale(0,RoundingMode.HALF_UP).toString()));
+		defArqueiro.setText(getFormattedNumber(quantia.multiply(unidade.defArq((
+				nível.getSelectedIndex()+1))).setScale(0,RoundingMode.HALF_UP).toString()));
 		
-		saque.setText(String.format("%,d",quantia.multiply(unidade.saque()).intValue()));
+		saque.setText(getFormattedNumber(quantia.multiply(unidade.saque()).toString()));
 		
-		madeira.setText(String.format("%,d",quantia.multiply(unidade.madeira()).intValue()));
-		argila.setText(String.format("%,d",quantia.multiply(unidade.argila()).intValue()));
-		ferro.setText(String.format("%,d",quantia.multiply(unidade.ferro()).intValue()));
-		população.setText(String.format("%,d",quantia.multiply(unidade.população()).intValue()));
+		madeira.setText(getFormattedNumber(quantia.multiply(unidade.madeira()).toString()));
+		argila.setText(getFormattedNumber(quantia.multiply(unidade.argila()).toString()));
+		ferro.setText(getFormattedNumber(quantia.multiply(unidade.ferro()).toString()));
+		população.setText(getFormattedNumber(quantia.multiply(unidade.população()).toString()));
 	}
 	
 	// Zera os valores quando a "quantidade" é nula
@@ -541,6 +610,47 @@ public class PanelUnidade{
 		argila.setText("");
 		ferro.setText("");
 		população.setText("");
+		
+	}
+	
+	// Returns the unformatted value of a formatted string
+	private String getUnformattedNumber(String input) {
+		
+		String unformated = "";
+		try {
+			unformated = NumberFormat.getNumberInstance(Locale.GERMANY)
+					.parse(input).toString();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return unformated;
+		
+	}
+	
+	// Returns the formatted value of an unformatted string
+	private String getFormattedNumber(String input) {
+		
+		String formated = NumberFormat.getNumberInstance(Locale.GERMANY)
+				.format(Integer.parseInt(input));
+		
+		return formated;
+		
+	}
+	
+	private boolean isFormatted(String input) {
+		
+		List<String> pieces = Arrays.asList(input.split("\\."));
+		
+		for (String s : pieces) {
+			
+			if (pieces.indexOf(s) != 0 && s.length() != 3){
+				return false;
+			}
+			
+		}
+		
+		return true;
 		
 	}
 	

@@ -3,7 +3,6 @@ package main;
 import javax.swing.JFrame;
 
 import config.File_Manager;
-import config.Mundo_Reader;
 import frames.MainWindow;
 
 public class Main {
@@ -40,7 +39,7 @@ public class Main {
 		
 		selecionar.dispose();
 		
-		File_Manager.save();
+//		File_Manager.save();
 		
 		mainFrame = new MainWindow();
 		//Adicionando todas as ferramentas criadas

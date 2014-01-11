@@ -7,12 +7,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
@@ -33,9 +36,9 @@ public class GUI extends Ferramenta{
 	
 	Cálculo cálculo = new Cálculo(input, output);
 	
-	StatInsertion stat = new StatInsertion(StatInsertion.Tipo.Atacante, input);
+	StatInsertion statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante, input);
 	
-	StatInsertion stat2 = new StatInsertion(StatInsertion.Tipo.Defensor, input);	
+	StatInsertion statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor, input);	
 	
 	ResultTroopDisplay display = new ResultTroopDisplay(output);
 	
@@ -51,20 +54,30 @@ public class GUI extends Ferramenta{
 		c.insets = new Insets(5,5,5,5);
 		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 0;
-		c.gridy = 0;
+		c.gridy = -1;
 		
+		addEmptySpace(c);
+		
+		c.gridy++;
 		add(addUnitNames(),c);
 		
 		
 		
 		c.gridx++;
-		add(stat,c);
+		c.gridy = 0;
+		c.gridheight = 2;
+		add(statAtacante,c);
 		
 		c.gridx++;
-		add(stat2,c);
+		add(statDefensor,c);
 
 		
+		c.gridy = -1;
 		c.gridx++;
+		c.gridheight = 1;
+		addEmptySpace(c);
+		
+		c.gridy++;
 		add(display, c);
 		
 		JButton button = new JButton("Go");
@@ -72,9 +85,9 @@ public class GUI extends Ferramenta{
 			
 			public void actionPerformed(ActionEvent arg0) {
 				
-				stat.setInputInfo();
+				statAtacante.setInputInfo();
 				
-				stat2.setInputInfo();
+				statDefensor.setInputInfo();
 		
 				cálculo.calculate();
 				
@@ -86,13 +99,12 @@ public class GUI extends Ferramenta{
 		c.gridy++;
 		add(button, c);
 		
-		
 	}
 	
 	public JPanel addUnitNames() {
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		panel.setLayout(new GridBagLayout());
 		
@@ -102,6 +114,7 @@ public class GUI extends Ferramenta{
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 1;
+			
 		
 		// Adding the headers
 		
@@ -112,6 +125,7 @@ public class GUI extends Ferramenta{
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
 		
+		c.gridy++;
 		panel.add(lblNome, c);
 			
 		// Setting the constraints for the unit panels
@@ -147,6 +161,23 @@ public class GUI extends Ferramenta{
 		}
 		
 		return panel;
+		
+	}
+	
+	private void addEmptySpace(GridBagConstraints c) {
+		
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
+			
+			// If mundo has levels, add space so that the units align with the
+			// input panels
+			
+			JLabel space = new JLabel("");
+			space.setPreferredSize(new Dimension(space.getPreferredSize().width, 16));
+			
+			c.gridy = 0;
+			add(space, c);
+			
+		}
 		
 	}
 	

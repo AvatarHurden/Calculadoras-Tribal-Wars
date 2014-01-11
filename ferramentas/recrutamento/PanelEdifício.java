@@ -44,7 +44,7 @@ public class PanelEdifício extends JPanel {
 		
 		setBackground(Cores.FUNDO_ESCURO);
 		
-		setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		GridBagLayout gbl = new GridBagLayout();
 		gbl.columnWidths = new int[] {125, 100, 100, 125};

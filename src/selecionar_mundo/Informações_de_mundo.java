@@ -52,7 +52,7 @@ public class Informações_de_mundo extends JPanel {
 		setLayout(gridBagLayout);
 		setOpaque(false);
 		
-		setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, true));
+		setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
 		
 		addProperties();
 		
