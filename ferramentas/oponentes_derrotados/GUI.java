@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -248,7 +249,12 @@ public class GUI extends Ferramenta {
  			
  	}
  	
- 	public int getODA(Unidade unidade) { return pontos_ODA.get(unidade); }
- 	public int getODD(Unidade unidade) { return pontos_ODD.get(unidade); }
+ 	public BigDecimal getODA(Unidade unidade) { 
+ 		return new BigDecimal(pontos_ODA.get(unidade)); 
+ 	}
+ 	
+ 	public BigDecimal getODD(Unidade unidade) { 
+ 		return new BigDecimal(pontos_ODD.get(unidade)); 
+ 	}
 	
 }

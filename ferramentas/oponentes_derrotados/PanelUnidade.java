@@ -4,21 +4,14 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.text.NumberFormat;
+import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Locale;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
 
 import database.Cores;
+import database.TroopFormattedTextField;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -32,7 +25,7 @@ public class PanelUnidade{
 	
 	private Unidade unidade;
 	private JLabel nome;
-	private JTextField quantidade;
+	private TroopFormattedTextField quantidade;
 	private JLabel lblOD;
 	
 	private Color cor;
@@ -131,59 +124,28 @@ public class PanelUnidade{
 		gbc_nome.gridy = 0;
 		panelDados.add(nome, gbc_nome);
 					
-		quantidade = new JTextField();
-		quantidade.setHorizontalAlignment(SwingConstants.LEFT);
-		quantidade.setDocument(new PlainDocument() {
-	
-			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
-				    if (str == null)
-				      return;
-				    
-				    // permite no máximo 9 dígitos
-
-				    if ((getLength() + str.length()) <= 9 && Character.isDigit(str.charAt(0))) {
-				      super.insertString(offset, str, attr);  
-				    }
-				  }
+		quantidade = new TroopFormattedTextField(9) {
 			
-		});
-	
-		quantidade.addKeyListener(new KeyListener() {
+			@Override
+			public void go() {
+				
+			if (!quantidade.getText().equals(""))
+				changeOD();
+			else
+				resetOD();
 			
-			public void keyTyped(KeyEvent arg0) {}
-			
-			public void keyReleased(KeyEvent e) {
-				
-				// Apenas fazer modificações caso a key seja um número ou o backspace
-				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE )
-				try {
-					// Germany has the "." as the thousands separator, so I used it
-					String formated = NumberFormat.getNumberInstance(Locale.GERMANY)
-							.parse(quantidade.getText()).toString();
-					
-					quantidade.setText(NumberFormat.getNumberInstance(Locale.GERMANY)
-							.format(Integer.parseInt(formated)));
-					
-				} catch (ParseException exc) {}
-				
-				if (!quantidade.getText().equals(""))
-					changeOD();
-				else
-					resetOD();
-				
-				gui.total.setTotal();
+			gui.total.setTotal();
 				
 			}
-			
-			public void keyPressed(KeyEvent arg0) {}
-		});
+		};
+		quantidade.setColumns(6);
 			
 		GridBagConstraints gbc_quantidade = new GridBagConstraints();
 		gbc_quantidade.insets = new Insets(5, 0, 5, 5);
 		gbc_quantidade.gridx = 1;
 		gbc_quantidade.gridy = 0;
 		panelDados.add(quantidade, gbc_quantidade);
-		quantidade.setColumns(6);
+		
 		
 	}
 	
@@ -215,19 +177,15 @@ public class PanelUnidade{
 	 */
 	protected void changeOD(){
 		
-		String formated = "";
-		try {
-			formated = NumberFormat.getNumberInstance(Locale.GERMANY)
-					.parse(quantidade.getText()).toString();
-		} catch (ParseException e) {}
+		BigDecimal quantia = quantidade.getValue();
 		
 		if (gui.buttonAtaque.isSelected())
-			lblOD.setText(NumberFormat.getNumberInstance(Locale.GERMANY)
-					.format(gui.getODA(unidade)*Integer.parseInt(formated)));
+			lblOD.setText(quantidade.numberFormat.format(
+					gui.getODA(unidade).multiply(quantia)));
 		
 		else if (gui.buttonDefesa.isSelected())
-			lblOD.setText( NumberFormat.getNumberInstance(Locale.GERMANY)
-					.format(gui.getODD(unidade)*Integer.parseInt(formated)));
+			lblOD.setText(quantidade.numberFormat.format(
+					gui.getODD(unidade).multiply(quantia)));
 	}
 	
 	private void resetOD() {
@@ -239,8 +197,7 @@ public class PanelUnidade{
 	protected String getQuantidade() { return quantidade.getText(); }
 	
 	protected String getOD() throws ParseException { 
-		return NumberFormat.getNumberInstance(Locale.GERMANY)
-			.parse(lblOD.getText()).toString(); 
+		return quantidade.numberFormat.parse(lblOD.getText()).toString(); 
 	}
 	
 	protected JPanel getPanelDados() { return panelDados; }

@@ -21,6 +21,7 @@ import javax.swing.text.PlainDocument;
 import config.Mundo_Reader;
 import database.Cores;
 import database.Edifício;
+import database.TroopFormattedTextField;
 
 @SuppressWarnings("serial")
 public class PanelEdifício extends JPanel {
@@ -29,7 +30,7 @@ public class PanelEdifício extends JPanel {
 	private Edifício edifício;
 	private ArrayList<PanelUnidade> unidades;
 	
-	private JTextField txtNível;
+	private TroopFormattedTextField txtNível;
 	private JLabel tempoTotal;
 	
 	/**
@@ -99,23 +100,18 @@ public class PanelEdifício extends JPanel {
 		gbc_finish.gridy++;
 		add(lblNível, gbc_finish);
 
-		txtNível = new JTextField();
+		txtNível = new TroopFormattedTextField(2) {
+			
+			@Override
+			public void go() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
 		txtNível.setHorizontalAlignment(SwingConstants.CENTER);
 		txtNível.setColumns(3);
-		txtNível.setDocument(new PlainDocument() {
-			
-			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
-				    if (str == null)
-				      return;
-				    
-				    // permite no máximo 2 dígitos
-				    
-				    if ((getLength() + str.length()) <= 2 && Character.isDigit(str.charAt(0))) {
-				      super.insertString(offset, str, attr);
-				    }
-				  }
-			
-		});
+		
+		//TODO criar EdifícioFormattedTextField
 		
 		txtNível.addKeyListener(new KeyListener() {
 			

@@ -4,24 +4,16 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
 
 import config.Mundo_Reader;
 import database.Cores;
+import database.TroopFormattedTextField;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -30,7 +22,7 @@ public class PanelUnidade extends JPanel {
 	private PanelEdifício edifício;
 	private Unidade unidade;
 	private JLabel nome;
-	private JTextField quantidade;
+	private TroopFormattedTextField quantidade;
 	private JLabel tempoUnitário;
 	private JLabel tempoTotal;
 	
@@ -61,46 +53,57 @@ public class PanelUnidade extends JPanel {
 		gbc_nome.gridy = 0;
 		add(nome, gbc_nome);
 					
-		quantidade = new JTextField();
-		quantidade.setHorizontalAlignment(SwingConstants.LEFT);
-		quantidade.setDocument(new PlainDocument() {
+		quantidade = new TroopFormattedTextField(9) {
 			
-			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
-				    if (str == null)
-				      return;
-				    
-				    // permite no máximo 9 dígitos
-
-				    if ((getLength() + str.length()) <= 9 && Character.isDigit(str.charAt(0))) {
-				      super.insertString(offset, str, attr);
-				    }
-				  }
+			@Override
+			public void go() {
 			
-		});
-		
-		quantidade.addKeyListener(new KeyListener() {
-			
-			public void keyTyped(KeyEvent arg0) {}
-			
-			public void keyReleased(KeyEvent e) {
+				if (quantidade.getText().equals(""))
+					resetTimes();
+				else
+					changeTimes();
 				
-				// Apenas fazer modificações caso a key seja um número ou o backspace
-				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE )
-				try {
-					String formated = NumberFormat.getNumberInstance(Locale.GERMANY)
-							.parse(quantidade.getText()).toString();
-					
-					quantidade.setText(NumberFormat.getNumberInstance(Locale.GERMANY)
-							.format(Integer.parseInt(formated)));
-					
-				} catch (ParseException exc) {}
-				
-				changeTimes();
-			
 			}
-			
-			public void keyPressed(KeyEvent arg0) {}
-		});
+		};
+//		quantidade.setHorizontalAlignment(SwingConstants.LEFT);
+//		quantidade.setDocument(new PlainDocument() {
+//			
+//			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+//				    if (str == null)
+//				      return;
+//				    
+//				    // permite no máximo 9 dígitos
+//
+//				    if ((getLength() + str.length()) <= 9 && Character.isDigit(str.charAt(0))) {
+//				      super.insertString(offset, str, attr);
+//				    }
+//				  }
+//			
+//		});
+//		
+//		quantidade.addKeyListener(new KeyListener() {
+//			
+//			public void keyTyped(KeyEvent arg0) {}
+//			
+//			public void keyReleased(KeyEvent e) {
+//				
+//				// Apenas fazer modificações caso a key seja um número ou o backspace
+//				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE )
+//				try {
+//					String formated = NumberFormat.getNumberInstance(Locale.GERMANY)
+//							.parse(quantidade.getText()).toString();
+//					
+//					quantidade.setText(NumberFormat.getNumberInstance(Locale.GERMANY)
+//							.format(Integer.parseInt(formated)));
+//					
+//				} catch (ParseException exc) {}
+//				
+//				changeTimes();
+//			
+//			}
+//			
+//			public void keyPressed(KeyEvent arg0) {}
+//		});
 			
 		GridBagConstraints gbc_quantidade = new GridBagConstraints();
 		gbc_quantidade.insets = new Insets(5, 0, 5, 5);
@@ -145,19 +148,23 @@ public class PanelUnidade extends JPanel {
 		BigDecimal tempo = Cálculos.getSeconds(getTempoUnitário().getText());
 		
 		//Remove os pontos de milhar para cálculo
-		StringBuilder builder = new StringBuilder(quantidade.getText());
-		while (builder.indexOf(".") != -1)
-			builder.deleteCharAt(builder.indexOf("."));
 		
-		try {
-			tempo = tempo.multiply(new BigDecimal(builder.toString()));
-			tempoTotal.setText(Cálculos.format(tempo));
-		} catch (Exception e) {
-			tempoTotal.setText("");
-		}
+		BigDecimal quantia = quantidade.getValue();
+		
+		tempo = tempo.multiply(quantia);
+		tempoTotal.setText(Cálculos.format(tempo));
 		
 		if (edifício != null)
 			edifício.setTempoTotal();
+	}
+	
+	private void resetTimes() {
+		
+		tempoTotal.setText("");
+		
+		if (edifício != null)
+			edifício.setTempoTotal();
+		
 	}
 	
 	/**
