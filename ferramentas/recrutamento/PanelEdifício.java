@@ -3,25 +3,18 @@ package recrutamento;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
 
 import config.Mundo_Reader;
 import database.Cores;
 import database.Edifício;
-import database.TroopFormattedTextField;
+import database.EdifícioFormattedComboBox;
 
 @SuppressWarnings("serial")
 public class PanelEdifício extends JPanel {
@@ -30,7 +23,7 @@ public class PanelEdifício extends JPanel {
 	private Edifício edifício;
 	private ArrayList<PanelUnidade> unidades;
 	
-	private TroopFormattedTextField txtNível;
+	private EdifícioFormattedComboBox txtNível;
 	private JLabel tempoTotal;
 	
 	/**
@@ -100,61 +93,32 @@ public class PanelEdifício extends JPanel {
 		gbc_finish.gridy++;
 		add(lblNível, gbc_finish);
 
-		txtNível = new TroopFormattedTextField(2) {
+		txtNível = new EdifícioFormattedComboBox(edifício, 1, Cores.FUNDO_ESCURO) {
 			
 			@Override
 			public void go() {
-				// TODO Auto-generated method stub
 				
-			}
-		};
-		txtNível.setHorizontalAlignment(SwingConstants.CENTER);
-		txtNível.setColumns(3);
-		
-		//TODO criar EdifícioFormattedTextField
-		
-		txtNível.addKeyListener(new KeyListener() {
-			
-			public void keyTyped(KeyEvent arg0) {}
-			
-			public void keyReleased(KeyEvent e) {
-				
-				// Apenas fazer modificações caso a key seja um número ou o backspace
-				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE ) {
+					// Passa por todas as unidades do edifício, definindo o tempo individual
+					for (PanelUnidade panel : unidades) {
+						BigDecimal tempo = panel.getUnidade().tempoDeProdução().
+							multiply(Mundo_Reader.MundoSelecionado.
+									getPorcentagemDeProdução(txtNível.getSelectedIndex()));
 					
-					if (!txtNível.getText().equals("")) {
-						
-						// Não permite o nível inserido ser maior do que o nível máximo do edifício
-						if (Integer.parseInt(txtNível.getText()) > edifício.nívelMáximo())
-							txtNível.setText(""+edifício.nívelMáximo());
-						
-						// Passa por todas as unidades do edifício, definindo o tempo individual
-						for (PanelUnidade panel : unidades) {
-
-							BigDecimal tempo = panel.getUnidade().tempoDeProdução().
-								multiply(Mundo_Reader.MundoSelecionado.
-										getPorcentagemDeProdução(Integer.parseInt(txtNível.getText())));
-						
-							panel.getTempoUnitário().setText(Cálculos.format(tempo));
-							panel.changeTimes();
-						
-						}
+						panel.getTempoUnitário().setText(Cálculos.format(tempo));
+						panel.changeTimes();
+					
 					}
+				
 				}
 				
-			}
-			
-			public void keyPressed(KeyEvent arg0) {}
-		});
-		
-		txtNível.setText("1");
+		};
 		
 		// Primeira passada para definir os tempos logo que o panel é formado
 		for (PanelUnidade panel : unidades) {
 
 			BigDecimal tempo = panel.getUnidade().tempoDeProdução().
 					multiply(Mundo_Reader.MundoSelecionado.
-							getPorcentagemDeProdução(Integer.parseInt(txtNível.getText())));
+							getPorcentagemDeProdução(txtNível.getSelectedIndex()));
 			
 			panel.getTempoUnitário().setText(Cálculos.format(tempo));
 		}

@@ -149,7 +149,11 @@ public class PanelUnidade extends JPanel {
 		
 		//Remove os pontos de milhar para cálculo
 		
-		BigDecimal quantia = quantidade.getValue();
+		BigDecimal quantia;
+		if (!quantidade.getText().equals(""))
+			quantia = quantidade.getValue();
+		else
+			quantia = BigDecimal.ZERO;
 		
 		tempo = tempo.multiply(quantia);
 		tempoTotal.setText(Cálculos.format(tempo));

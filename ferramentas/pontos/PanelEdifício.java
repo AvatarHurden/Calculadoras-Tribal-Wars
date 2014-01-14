@@ -4,20 +4,15 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
 
 import database.Cores;
 import database.Edifício;
+import database.EdifícioFormattedComboBox;
 
 public class PanelEdifício{
 	
@@ -31,7 +26,7 @@ public class PanelEdifício{
 	private JPanel populaçãoRestantePanel;
 	
 	private JLabel nome;
-	private JTextField txtNível;
+	private EdifícioFormattedComboBox txtNível;
 	private JLabel população, pontos, populaçãoRestante;
 
 	private Edifício edifício;
@@ -167,47 +162,64 @@ public class PanelEdifício{
 		
 		addSeparator(constraints, identificadores);
 		
-		txtNível = new JTextField();
-		txtNível.setHorizontalAlignment(SwingConstants.CENTER);
-		txtNível.setColumns(3);
-		txtNível.setDocument(new PlainDocument() {
+		txtNível = new EdifícioFormattedComboBox(edifício, 0, cor) {
 			
-			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
-				    if (str == null)
-				      return;
-				    
-				    // permite no máximo 2 dígitos
-
-				    if ((getLength() + str.length()) <= 2 && Character.isDigit(str.charAt(0))) {
-				      super.insertString(offset, str, attr);
-				    }
-				  }
-			
-		});
-		
-		txtNível.addKeyListener(new KeyListener() {
-			
-			public void keyTyped(KeyEvent arg0) {}
-			
-			public void keyReleased(KeyEvent e) {
+			@Override
+			public void go() {
 				
-				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE ) {
-					
-					if (!txtNível.getText().equals("")) {
-						if (Integer.parseInt(txtNível.getText()) > edifício.nívelMáximo())
-							txtNível.setText(""+edifício.nívelMáximo());
-						changeValues(Integer.parseInt(txtNível.getText()));
-					} else
-						resetValues();
-					
-				}	
-					
+				if (txtNível.getSelectedIndex() != 0)
+					changeValues(txtNível.getSelectedIndex());
+				else
+					resetValues();
+				
 				soma.setTotal();
 				
 			}
-			
-			public void keyPressed(KeyEvent arg0) {}
-		});
+		};
+//		txtNível.setHorizontalAlignment(SwingConstants.CENTER);
+//		txtNível.setColumns(3);
+//		txtNível.setDocument(new PlainDocument() {
+//			
+//			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+//				    if (str == null)
+//				      return;
+//				    
+//				    // permite no máximo 2 dígitos
+//
+//				    if ((getLength() + str.length()) <= 2 && Character.isDigit(str.charAt(0))) {
+//				      super.insertString(offset, str, attr);
+//				    }
+//				  }
+//			
+//		});
+//		
+//		txtNível.addKeyListener(new KeyListener() {
+//			
+//			public void keyTyped(KeyEvent arg0) {}
+//			
+//			public void keyReleased(KeyEvent e) {
+//				
+//				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE ) {
+//					
+//					if (!txtNível.getText().equals("")) {
+//						if (Integer.parseInt(txtNível.getText()) > edifício.nívelMáximo())
+//							txtNível.setText(""+edifício.nívelMáximo());
+//						changeValues(Integer.parseInt(txtNível.getText()));
+//					} else
+//						resetValues();
+//					
+//				}	
+//					
+//				soma.setTotal();
+//				
+//			}
+//			
+//			public void keyPressed(KeyEvent arg0) {}
+//		});
+		
+//		changeValues(txtNível.getSelectedIndex());
+		
+//		soma.setTotal();
 		
 		constraints.insets = new Insets(4, 5, 4, 5);
 		constraints.gridx++;
@@ -263,6 +275,8 @@ public class PanelEdifício{
 	// Modifica os valores das características para adequar ao número de unidades
 	private void changeValues(int nível) {
 		
+		System.out.println("hi");
+		
 		pontos.setText(String.format("%,d",edifício.pontos(nível)));
 		
 		if (!edifício.equals(Edifício.FAZENDA))
@@ -286,11 +300,8 @@ public class PanelEdifício{
 
 	protected Edifício getEdifício() { return edifício; }
 	protected int getNível() {
-		if (!txtNível.getText().equals(""))
-			return Integer.parseInt(txtNível.getText());
-		else
-			 return 0; 
-		}
+		return txtNível.getSelectedIndex();
+	}
 	
 	/**
 	 * @return JPanel com as labels dos dados principais
