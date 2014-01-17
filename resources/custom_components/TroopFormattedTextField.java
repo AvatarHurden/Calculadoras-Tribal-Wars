@@ -1,4 +1,4 @@
-package database;
+package custom_components;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -119,9 +119,7 @@ public abstract class TroopFormattedTextField extends JTextField{
 			String unformated = "";
 			try {
 				unformated = numberFormat.parse(input).toString();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			} catch (ParseException e) {}
 			
 			return unformated;
 			
@@ -158,7 +156,11 @@ public abstract class TroopFormattedTextField extends JTextField{
 	 * @return BigDecimal the value of the text
 	 */
 	public BigDecimal getValue() {
-		return new BigDecimal(getUnformattedNumber(getText()));
+		try {
+			return new BigDecimal(getUnformattedNumber(getText()));
+		} catch (Exception e) {
+			return BigDecimal.ZERO;
+		}
 	}
 	
 }

@@ -9,8 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import custom_components.Ferramenta;
+
 import database.Cores;
-import database.Ferramenta;
 
 @SuppressWarnings("serial")
 public class Informações_de_mundo extends JPanel {

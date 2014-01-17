@@ -12,9 +12,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import config.Mundo_Reader;
+import custom_components.EdifícioFormattedComboBox;
 import database.Cores;
 import database.Edifício;
-import database.EdifícioFormattedComboBox;
 
 @SuppressWarnings("serial")
 public class PanelEdifício extends JPanel {

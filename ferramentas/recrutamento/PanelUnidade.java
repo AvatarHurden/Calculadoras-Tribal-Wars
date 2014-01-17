@@ -12,8 +12,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import config.Mundo_Reader;
+import custom_components.TroopFormattedTextField;
 import database.Cores;
-import database.TroopFormattedTextField;
 import database.Unidade;
 
 @SuppressWarnings("serial")

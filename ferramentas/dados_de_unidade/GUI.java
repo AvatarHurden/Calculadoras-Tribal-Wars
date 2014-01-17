@@ -12,15 +12,21 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Mundo_Reader;
+import custom_components.Ferramenta;
+import custom_components.TroopFormattedTextField;
+import custom_components.TroopListPanel;
 import database.Cores;
-import database.Ferramenta;
 import database.Unidade;
-import config.Mundo_Reader;;
 
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
 
-	List<Unidade> unidadesUtilizadas = new ArrayList<Unidade>();
+//	List<Unidade> unidadesUtilizadas = new ArrayList<Unidade>();
+//	List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
+	
+	Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
+	
 	List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
 	
 	Map<String, BigInteger> somaTotal = new HashMap<String, BigInteger>();
@@ -61,7 +67,12 @@ public class GUI extends Ferramenta {
 		
 		addHeader(true, gbc);
 		
-		gbc.gridy = 1;
+		gbc.gridy++;
+		gbc.gridx = 0;
+		gbc.anchor = GridBagConstraints.EAST;
+		add(new TroopListPanel(mapQuantidades), gbc);
+		
+		gbc.gridy++;
 		gbc.gridx = 0;
 		add(unitePanels("identificadores"), gbc);
 		
@@ -153,45 +164,55 @@ public class GUI extends Ferramenta {
 	/**
 	 * Cria a lista de PanelUnidade, utilizando as unidades do mundo
 	 */
-	private void createPanelUnidade() {
-		
-		for (Unidade i : unidadesUtilizadas)
-			panelUnidadeList.add(new PanelUnidade(getNextColor(),i, total));
-		
-	}
+//	private void createPanelUnidade() {
+//		
+//		for (Unidade i : unidadesUtilizadas)
+//			panelUnidadeList.add(new PanelUnidade(getNextColor(),i, total));
+//		
+//	}
 	
 	/**
 	 * Define quais unidades serão utilizadas, com as configurações do mundo
 	 */
  	private void setUnidades() {
-	
-		unidadesUtilizadas.add(Unidade.LANCEIRO);
-		unidadesUtilizadas.add(Unidade.ESPADACHIM);
-		
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
-			unidadesUtilizadas.add(Unidade.ARQUEIRO);
-		
-		unidadesUtilizadas.add(Unidade.BÁRBARO);
-		
-		unidadesUtilizadas.add(Unidade.EXPLORADOR);
-		unidadesUtilizadas.add(Unidade.CAVALOLEVE);
-		
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
-			unidadesUtilizadas.add(Unidade.ARCOCAVALO);
-		
-		unidadesUtilizadas.add(Unidade.CAVALOPESADO);
-		
-		unidadesUtilizadas.add(Unidade.ARÍETE);
-		unidadesUtilizadas.add(Unidade.CATAPULTA);
-		unidadesUtilizadas.add(Unidade.NOBRE);
-		
-		if (Mundo_Reader.MundoSelecionado.hasMilícia())
-			unidadesUtilizadas.add(Unidade.MILÍCIA);
-		
-		if (Mundo_Reader.MundoSelecionado.hasPaladino())
-			unidadesUtilizadas.add(Unidade.PALADINO);
-		
-		createPanelUnidade();
+ 		
+ 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+ 			
+ 			if (i != null) {
+ 				panelUnidadeList.add(new PanelUnidade(getNextColor(), i, total));
+ 				mapQuantidades.put(i, 
+ 						panelUnidadeList.get(panelUnidadeList.size()-1).getQuantidade());
+ 			}
+ 			
+ 		}
+ 		
+//		unidadesUtilizadas.add(Unidade.LANCEIRO);
+//		unidadesUtilizadas.add(Unidade.ESPADACHIM);
+//		
+//		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
+//			unidadesUtilizadas.add(Unidade.ARQUEIRO);
+//		
+//		unidadesUtilizadas.add(Unidade.BÁRBARO);
+//		
+//		unidadesUtilizadas.add(Unidade.EXPLORADOR);
+//		unidadesUtilizadas.add(Unidade.CAVALOLEVE);
+//		
+//		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
+//			unidadesUtilizadas.add(Unidade.ARCOCAVALO);
+//		
+//		unidadesUtilizadas.add(Unidade.CAVALOPESADO);
+//		
+//		unidadesUtilizadas.add(Unidade.ARÍETE);
+//		unidadesUtilizadas.add(Unidade.CATAPULTA);
+//		unidadesUtilizadas.add(Unidade.NOBRE);
+//		
+//		if (Mundo_Reader.MundoSelecionado.hasMilícia())
+//			unidadesUtilizadas.add(Unidade.MILÍCIA);
+//		
+//		if (Mundo_Reader.MundoSelecionado.hasPaladino())
+//			unidadesUtilizadas.add(Unidade.PALADINO);
+//		
+//		createPanelUnidade();
 	}
 
 	

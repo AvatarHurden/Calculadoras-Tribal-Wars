@@ -13,9 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
+import custom_components.Ferramenta;
 import database.Cores;
 import database.Edifício;
-import database.Ferramenta;
 
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {

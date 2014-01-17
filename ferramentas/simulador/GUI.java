@@ -18,9 +18,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import config.Mundo_Reader;
+import custom_components.Ferramenta;
 import database.Bandeira;
 import database.Cores;
-import database.Ferramenta;
 import database.ItemPaladino;
 import database.Unidade;
 

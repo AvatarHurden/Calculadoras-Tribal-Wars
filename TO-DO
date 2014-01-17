@@ -1,6 +1,8 @@
 - Criar listas de tropas, para adicionar em qualquer seção (nomes para listas)
 	- Listas de edifícios, com níveis pré-definidos
-	
+
+- Put flag selection on same y-level as troop-list selection
+
 - Create improved JTextField to add all funcionality to format numbers
 	to see the code, go to dados_de_unidade and PanelUnidade
 	

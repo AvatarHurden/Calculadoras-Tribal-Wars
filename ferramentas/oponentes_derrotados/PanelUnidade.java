@@ -10,8 +10,9 @@ import java.text.ParseException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import custom_components.TroopFormattedTextField;
+
 import database.Cores;
-import database.TroopFormattedTextField;
 import database.Unidade;
 
 @SuppressWarnings("serial")

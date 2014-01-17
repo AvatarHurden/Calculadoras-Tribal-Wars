@@ -1,4 +1,4 @@
-package database;
+package custom_components;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,9 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+
+import database.Cores;
+import database.Edifício;
 
 /**
  * {@link JComboBox} that only allows the maximum level of the edifício<br>
@@ -62,7 +65,7 @@ public abstract class EdifícioFormattedComboBox extends JComboBox<Integer> {
 		    			return 0;
 		    		}
 		    	};
-		    }	
+		    }
 		});
 		
 		addActionListener(new ActionListener() {

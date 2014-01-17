@@ -11,8 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import custom_components.Ferramenta;
+
 import database.Cores;
-import database.Ferramenta;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {

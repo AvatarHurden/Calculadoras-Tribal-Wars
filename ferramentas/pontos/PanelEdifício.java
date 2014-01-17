@@ -10,9 +10,10 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import custom_components.EdifícioFormattedComboBox;
+
 import database.Cores;
 import database.Edifício;
-import database.EdifícioFormattedComboBox;
 
 public class PanelEdifício{
 	

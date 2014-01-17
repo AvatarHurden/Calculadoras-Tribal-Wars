@@ -14,15 +14,14 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
 import config.Mundo_Reader;
+import custom_components.TroopFormattedTextField;
 import database.Cores;
-import database.TroopFormattedTextField;
 import database.Unidade;
 
 public class PanelUnidade{
@@ -87,9 +86,9 @@ public class PanelUnidade{
 		
 		GridBagLayout gbl_inserção = new GridBagLayout();
 		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
-			gbl_inserção.columnWidths = new int[] {125, 1, 40, 1, 80};
+			gbl_inserção.columnWidths = new int[] {125, 1, 40, 1, 100};
 		else
-			gbl_inserção.columnWidths = new int[] {125, 80};
+			gbl_inserção.columnWidths = new int[] {125, 100};
 		gbl_inserção.rowHeights = new int[] {20};
 		gbl_inserção.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_inserção.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
@@ -228,9 +227,9 @@ public class PanelUnidade{
 		
 		GridBagLayout gbl = new GridBagLayout();
 		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
-			gbl.columnWidths = new int[] {125, 1, 40, 1, 80};
+			gbl.columnWidths = new int[] {125, 1, 40, 1, 100};
 		else
-			gbl.columnWidths = new int[] {125, 80};
+			gbl.columnWidths = new int[] {125, 100};
 		gbl.rowHeights = new int[] {20};
 		gbl.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
@@ -275,6 +274,7 @@ public class PanelUnidade{
 		quantidade.setColumns(6);
 		
 		constraints.insets = new Insets(5, 0, 5, 5);
+		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.gridx++;
 		identificadores.add(quantidade, constraints);
 		
@@ -511,7 +511,7 @@ public class PanelUnidade{
 	 */
 	protected JPanel getIdentificadores() { return identificadores; }
 	
-	protected JTextField getQuantidade() { return quantidade; }
+	protected TroopFormattedTextField getQuantidade() { return quantidade; }
 	
 	/**
 	 * @return JPanel com as labels dos dados principais
