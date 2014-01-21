@@ -167,6 +167,8 @@ public class TroopListPanel extends JPanel{
 					
 					System.out.println(i.getKey()+": "+i.getValue().getValue());
 					
+					System.out.println("hello");
+					
 				}
 				
 			}
