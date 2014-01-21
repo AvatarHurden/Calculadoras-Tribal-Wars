@@ -353,32 +353,32 @@ public class ResultTroopDisplay extends JPanel{
 		
 	}
 	
-	public static void main (String args[]) {
-		
-		Mundo_Reader.read();
-		
-		Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(0));
-		
-		
-		JFrame test = new JFrame();
-		
-		test.setLayout(new GridBagLayout());
-		
-		GUI gui = new GUI();
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
-		
-		test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		ResultTroopDisplay display = new ResultTroopDisplay(gui.output);
-		
-		test.add(display,c);
-		test.pack();
-		test.setVisible(true);
-		
-		display.setValues();
-		
-	}
+//	public static void main (String args[]) {
+//		
+//		Mundo_Reader.read();
+//		
+//		Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(0));
+//		
+//		
+//		JFrame test = new JFrame();
+//		
+//		test.setLayout(new GridBagLayout());
+//		
+//		GUI gui = new GUI();
+//		
+//		GridBagConstraints c = new GridBagConstraints();
+//		c.anchor = GridBagConstraints.NORTH;
+//		
+//		test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		
+//		ResultTroopDisplay display = new ResultTroopDisplay(gui.output);
+//		
+//		test.add(display,c);
+//		test.pack();
+//		test.setVisible(true);
+//		
+//		display.setValues();
+//		
+//	}
 	
 }

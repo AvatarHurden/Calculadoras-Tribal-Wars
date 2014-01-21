@@ -70,10 +70,6 @@ public class File_Manager {
 			 
 		}
 		
-		// Usar o que foi conseguido nos readers adequados
-		
-		Mundo_Reader.read(mundos);
-		
 	}
 	
 	private static void process(BufferedReader in) throws IOException {
@@ -120,6 +116,17 @@ public class File_Manager {
 		
 	}
 	
+	public static void defineMundos() {
+		
+		Mundo_Reader.read(mundos);
+		
+	}
+	
+	public static void defineModelos() {
+		
+		ModeloTropas_Reader.read(modeloTropas);
+		
+	}
 	
 	public static void save() {
 		

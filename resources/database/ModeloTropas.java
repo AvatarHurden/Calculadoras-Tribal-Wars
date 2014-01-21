@@ -3,6 +3,7 @@ package database;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Class that stores a specific number of every unit to be used in different
@@ -18,6 +19,21 @@ public class ModeloTropas {
 	private Map<Unidade, BigDecimal> list = new HashMap<Unidade, BigDecimal>();
 	
 
+	public ModeloTropas(Properties p) {
+		
+		System.out.println(p);
+		
+		nome = p.getProperty("nome");
+		
+		for (Unidade i : Unidade.values()){
+			String nome = i.nome().toLowerCase().replace(' ', '_');
+			list.put(i, new BigDecimal(p.getProperty(nome)));
+		}
+		
+//		list.put(Unidade.LANCEIRO, new BigDecimal(p.getProperty("lanceiro")));
+		
+	}
+	
 	public ModeloTropas(String nome, Map<Unidade, BigDecimal> list) {
 		
 		this.nome = nome;
@@ -27,6 +43,10 @@ public class ModeloTropas {
 	
 	public String getNome() {
 		return nome;
+	}
+	
+	public BigDecimal getQuantidade(Unidade i) {
+		return list.get(i);
 	}
 	
 	public Map<Unidade, BigDecimal> getList() {

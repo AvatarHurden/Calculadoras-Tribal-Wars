@@ -8,19 +8,22 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
 import selecionar_mundo.GUI;
+import config.ModeloTropas_Reader;
 import database.Cores;
+import database.ModeloTropas;
 import database.Unidade;
 
 /**
@@ -41,6 +44,8 @@ public class TroopListPanel extends JPanel{
 	public TroopListPanel(Map<Unidade, TroopFormattedTextField> textFields) {
 		
 		mapTextFields = textFields;
+		
+		addSampleModeloTropas();
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {54, 20, 20};
@@ -63,13 +68,11 @@ public class TroopListPanel extends JPanel{
 		
 		c.gridx = 1;
 		c.insets = new Insets(0,0,0,0);
-		add(makeSelectionButton(), c);
+		add(makeSelectionButton(makePopupMenu()), c);
 		
 		c.gridx = 2;
 		c.insets = new Insets(0,0,0,2);
 		add(makeSaveButton(), c);
-		
-		System.out.println(getPreferredSize());
 		
 	}
 	
@@ -83,20 +86,66 @@ public class TroopListPanel extends JPanel{
 		
 	}
 	
-	private JComboBox<String> makeSelectionButton() {
+	private JButton makeSelectionButton(final JPopupMenu popup) {
 		
-		String[] strings = new String[2];
+		final JButton button = new JButton();
 		
-		strings[0] = "Hello";
-		strings[1] = "This is a long string";
-		
-		WiderDropDownCombo button = new WiderDropDownCombo(strings);
-		
-		button.setWide(true);
-		
+		button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				GUI.class.getResource("/images/down_arrow.png"))));
+	
 		button.setPreferredSize(new Dimension(20,20));
 		
+		button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int x = button.getLocation().x + button.getPreferredSize().width/2 
+						- popup.getPreferredSize().width/2;
+				
+				int y = button.getLocation().y + button.getPreferredSize().height;
+				
+				popup.show(button.getParent(), x, y);
+				
+			}
+		});
+		
 		return button;
+		
+	}
+	
+	private JPopupMenu makePopupMenu() {
+		
+		JPopupMenu popup = new JPopupMenu();
+		
+		// Adds all the models to the dropdown menu
+		for (final ModeloTropas i : ModeloTropas_Reader.getListModelos()) {
+			JMenuItem item = new JMenuItem(i.getNome());
+			
+			item.setName(i.getNome());
+			
+			item.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent a) {
+				
+					// Edits all the textfields according to the model
+					for (Entry<Unidade, TroopFormattedTextField> e : mapTextFields.entrySet())
+						if (i.getQuantidade(e.getKey()).equals(BigDecimal.ZERO))
+							e.getValue().setText("");
+						else
+							e.getValue().setText(
+								i.getQuantidade(e.getKey()).toString());
+					
+					// puts the focus on the first textfield (for consistency)
+					mapTextFields.get(Unidade.LANCEIRO).requestFocus();
+					
+				}
+			});
+			
+			popup.add(item);
+			
+		}
+		
+		return popup;
 		
 	}
 	
@@ -127,6 +176,42 @@ public class TroopListPanel extends JPanel{
 		
 	}
 	
+	private void addSampleModeloTropas() {
+		
+		Map<Unidade, BigDecimal> map1 = new HashMap<Unidade, BigDecimal>();
+		
+		for (Unidade i : Unidade.values())
+			map1.put(i, new BigDecimal("10"));
+		
+		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("10", map1));
+		
+		Map<Unidade, BigDecimal> map2 = new HashMap<Unidade, BigDecimal>();
+		
+		for (Unidade i : Unidade.values())
+			map2.put(i, new BigDecimal("20"));
+		
+		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("20", map2));
+		
+		Map<Unidade, BigDecimal> map3 = new HashMap<Unidade, BigDecimal>();
+		
+		for (Unidade i : Unidade.values())
+			map3.put(i, new BigDecimal("30"));
+		
+		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("30", map3));
+		
+		Map<Unidade, BigDecimal> map4 = new HashMap<Unidade, BigDecimal>();
+		
+		for (Unidade i : Unidade.values())
+			map4.put(i, new BigDecimal("1000"));
+		
+		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("Tudo mil", map4));
+		
+		ModeloTropas_Reader.setMap();
+		
+		
+		
+	}
+	
 	private JButton makeHelpButton() {
 		
 		final JButton button = new JButton();
@@ -137,24 +222,6 @@ public class TroopListPanel extends JPanel{
 		button.setPreferredSize(new Dimension(32,20));
 		
 		return button;
-		
-		
-	}
-	
-
-	
-	public static void main(String args[]) {
-		
-		JFrame test = new JFrame();
-		
-		test.setVisible(true);
-		test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		test.add(new TroopListPanel(null));
-		
-		test.setResizable(false);
-		
-		test.pack();
 		
 		
 	}

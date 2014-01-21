@@ -65,12 +65,12 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		
-		addHeader(true, gbc);
+		gbc.anchor = GridBagConstraints.EAST;
+		add(new TroopListPanel(mapQuantidades), gbc);
 		
 		gbc.gridy++;
 		gbc.gridx = 0;
-		gbc.anchor = GridBagConstraints.EAST;
-		add(new TroopListPanel(mapQuantidades), gbc);
+		addHeader(true, gbc);
 		
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -161,15 +161,6 @@ public class GUI extends Ferramenta {
 		
 	}
 	
-	/**
-	 * Cria a lista de PanelUnidade, utilizando as unidades do mundo
-	 */
-//	private void createPanelUnidade() {
-//		
-//		for (Unidade i : unidadesUtilizadas)
-//			panelUnidadeList.add(new PanelUnidade(getNextColor(),i, total));
-//		
-//	}
 	
 	/**
 	 * Define quais unidades serão utilizadas, com as configurações do mundo
@@ -186,33 +177,6 @@ public class GUI extends Ferramenta {
  			
  		}
  		
-//		unidadesUtilizadas.add(Unidade.LANCEIRO);
-//		unidadesUtilizadas.add(Unidade.ESPADACHIM);
-//		
-//		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
-//			unidadesUtilizadas.add(Unidade.ARQUEIRO);
-//		
-//		unidadesUtilizadas.add(Unidade.BÁRBARO);
-//		
-//		unidadesUtilizadas.add(Unidade.EXPLORADOR);
-//		unidadesUtilizadas.add(Unidade.CAVALOLEVE);
-//		
-//		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) 
-//			unidadesUtilizadas.add(Unidade.ARCOCAVALO);
-//		
-//		unidadesUtilizadas.add(Unidade.CAVALOPESADO);
-//		
-//		unidadesUtilizadas.add(Unidade.ARÍETE);
-//		unidadesUtilizadas.add(Unidade.CATAPULTA);
-//		unidadesUtilizadas.add(Unidade.NOBRE);
-//		
-//		if (Mundo_Reader.MundoSelecionado.hasMilícia())
-//			unidadesUtilizadas.add(Unidade.MILÍCIA);
-//		
-//		if (Mundo_Reader.MundoSelecionado.hasPaladino())
-//			unidadesUtilizadas.add(Unidade.PALADINO);
-//		
-//		createPanelUnidade();
 	}
 
 	

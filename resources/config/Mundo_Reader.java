@@ -21,11 +21,6 @@ public class Mundo_Reader {
 	// Mundo Selecionado
 	public static Mundo MundoSelecionado;
 	
-	/**
-	 * Reads the configuration file for the world informations
-	 * If the file is corrupt, for any reason, use the default world configurations, which has the worlds
-	 * lauched until the time of publishing
-	 */
 	public static void read(String section) {
 	
 		try {
@@ -38,21 +33,7 @@ public class Mundo_Reader {
 		// in case the file is corrupt, for any reason (thus we generalize the exception), we use
 		// the default file
 		} catch (IOException e) {
-//			
-//			propertyList.removeAll(propertyList);
-//			mundoList.removeAll(mundoList);
-//			
-//			System.out.println("O arquivo salvo está corrompido");
-//			
-//			BufferedReader in = new BufferedReader(
-//						new InputStreamReader(Mundo_Reader.class.getResourceAsStream("default_mundos")));
-//			
-//			try {
-//				store(in);
-//			} catch (IOException exc) {
 				System.out.println("bugou geral");
-//			}
-//			 
 		}
 		
 	}
@@ -111,16 +92,13 @@ public class Mundo_Reader {
 			
 	}
 	
-	public static Mundo setMundoSelecionado(Mundo mundo) {
+	public static void setMundoSelecionado(Mundo mundo) {
 		
 		MundoSelecionado = mundo;
 		
 		MundoSelecionado.setTemposDeProdução();
 		
 		MundoSelecionado.setUnidadeList();
-		
-		
-		return null;
 		
 	}
 	

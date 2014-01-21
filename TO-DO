@@ -3,6 +3,8 @@
 
 - Put flag selection on same y-level as troop-list selection
 
+- On WorldSelection, edit informations on same panel
+
 - Create improved JTextField to add all funcionality to format numbers
 	to see the code, go to dados_de_unidade and PanelUnidade
 	

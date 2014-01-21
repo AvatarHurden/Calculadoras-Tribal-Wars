@@ -14,6 +14,8 @@ public class Main {
 		
 		File_Manager.read();
 		
+		File_Manager.defineMundos();
+		
 		openSelection();
 		
 	}
@@ -38,6 +40,8 @@ public class Main {
 	public static void openMainFrame() {
 		
 		selecionar.dispose();
+		
+		File_Manager.defineModelos();
 		
 //		File_Manager.save();
 		

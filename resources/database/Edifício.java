@@ -22,7 +22,7 @@ public enum Edifício {
 	BOSQUE				("Bosque", 				30,	 "1.155",  5,	  6),
 	POÇO_DE_ARGILA		("Poço de Argila", 		30,	 "1.14",   10,	  6),
 	MINA_DE_FERRO		("Mina de Ferro", 		30,	 "1.17",   10,	  6),	
-	FAZENDA				("Fazenda", 			30,	 "1.17",   240,   5),
+	FAZENDA				("Fazenda", 			30,	 "1.172103",   240,   5),
 	ARMAZÉM				("Armazém", 			30,  "1.15",   0,     6),	
 	ESCONDERIJO			("Esconderijo", 		10,	 "1.17",   2,	  5),
 	MURALHA				("Muralha", 			20,	 "1.17",   5,	  8),
