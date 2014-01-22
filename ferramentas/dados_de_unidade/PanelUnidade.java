@@ -271,7 +271,6 @@ public class PanelUnidade{
 				
 			}
 		};
-		quantidade.setColumns(6);
 		
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.anchor = GridBagConstraints.CENTER;

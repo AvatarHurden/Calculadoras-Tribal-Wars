@@ -3,6 +3,7 @@ package custom_components;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -14,16 +15,21 @@ import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+import javax.swing.Popup;
 import javax.swing.border.LineBorder;
 
 import selecionar_mundo.GUI;
 import config.ModeloTropas_Reader;
+import config.Mundo_Reader;
 import database.Cores;
 import database.ModeloTropas;
+import database.Mundo;
 import database.Unidade;
 
 /**
@@ -39,13 +45,13 @@ public class TroopListPanel extends JPanel{
 
 	private Map<Unidade, TroopFormattedTextField> mapTextFields;
 	
-	private Map<Unidade, BigDecimal> mapQuantities;
+	private JPopupMenu popup;
 	
 	public TroopListPanel(Map<Unidade, TroopFormattedTextField> textFields) {
 		
 		mapTextFields = textFields;
 		
-		addSampleModeloTropas();
+		popup = makePopupMenu();
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {54, 20, 20};
@@ -68,7 +74,7 @@ public class TroopListPanel extends JPanel{
 		
 		c.gridx = 1;
 		c.insets = new Insets(0,0,0,0);
-		add(makeSelectionButton(makePopupMenu()), c);
+		add(makeSelectionButton(), c);
 		
 		c.gridx = 2;
 		c.insets = new Insets(0,0,0,2);
@@ -86,7 +92,7 @@ public class TroopListPanel extends JPanel{
 		
 	}
 	
-	private JButton makeSelectionButton(final JPopupMenu popup) {
+	private JButton makeSelectionButton() {
 		
 		final JButton button = new JButton();
 		
@@ -151,7 +157,7 @@ public class TroopListPanel extends JPanel{
 	
 	private JButton makeSaveButton() {
 		
-		JButton button = new JButton();
+		final JButton button = new JButton();
 		
 		button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 						GUI.class.getResource("/images/save_icon.png"))));
@@ -163,13 +169,21 @@ public class TroopListPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				for (Entry<Unidade, TroopFormattedTextField> i : mapTextFields.entrySet()) {
-					
-					System.out.println(i.getKey()+": "+i.getValue().getValue());
-					
-					System.out.println("hello");
-					
-				}
+				Map<Unidade, BigDecimal> toSave = new HashMap<Unidade, BigDecimal>();
+				
+				for (Unidade i : mapTextFields.keySet())
+					toSave.put(i, mapTextFields.get(i).getValue());
+				
+				JDialog dialog = makeSaveDialog(toSave);
+				
+				int x = button.getLocationOnScreen().x + button.getPreferredSize().width/2 
+						- dialog.getPreferredSize().width/2;
+				
+				int y = button.getLocationOnScreen().y + button.getPreferredSize().height;
+				
+				dialog.setLocation(x, y);
+				
+				dialog.setVisible(true);
 				
 			}
 		});
@@ -178,39 +192,131 @@ public class TroopListPanel extends JPanel{
 		
 	}
 	
-	private void addSampleModeloTropas() {
+	private JDialog makeSaveDialog(Map<Unidade, BigDecimal> map) {
 		
-		Map<Unidade, BigDecimal> map1 = new HashMap<Unidade, BigDecimal>();
+		// TextFields
+		final JTextField name;
+		final Map<Unidade, TroopFormattedTextField> saveMap = new HashMap<Unidade, TroopFormattedTextField>();
+		JButton save, cancel;
 		
-		for (Unidade i : Unidade.values())
-			map1.put(i, new BigDecimal("10"));
+		final JDialog dialog = new JDialog();
 		
-		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("10", map1));
+		dialog.getContentPane().setBackground(Cores.FUNDO_CLARO);
 		
-		Map<Unidade, BigDecimal> map2 = new HashMap<Unidade, BigDecimal>();
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {100, 120};
+		layout.rowHeights = new int[] {20};
+		layout.columnWeights = new double[]{0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		dialog.setLayout(layout);
 		
-		for (Unidade i : Unidade.values())
-			map2.put(i, new BigDecimal("20"));
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(10,10,10,10);
+		c.gridy = 0;
+		c.gridx = 0;
+		c.gridwidth = 2;
 		
-		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("20", map2));
+		// Creating name place
 		
-		Map<Unidade, BigDecimal> map3 = new HashMap<Unidade, BigDecimal>();
+		JPanel namePanel = new JPanel();
+		namePanel.setLayout(layout);
+		namePanel.setOpaque(false);
+		namePanel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 		
-		for (Unidade i : Unidade.values())
-			map3.put(i, new BigDecimal("30"));
+		GridBagConstraints nameC = new GridBagConstraints();
+		nameC.insets = new Insets(5,5,5,5);
+		nameC.gridy = 0;
+		nameC.gridx = 0;
 		
-		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("30", map3));
+		namePanel.add(new JLabel("Nome"), nameC);
 		
-		Map<Unidade, BigDecimal> map4 = new HashMap<Unidade, BigDecimal>();
+		nameC.gridx++;
+		namePanel.add(name = new JTextField(6), nameC);
 		
-		for (Unidade i : Unidade.values())
-			map4.put(i, new BigDecimal("1000"));
+		dialog.add(namePanel,c);
 		
-		ModeloTropas_Reader.getListModelos().add(new ModeloTropas("Tudo mil", map4));
+		// Creating unit panels
 		
-		ModeloTropas_Reader.setMap();
+		JPanel unitsPanel = new JPanel(new GridBagLayout());
+		unitsPanel.setOpaque(false);
+		unitsPanel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 		
+		for (Unidade i : Unidade.values()) {
+			if (map.containsKey(i)) {
+			
+			JPanel unitPanel = new JPanel();
+			unitPanel.setLayout(layout);
+			unitPanel.setOpaque(false);
+			
+			GridBagConstraints unitC = new GridBagConstraints();
+			unitC.gridy = 0;
+			unitC.gridx = 0;
+			
+			unitPanel.add(new JLabel(i.nome()), unitC);
+			
+			saveMap.put(i, new TroopFormattedTextField(9) {
+				public void go() {}
+			});
 		
+			// puting the right value in jtextfield
+			if (!map.get(i).equals(BigDecimal.ZERO))
+				saveMap.get(i).setText(map.get(i).toString());
+			
+			unitC.gridx++;
+			unitPanel.add(saveMap.get(i), unitC);
+			
+			if (i.equals(Unidade.LANCEIRO))
+				c.insets = new Insets(5,5,2,5);
+			else if (i.equals(Unidade.NOBRE) || 
+					(Mundo_Reader.MundoSelecionado.hasMilícia() && i.equals(Unidade.MILÍCIA)))
+				c.insets = new Insets(2,5,5,5);
+			else
+				c.insets = new Insets(2,5,2,5);
+			
+			c.gridy++;
+			unitsPanel.add(unitPanel, c);
+			
+			}
+			
+		}
+		
+		c.gridy++;
+		c.insets = new Insets(10,10,10,10);
+		dialog.add(unitsPanel, c);
+		
+		// Adding save and cancel buttons
+		
+		save = new JButton("Salvar");
+		
+		save.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Map<Unidade,BigDecimal> map = new HashMap<Unidade,BigDecimal>();
+				
+				for (Unidade i : mapTextFields.keySet())
+					map.put(i, saveMap.get(i).getValue());
+				
+				ModeloTropas modelo = new ModeloTropas(name.getText(),map);
+				
+				ModeloTropas_Reader.addModelo(modelo);
+				
+				popup = makePopupMenu();
+				
+				dialog.dispose();
+				
+			}
+		});
+		
+		c.gridwidth = 1;
+		c.gridy++;
+		dialog.add(save,c);
+		
+		dialog.setModal(true);
+		
+		dialog.pack();
+		
+		return dialog;
 		
 	}
 	

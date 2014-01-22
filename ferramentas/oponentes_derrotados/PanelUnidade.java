@@ -139,7 +139,6 @@ public class PanelUnidade{
 				
 			}
 		};
-		quantidade.setColumns(6);
 			
 		GridBagConstraints gbc_quantidade = new GridBagConstraints();
 		gbc_quantidade.insets = new Insets(5, 0, 5, 5);

@@ -21,16 +21,12 @@ public class ModeloTropas {
 
 	public ModeloTropas(Properties p) {
 		
-		System.out.println(p);
-		
 		nome = p.getProperty("nome");
 		
 		for (Unidade i : Unidade.values()){
 			String nome = i.nome().toLowerCase().replace(' ', '_');
 			list.put(i, new BigDecimal(p.getProperty(nome)));
 		}
-		
-//		list.put(Unidade.LANCEIRO, new BigDecimal(p.getProperty("lanceiro")));
 		
 	}
 	

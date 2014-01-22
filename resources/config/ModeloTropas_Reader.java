@@ -8,10 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 import database.ModeloTropas;
-import database.Mundo;
 
 /**
  * Class that reads the troop models file and creates objects for each model
@@ -79,6 +77,14 @@ private static void store(BufferedReader in) throws IOException{
 		
 		for (ModeloTropas i : listModelos)
 			mapModelos.put(i.getNome(), i);
+		
+	}
+	
+	public static void addModelo(ModeloTropas modelo) {
+		
+		listModelos.add(modelo);
+		
+		mapModelos.put(modelo.getNome(), modelo);
 		
 	}
 	

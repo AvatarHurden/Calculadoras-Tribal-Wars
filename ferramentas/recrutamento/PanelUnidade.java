@@ -65,52 +65,12 @@ public class PanelUnidade extends JPanel {
 				
 			}
 		};
-//		quantidade.setHorizontalAlignment(SwingConstants.LEFT);
-//		quantidade.setDocument(new PlainDocument() {
-//			
-//			 public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
-//				    if (str == null)
-//				      return;
-//				    
-//				    // permite no máximo 9 dígitos
-//
-//				    if ((getLength() + str.length()) <= 9 && Character.isDigit(str.charAt(0))) {
-//				      super.insertString(offset, str, attr);
-//				    }
-//				  }
-//			
-//		});
-//		
-//		quantidade.addKeyListener(new KeyListener() {
-//			
-//			public void keyTyped(KeyEvent arg0) {}
-//			
-//			public void keyReleased(KeyEvent e) {
-//				
-//				// Apenas fazer modificações caso a key seja um número ou o backspace
-//				if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() == KeyEvent.VK_BACK_SPACE )
-//				try {
-//					String formated = NumberFormat.getNumberInstance(Locale.GERMANY)
-//							.parse(quantidade.getText()).toString();
-//					
-//					quantidade.setText(NumberFormat.getNumberInstance(Locale.GERMANY)
-//							.format(Integer.parseInt(formated)));
-//					
-//				} catch (ParseException exc) {}
-//				
-//				changeTimes();
-//			
-//			}
-//			
-//			public void keyPressed(KeyEvent arg0) {}
-//		});
 			
 		GridBagConstraints gbc_quantidade = new GridBagConstraints();
 		gbc_quantidade.insets = new Insets(5, 0, 5, 5);
 		gbc_quantidade.gridx = 1;
 		gbc_quantidade.gridy = 0;
 		add(quantidade, gbc_quantidade);
-		quantidade.setColumns(6);
 		
 		tempoUnitário = new JLabel();
 		GridBagConstraints gbc_tempoUnitário = new GridBagConstraints();

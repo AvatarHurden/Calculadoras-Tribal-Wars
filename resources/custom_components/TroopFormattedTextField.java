@@ -111,6 +111,8 @@ public abstract class TroopFormattedTextField extends JTextField{
 			public void focusGained(FocusEvent arg0) {}
 		});
 		
+		setColumns(6);
+		
 	}
 	
 	// Returns the unformatted value of a formatted string
