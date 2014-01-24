@@ -1,6 +1,7 @@
 package custom_components;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -169,12 +170,37 @@ public class TroopListPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
+				// Map with values in the 'ferramenta' at the time of clicking
 				Map<Unidade, BigDecimal> toSave = new HashMap<Unidade, BigDecimal>();
 				
-				for (Unidade i : mapTextFields.keySet())
-					toSave.put(i, mapTextFields.get(i).getValue());
+				for (Unidade i : Unidade.values())
+					if (mapTextFields.containsKey(i))
+						toSave.put(i, mapTextFields.get(i).getValue());
+					else
+						toSave.put(i, BigDecimal.ZERO);
 				
-				JDialog dialog = makeSaveDialog(toSave);
+				// Modelo that will be used as parameter for dialog
+				ModeloTropas modelo = null;
+				
+				for (ModeloTropas i : ModeloTropas_Reader.getListModelos()) {
+					
+					if (i.getList().equals(toSave)) {
+						modelo = i;
+						break;
+					} else
+						modelo = new ModeloTropas(null, toSave);
+					
+//					for (Entry<Unidade, BigDecimal> e : toSave.entrySet())
+//						// If the modeloTropas contains all the pairs provided
+//						if (!i.getList().entrySet().contains(e)) {
+//							modelo = new ModeloTropas(null, toSave);
+//							break;
+//						} else
+//							modelo = i;
+						
+				}
+				
+				JDialog dialog = makeSaveDialog(modelo);
 				
 				int x = button.getLocationOnScreen().x + button.getPreferredSize().width/2 
 						- dialog.getPreferredSize().width/2;
@@ -192,17 +218,21 @@ public class TroopListPanel extends JPanel{
 		
 	}
 	
-	private JDialog makeSaveDialog(Map<Unidade, BigDecimal> map) {
+	private JDialog makeSaveDialog(final ModeloTropas modelo) {
+		
+		//TODO ModeloTropas as parameter, checking on button if it matches an existing one
+		// If it does, use this as an editor. If not, a creator. Somehow not allow 2 with
+		// same name, or same units (checking when clicking save)
 		
 		// TextFields
-		final JTextField name;
+		final JTextField name = new JTextField(16);
 		final Map<Unidade, TroopFormattedTextField> saveMap = new HashMap<Unidade, TroopFormattedTextField>();
 		JButton save, cancel;
 		
 		final JDialog dialog = new JDialog();
 		
 		dialog.getContentPane().setBackground(Cores.FUNDO_CLARO);
-		
+	
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] {100, 120};
 		layout.rowHeights = new int[] {20};
@@ -216,6 +246,19 @@ public class TroopListPanel extends JPanel{
 		c.gridx = 0;
 		c.gridwidth = 2;
 		
+		// Creating JLabel that describes the action
+		
+		JLabel infoPanel = new JLabel();
+//		System.out.println(infoPanel.getFont().getName());
+		infoPanel.setFont(new Font("Dialog", 0, 16));
+		
+		if (ModeloTropas_Reader.getListModelos().contains(modelo))
+			infoPanel.setText("Editando \""+modelo.getNome()+"\"");
+		else
+			infoPanel.setText("Criando novo modelo");
+		
+		dialog.add(infoPanel,c);
+		
 		// Creating name place
 		
 		JPanel namePanel = new JPanel();
@@ -227,12 +270,19 @@ public class TroopListPanel extends JPanel{
 		nameC.insets = new Insets(5,5,5,5);
 		nameC.gridy = 0;
 		nameC.gridx = 0;
+		nameC.anchor = GridBagConstraints.WEST;
 		
 		namePanel.add(new JLabel("Nome"), nameC);
 		
-		nameC.gridx++;
-		namePanel.add(name = new JTextField(6), nameC);
+		if (modelo.getNome() != null)
+			name.setText(modelo.getNome());
 		
+		nameC.anchor = GridBagConstraints.EAST;
+		nameC.gridy++;
+		nameC.gridwidth = 2;
+		namePanel.add(name, nameC);
+		
+		c.gridy++;
 		dialog.add(namePanel,c);
 		
 		// Creating unit panels
@@ -242,7 +292,6 @@ public class TroopListPanel extends JPanel{
 		unitsPanel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 		
 		for (Unidade i : Unidade.values()) {
-			if (map.containsKey(i)) {
 			
 			JPanel unitPanel = new JPanel();
 			unitPanel.setLayout(layout);
@@ -259,8 +308,8 @@ public class TroopListPanel extends JPanel{
 			});
 		
 			// puting the right value in jtextfield
-			if (!map.get(i).equals(BigDecimal.ZERO))
-				saveMap.get(i).setText(map.get(i).toString());
+			if (!modelo.getList().isEmpty() && !modelo.getList().get(i).equals(BigDecimal.ZERO))
+				saveMap.get(i).setText(modelo.getList().get(i).toString());
 			
 			unitC.gridx++;
 			unitPanel.add(saveMap.get(i), unitC);
@@ -276,8 +325,6 @@ public class TroopListPanel extends JPanel{
 			c.gridy++;
 			unitsPanel.add(unitPanel, c);
 			
-			}
-			
 		}
 		
 		c.gridy++;
@@ -292,10 +339,21 @@ public class TroopListPanel extends JPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 				
+				// Para trabalhar como editor
+				if (ModeloTropas_Reader.getListModelos().contains(modelo)) {
+					
+					
+					
+				}
+				
+				
 				Map<Unidade,BigDecimal> map = new HashMap<Unidade,BigDecimal>();
 				
-				for (Unidade i : mapTextFields.keySet())
-					map.put(i, saveMap.get(i).getValue());
+				for (Unidade i : Unidade.values())
+					if (mapTextFields.containsKey(i))
+						map.put(i, saveMap.get(i).getValue());
+					else
+						map.put(i, BigDecimal.ZERO);
 				
 				ModeloTropas modelo = new ModeloTropas(name.getText(),map);
 				

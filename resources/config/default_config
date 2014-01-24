@@ -804,6 +804,6 @@ Modelos_de_Tropas {
 	catapulta=0
 	paladino=0
 	nobre=0
-	milícia=0
+	milícia=1
 	
 }

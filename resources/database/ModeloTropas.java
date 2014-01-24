@@ -19,6 +19,10 @@ public class ModeloTropas {
 	private Map<Unidade, BigDecimal> list = new HashMap<Unidade, BigDecimal>();
 	
 
+	public ModeloTropas() {
+		
+	}
+	
 	public ModeloTropas(Properties p) {
 		
 		nome = p.getProperty("nome");
@@ -35,6 +39,14 @@ public class ModeloTropas {
 		this.nome = nome;
 		this.list = list;
 		
+	}
+	
+	public void setNome(String s) {
+		nome = s;
+	}
+	
+	public void setList(Map<Unidade, BigDecimal> list) {
+		this.list = list;
 	}
 	
 	public String getNome() {
