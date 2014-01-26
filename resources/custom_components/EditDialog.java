@@ -1,17 +1,24 @@
 package custom_components;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 import config.File_Manager;
 import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
-import database.ModeloTropas;
+import database.Cores;
 
 /**
  * Dialog that contains info to edit a list (Mundos and ModeloTropas)
@@ -35,14 +42,17 @@ public class EditDialog extends JDialog {
 
 	List<Properties> propertiesList;
 	
-	public EditDialog(List<ModeloTropas> objects) throws IllegalArgumentException, IllegalAccessException {
+	Map<Object, JComponent> mapping;
+	
+	public EditDialog(List objects) throws IllegalArgumentException, IllegalAccessException {
 		
 		for (Object i : objects)
-			i.toString();
+			System.out.println(i.toString());
 		
 		Field[] field = objects.get(0).getClass().getDeclaredFields();
 		
 		System.out.println(field.length);
+		
 		
 		for (Field t : field) {
 			System.out.println(t.getName()+" "+t.getType());
@@ -51,8 +61,53 @@ public class EditDialog extends JDialog {
 				for (Entry<Object, Object> x : ((Map<Object, Object>) t.get(objects.get(0))).entrySet())
 					System.out.println(x.getKey()+": "+x.getValue());
 			}
+			
 		}
 		
+	}
+	
+	private JPanel makeFieldPanel(Field field) {
+		
+		JPanel panel = new JPanel();
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] {100, 120};
+		layout.rowHeights = new int[] {20};
+		layout.columnWeights = new double[]{0, Double.MIN_VALUE};
+		layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(layout);
+
+		panel.setOpaque(false);
+		panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		
+		
+		if (field.getType().equals(boolean.class)) {
+			
+			
+			
+			GridBagConstraints nameC = new GridBagConstraints();
+			nameC.insets = new Insets(5,5,5,5);
+			nameC.gridy = 0;
+			nameC.gridx = 0;
+			nameC.anchor = GridBagConstraints.WEST;
+			
+			panel.add(new JLabel("Nome"), nameC);
+			
+			if (modelo.getNome() != null)
+				name.setText(modelo.getNome());
+			
+			nameC.anchor = GridBagConstraints.EAST;
+			nameC.gridy++;
+			nameC.gridwidth = 2;
+			panel.add(name, nameC);
+
+			
+		}
+		
+		return panel;
 	}
 	
 	public static void main (String args[]) {
@@ -66,7 +121,7 @@ public class EditDialog extends JDialog {
 		File_Manager.defineModelos();
 		
 		try {
-			EditDialog test = new EditDialog(ModeloTropas_Reader.getListModelos());
+			EditDialog test = new EditDialog(Mundo_Reader.getMundoList());
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
