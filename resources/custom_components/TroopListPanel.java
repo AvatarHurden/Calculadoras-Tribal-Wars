@@ -218,7 +218,21 @@ public class TroopListPanel extends JPanel{
 		
 	}
 	
+	private JDialog makeEditDialog() {
+		
+		JDialog dialog = new JDialog();
+		
+		
+		
+		return null;
+		
+	}
+	
 	private JDialog makeSaveDialog(final ModeloTropas modelo) {
+		
+		//TODO Change this whole thing. The save dialog opens a divided window.
+		// On the left side, all existing models and a button to create a new one
+		// On the right, basically what we had as the full dialog.
 		
 		//TODO ModeloTropas as parameter, checking on button if it matches an existing one
 		// If it does, use this as an editor. If not, a creator. Somehow not allow 2 with

@@ -236,6 +236,10 @@ public class Mundo {
 		this.modificarUnidaes = modificarUnidaes;
 	}
 
+	public String toString() {
+		return nome;
+	}
+	
 	public String getNome() {
 		return nome;
 	}

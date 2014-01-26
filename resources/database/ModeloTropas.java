@@ -16,7 +16,7 @@ public class ModeloTropas {
 	
 	private String nome;
 	
-	private Map<Unidade, BigDecimal> list = new HashMap<Unidade, BigDecimal>();
+	public Map<Unidade, BigDecimal> list = new HashMap<Unidade, BigDecimal>();
 	
 
 	public ModeloTropas() {
@@ -39,6 +39,10 @@ public class ModeloTropas {
 		this.nome = nome;
 		this.list = list;
 		
+	}
+	
+	public String toString() {
+		return nome;
 	}
 	
 	public void setNome(String s) {
