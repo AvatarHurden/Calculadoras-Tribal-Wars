@@ -23,7 +23,7 @@ public class Mundo {
 	private boolean hasBandeira;
 	private boolean hasBonusNoturno;
 	private BigDecimal velocidade;
-	private BigDecimal modificarUnidaes;
+	private BigDecimal modificarUnidades;
 	
 	private Unidade[] unidades = new Unidade[13];
 	
@@ -68,7 +68,7 @@ public class Mundo {
 		
 		String modifier = prop.getProperty("modificador");
 		modifier = modifier.replaceAll(",", ".");
-		modificarUnidaes = new BigDecimal(modifier);
+		modificarUnidades = new BigDecimal(modifier);
 		
 	}
 	
@@ -80,7 +80,7 @@ public class Mundo {
 		
 		s+=("\tnome="+nome+"\n");
 		s+=("\tvelocidade="+velocidade.toString()+"\n");
-		s+=("\tmodificador="+modificarUnidaes.toString()+"\n");
+		s+=("\tmodificador="+modificarUnidades.toString()+"\n");
 		
 		s+=("\tmoral="+hasMoral+"\n");
 		s+=("\tpesquisaDeNiveis="+pesquisaDeNíveis+"\n");
@@ -233,7 +233,7 @@ public class Mundo {
 	}
 
 	public void setModificarUnidaes(BigDecimal modificarUnidaes) {
-		this.modificarUnidaes = modificarUnidaes;
+		this.modificarUnidades = modificarUnidaes;
 	}
 
 	public String toString() {
@@ -289,7 +289,7 @@ public class Mundo {
 	}
 
 	public BigDecimal getModificarUnidaes() {
-		return modificarUnidaes;
+		return modificarUnidades;
 	}
 	
 	/**
@@ -313,6 +313,45 @@ public class Mundo {
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * @param declared variable name
+	 * @return User-friendly variable name
+	 */
+	public static String getVariableName(String s) {
+		
+		switch (s) {
+			case "nome":
+				return "Nome";
+			case "hasArqueiro":
+				return "Arqueiros";
+			case "hasMilícia":
+				return "Milícia";
+			case "hasPaladino":
+				return "Paladino";
+			case "hasItensAprimorados":
+				return "Itens Aprimorados";
+			case "hasIgreja":
+				return "Igreja";
+			case "academiaDeNíveis":
+				return "Cunhagem de Moedas";
+			case "pesquisaDeNíveis":
+				return "Pesquisa de 3 níveis";
+			case "hasMoral":
+				return "Moral";
+			case "hasBandeira":
+				return "Bandeiras";
+			case "hasBonusNoturno":
+				return "Bônus Noturno";
+			case "velocidade":
+				return "Velocidade";
+			case "modificarUnidades":
+				return "Modificador de Unidade";
+			default:
+				return null;
+		}
+		
 	}
 	
 	/**

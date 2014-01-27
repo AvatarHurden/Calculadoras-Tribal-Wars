@@ -44,6 +44,10 @@ public class EditDialog extends JDialog {
 	
 	Map<Object, JComponent> mapping;
 	
+	//TODO create an interface called variable. WIthin it, different classes with types
+	// that I want (2-choices, boolean, map, etc). Have each class contain a list of
+	// all the variables that they have, using that as a parameter for this dialog;
+	
 	public EditDialog(List objects) throws IllegalArgumentException, IllegalAccessException {
 		
 		for (Object i : objects)
@@ -82,7 +86,17 @@ public class EditDialog extends JDialog {
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
-		
+		if (field.getType().equals(Map.class)) {
+			
+			// Mapping the entries to the first object, since only the name will be used
+			for (Entry<Object, Object> x : ((Map<Object, Object>) field.get(objects.get(0))).entrySet()) {
+				
+				
+				
+				
+			}
+			
+		}
 		
 		if (field.getType().equals(boolean.class)) {
 			

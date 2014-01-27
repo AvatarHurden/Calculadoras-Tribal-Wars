@@ -1,6 +1,8 @@
 package database;
 
+import java.util.List;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -16,9 +18,11 @@ public class ModeloTropas {
 	
 	private String nome;
 	
-	public Map<Unidade, BigDecimal> list = new HashMap<Unidade, BigDecimal>();
+	private Map<Unidade, BigDecimal> quantidades = new HashMap<Unidade, BigDecimal>();
 	
-
+	// This list will declare the order in which the map will be displayed
+	private static List<Unidade> quantidadesList = new ArrayList<Unidade>(); 
+	
 	public ModeloTropas() {
 		
 	}
@@ -29,7 +33,7 @@ public class ModeloTropas {
 		
 		for (Unidade i : Unidade.values()){
 			String nome = i.nome().toLowerCase().replace(' ', '_');
-			list.put(i, new BigDecimal(p.getProperty(nome)));
+			quantidades.put(i, new BigDecimal(p.getProperty(nome)));
 		}
 		
 	}
@@ -37,7 +41,7 @@ public class ModeloTropas {
 	public ModeloTropas(String nome, Map<Unidade, BigDecimal> list) {
 		
 		this.nome = nome;
-		this.list = list;
+		this.quantidades = list;
 		
 	}
 	
@@ -50,7 +54,7 @@ public class ModeloTropas {
 	}
 	
 	public void setList(Map<Unidade, BigDecimal> list) {
-		this.list = list;
+		this.quantidades = list;
 	}
 	
 	public String getNome() {
@@ -58,11 +62,11 @@ public class ModeloTropas {
 	}
 	
 	public BigDecimal getQuantidade(Unidade i) {
-		return list.get(i);
+		return quantidades.get(i);
 	}
 	
 	public Map<Unidade, BigDecimal> getList() {
-		return list;
+		return quantidades;
 	}
 	
 }
