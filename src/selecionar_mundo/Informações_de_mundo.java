@@ -106,7 +106,7 @@ public class Informações_de_mundo extends JPanel {
 		add(panelProperty("milicia"), gbc);
 		
 		gbc.gridy++;
-		add(panelProperty("academiaDeNiveis"), gbc);
+		add(panelProperty("cunhagemDeMoedas"), gbc);
 		
 	}
 
@@ -141,7 +141,7 @@ public class Informações_de_mundo extends JPanel {
 			return "Itens Aprimorados";
 		case "milicia":
 			return "Milícia";
-		case "academiaDeNiveis":
+		case "cunhagemDeMoedas":
 			return "Cunhagem de Moedas";	
 		default:
 			return null;
@@ -207,11 +207,11 @@ public class Informações_de_mundo extends JPanel {
 				return "Ativado";
 			else
 				return "Desativado";
-		case "academiaDeNiveis":
+		case "cunhagemDeMoedas":
 			if (propertyValue.equals("true"))
-				return "Desativado";
-			else
 				return "Ativado";
+			else
+				return "Desativado";
 		default:
 			return null;
 		}

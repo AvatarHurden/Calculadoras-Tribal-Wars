@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Properties;
 
+import property_classes.Escolha;
+import property_classes.Number;
+
 /**
  * Classe para a criação de diferentes mundos
  * 
@@ -12,18 +15,34 @@ import java.util.Properties;
 public class Mundo {
 
 	private String nome;
-	private boolean hasArqueiro;
-	private boolean hasMilícia;
-	private boolean hasPaladino;
-	private boolean hasItensAprimorados;
-	private boolean hasIgreja;
-	private boolean academiaDeNíveis;
-	private boolean pesquisaDeNíveis;
-	private boolean hasMoral;
-	private boolean hasBandeira;
-	private boolean hasBonusNoturno;
-	private BigDecimal velocidade;
-	private BigDecimal modificarUnidades;
+//	private boolean hasArqueiro;
+//	private boolean hasMilícia;
+//	private boolean hasPaladino;
+//	private boolean hasItensAprimorados;
+//	private boolean hasIgreja;
+//	private boolean academiaDeNíveis;
+//	private boolean pesquisaDeNíveis;
+//	private boolean hasMoral;
+//	private boolean hasBandeira;
+//	private boolean hasBonusNoturno;
+//	private BigDecimal velocidade;
+//	private BigDecimal modificarUnidades;
+	
+	private property_classes.Boolean hasArqueiro;
+	private property_classes.Boolean hasMilícia;
+	private property_classes.Boolean hasPaladino;
+	private property_classes.Boolean hasItensAprimorados;
+	private property_classes.Boolean hasIgreja;
+	private property_classes.Boolean hasMoral;
+	private property_classes.Boolean hasBandeira;
+	private property_classes.Boolean hasBonusNoturno;
+	private property_classes.Boolean cunhagemDeMoedas;
+	
+	private Escolha sistemaDePesquisa;
+	
+	private property_classes.Number velocidade;
+	private property_classes.Number modificarUnidades;
+	
 	
 	private Unidade[] unidades = new Unidade[13];
 	
@@ -42,33 +61,49 @@ public class Mundo {
 		
 		nome = prop.getProperty("nome");
 		
-		hasArqueiro = Boolean.parseBoolean(prop.getProperty("arqueiro"));
+		hasArqueiro = new property_classes.Boolean("Arqueiro", 
+				 Boolean.parseBoolean(prop.getProperty("arqueiro")));
 		
-		hasMilícia = Boolean.parseBoolean(prop.getProperty("milicia"));
+		hasMilícia = new property_classes.Boolean("Milícia", 
+				 Boolean.parseBoolean(prop.getProperty("milicia")));
 		
-		hasPaladino = Boolean.parseBoolean(prop.getProperty("paladino"));
+		hasPaladino = new property_classes.Boolean("Paladino", 
+				 Boolean.parseBoolean(prop.getProperty("paladino")));
 		
-		hasItensAprimorados = Boolean.parseBoolean(prop.getProperty("itensAprimorados"));
+		hasItensAprimorados = new property_classes.Boolean("Itens Aprimorados", 
+				 Boolean.parseBoolean(prop.getProperty("itensAprimorados")));
 		
-		hasIgreja = Boolean.parseBoolean(prop.getProperty("igreja"));
+		hasIgreja = new property_classes.Boolean("Igreja", 
+				 Boolean.parseBoolean(prop.getProperty("igreja")));
 		
-		academiaDeNíveis = Boolean.parseBoolean(prop.getProperty("academiaDeNiveis"));
+		hasMoral = new property_classes.Boolean("Moral", 
+				 Boolean.parseBoolean(prop.getProperty("moral")));
 		
-		pesquisaDeNíveis = Boolean.parseBoolean(prop.getProperty("pesquisaDeNiveis"));
+		hasBandeira = new property_classes.Boolean("Bandeiras", 
+				 Boolean.parseBoolean(prop.getProperty("bandeira")));
 		
-		hasMoral = Boolean.parseBoolean(prop.getProperty("moral"));
+		hasBonusNoturno = new property_classes.Boolean("Bônus Noturno", 
+				 Boolean.parseBoolean(prop.getProperty("bonusNoturno")));
 		
-		hasBandeira = Boolean.parseBoolean(prop.getProperty("bandeira"));
+		cunhagemDeMoedas = new property_classes.Boolean("Cunhagem e Moedas", 
+				 Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
+				
+				
+//				Boolean.parseBoolean(prop.getProperty("academiaDeNiveis"));
 		
-		hasBonusNoturno = Boolean.parseBoolean(prop.getProperty("bonusNoturno"));
+//		pesquisaDeNíveis = Boolean.parseBoolean(prop.getProperty("pesquisaDeNiveis"));
+		
+		
+		sistemaDePesquisa = new Escolha("Sistema de Pesquisa", 
+				"Pesquisa Simples", "Pesquisa de 3 Níveis", prop.getProperty("pesquisaDeNiveis"));
 		
 		String speed = prop.getProperty("velocidade");
 		speed = speed.replaceAll(",", ".");
-		velocidade = new BigDecimal(speed);
+		velocidade = new Number("Velocidade", new BigDecimal(speed));
 		
 		String modifier = prop.getProperty("modificador");
 		modifier = modifier.replaceAll(",", ".");
-		modificarUnidades = new BigDecimal(modifier);
+		modificarUnidades = new Number("Modificador de Unidade", new BigDecimal(modifier));
 		
 	}
 	
@@ -83,7 +118,7 @@ public class Mundo {
 		s+=("\tmodificador="+modificarUnidades.toString()+"\n");
 		
 		s+=("\tmoral="+hasMoral+"\n");
-		s+=("\tpesquisaDeNiveis="+pesquisaDeNíveis+"\n");
+		s+=("\tpesquisaDeNiveis="+sistemaDePesquisa+"\n");
 		s+=("\tigreja="+hasIgreja+"\n");
 		s+=("\tbonusNoturno="+hasBonusNoturno+"\n");
 		s+=("\tbandeira="+hasBandeira+"\n");
@@ -91,7 +126,7 @@ public class Mundo {
 		s+=("\tpaladino="+hasPaladino+"\n");
 		s+=("\titensAprimorados="+hasItensAprimorados+"\n");
 		s+=("\tmilicia="+hasMilícia+"\n");
-		s+=("\tacademiaDeNiveis="+academiaDeNíveis+"\n");
+		s+=("\tcunhagemDeMoedas="+cunhagemDeMoedas+"\n");
 		
 		return s;
 		
@@ -145,7 +180,7 @@ public class Mundo {
 		
 		for (int i = 0; i < 26; i++)
 			porcentagemDeProdução[i] = 
-			porcentagemDeProdução[i].divide(velocidade, 30, BigDecimal.ROUND_HALF_EVEN);
+			porcentagemDeProdução[i].divide(velocidade.getValue(), 30, BigDecimal.ROUND_HALF_EVEN);
 
 	}
 	
@@ -159,7 +194,7 @@ public class Mundo {
 		unidades[1] = Unidade.ESPADACHIM;
 		unidades[2] = Unidade.BÁRBARO;
 		
-		if (hasArqueiro)
+		if (hasArqueiro.getValue())
 			unidades[3] = Unidade.ARQUEIRO;
 		else
 			unidades[3] = null;
@@ -167,7 +202,7 @@ public class Mundo {
 		unidades[4] = Unidade.EXPLORADOR;
 		unidades[5] = Unidade.CAVALOLEVE;
 		
-		if (hasArqueiro)
+		if (hasArqueiro.getValue())
 			unidades[6] = Unidade.ARCOCAVALO;
 		else
 			unidades[6] = null;
@@ -176,12 +211,12 @@ public class Mundo {
 		unidades[8] = Unidade.ARÍETE;
 		unidades[9] = Unidade.CATAPULTA;
 		
-		if (hasPaladino)
+		if (hasPaladino.getValue())
 			unidades[10] = Unidade.PALADINO;
 		
 		unidades[11] = Unidade.NOBRE;
 		
-		if (hasMilícia)
+		if (hasMilícia.getValue())
 		unidades[12] = Unidade.MILÍCIA;
 		
 	}
@@ -192,49 +227,49 @@ public class Mundo {
 		this.nome = nome;
 	}
 	
-	public void setHasMilícia(boolean hasMilícia) {
-		this.hasMilícia = hasMilícia;
-	}
-	
-	public void setHasPaladino(boolean hasPaladino) {
-		this.hasPaladino = hasPaladino;
-	}
-	
-	public void setHasItemnsprimorados(boolean hasItemAprimorado) {
-		this.hasItensAprimorados = hasItemAprimorado;
-	}
-	
-	public void setHasIgreja(boolean hasIgreja) {
-		this.hasIgreja = hasIgreja;
-	}
-	
-	public void setAcademiaDeNíveis(boolean academiaDeNíveis) {
-		this.academiaDeNíveis = academiaDeNíveis;
-	}
-	
-	public void setPesquisaDeNíveis(boolean pesquisaDeNíveis) {
-		this.pesquisaDeNíveis = pesquisaDeNíveis;
-	}
-
-	public void setHasMoral(boolean hasMoral) {
-		this.hasMoral = hasMoral;
-	}
-	
-	public void setHasBandeira(boolean hasBandeira) {
-		this.hasBandeira = hasBandeira;
-	}
-	
-	public void setHasBonusNoturno(boolean hasBonusNoturno) {
-		this.hasBonusNoturno = hasBonusNoturno;
-	}
-	
-	public void setVelocidade(BigDecimal velocidade) {
-		this.velocidade = velocidade;
-	}
-
-	public void setModificarUnidaes(BigDecimal modificarUnidaes) {
-		this.modificarUnidades = modificarUnidaes;
-	}
+//	public void setHasMilícia(boolean hasMilícia) {
+//		this.hasMilícia = new property_classes.Boolean("Milícia", hasMilícia);
+//	}
+//	
+//	public void setHasPaladino(boolean hasPaladino) {
+//		this.hasPaladino = hasPaladino;
+//	}
+//	
+//	public void setHasItemnsprimorados(boolean hasItemAprimorado) {
+//		this.hasItensAprimorados = hasItemAprimorado;
+//	}
+//	
+//	public void setHasIgreja(boolean hasIgreja) {
+//		this.hasIgreja = hasIgreja;
+//	}
+//	
+//	public void setAcademiaDeNíveis(boolean academiaDeNíveis) {
+//		this.academiaDeNíveis = academiaDeNíveis;
+//	}
+//	
+//	public void setPesquisaDeNíveis(boolean pesquisaDeNíveis) {
+//		this.pesquisaDeNíveis = pesquisaDeNíveis;
+//	}
+//
+//	public void setHasMoral(boolean hasMoral) {
+//		this.hasMoral = hasMoral;
+//	}
+//	
+//	public void setHasBandeira(boolean hasBandeira) {
+//		this.hasBandeira = hasBandeira;
+//	}
+//	
+//	public void setHasBonusNoturno(boolean hasBonusNoturno) {
+//		this.hasBonusNoturno = hasBonusNoturno;
+//	}
+//	
+//	public void setVelocidade(BigDecimal velocidade) {
+//		this.velocidade = velocidade;
+//	}
+//
+//	public void setModificarUnidaes(BigDecimal modificarUnidaes) {
+//		this.modificarUnidades = modificarUnidaes;
+//	}
 
 	public String toString() {
 		return nome;
@@ -245,51 +280,51 @@ public class Mundo {
 	}
 
 	public boolean hasArqueiro() {
-		return hasArqueiro;
+		return hasArqueiro.getValue();
 	}
 
 	public boolean hasMilícia() {
-		return hasMilícia;
+		return hasMilícia.getValue();
 	}
 
 	public boolean hasPaladino() {
-		return hasPaladino;
+		return hasPaladino.getValue();
 	}
 	
 	public boolean hasItensAprimorados() {
-		return hasItensAprimorados;
+		return hasItensAprimorados.getValue();
 	}
 
 	public boolean hasIgreja() {
-		return hasIgreja;
+		return hasIgreja.getValue();
 	}
 
 	public boolean isAcademiaDeNíveis() {
-		return academiaDeNíveis;
+		return cunhagemDeMoedas.getValue();
 	}
 
 	public boolean isPesquisaDeNíveis() {
-		return pesquisaDeNíveis;
+		return sistemaDePesquisa.isOption("Pesquisa de 3 Níveis");
 	}
 
 	public boolean hasMoral() {
-		return hasMoral;
+		return hasMoral.getValue();
 	}
 	
 	public boolean hasBandeira() {
-		return hasBandeira;
+		return hasBandeira.getValue();
 	}
 	
 	public boolean hasBonusNoturno() {
-		return hasBonusNoturno;
+		return hasBonusNoturno.getValue();
 	}
 
 	public BigDecimal getVelocidade() {
-		return velocidade;
+		return velocidade.getValue();
 	}
 
 	public BigDecimal getModificarUnidaes() {
-		return modificarUnidades;
+		return modificarUnidades.getValue();
 	}
 	
 	/**

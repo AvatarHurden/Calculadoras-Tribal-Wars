@@ -15,7 +15,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 3
 	velocidade=2.0
@@ -29,7 +29,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 4
 	velocidade=1.6
@@ -43,7 +43,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 5
 	velocidade=1.6
@@ -57,7 +57,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 6
 	velocidade=1.6
@@ -71,7 +71,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 7
 	velocidade=1.75
@@ -85,7 +85,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 8
 	velocidade=1.0
@@ -99,7 +99,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 9
 	velocidade=1.0
@@ -113,7 +113,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 10
 	velocidade=1.2
@@ -127,7 +127,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 11
 	velocidade=1.0
@@ -141,7 +141,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 12
 	velocidade=1.0
@@ -155,7 +155,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 13
 	velocidade=2.0
@@ -169,7 +169,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 14
 	velocidade=1.6
@@ -183,7 +183,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 15
 	velocidade=1.0
@@ -197,7 +197,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 16
 	velocidade=1.0
@@ -211,7 +211,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 17
 	velocidade=1.0
@@ -225,7 +225,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 18
 	velocidade=1.25
@@ -239,7 +239,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 19
 	velocidade=0.8
@@ -253,7 +253,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 20
 	velocidade=1.0
@@ -267,7 +267,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 21
 	velocidade=2.0
@@ -281,7 +281,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 22
 	velocidade=1.6
@@ -295,7 +295,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 23
 	velocidade=1.0
@@ -309,7 +309,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 24
 	velocidade=1.0
@@ -323,7 +323,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 25
 	velocidade=2.0
@@ -337,7 +337,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 26
 	velocidade=1.0
@@ -351,7 +351,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 27
 	velocidade=1.3
@@ -365,7 +365,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 28
 	velocidade=1.2
@@ -379,7 +379,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 29
 	velocidade=2.0
@@ -393,7 +393,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 30
 	velocidade=1.0
@@ -407,7 +407,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 31
 	velocidade=1.5
@@ -421,7 +421,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 32
 	velocidade=1.2
@@ -435,7 +435,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 33
 	velocidade=1.0
@@ -449,7 +449,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 34
 	velocidade=1.6
@@ -463,7 +463,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 35
 	velocidade=2.0
@@ -477,7 +477,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 36
 	velocidade=1.0
@@ -491,7 +491,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 37
 	velocidade=1.5
@@ -505,7 +505,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=true
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 38
 	velocidade=1.0
@@ -519,7 +519,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 39
 	velocidade=2.0
@@ -533,7 +533,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 40
 	velocidade=1.0
@@ -547,7 +547,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 41
 	velocidade=1.5
@@ -561,7 +561,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 42
 	velocidade=1.0
@@ -575,7 +575,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 43
 	velocidade=1.6
@@ -589,7 +589,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 44
 	velocidade=1.0
@@ -603,7 +603,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 45
 	velocidade=1.3
@@ -617,7 +617,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 46
 	velocidade=1.0
@@ -631,7 +631,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 47
 	velocidade=2.0
@@ -645,7 +645,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 48
 	velocidade=1.0
@@ -659,7 +659,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 49
 	velocidade=1.5
@@ -673,7 +673,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=false
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 50
 	velocidade=1.0
@@ -687,7 +687,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 51
 	velocidade=1.3
@@ -701,7 +701,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 52
 	velocidade=1.0
@@ -715,7 +715,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 53
 	velocidade=2.0
@@ -729,7 +729,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=true
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 54
 	velocidade=1.0
@@ -743,7 +743,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 55
 	velocidade=1.5
@@ -757,7 +757,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=true
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 
 	nome=Mundo 56
 	velocidade=1.0
@@ -771,7 +771,7 @@ Mundos {
 	paladino=true
 	itensAprimorados=true
 	milicia=true
-	academiaDeNiveis=false
+	cunhagemDeMoedas=true
 
 	nome=Mundo 57
 	velocidade=1.6
@@ -785,7 +785,7 @@ Mundos {
 	paladino=false
 	itensAprimorados=false
 	milicia=true
-	academiaDeNiveis=true
+	cunhagemDeMoedas=false
 	
 }
 

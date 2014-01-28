@@ -189,14 +189,6 @@ public class TroopListPanel extends JPanel{
 						break;
 					} else
 						modelo = new ModeloTropas(null, toSave);
-					
-//					for (Entry<Unidade, BigDecimal> e : toSave.entrySet())
-//						// If the modeloTropas contains all the pairs provided
-//						if (!i.getList().entrySet().contains(e)) {
-//							modelo = new ModeloTropas(null, toSave);
-//							break;
-//						} else
-//							modelo = i;
 						
 				}
 				
