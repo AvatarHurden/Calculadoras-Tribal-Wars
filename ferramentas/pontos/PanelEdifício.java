@@ -276,8 +276,6 @@ public class PanelEdifício{
 	// Modifica os valores das características para adequar ao número de unidades
 	private void changeValues(int nível) {
 		
-		System.out.println("hi");
-		
 		pontos.setText(String.format("%,d",edifício.pontos(nível)));
 		
 		if (!edifício.equals(Edifício.FAZENDA))

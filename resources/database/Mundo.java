@@ -1,11 +1,14 @@
 package database;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import property_classes.Escolha;
 import property_classes.Number;
+import property_classes.Property;
 
 /**
  * Classe para a criação de diferentes mundos
@@ -15,18 +18,6 @@ import property_classes.Number;
 public class Mundo {
 
 	private String nome;
-//	private boolean hasArqueiro;
-//	private boolean hasMilícia;
-//	private boolean hasPaladino;
-//	private boolean hasItensAprimorados;
-//	private boolean hasIgreja;
-//	private boolean academiaDeNíveis;
-//	private boolean pesquisaDeNíveis;
-//	private boolean hasMoral;
-//	private boolean hasBandeira;
-//	private boolean hasBonusNoturno;
-//	private BigDecimal velocidade;
-//	private BigDecimal modificarUnidades;
 	
 	private property_classes.Boolean hasArqueiro;
 	private property_classes.Boolean hasMilícia;
@@ -43,6 +34,8 @@ public class Mundo {
 	private property_classes.Number velocidade;
 	private property_classes.Number modificarUnidades;
 	
+	// List of properties in the order they are to be shown
+	private List<Property> variableList = new ArrayList<Property>();
 	
 	private Unidade[] unidades = new Unidade[13];
 	
@@ -88,11 +81,6 @@ public class Mundo {
 		cunhagemDeMoedas = new property_classes.Boolean("Cunhagem e Moedas", 
 				 Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
 				
-				
-//				Boolean.parseBoolean(prop.getProperty("academiaDeNiveis"));
-		
-//		pesquisaDeNíveis = Boolean.parseBoolean(prop.getProperty("pesquisaDeNiveis"));
-		
 		
 		sistemaDePesquisa = new Escolha("Sistema de Pesquisa", 
 				"Pesquisa Simples", "Pesquisa de 3 Níveis", prop.getProperty("pesquisaDeNiveis"));
@@ -105,6 +93,18 @@ public class Mundo {
 		modifier = modifier.replaceAll(",", ".");
 		modificarUnidades = new Number("Modificador de Unidade", new BigDecimal(modifier));
 		
+		variableList.add(velocidade);
+		variableList.add(modificarUnidades);
+		variableList.add(hasMoral);
+		variableList.add(sistemaDePesquisa);
+		variableList.add(hasIgreja);
+		variableList.add(hasBonusNoturno);
+		variableList.add(hasBandeira);
+		variableList.add(hasArqueiro);
+		variableList.add(hasPaladino);
+		variableList.add(hasItensAprimorados);
+		variableList.add(hasMilícia);
+		variableList.add(cunhagemDeMoedas);
 	}
 	
 	public String getConfigText() {

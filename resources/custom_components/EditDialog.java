@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import config.File_Manager;
-import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.Cores;
 
@@ -48,26 +47,26 @@ public class EditDialog extends JDialog {
 	// that I want (2-choices, boolean, map, etc). Have each class contain a list of
 	// all the variables that they have, using that as a parameter for this dialog;
 	
-	public EditDialog(List objects) throws IllegalArgumentException, IllegalAccessException {
-		
-		for (Object i : objects)
-			System.out.println(i.toString());
-		
-		Field[] field = objects.get(0).getClass().getDeclaredFields();
-		
-		System.out.println(field.length);
+	public EditDialog(List objects, Field variableList) {
 		
 		
-		for (Field t : field) {
-			System.out.println(t.getName()+" "+t.getType());
-			if (t.getType().equals(Map.class)) {
-				System.out.println("it is a boolean");
-				for (Entry<Object, Object> x : ((Map<Object, Object>) t.get(objects.get(0))).entrySet())
-					System.out.println(x.getKey()+": "+x.getValue());
-			}
+	}
+	
+	private void makeBooleanPanel() {
+		
+		
+	}
+	
+	private void makeEscolhaPanel() {
+		
+	}
+	
+	private void makeNumberPanel() {
+		
+	}
+	
+	private void makeUnidadeListPanel() {
 			
-		}
-		
 	}
 	
 	private JPanel makeFieldPanel(Field field) {

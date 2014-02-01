@@ -2,13 +2,13 @@ package database;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import property_classes.Quantidade;
+import property_classes.Property;
+import property_classes.UnidadeList;
 
 /**
  * Class that stores a specific number of every unit to be used in different
@@ -23,12 +23,14 @@ public class ModeloTropas {
 	
 //	private Map<Unidade, BigDecimal> quantidades = new HashMap<Unidade, BigDecimal>();
 	
-	private List<Quantidade> quantidades = new ArrayList<Quantidade>();
+	private UnidadeList quantidades = new UnidadeList();
 	
-//	// This list will declare the order in which the map will be displayed
-//	private static List<Unidade> quantidadesList = new ArrayList<Unidade>(); 
+	// This list will declare the order in which the map will be displayed
+	private static List<Property> variableList = new ArrayList<Property>(); 
 	
 	public ModeloTropas() {
+		
+		setVariableList();
 		
 	}
 	
@@ -43,8 +45,10 @@ public class ModeloTropas {
 		
 		for (Unidade i : Unidade.values()) {
 			String nome = i.nome().toLowerCase().replace(' ', '_');
-			quantidades.add(new Quantidade(i, new BigDecimal(p.getProperty(nome))));
+			quantidades.put(i, new BigDecimal(p.getProperty(nome)));
 		}
+		
+		setVariableList();
 		
 	}
 	
@@ -53,7 +57,15 @@ public class ModeloTropas {
 		this.nome = nome;
 		
 		for (Entry<Unidade, BigDecimal> i : map.entrySet())
-			quantidades.add(new Quantidade(i.getKey(), i.getValue()));
+			quantidades.put(i.getKey(), i.getValue());
+		
+		setVariableList();
+		
+	}
+	
+	private void setVariableList() {
+		
+		variableList.add(quantidades);
 		
 	}
 	
@@ -68,10 +80,10 @@ public class ModeloTropas {
 	/**
 	 * @param map A map<Unidade, BigDecimal>
 	 */
-	public void setList(Map<Unidade, BigDecimal> map) {
+	public void setMap(Map<Unidade, BigDecimal> map) {
 	
 		for (Entry<Unidade, BigDecimal> i : map.entrySet())
-			quantidades.add(new Quantidade(i.getKey(), i.getValue()));
+			quantidades.put(i.getKey(), i.getValue());
 		
 	}
 	
@@ -81,22 +93,14 @@ public class ModeloTropas {
 	
 	public BigDecimal getQuantidade(Unidade i) {
 		
-		for (Quantidade q : quantidades)
-			if (q.getUnidade().equals(i))
-				return q.getValue();
-		
-		return null;
+		return quantidades.get(i);
 		
 	}
 	
 	public Map<Unidade, BigDecimal> getList() {
 		
-		Map<Unidade, BigDecimal> map = new HashMap<Unidade, BigDecimal>();
+		return quantidades;
 		
-		for (Quantidade i : quantidades)
-			map.put(i.getUnidade(), i.getValue());
-
-		return map;
 	}
 	
 }
