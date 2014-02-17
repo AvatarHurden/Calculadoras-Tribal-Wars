@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import property_classes.Property;
-import property_classes.UnidadeList;
+import property_classes.Property_UnidadeList;
 
 /**
  * Class that stores a specific number of every unit to be used in different
@@ -23,7 +23,7 @@ public class ModeloTropas {
 	
 //	private Map<Unidade, BigDecimal> quantidades = new HashMap<Unidade, BigDecimal>();
 	
-	private UnidadeList quantidades = new UnidadeList();
+	private Property_UnidadeList quantidades = new Property_UnidadeList();
 	
 	// This list will declare the order in which the map will be displayed
 	private static List<Property> variableList = new ArrayList<Property>(); 

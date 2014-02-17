@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 import database.Unidade;
 
-@SuppressWarnings({ "serial" })
-public class UnidadeList extends HashMap<Unidade, BigDecimal> implements Property {
+@SuppressWarnings({ "serial", "rawtypes" })
+public class Property_UnidadeList extends HashMap<Unidade, BigDecimal> implements Property {
 	
 	public String getName() {
 		

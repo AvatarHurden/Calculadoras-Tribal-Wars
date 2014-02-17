@@ -1,6 +1,6 @@
 package property_classes;
 
-public class Escolha implements Property {
+public class Property_Escolha implements Property {
 
 	private String name;
 	
@@ -8,7 +8,7 @@ public class Escolha implements Property {
 	
 	private String[] options;
 	
-	public Escolha (String name, String selected, String ... options) {
+	public Property_Escolha (String name, String selected, String ... options) {
 		
 		this.name = name;
 		
@@ -31,6 +31,10 @@ public class Escolha implements Property {
 		else
 			return false;
 		
+	}
+	
+	public String[] getOptions() {
+		return options;
 	}
 
 }

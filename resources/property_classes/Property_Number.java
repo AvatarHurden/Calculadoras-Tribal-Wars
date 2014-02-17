@@ -2,13 +2,14 @@ package property_classes;
 
 import java.math.BigDecimal;
 
-public class Number implements Property {
+public class Property_Number implements Property {
 
 	private String name;
 	
 	private BigDecimal number;
 	
-	public Number(String name, BigDecimal number) {
+	
+	public Property_Number(String name, BigDecimal number) {
 		
 		this.name = name;
 		this.number =  number;

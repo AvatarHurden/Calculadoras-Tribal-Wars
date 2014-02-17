@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 
 import database.Unidade;
 
-public class Quantidade implements Property{
+public class Property_Quantidade implements Property{
 	
 	private Unidade unidade;
 	
 	private BigDecimal quantidade;
 	
-	public Quantidade(Unidade unidade, BigDecimal quantidade) {
+	public Property_Quantidade(Unidade unidade, BigDecimal quantidade) {
 		
 		this.unidade = unidade;
 		this.quantidade = quantidade;

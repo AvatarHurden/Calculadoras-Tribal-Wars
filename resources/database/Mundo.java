@@ -6,9 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import property_classes.Escolha;
-import property_classes.Number;
 import property_classes.Property;
+import property_classes.Property_Boolean;
+import property_classes.Property_Escolha;
+import property_classes.Property_Number;
 
 /**
  * Classe para a criação de diferentes mundos
@@ -19,20 +20,20 @@ public class Mundo {
 
 	private String nome;
 	
-	private property_classes.Boolean hasArqueiro;
-	private property_classes.Boolean hasMilícia;
-	private property_classes.Boolean hasPaladino;
-	private property_classes.Boolean hasItensAprimorados;
-	private property_classes.Boolean hasIgreja;
-	private property_classes.Boolean hasMoral;
-	private property_classes.Boolean hasBandeira;
-	private property_classes.Boolean hasBonusNoturno;
-	private property_classes.Boolean cunhagemDeMoedas;
+	private Property_Boolean hasArqueiro;
+	private Property_Boolean hasMilícia;
+	private Property_Boolean hasPaladino;
+	private Property_Boolean hasItensAprimorados;
+	private Property_Boolean hasIgreja;
+	private Property_Boolean hasMoral;
+	private Property_Boolean hasBandeira;
+	private Property_Boolean hasBonusNoturno;
+	private Property_Boolean cunhagemDeMoedas;
 	
-	private Escolha sistemaDePesquisa;
+	private Property_Escolha sistemaDePesquisa;
 	
-	private property_classes.Number velocidade;
-	private property_classes.Number modificarUnidades;
+	private Property_Number velocidade;
+	private Property_Number modificarUnidades;
 	
 	// List of properties in the order they are to be shown
 	private List<Property> variableList = new ArrayList<Property>();
@@ -54,44 +55,44 @@ public class Mundo {
 		
 		nome = prop.getProperty("nome");
 		
-		hasArqueiro = new property_classes.Boolean("Arqueiro", 
+		hasArqueiro = new Property_Boolean("Arqueiro", 
 				 Boolean.parseBoolean(prop.getProperty("arqueiro")));
 		
-		hasMilícia = new property_classes.Boolean("Milícia", 
+		hasMilícia = new Property_Boolean("Milícia", 
 				 Boolean.parseBoolean(prop.getProperty("milicia")));
 		
-		hasPaladino = new property_classes.Boolean("Paladino", 
+		hasPaladino = new Property_Boolean("Paladino", 
 				 Boolean.parseBoolean(prop.getProperty("paladino")));
 		
-		hasItensAprimorados = new property_classes.Boolean("Itens Aprimorados", 
+		hasItensAprimorados = new Property_Boolean("Itens Aprimorados", 
 				 Boolean.parseBoolean(prop.getProperty("itensAprimorados")));
 		
-		hasIgreja = new property_classes.Boolean("Igreja", 
+		hasIgreja = new Property_Boolean("Igreja", 
 				 Boolean.parseBoolean(prop.getProperty("igreja")));
 		
-		hasMoral = new property_classes.Boolean("Moral", 
+		hasMoral = new Property_Boolean("Moral", 
 				 Boolean.parseBoolean(prop.getProperty("moral")));
 		
-		hasBandeira = new property_classes.Boolean("Bandeiras", 
+		hasBandeira = new Property_Boolean("Bandeiras", 
 				 Boolean.parseBoolean(prop.getProperty("bandeira")));
 		
-		hasBonusNoturno = new property_classes.Boolean("Bônus Noturno", 
+		hasBonusNoturno = new Property_Boolean("Bônus Noturno", 
 				 Boolean.parseBoolean(prop.getProperty("bonusNoturno")));
 		
-		cunhagemDeMoedas = new property_classes.Boolean("Cunhagem e Moedas", 
+		cunhagemDeMoedas = new Property_Boolean("Cunhagem e Moedas", 
 				 Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
 				
 		
-		sistemaDePesquisa = new Escolha("Sistema de Pesquisa", 
+		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa", 
 				"Pesquisa Simples", "Pesquisa de 3 Níveis", prop.getProperty("pesquisaDeNiveis"));
 		
 		String speed = prop.getProperty("velocidade");
 		speed = speed.replaceAll(",", ".");
-		velocidade = new Number("Velocidade", new BigDecimal(speed));
+		velocidade = new Property_Number("Velocidade", new BigDecimal(speed));
 		
 		String modifier = prop.getProperty("modificador");
 		modifier = modifier.replaceAll(",", ".");
-		modificarUnidades = new Number("Modificador de Unidade", new BigDecimal(modifier));
+		modificarUnidades = new Property_Number("Modificador de Unidade", new BigDecimal(modifier));
 		
 		variableList.add(velocidade);
 		variableList.add(modificarUnidades);

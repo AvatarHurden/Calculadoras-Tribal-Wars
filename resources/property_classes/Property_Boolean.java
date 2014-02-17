@@ -1,12 +1,12 @@
 package property_classes;
 
-public class Boolean implements Property{
+public class Property_Boolean implements Property{
 
 	private String name;
 	
 	private boolean isTrue;
 	
-	public Boolean(String name, boolean isTrue) {
+	public Property_Boolean(String name, boolean isTrue) {
 		
 		this.name = name;
 		this.isTrue = isTrue;
