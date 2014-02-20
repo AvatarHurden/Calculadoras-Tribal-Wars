@@ -17,32 +17,32 @@ import database.Cores;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
-	
+
 	JPanel tabs;
 	JPanel body;
-	
+
 	public List<Ferramenta> ferramentas = new ArrayList<Ferramenta>();
-	
+
 	/**
-	 * Frame que contém todas as ferramentas 
+	 * Frame que contém todas as ferramentas
 	 */
 	public MainWindow() {
-		
+
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		setBackground(Cores.FUNDO_CLARO);
-		
+
 		setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 0, 5);
-		
+
 		c.gridy = 0;
 		c.gridx = 0;
 		tabs = new JPanel();
 		tabs.setLayout(new GridBagLayout());
 		c.anchor = GridBagConstraints.WEST;
-		add(tabs,c);
-		
+		add(tabs, c);
+
 		c.insets = new Insets(0, 5, 5, 5);
 		c.gridy++;
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -50,37 +50,39 @@ public class MainWindow extends JFrame {
 		body.setLayout(new FlowLayout());
 		body.setBackground(Cores.FUNDO_CLARO);
 		body.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-		add(body,c);
-		
+		add(body, c);
+
 	}
-	
+
 	/**
-	 * Adiciona uma ferramenta nova ao frame, colocando a "tab" no local adequado
+	 * Adiciona uma ferramenta nova ao frame, colocando a "tab" no local
+	 * adequado
 	 * 
-	 * @param tool Ferramenta a ser adicionada
+	 * @param tool
+	 *            Ferramenta a ser adicionada
 	 */
 	public void addPanel(Ferramenta tool) {
-		
+
 		tool.setFrame(this);
-		
+
 		ferramentas.add(tool);
-	
+
 		tabs.add(tool.getTab());
-		
+
 		body.add(tool);
-		
+
 	}
-	
+
 	/**
 	 * Seleciona a primeira ferramenta do frame
 	 */
 	public void selectFirst() {
-		
+
 		for (Ferramenta i : ferramentas)
 			i.setSelected(false);
-		
+
 		ferramentas.get(0).setSelected(true);
-		
+
 	}
-	
+
 }

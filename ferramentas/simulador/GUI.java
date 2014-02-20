@@ -25,184 +25,186 @@ import database.ItemPaladino;
 import database.Unidade;
 
 @SuppressWarnings("serial")
-public class GUI extends Ferramenta{
-	
+public class GUI extends Ferramenta {
+
 	InputInfo input = new InputInfo();
-	
+
 	OutputInfo output = new OutputInfo();
-	
+
 	Cálculo cálculo = new Cálculo(input, output);
-	
-	StatInsertion statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante, input);
-	
-	StatInsertion statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor, input);	
-	
+
+	StatInsertion statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante,
+			input);
+
+	StatInsertion statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor,
+			input);
+
 	ResultTroopDisplay display = new ResultTroopDisplay(output);
-	
+
 	public GUI() {
-		
+
 		super("Simulador - Beta");
-		
+
 		setBackground(Cores.FUNDO_CLARO);
-		
+
 		setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5,5,5,5);
+		c.insets = new Insets(5, 5, 5, 5);
 		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 0;
 		c.gridy = -1;
-		
+
 		addEmptySpace(c);
-		
+
 		c.gridy++;
-		add(addUnitNames(),c);
-		
-		
-		
+		add(addUnitNames(), c);
+
 		c.gridx++;
 		c.gridy = 0;
 		c.gridheight = 2;
-		add(statAtacante,c);
-		
-		c.gridx++;
-		add(statDefensor,c);
+		add(statAtacante, c);
 
-		
+		c.gridx++;
+		add(statDefensor, c);
+
 		c.gridy = -1;
 		c.gridx++;
 		c.gridheight = 1;
 		addEmptySpace(c);
-		
+
 		c.gridy++;
 		add(display, c);
-		
+
 		JButton button = new JButton("Go");
 		button.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				statAtacante.setInputInfo();
-				
+
 				statDefensor.setInputInfo();
-		
+
 				cálculo.calculate();
-				
+
 				display.setValues();
-				
+
 			}
 		});
-		
+
 		c.gridy++;
 		add(button, c);
-		
+
 	}
-	
+
 	public JPanel addUnitNames() {
-		
+
 		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1,false));
-		
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
+
 		panel.setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0,0,0,0);
+		c.insets = new Insets(0, 0, 0, 0);
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 1;
-			
-		
+
 		// Adding the headers
-		
+
 		JLabel lblNome = new JLabel("Unidade");
-		lblNome.setPreferredSize(new Dimension(lblNome.getPreferredSize().width+10, 26));
+		lblNome.setPreferredSize(new Dimension(
+				lblNome.getPreferredSize().width + 10, 26));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
-		
+
 		c.gridy++;
 		panel.add(lblNome, c);
-			
+
 		// Setting the constraints for the unit panels
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		
+
 		int loop = 0;
-		
+
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
-			
+
 			if (i != null) {
-				
-			JPanel tropaPanel = new JPanel();
-			tropaPanel.setLayout(new GridBagLayout());
-			tropaPanel.setBackground(Cores.getAlternar(loop));
-//			tropaPanel.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
-			
-			GridBagConstraints tropaC = new GridBagConstraints();
-			tropaC.insets = new Insets(5,5,5,5);
-			tropaC.gridx = 0;
-			tropaC.gridy = 0;
-			
-			// Creating the TextField for the quantity of troops
-			JLabel lbl = new JLabel(i.nome());
-			
-			tropaPanel.add(lbl, tropaC);
-			
-			loop++;
-			c.gridy++;
-			panel.add(tropaPanel, c);
-			
+
+				JPanel tropaPanel = new JPanel();
+				tropaPanel.setLayout(new GridBagLayout());
+				tropaPanel.setBackground(Cores.getAlternar(loop));
+				// tropaPanel.setBorder(new
+				// MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+
+				GridBagConstraints tropaC = new GridBagConstraints();
+				tropaC.insets = new Insets(5, 5, 5, 5);
+				tropaC.gridx = 0;
+				tropaC.gridy = 0;
+
+				// Creating the TextField for the quantity of troops
+				JLabel lbl = new JLabel(i.nome());
+
+				tropaPanel.add(lbl, tropaC);
+
+				loop++;
+				c.gridy++;
+				panel.add(tropaPanel, c);
+
 			}
 		}
-		
+
 		return panel;
-		
+
 	}
-	
+
 	private void addEmptySpace(GridBagConstraints c) {
-		
+
 		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
-			
+
 			// If mundo has levels, add space so that the units align with the
 			// input panels
-			
+
 			JLabel space = new JLabel("");
-			space.setPreferredSize(new Dimension(space.getPreferredSize().width, 16));
-			
+			space.setPreferredSize(new Dimension(
+					space.getPreferredSize().width, 16));
+
 			c.gridy = 0;
 			add(space, c);
-			
+
 		}
-		
+
 	}
-	
+
 	protected class InputInfo {
-		
+
 		private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
 		private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
-	
+
 		private Map<Unidade, Integer> nívelTropasAtaque = new HashMap<Unidade, Integer>();
 		private Map<Unidade, Integer> nívelTropasDefesa = new HashMap<Unidade, Integer>();
-		
+
 		private int muralha;
-		
+
 		private int edifício;
-		
+
 		private int moral;
-		
+
 		private ItemPaladino itemAtacante, itemDefensor;
 
 		private Bandeira bandeiraAtacante, bandeiraDefensor;
-		
+
 		private boolean religiãoAtacante, religiãoDefensor;
-		
+
 		private int sorte;
-		
+
 		private boolean noite;
-		
-		public InputInfo() {}
+
+		public InputInfo() {
+		}
 
 		/**
 		 * @return Map com tropas atacantes
@@ -211,7 +213,8 @@ public class GUI extends Ferramenta{
 			return tropasAtacantes;
 		}
 
-		protected void setTropasAtacantes(Map<Unidade, BigDecimal> tropasAtacantes) {
+		protected void setTropasAtacantes(
+				Map<Unidade, BigDecimal> tropasAtacantes) {
 			this.tropasAtacantes = tropasAtacantes;
 		}
 
@@ -222,7 +225,8 @@ public class GUI extends Ferramenta{
 			return tropasDefensoras;
 		}
 
-		protected void setTropasDefensoras(Map<Unidade, BigDecimal> tropasDefensoras) {
+		protected void setTropasDefensoras(
+				Map<Unidade, BigDecimal> tropasDefensoras) {
 			this.tropasDefensoras = tropasDefensoras;
 		}
 
@@ -233,7 +237,8 @@ public class GUI extends Ferramenta{
 			return nívelTropasAtaque;
 		}
 
-		protected void setNívelTropasAtaque(Map<Unidade, Integer> nívelTropasAtaque) {
+		protected void setNívelTropasAtaque(
+				Map<Unidade, Integer> nívelTropasAtaque) {
 			this.nívelTropasAtaque = nívelTropasAtaque;
 		}
 
@@ -244,7 +249,8 @@ public class GUI extends Ferramenta{
 			return nívelTropasDefesa;
 		}
 
-		protected void setNívelTropasDefesa(Map<Unidade, Integer> nívelTropasDefesa) {
+		protected void setNívelTropasDefesa(
+				Map<Unidade, Integer> nívelTropasDefesa) {
 			this.nívelTropasDefesa = nívelTropasDefesa;
 		}
 
@@ -256,14 +262,16 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param nível da muralha (se for maior do que o máximo ou menor do que o mínimo, ele arruma)
+		 * @param nível
+		 *            da muralha (se for maior do que o máximo ou menor do que o
+		 *            mínimo, ele arruma)
 		 */
 		protected void setMuralha(int muralha) {
-			
+
 			if (muralha > 20) {
 				muralha = 20;
 			}
-			
+
 			this.muralha = muralha;
 		}
 
@@ -286,14 +294,15 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param moral, em porcentagem (e.g 80)
+		 * @param moral
+		 *            , em porcentagem (e.g 80)
 		 */
 		protected void setMoral(int moral) {
-			
+
 			if (moral > 100) {
 				moral = 100;
 			}
-			
+
 			this.moral = moral;
 		}
 
@@ -305,7 +314,8 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param item do paladino atacante
+		 * @param item
+		 *            do paladino atacante
 		 */
 		protected void setItemAtacante(ItemPaladino itemAtacante) {
 			this.itemAtacante = itemAtacante;
@@ -319,7 +329,8 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param item do paladino defensor
+		 * @param item
+		 *            do paladino defensor
 		 */
 		protected void setItemDefensor(ItemPaladino itemDefensor) {
 			this.itemDefensor = itemDefensor;
@@ -333,7 +344,8 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param bandeira atacante
+		 * @param bandeira
+		 *            atacante
 		 */
 		protected void setBandeiraAtacante(Bandeira bandeiraAtacante) {
 			this.bandeiraAtacante = bandeiraAtacante;
@@ -347,7 +359,8 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param bandeira defensor
+		 * @param bandeira
+		 *            defensor
 		 */
 		protected void setBandeiraDefensor(Bandeira bandeiraDefensor) {
 			this.bandeiraDefensor = bandeiraDefensor;
@@ -361,7 +374,8 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param religião do atacante
+		 * @param religião
+		 *            do atacante
 		 */
 		protected void setReligiãoAtacante(boolean religiãoAtacante) {
 			this.religiãoAtacante = religiãoAtacante;
@@ -375,7 +389,8 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param religião do defensor
+		 * @param religião
+		 *            do defensor
 		 */
 		protected void setReligiãoDefensor(boolean religiãoDefensor) {
 			this.religiãoDefensor = religiãoDefensor;
@@ -389,17 +404,18 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param sorte do atacante, em porcetagem (e.g 20)
+		 * @param sorte
+		 *            do atacante, em porcetagem (e.g 20)
 		 */
 		protected void setSorte(int sorte) {
-			
+
 			if (Math.abs(sorte) > 25) {
 				if (Integer.signum(sorte) == -1)
 					sorte = -25;
 				else
 					sorte = 25;
 			}
-			
+
 			this.sorte = sorte;
 		}
 
@@ -411,22 +427,22 @@ public class GUI extends Ferramenta{
 		}
 
 		/**
-		 * @param se possui bônus noturno
+		 * @param se
+		 *            possui bônus noturno
 		 */
 		protected void setNoite(boolean noite) {
 			this.noite = noite;
 		};
-		
-		
+
 	}
-	
+
 	protected class OutputInfo {
-		
+
 		private Map<Unidade, BigDecimal> tropasAtacantesPerdidas = new HashMap<Unidade, BigDecimal>();
 		private Map<Unidade, BigDecimal> tropasDefensorasPerdidas = new HashMap<Unidade, BigDecimal>();
-	
+
 		private int muralha;
-		
+
 		private int edifício;
 
 		/**
@@ -474,9 +490,7 @@ public class GUI extends Ferramenta{
 		protected void setEdifício(int edifício) {
 			this.edifício = edifício;
 		}
-		
-		
-		
+
 	}
 
 }
