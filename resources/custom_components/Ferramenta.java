@@ -78,10 +78,7 @@ public class Ferramenta extends JPanel{
 	
 	public boolean isSelected() {
 		
-		if (isVisible())
-			return true;
-		else
-			return false;
+		return isVisible();
 		
 	}
 	

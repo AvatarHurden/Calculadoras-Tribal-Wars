@@ -4,9 +4,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.ScrollPane;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,12 +18,12 @@ import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
 
 import property_classes.Property;
 import property_classes.Property_Boolean;
@@ -72,9 +74,10 @@ public class EditDialog extends JDialog {
 		
 		this.objects = objects;
 		
-		JFrame test2 = new JFrame();
+		JPanel test = new JPanel(new GridBagLayout());
 		
-		JPanel test = new JPanel(new GridLayout(0,1));
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy = 0;
 		
 		try {
 			for (Property i : ((ArrayList<Property>) 
@@ -84,20 +87,24 @@ public class EditDialog extends JDialog {
 				
 				if (i.getClass().equals(Property_Boolean.class)) {
 					
-				test.add(makeBooleanPanel((Property_Boolean) i));	
-					
+				test.add(makeBooleanPanel((Property_Boolean) i), c);	
+				c.gridy++;	
+				
 				} else if (i.getClass().equals(Property_Escolha.class)) {
 					
-				test.add(makeEscolhaPanel((Property_Escolha) i));	
-					
+				test.add(makeEscolhaPanel((Property_Escolha) i), c);		
+				c.gridy++;
+				
 				} else if (i.getClass().equals(Property_Number.class)) {
 					
-				test.add(makeNumberPanel((Property_Number) i));
-					
+				test.add(makeNumberPanel((Property_Number) i), c);	
+				c.gridy++;
+				
 				} else if (i.getClass().equals(Property_UnidadeList.class)) {
 					
-				test.add(makeUnidadeListPanel((Property_UnidadeList) i));	
-					
+				test.add(makeUnidadeListPanel((Property_UnidadeList) i), c);		
+				c.gridy++;
+				
 				}
 				
 			}
@@ -106,168 +113,315 @@ public class EditDialog extends JDialog {
 			e.printStackTrace();
 		}
 		
-		test2.add(test);
+		add(test);
 		
-		test2.pack();
-		test2.setVisible(true);
-		test2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+		setVisible(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 
 	}
+	
+	private JPanel makeObjectInfoPanel(Object object) {
+		
+		
+		
+		return null;
+		
+	}
 
-	private JPanel makeBooleanPanel(Property_Boolean variable) {
-
-		JPanel panel = makeDefaultPanel();
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = 0;
-		c.gridx = 0;
-		c.gridwidth = 1;
-
-		JLabel name = new JLabel(variable.getName());
-		panel.add(name, c);
-
-		JCheckBox checkBox = new JCheckBox();
-		checkBox.setOpaque(false);
-		checkBox.setSelected(variable.getValue());
-
-		c.gridx++;
-		panel.add(checkBox, c);
-
+	private JPanel makeScrollPanel() {
+		
+		JPanel panel = new JPanel();
+		
+		ScrollPane scroll = new ScrollPane();
+		
+		
 		return panel;
-
-	}
-
-	private JPanel makeEscolhaPanel(Property_Escolha variable) {
-
-		JPanel panel = makeDefaultPanel();
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = 0;
-		c.gridx = 0;
-		c.gridwidth = 1;
-
-		JLabel name = new JLabel(variable.getName());
-		panel.add(name, c);
-
-		ButtonGroup buttonGroup = new ButtonGroup();
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setOpaque(false);
 		
-		for (String s : variable.getOptions()) {
+	}
+	
+	// Creates a panel to be inserted in the scrollpane
+	private JPanel makeObjectNamePanel(Object object) {
+		
+		JPanel panel = new JPanel();
+		panel.add(new JLabel(object.toString()));
+		
+		panel.setBackground(Cores.SEPARAR_CLARO);
+		panel.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
+		
+		return null;
+		
+	}
+	
+	
+	private class ObjectInterface {
+		
+		private JPanel objectName;
+		
+		private JPanel objectInformation;
+		
+		/**
+		 * Maps the objects properties to an object that contains the property's value
+		 * <br>This is the mapping that is made depending on the type of property:
+		 * <br>
+		 * <br> Boolean : JCheckBox
+		 * <br> Escolha : ButtonGroup
+		 * <br> Number : JTextField
+		 * <br> UnidadeList : HashMap<\Unidade, TroopFormattedTextField>
+		 */
+		private Map<Property, Object> variableMap = new HashMap<Property, Object>();
+		
+		public ObjectInterface(Object object, List<Property> list) {
 			
-			JRadioButton button = new JRadioButton(s);
-			button.setOpaque(false);
+			createNamePanel(object.toString());
 			
-			if (variable.isOption(s))
-				button.setSelected(true);
+		}
+		
+		private void createNamePanel(String s) {
+			
+			objectName = new JPanel();
+			objectName.add(new JLabel(s));
+			
+			objectName.setBackground(Cores.SEPARAR_CLARO);
+			objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
+			
+		}
+		
+		private void createInformationPanel(String name, List<Property> list) {
+			
+			objectInformation = new JPanel(new GridBagLayout());
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(0, 10, 0, 10);
+			c.gridy = 0;
+			
+			objectInformation.add(makeNamePanel(name), c);
+			
+			for (Property i : list) {
+				
+				if (i.getClass().equals(Property_Boolean.class)) {
+					
+				objectInformation.add(makeBooleanPanel((Property_Boolean) i), c);	
+				c.gridy++;	
+				
+				} else if (i.getClass().equals(Property_Escolha.class)) {
+					
+				objectInformation.add(makeEscolhaPanel((Property_Escolha) i), c);		
+				c.gridy++;
+				
+				} else if (i.getClass().equals(Property_Number.class)) {
+					
+				objectInformation.add(makeNumberPanel((Property_Number) i), c);	
+				c.gridy++;
+				
+				} else if (i.getClass().equals(Property_UnidadeList.class)) {
+					
+				objectInformation.add(makeUnidadeListPanel((Property_UnidadeList) i), c);		
+				c.gridy++;
+				
+				}
+				
+			}
+			
+			
+			
+		}
+		
+		private JPanel makeNamePanel(String s) {
+			
+			JPanel panel = makeDefaultPanel();
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(5, 5, 5, 5);
+			c.gridy = 0;
+			c.gridx = 0;
+			c.gridwidth = 1;
+			c.anchor = GridBagConstraints.WEST;
+			
+			panel.add(new JLabel("Nome"), c);
+			
+			JTextField nameField = new JTextField(16);
+			nameField.setText(s);
+			
+			c.anchor = GridBagConstraints.EAST;
+			c.gridy++;
+			c.gridwidth = 2;
+			panel.add(nameField, c);
+			
+			return panel;
+			
+		}
 
-			buttonGroup.add(button);
-			buttonPanel.add(button);
+		private JPanel makeBooleanPanel(Property_Boolean variable) {
+
+			JPanel panel = makeDefaultPanel();
+
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(5, 5, 5, 5);
+			c.gridy = 0;
+			c.gridx = 0;
+			c.gridwidth = 1;
+
+			JLabel name = new JLabel(variable.getName());
+			panel.add(name, c);
+
+			JCheckBox checkBox = new JCheckBox();
+			checkBox.setOpaque(false);
+			checkBox.setSelected(variable.getValue());
+			
+			c.gridx++;
+			panel.add(checkBox, c);
+
+			variableMap.put(variable, checkBox);
+			
+			return panel;
 
 		}
 
-		// Code for retrieving the selected value
+		private JPanel makeEscolhaPanel(Property_Escolha variable) {
 
-		// Enumeration<AbstractButton> enumeration = buttonGroup.getElements();
-		//
-		// while (enumeration.hasMoreElements()) {
-		//
-		// AbstractButton b = enumeration.nextElement();
-		//
-		// if (b.isSelected())
-		// System.out.println(b.getText());
-		//
-		// }
+			JPanel panel = makeDefaultPanel();
 
-		c.gridx++;
-		panel.add(buttonPanel, c);
-
-		return panel;
-
-	}
-
-	private JPanel makeNumberPanel(Property_Number variable) {
-
-		JPanel panel = makeDefaultPanel();
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = 0;
-		c.gridx = 0;
-		c.gridwidth = 1;
-
-		JLabel name = new JLabel(variable.getName());
-		panel.add(name, c);
-
-		JTextField txt = new JTextField(variable.getValue().toString());
-		txt.setColumns(5);
-		
-		c.gridx++;
-		panel.add(txt, c);
-
-		return panel;
-
-	}
-
-	@SuppressWarnings("serial")
-	private JPanel makeUnidadeListPanel(Property_UnidadeList variable) {
-
-		JPanel panel = makeDefaultPanel();
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = 0;
-		c.gridx = 0;
-		c.gridwidth = 1;
-
-		for (Entry<Unidade, BigDecimal> i : variable.entrySet()) {
-
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(5, 5, 5, 5);
+			c.gridy = 0;
 			c.gridx = 0;
-			c.gridy++;
-			panel.add(new JLabel(i.getKey().nome()), c);
+			c.gridwidth = 1;
 
-			TroopFormattedTextField txt = new TroopFormattedTextField(9) {
-				public void go() {
-				}
-			};
+			JLabel name = new JLabel(variable.getName());
+			panel.add(name, c);
 
-			txt.setText(i.getValue().toString());
+			ButtonGroup buttonGroup = new ButtonGroup();
 
-			c.gridx = 1;
+			JPanel buttonPanel = new JPanel(new GridLayout(0,1));
+			buttonPanel.setOpaque(false);
+			
+			for (String s : variable.getOptions()) {
+				
+				JRadioButton button = new JRadioButton(s);
+				button.setOpaque(false);
+				
+				if (variable.isOption(s))
+					button.setSelected(true);
+
+				buttonGroup.add(button);
+				buttonPanel.add(button);
+
+			}
+
+			// Code for retrieving the selected value
+
+			// Enumeration<AbstractButton> enumeration = buttonGroup.getElements();
+			//
+			// while (enumeration.hasMoreElements()) {
+			//
+			// AbstractButton b = enumeration.nextElement();
+			//
+			// if (b.isSelected())
+			// System.out.println(b.getText());
+			//
+			// }
+
+			c.gridx++;
+			panel.add(buttonPanel, c);
+
+			variableMap.put(variable, buttonGroup);
+			
+			return panel;
+
+		}
+
+		private JPanel makeNumberPanel(Property_Number variable) {
+
+			JPanel panel = makeDefaultPanel();
+
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(5, 5, 5, 5);
+			c.gridy = 0;
+			c.gridx = 0;
+			c.gridwidth = 1;
+
+			JLabel name = new JLabel(variable.getName());
+			panel.add(name, c);
+
+			JTextField txt = new JTextField(variable.getValue().toString());
+			txt.setColumns(5);
+			
+			c.gridx++;
 			panel.add(txt, c);
 
+			variableMap.put(variable, txt);
+			
+			return panel;
+
 		}
 
-		return panel;
+		@SuppressWarnings("serial")
+		private JPanel makeUnidadeListPanel(Property_UnidadeList variable) {
 
+			JPanel panel = makeDefaultPanel();
+
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(5, 5, 5, 5);
+			c.gridy = 0;
+			c.gridx = 0;
+			c.gridwidth = 1;
+
+			Map<Unidade, TroopFormattedTextField> map = new HashMap<Unidade, TroopFormattedTextField>();
+			
+			for (Entry<Unidade, BigDecimal> i : variable.entrySet()) {
+
+				c.gridx = 0;
+				c.gridy++;
+				panel.add(new JLabel(i.getKey().nome()), c);
+
+				TroopFormattedTextField txt = new TroopFormattedTextField(9) {
+					public void go() {
+					}
+				};
+
+				txt.setText(i.getValue().toString());
+
+				c.gridx = 1;
+				panel.add(txt, c);
+				
+				map.put(i.getKey(), txt);
+
+			}
+			
+			variableMap.put(variable, map);
+
+			return panel;
+
+		}
+
+		/**
+		 * Creates the default panel, with adequate colors, borders and layout
+		 */
+		private JPanel makeDefaultPanel() {
+
+			JPanel panel = new JPanel();
+
+			panel.setBackground(Cores.FUNDO_CLARO);
+
+			panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
+
+			GridBagLayout layout = new GridBagLayout();
+			layout.columnWidths = new int[] { 200, 180 };
+			layout.rowHeights = new int[] { 20 };
+			layout.columnWeights = new double[] { 0, Double.MIN_VALUE };
+			layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+			panel.setLayout(layout);
+
+			return panel;
+
+		}
+
+		
+		
 	}
-
-	/**
-	 * Creates the default panel, with adequate colors, borders and layout
-	 */
-	private JPanel makeDefaultPanel() {
-
-		JPanel panel = new JPanel();
-
-		panel.setBackground(Cores.FUNDO_CLARO);
-
-		panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
-
-		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] { 100, 120 };
-		layout.rowHeights = new int[] { 20 };
-		layout.columnWeights = new double[] { 0, Double.MIN_VALUE };
-		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-		panel.setLayout(layout);
-
-		return panel;
-
-	}
-
+	
 	private JPanel makeFieldPanel(Field field) {
 
 		JPanel panel = new JPanel();
