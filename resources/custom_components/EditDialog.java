@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.ScrollPane;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -63,6 +65,8 @@ public class EditDialog extends JDialog {
 
 	Map<Object, JComponent> mapping;
 
+	List<ObjectInterface> interfaceList = new ArrayList<ObjectInterface>();
+	
 	// TODO create an interface called variable. WIthin it, different classes
 	// with types
 	// that I want (2-choices, boolean, map, etc). Have each class contain a
@@ -186,6 +190,26 @@ public class EditDialog extends JDialog {
 			objectName.setBackground(Cores.SEPARAR_CLARO);
 			objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
 			
+			objectName.addMouseListener(new MouseListener() {
+				
+				public void mouseReleased(MouseEvent arg0) {}
+				
+				public void mousePressed(MouseEvent arg0) {}
+				
+				public void mouseExited(MouseEvent arg0) {}
+				
+				public void mouseEntered(MouseEvent arg0) {}
+				
+				public void mouseClicked(MouseEvent arg0) {
+					
+					for (ObjectInterface i : interfaceList)
+						i.setSelected(false);
+					
+					setSelected(true);
+					
+				}
+			});
+			
 		}
 		
 		private void createInformationPanel(String name, List<Property> list) {
@@ -223,7 +247,6 @@ public class EditDialog extends JDialog {
 				}
 				
 			}
-			
 			
 			
 		}
@@ -418,7 +441,18 @@ public class EditDialog extends JDialog {
 
 		}
 
-		
+		public void setSelected(boolean isSelected) {
+			
+			if (isSelected) {
+				setVisible(true);
+				objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+				objectName.setBackground(Cores.FUNDO_ESCURO);
+			} else {
+				setVisible(false);
+				objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
+				objectName.setBackground(Cores.FUNDO_CLARO);
+			}
+		}
 		
 	}
 	
@@ -472,6 +506,8 @@ public class EditDialog extends JDialog {
 		return panel;
 	}
 
+	
+	
 	public static void main(String args[]) {
 
 		File_Manager.read();
