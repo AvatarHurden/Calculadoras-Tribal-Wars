@@ -5,18 +5,23 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.ScrollPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -67,6 +72,10 @@ public class EditDialog extends JDialog {
 
 	List<ObjectInterface> interfaceList = new ArrayList<ObjectInterface>();
 	
+	JPanel namePanel;
+	
+	JPanel informationPanel;
+	
 	// TODO create an interface called variable. WIthin it, different classes
 	// with types
 	// that I want (2-choices, boolean, map, etc). Have each class contain a
@@ -80,44 +89,35 @@ public class EditDialog extends JDialog {
 		
 		JPanel test = new JPanel(new GridBagLayout());
 		
+		test.setBackground(Cores.FUNDO_CLARO);
+		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridy = 0;
 		
+//		try {
+//			for (Property i : ((ArrayList<Property>) 
+//					variableList.get(objects.get(0)))) {
+//				
+//				ObjectInterface obj = new ObjectInterface();
+//				
+//			}
+//		} catch (IllegalArgumentException | IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		ObjectInterface obj = null;
+		
 		try {
-			for (Property i : ((ArrayList<Property>) 
-					variableList.get(objects.get(0)))) {
-				
-				System.out.println(i.getName());
-				
-				if (i.getClass().equals(Property_Boolean.class)) {
-					
-				test.add(makeBooleanPanel((Property_Boolean) i), c);	
-				c.gridy++;	
-				
-				} else if (i.getClass().equals(Property_Escolha.class)) {
-					
-				test.add(makeEscolhaPanel((Property_Escolha) i), c);		
-				c.gridy++;
-				
-				} else if (i.getClass().equals(Property_Number.class)) {
-					
-				test.add(makeNumberPanel((Property_Number) i), c);	
-				c.gridy++;
-				
-				} else if (i.getClass().equals(Property_UnidadeList.class)) {
-					
-				test.add(makeUnidadeListPanel((Property_UnidadeList) i), c);		
-				c.gridy++;
-				
-				}
-				
-			}
+			obj = new ObjectInterface
+					(objects.get(0),
+							((ArrayList<Property>)variableList.get(objects.get(0))));
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		add(test);
+		add(obj.objectInformation);
 		
 		pack();
 		setVisible(true);
@@ -161,6 +161,13 @@ public class EditDialog extends JDialog {
 	
 	private class ObjectInterface {
 		
+		/**
+		 * The object that this interface references.
+		 * <br> All editing and saving of the object is done in the <class>Object
+		 * Interface</class>.
+		 */
+		private Object object;
+		
 		private JPanel objectName;
 		
 		private JPanel objectInformation;
@@ -178,7 +185,11 @@ public class EditDialog extends JDialog {
 		
 		public ObjectInterface(Object object, List<Property> list) {
 			
+			this.object = object;
+			
 			createNamePanel(object.toString());
+			
+			createInformationPanel(object.toString(), list);
 			
 		}
 		
@@ -217,10 +228,11 @@ public class EditDialog extends JDialog {
 			objectInformation = new JPanel(new GridBagLayout());
 			
 			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(0, 10, 0, 10);
+			c.insets = new Insets(0, 10, 5, 10);
 			c.gridy = 0;
 			
 			objectInformation.add(makeNamePanel(name), c);
+			c.gridy++;
 			
 			for (Property i : list) {
 				
@@ -247,6 +259,23 @@ public class EditDialog extends JDialog {
 				}
 				
 			}
+			
+			JButton savebutton = new JButton("Save");
+			
+			savebutton.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent arg0) {
+					
+					saveObejct();
+					
+					int i = objects.indexOf(object);
+					
+					System.out.println(Mundo_Reader.getMundo(i).getConfigText());
+					
+				}
+			});
+			
+			objectInformation.add(savebutton, c);
 			
 			
 		}
@@ -368,6 +397,8 @@ public class EditDialog extends JDialog {
 			JLabel name = new JLabel(variable.getName());
 			panel.add(name, c);
 
+			//TODO make it only accept numbers as input
+			
 			JTextField txt = new JTextField(variable.getValue().toString());
 			txt.setColumns(5);
 			
@@ -452,6 +483,47 @@ public class EditDialog extends JDialog {
 				objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
 				objectName.setBackground(Cores.FUNDO_CLARO);
 			}
+		}
+		
+		private void saveObejct() {
+			
+			for (Entry<Property, Object> i : variableMap.entrySet()) {
+				
+				// Boolean case
+				if (i.getValue().getClass().equals(JCheckBox.class)) {
+					
+				i.getKey().setValue(((JCheckBox) i.getValue()).isSelected());
+					
+				// Escolha case
+				} else if (i.getValue().getClass().equals(ButtonGroup.class)) {
+					
+					 Enumeration<AbstractButton> enumeration = 
+							 ((ButtonGroup) i.getValue()).getElements();
+					
+					 while (enumeration.hasMoreElements()) {
+					
+						 AbstractButton b = enumeration.nextElement();
+					
+						 if (b.isSelected())
+							 i.getKey().setValue(b.getText());
+					 
+					 }
+					
+				// Number case
+				} else if (i.getValue().getClass().equals(JTextField.class)) {
+					
+					i.getKey().setValue(((JTextField) i.getValue()).getText());
+				
+				// UnidadeList case 
+				} else if (i.getValue().getClass().equals(HashMap.class)) {
+					
+					i.getKey().setValue(i.getValue());
+					
+				}
+			
+				
+			}
+			
 		}
 		
 	}

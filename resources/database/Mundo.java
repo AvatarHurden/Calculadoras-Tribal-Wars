@@ -116,20 +116,22 @@ public class Mundo {
 		String s = "\n";
 
 		s += ("\tnome=" + nome + "\n");
-		s += ("\tvelocidade=" + velocidade.toString() + "\n");
-		s += ("\tmodificador=" + modificarUnidades.toString() + "\n");
+		s += ("\tvelocidade=" + velocidade.getValue().toString() + "\n");
+		s += ("\tmodificador=" + modificarUnidades.getValue().toString() + "\n");
 
-		s += ("\tmoral=" + hasMoral + "\n");
-		s += ("\tpesquisaDeNiveis=" + sistemaDePesquisa + "\n");
-		s += ("\tigreja=" + hasIgreja + "\n");
-		s += ("\tbonusNoturno=" + hasBonusNoturno + "\n");
-		s += ("\tbandeira=" + hasBandeira + "\n");
-		s += ("\tarqueiro=" + hasArqueiro + "\n");
-		s += ("\tpaladino=" + hasPaladino + "\n");
-		s += ("\titensAprimorados=" + hasItensAprimorados + "\n");
-		s += ("\tmilicia=" + hasMilícia + "\n");
-		s += ("\tcunhagemDeMoedas=" + cunhagemDeMoedas + "\n");
+		s += ("\tmoral=" + hasMoral.getValue() + "\n");
+		s += ("\tSistema de Pesquisa=" + sistemaDePesquisa.getSelected() + "\n");
+		s += ("\tigreja=" + hasIgreja.getValue() + "\n");
+		s += ("\tbonusNoturno=" + hasBonusNoturno.getValue() + "\n");
+		s += ("\tbandeira=" + hasBandeira.getValue() + "\n");
+		s += ("\tarqueiro=" + hasArqueiro.getValue() + "\n");
+		s += ("\tpaladino=" + hasPaladino.getValue() + "\n");
+		s += ("\titensAprimorados=" + hasItensAprimorados.getValue() + "\n");
+		s += ("\tmilicia=" + hasMilícia.getValue() + "\n");
+		s += ("\tcunhagemDeMoedas=" + cunhagemDeMoedas.getValue() + "\n");
 
+		//TODO edit the way configs are printed, so to represent what they actually are
+		
 		return s;
 
 	}

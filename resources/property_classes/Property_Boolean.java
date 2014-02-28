@@ -23,6 +23,12 @@ public class Property_Boolean implements Property{
 		return isTrue;
 	}
 
-	
+	/**
+	 * Takes a boolean as parameter
+	 */
+	public void setValue(Object i) {
+		
+		isTrue = (boolean)i;
+	}
 	
 }

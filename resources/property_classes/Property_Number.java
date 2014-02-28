@@ -28,4 +28,13 @@ public class Property_Number implements Property {
 		
 	}
 
+	/**
+	 * Takes a string as parameter
+	 */
+	public void setValue(Object i) {
+		
+		number = new BigDecimal((String) i );
+		
+	}
+
 }

@@ -24,6 +24,10 @@ public class Property_Escolha implements Property {
 		return name;
 	}
 	
+	public String getSelected() {
+		return options[selectedOption];
+	}
+	
 	public boolean isOption(String s) {
 		
 		if (options[selectedOption].equals(s))
@@ -35,6 +39,18 @@ public class Property_Escolha implements Property {
 	
 	public String[] getOptions() {
 		return options;
+	}
+	
+	/**
+	 * Takes a string as parameter
+	 */
+	public void setValue(Object i) {
+		
+		for (int x = 0; x < options.length;x++) {
+			if ((String)i == options[x])
+				selectedOption = x;
+		}
+		
 	}
 
 }
