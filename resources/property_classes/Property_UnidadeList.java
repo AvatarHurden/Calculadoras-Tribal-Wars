@@ -14,6 +14,20 @@ public class Property_UnidadeList extends HashMap<Unidade, BigDecimal> implement
 		
 	}
 
+	public String toString() {
+		
+		String s = "{";
+		
+		for (Unidade i : Unidade.values()) {
+			s+=i.nome()+"="+get(i).toString()+",";
+		}
+		
+		s+="}";
+		
+		return s;
+		
+	}
+	
 	/**
 	 * Takes a hashMap<Unidade, BigDecimal> as parameter
 	 */
@@ -24,6 +38,6 @@ public class Property_UnidadeList extends HashMap<Unidade, BigDecimal> implement
 		
 		putAll((HashMap<Unidade, BigDecimal>) i);
 		
-	} 
+	}
 
 }

@@ -82,6 +82,8 @@ public class Mundo {
 		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas",
 				Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
 
+		//TODO edit default_config to show the actual research system.
+		
 		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
 				prop.getProperty("pesquisaDeNiveis"), "Pesquisa Simples", 
 				"Pesquisa de 3 Níveis");
