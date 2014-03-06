@@ -1,6 +1,5 @@
 package custom_components;
 
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
@@ -31,6 +32,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 import property_classes.Property;
 import property_classes.Property_Boolean;
@@ -72,6 +76,8 @@ public class EditDialog extends JDialog {
 
 	// Used for setting the visibility of the information panels
 	List<ObjectInterface> interfaceList = new ArrayList<ObjectInterface>();
+	
+	private ObjectInterface selectedInterface;
 	
 	JPanel namePanel;
 	
@@ -195,6 +201,8 @@ public class EditDialog extends JDialog {
 //				informationPanel.getPreferredSize().height));
 				300));
 		
+//		scroll.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		
 		GridBagConstraints scrollC = new GridBagConstraints();
 		scrollC.anchor = GridBagConstraints.NORTH;
 		
@@ -212,6 +220,17 @@ public class EditDialog extends JDialog {
 		
 	}
 	
+	private JPanel makeEditPanel() {
+		
+		JPanel panel = new JPanel();
+		
+		JButton saveButton = new JButton("Salvar");
+		
+		JButton newButton = new JButton("Novo");
+		
+		return panel;
+		
+	}
 	
 	private class ObjectInterface {
 		
@@ -267,8 +286,7 @@ public class EditDialog extends JDialog {
 				
 				public void mouseClicked(MouseEvent arg0) {
 					
-					for (ObjectInterface i : interfaceList)
-						i.setSelected(false);
+					selectedInterface.setSelected(false);
 					
 					setSelected(true);
 					
@@ -459,9 +477,52 @@ public class EditDialog extends JDialog {
 			JLabel name = new JLabel(variable.getName());
 			panel.add(name, c);
 
-			//TODO make it only accept numbers as input
-			
 			JTextField txt = new JTextField(variable.getValue().toString());
+			
+			txt.setDocument(new PlainDocument() {
+
+				@Override
+				public void insertString(int offset, String str, AttributeSet attr)
+						throws BadLocationException {
+					if (str == null)
+						return;
+
+					// Only does anything if it is a comma, period or number
+					if (str.charAt(0) == '.' || str.charAt(0) == ',' ||
+							 Character.isDigit(str.charAt(0))) {
+						
+						// If it is a comma or perido, check if it already has one
+						if (!Character.isDigit(str.charAt(0)) && 
+								super.getText(0, getLength()).contains(".")) {}
+						else
+							// If it does not and the inserted is a comma, add a period
+							if (str.charAt(0) == ',')
+								super.insertString(offset, ".", attr);
+							else
+								// Else, add the inserted character (period or number)
+								super.insertString(offset, str, attr);
+					}
+
+
+				}
+
+			});
+			
+			txt.addFocusListener(new FocusListener() {
+			
+				public void focusLost(FocusEvent f) {
+					
+					if (((JTextField) f.getSource()).getText().equals("")) {
+						((JTextField) f.getSource()).setText("1");
+					}
+					
+				}
+				
+				public void focusGained(FocusEvent arg0) {}
+			});
+			
+			txt.setText(variable.getValue().toString());
+			
 			txt.setColumns(5);
 			
 			c.gridx++;
@@ -540,6 +601,9 @@ public class EditDialog extends JDialog {
 				objectInformation.setVisible(true);
 				objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
 				objectName.setBackground(Cores.FUNDO_ESCURO);
+				
+				selectedInterface = this;
+				
 			} else {
 				objectInformation.setVisible(false);
 				objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
