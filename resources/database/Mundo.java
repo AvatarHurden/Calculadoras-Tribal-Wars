@@ -48,9 +48,84 @@ public class Mundo {
 
 	}
 
+	/**
+	 * Constructor for a default world
+	 */
 	public Mundo() {
+		
+		nome = "Novo Mundo";
+		//TODO put all stuff
+		hasArqueiro = new Property_Boolean("Arqueiro", false);
+		
+		variableList.add(hasArqueiro);
+		
 	}
+	/**
+	 * Constructor for a personalized world
+	 * @param the Properties of the world
+	 */
+	public Mundo(Properties prop) {
+		
+		nome = prop.getProperty("nome");
 
+		hasArqueiro = new Property_Boolean("Arqueiro",
+				Boolean.parseBoolean(prop.getProperty("arqueiro")));
+
+		hasMilícia = new Property_Boolean("Milícia", Boolean.parseBoolean(prop
+				.getProperty("milicia")));
+
+		hasPaladino = new Property_Boolean("Paladino",
+				Boolean.parseBoolean(prop.getProperty("paladino")));
+
+		hasItensAprimorados = new Property_Boolean("Itens Aprimorados",
+				Boolean.parseBoolean(prop.getProperty("itensAprimorados")));
+
+		hasIgreja = new Property_Boolean("Igreja", Boolean.parseBoolean(prop
+				.getProperty("igreja")));
+
+		hasMoral = new Property_Boolean("Moral", Boolean.parseBoolean(prop
+				.getProperty("moral")));
+
+		hasBandeira = new Property_Boolean("Bandeiras",
+				Boolean.parseBoolean(prop.getProperty("bandeira")));
+
+		hasBonusNoturno = new Property_Boolean("Bônus Noturno",
+				Boolean.parseBoolean(prop.getProperty("bonusNoturno")));
+
+		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas",
+				Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
+
+		//TODO edit default_config to show the actual research system.
+		
+		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
+				prop.getProperty("pesquisaDeNiveis"), "Pesquisa Simples", 
+				"Pesquisa de 3 Níveis");
+
+		String speed = prop.getProperty("velocidade");
+		speed = speed.replaceAll(",", ".");
+		velocidade = new Property_Number("Velocidade", new BigDecimal(speed));
+
+		String modifier = prop.getProperty("modificador");
+		modifier = modifier.replaceAll(",", ".");
+		modificarUnidades = new Property_Number("Modificador de Unidade",
+				new BigDecimal(modifier));
+
+		variableList.add(velocidade);
+		variableList.add(modificarUnidades);
+		variableList.add(hasMoral);
+		variableList.add(sistemaDePesquisa);
+		variableList.add(hasIgreja);
+		variableList.add(hasBonusNoturno);
+		variableList.add(hasBandeira);
+		variableList.add(hasArqueiro);
+		variableList.add(hasPaladino);
+		variableList.add(hasItensAprimorados);
+		variableList.add(hasMilícia);
+		variableList.add(cunhagemDeMoedas);
+		
+	}
+	
+	//TODO delete this
 	public void setAll(Properties prop) {
 
 		nome = prop.getProperty("nome");

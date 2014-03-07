@@ -31,10 +31,13 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+
+import com.sun.org.apache.xml.internal.utils.ObjectStack;
 
 import property_classes.Property;
 import property_classes.Property_Boolean;
@@ -83,6 +86,8 @@ public class EditDialog extends JDialog {
 	
 	JPanel informationPanel = new JPanel();
 	
+	int listNumber = 0;
+	
 	// TODO create an interface called variable. WIthin it, different classes
 	// with types
 	// that I want (2-choices, boolean, map, etc). Have each class contain a
@@ -98,8 +103,7 @@ public class EditDialog extends JDialog {
 		
 		setLayout(new GridBagLayout());
 
-		setBackground(Cores.FUNDO_ESCURO);
-		getContentPane().setBackground(Cores.FUNDO_ESCURO);
+		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		
 //		JPanel test = new JPanel(new GridBagLayout());
 //		
@@ -147,11 +151,15 @@ public class EditDialog extends JDialog {
 		
 		interfaceList.get(0).setSelected(true);
 		
+		c.gridy++;
+		c.gridwidth = 2;
+//		c.insets = new Insets(10,0,0,0);
+		add(makeEditPanel(), c);
+		
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
-
 	}
 	
 	private void addObject(Object o) {
@@ -163,7 +171,7 @@ public class EditDialog extends JDialog {
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.anchor = GridBagConstraints.NORTH;
-			c.gridy = objects.indexOf(o);
+			c.gridy = listNumber++;		
 			
 			interfaceList.add(oi);
 			
@@ -223,10 +231,71 @@ public class EditDialog extends JDialog {
 	private JPanel makeEditPanel() {
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(Cores.FUNDO_CLARO);
+		panel.setBorder(new MatteBorder(3, 0, 0, 0, Cores.SEPARAR_ESCURO));
+		
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] { 160, informationPanel.getPreferredSize().width };
+		layout.rowHeights = new int[] { 20 };
+		layout.columnWeights = new double[] { 1, Double.MIN_VALUE };
+		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+		panel.setLayout(layout);
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(10,0,10,0);
+		c.gridy = 0;
+		c.gridx = 0;
+		
+		JButton newButton = new JButton("Novo");
+		
+		newButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//TODO create a "getNewObject" method in the classes, so as to
+				// be able to implement here.
+				try {
+					
+					Object obj = objects.get(0).getClass().newInstance();
+					
+					
+					
+					addObject(obj);
+					
+					System.out.println("hi");
+					
+					repaint();
+					pack();
+					
+				} catch (InstantiationException | IllegalAccessException
+						| IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		
+		panel.add(newButton,c);
 		
 		JButton saveButton = new JButton("Salvar");
 		
-		JButton newButton = new JButton("Novo");
+		saveButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+		
+				System.out.println("hello");
+				
+				selectedInterface.saveObejct();
+				
+				System.out.println("goodbye");
+				
+			}
+		});
+		
+		c.gridx++;
+		panel.add(saveButton, c);
+		
 		
 		return panel;
 		
@@ -655,9 +724,16 @@ public class EditDialog extends JDialog {
 					i.getKey().setValue(map);
 					
 				}
-			
 				
 			}
+			
+			//TODO test this to see if it really is this simple
+			if (!objects.contains(object))
+				objects.add(object);
+			
+			
+			System.out.println(objects.toString());
+			
 			
 		}
 		
