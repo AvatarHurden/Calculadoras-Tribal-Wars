@@ -46,7 +46,7 @@ public class Escolha_de_mundo extends JPanel{
 		// Adiciona o nome de todos os mundos para a lista que será utilizada
 		// no comboBox
 		for (int i = 0; i < Mundo_Reader.getMundoList().size(); i++)
-			nomeMundos[i] = Mundo_Reader.getMundo(i).getNome();
+			nomeMundos[i] = Mundo_Reader.getMundo(i).toString();
 		
 		selectionBox = new JComboBox<String>(nomeMundos);
 		

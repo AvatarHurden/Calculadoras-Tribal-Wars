@@ -37,11 +37,10 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import com.sun.org.apache.xml.internal.utils.ObjectStack;
-
 import property_classes.Property;
 import property_classes.Property_Boolean;
 import property_classes.Property_Escolha;
+import property_classes.Property_Nome;
 import property_classes.Property_Number;
 import property_classes.Property_UnidadeList;
 import config.File_Manager;
@@ -290,6 +289,8 @@ public class EditDialog extends JDialog {
 				
 				System.out.println("goodbye");
 				
+				System.out.println(Mundo_Reader.getMundosConfig());
+				
 			}
 		});
 		
@@ -331,7 +332,7 @@ public class EditDialog extends JDialog {
 			
 			createNamePanel(object.toString());
 			
-			createInformationPanel(object.toString(), list);
+			createInformationPanel(list);
 			
 		}
 		
@@ -368,7 +369,7 @@ public class EditDialog extends JDialog {
 			
 		}
 		
-		private void createInformationPanel(String name, List<Property> list) {
+		private void createInformationPanel(List<Property> list) {
 			
 			objectInformation = new JPanel(new GridBagLayout());
 			
@@ -377,12 +378,14 @@ public class EditDialog extends JDialog {
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridy = 0;
 			
-			objectInformation.add(makeNamePanel(name), c);
-			c.gridy++;
-			
 			for (Property i : list) {
 				
-				if (i.getClass().equals(Property_Boolean.class)) {
+				if (i.getClass().equals(Property_Nome.class)) {
+				
+				objectInformation.add(makeNamePanel((Property_Nome) i), c);
+				c.gridy++;	
+					
+				} else if (i.getClass().equals(Property_Boolean.class)) {
 					
 				objectInformation.add(makeBooleanPanel((Property_Boolean) i), c);	
 				c.gridy++;	
@@ -429,7 +432,7 @@ public class EditDialog extends JDialog {
 			
 		}
 		
-		private JPanel makeNamePanel(String s) {
+		private JPanel makeNamePanel(Property_Nome variable) {
 			
 			JPanel panel = makeDefaultPanel();
 			
@@ -443,12 +446,14 @@ public class EditDialog extends JDialog {
 			panel.add(new JLabel("Nome"), c);
 			
 			JTextField nameField = new JTextField(16);
-			nameField.setText(s);
+			nameField.setText(variable.getName());
 			
 			c.anchor = GridBagConstraints.EAST;
 			c.gridy++;
 			c.gridwidth = 2;
 			panel.add(nameField, c);
+			
+			variableMap.put(variable, nameField);
 			
 			return panel;
 			
@@ -684,8 +689,12 @@ public class EditDialog extends JDialog {
 			
 			for (Entry<Property, Object> i : variableMap.entrySet()) {
 				
+				if (i.getKey().getClass().equals(Property_Nome.class)) {
+			
+				i.getKey().setValue(((JTextField) i.getValue()).getText());	
+					
 				// Boolean case
-				if (i.getValue().getClass().equals(JCheckBox.class)) {
+				} else if (i.getValue().getClass().equals(JCheckBox.class)) {
 					
 				i.getKey().setValue(((JCheckBox) i.getValue()).isSelected());
 					
@@ -738,58 +747,6 @@ public class EditDialog extends JDialog {
 		}
 		
 	}
-	
-	private JPanel makeFieldPanel(Field field) {
-
-		JPanel panel = new JPanel();
-
-		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] { 100, 120 };
-		layout.rowHeights = new int[] { 20 };
-		layout.columnWeights = new double[] { 0, Double.MIN_VALUE };
-		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-		panel.setLayout(layout);
-
-		panel.setOpaque(false);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
-
-		GridBagConstraints c = new GridBagConstraints();
-
-		if (field.getType().equals(Map.class)) {
-
-			// Mapping the entries to the first object, since only the name will
-			// be used
-			for (Entry<Object, Object> x : ((Map<Object, Object>) field
-					.get(objects.get(0))).entrySet()) {
-
-			}
-
-		}
-
-		if (field.getType().equals(boolean.class)) {
-
-			GridBagConstraints nameC = new GridBagConstraints();
-			nameC.insets = new Insets(5, 5, 5, 5);
-			nameC.gridy = 0;
-			nameC.gridx = 0;
-			nameC.anchor = GridBagConstraints.WEST;
-
-			panel.add(new JLabel("Nome"), nameC);
-
-			if (modelo.getNome() != null)
-				name.setText(modelo.getNome());
-
-			nameC.anchor = GridBagConstraints.EAST;
-			nameC.gridy++;
-			nameC.gridwidth = 2;
-			panel.add(name, nameC);
-
-		}
-
-		return panel;
-	}
-
-	
 	
 	public static void main(String args[]) {
 

@@ -72,8 +72,8 @@ public class Mundo_Reader {
 			i.load(new StringReader(total));
 			propertyList.add(i);
 
-			Mundo mundo = new Mundo();
-			mundo.setAll(i);
+			Mundo mundo = new Mundo(i);
+//			mundo.setAll(i);
 			mundoList.add(mundo);
 		}
 

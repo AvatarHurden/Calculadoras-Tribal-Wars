@@ -9,6 +9,7 @@ import java.util.Properties;
 import property_classes.Property;
 import property_classes.Property_Boolean;
 import property_classes.Property_Escolha;
+import property_classes.Property_Nome;
 import property_classes.Property_Number;
 
 /**
@@ -18,7 +19,7 @@ import property_classes.Property_Number;
  */
 public class Mundo {
 
-	private String nome;
+	private Property_Nome nome;
 
 	private Property_Boolean hasArqueiro;
 	private Property_Boolean hasMilícia;
@@ -44,7 +45,7 @@ public class Mundo {
 
 	public Mundo(String nome) {
 
-		this.nome = nome;
+		this.nome = new Property_Nome(nome);
 
 	}
 
@@ -53,11 +54,46 @@ public class Mundo {
 	 */
 	public Mundo() {
 		
-		nome = "Novo Mundo";
-		//TODO put all stuff
+		nome = new Property_Nome("Novo Mundo");
+		
 		hasArqueiro = new Property_Boolean("Arqueiro", false);
 		
+		hasMilícia = new Property_Boolean("Milícia", false);
+
+		hasPaladino = new Property_Boolean("Paladino", false);
+
+		hasItensAprimorados = new Property_Boolean("Itens Aprimorados", false);
+
+		hasIgreja = new Property_Boolean("Igreja", false);
+
+		hasMoral = new Property_Boolean("Moral", false);
+
+		hasBandeira = new Property_Boolean("Bandeiras", false);
+
+		hasBonusNoturno = new Property_Boolean("Bônus Noturno", false);
+
+		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas", false);
+
+		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
+			"Pesquisa Simples", "Pesquisa Simples", "Pesquisa de 3 Níveis");
+
+		velocidade = new Property_Number("Velocidade", BigDecimal.ONE);
+
+		modificarUnidades = new Property_Number("Modificador de Unidade", BigDecimal.ONE);
+
+		variableList.add(nome);
+		variableList.add(velocidade);
+		variableList.add(modificarUnidades);
+		variableList.add(hasMoral);
+		variableList.add(sistemaDePesquisa);
+		variableList.add(hasIgreja);
+		variableList.add(hasBonusNoturno);
+		variableList.add(hasBandeira);
 		variableList.add(hasArqueiro);
+		variableList.add(hasPaladino);
+		variableList.add(hasItensAprimorados);
+		variableList.add(hasMilícia);
+		variableList.add(cunhagemDeMoedas);
 		
 	}
 	/**
@@ -66,7 +102,7 @@ public class Mundo {
 	 */
 	public Mundo(Properties prop) {
 		
-		nome = prop.getProperty("nome");
+		nome = new Property_Nome(prop.getProperty("nome"));
 
 		hasArqueiro = new Property_Boolean("Arqueiro",
 				Boolean.parseBoolean(prop.getProperty("arqueiro")));
@@ -98,7 +134,7 @@ public class Mundo {
 		//TODO edit default_config to show the actual research system.
 		
 		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
-				prop.getProperty("pesquisaDeNiveis"), "Pesquisa Simples", 
+				prop.getProperty("sistemaDePesquisa"), "Pesquisa Simples", 
 				"Pesquisa de 3 Níveis");
 
 		String speed = prop.getProperty("velocidade");
@@ -110,6 +146,7 @@ public class Mundo {
 		modificarUnidades = new Property_Number("Modificador de Unidade",
 				new BigDecimal(modifier));
 
+		variableList.add(nome);
 		variableList.add(velocidade);
 		variableList.add(modificarUnidades);
 		variableList.add(hasMoral);
@@ -126,65 +163,65 @@ public class Mundo {
 	}
 	
 	//TODO delete this
-	public void setAll(Properties prop) {
-
-		nome = prop.getProperty("nome");
-
-		hasArqueiro = new Property_Boolean("Arqueiro",
-				Boolean.parseBoolean(prop.getProperty("arqueiro")));
-
-		hasMilícia = new Property_Boolean("Milícia", Boolean.parseBoolean(prop
-				.getProperty("milicia")));
-
-		hasPaladino = new Property_Boolean("Paladino",
-				Boolean.parseBoolean(prop.getProperty("paladino")));
-
-		hasItensAprimorados = new Property_Boolean("Itens Aprimorados",
-				Boolean.parseBoolean(prop.getProperty("itensAprimorados")));
-
-		hasIgreja = new Property_Boolean("Igreja", Boolean.parseBoolean(prop
-				.getProperty("igreja")));
-
-		hasMoral = new Property_Boolean("Moral", Boolean.parseBoolean(prop
-				.getProperty("moral")));
-
-		hasBandeira = new Property_Boolean("Bandeiras",
-				Boolean.parseBoolean(prop.getProperty("bandeira")));
-
-		hasBonusNoturno = new Property_Boolean("Bônus Noturno",
-				Boolean.parseBoolean(prop.getProperty("bonusNoturno")));
-
-		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas",
-				Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
-
-		//TODO edit default_config to show the actual research system.
-		
-		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
-				prop.getProperty("pesquisaDeNiveis"), "Pesquisa Simples", 
-				"Pesquisa de 3 Níveis");
-
-		String speed = prop.getProperty("velocidade");
-		speed = speed.replaceAll(",", ".");
-		velocidade = new Property_Number("Velocidade", new BigDecimal(speed));
-
-		String modifier = prop.getProperty("modificador");
-		modifier = modifier.replaceAll(",", ".");
-		modificarUnidades = new Property_Number("Modificador de Unidade",
-				new BigDecimal(modifier));
-
-		variableList.add(velocidade);
-		variableList.add(modificarUnidades);
-		variableList.add(hasMoral);
-		variableList.add(sistemaDePesquisa);
-		variableList.add(hasIgreja);
-		variableList.add(hasBonusNoturno);
-		variableList.add(hasBandeira);
-		variableList.add(hasArqueiro);
-		variableList.add(hasPaladino);
-		variableList.add(hasItensAprimorados);
-		variableList.add(hasMilícia);
-		variableList.add(cunhagemDeMoedas);
-	}
+//	public void setAll(Properties prop) {
+//
+//		nome = prop.getProperty("nome");
+//
+//		hasArqueiro = new Property_Boolean("Arqueiro",
+//				Boolean.parseBoolean(prop.getProperty("arqueiro")));
+//
+//		hasMilícia = new Property_Boolean("Milícia", Boolean.parseBoolean(prop
+//				.getProperty("milicia")));
+//
+//		hasPaladino = new Property_Boolean("Paladino",
+//				Boolean.parseBoolean(prop.getProperty("paladino")));
+//
+//		hasItensAprimorados = new Property_Boolean("Itens Aprimorados",
+//				Boolean.parseBoolean(prop.getProperty("itensAprimorados")));
+//
+//		hasIgreja = new Property_Boolean("Igreja", Boolean.parseBoolean(prop
+//				.getProperty("igreja")));
+//
+//		hasMoral = new Property_Boolean("Moral", Boolean.parseBoolean(prop
+//				.getProperty("moral")));
+//
+//		hasBandeira = new Property_Boolean("Bandeiras",
+//				Boolean.parseBoolean(prop.getProperty("bandeira")));
+//
+//		hasBonusNoturno = new Property_Boolean("Bônus Noturno",
+//				Boolean.parseBoolean(prop.getProperty("bonusNoturno")));
+//
+//		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas",
+//				Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
+//
+//		//TODO edit default_config to show the actual research system.
+//		
+//		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
+//				prop.getProperty("pesquisaDeNiveis"), "Pesquisa Simples", 
+//				"Pesquisa de 3 Níveis");
+//
+//		String speed = prop.getProperty("velocidade");
+//		speed = speed.replaceAll(",", ".");
+//		velocidade = new Property_Number("Velocidade", new BigDecimal(speed));
+//
+//		String modifier = prop.getProperty("modificador");
+//		modifier = modifier.replaceAll(",", ".");
+//		modificarUnidades = new Property_Number("Modificador de Unidade",
+//				new BigDecimal(modifier));
+//
+//		variableList.add(velocidade);
+//		variableList.add(modificarUnidades);
+//		variableList.add(hasMoral);
+//		variableList.add(sistemaDePesquisa);
+//		variableList.add(hasIgreja);
+//		variableList.add(hasBonusNoturno);
+//		variableList.add(hasBandeira);
+//		variableList.add(hasArqueiro);
+//		variableList.add(hasPaladino);
+//		variableList.add(hasItensAprimorados);
+//		variableList.add(hasMilícia);
+//		variableList.add(cunhagemDeMoedas);
+//	}
 
 	public String getConfigText() {
 
@@ -192,12 +229,12 @@ public class Mundo {
 
 		String s = "\n";
 
-		s += ("\tnome=" + nome + "\n");
+		s += ("\tnome=" + nome.getName() + "\n");
 		s += ("\tvelocidade=" + velocidade.getValue().toString() + "\n");
 		s += ("\tmodificador=" + modificarUnidades.getValue().toString() + "\n");
 
 		s += ("\tmoral=" + hasMoral.getValue() + "\n");
-		s += ("\tSistema de Pesquisa=" + sistemaDePesquisa.getSelected() + "\n");
+		s += ("\tsistemaDePesquisa=" + sistemaDePesquisa.getSelected() + "\n");
 		s += ("\tigreja=" + hasIgreja.getValue() + "\n");
 		s += ("\tbonusNoturno=" + hasBonusNoturno.getValue() + "\n");
 		s += ("\tbandeira=" + hasBandeira.getValue() + "\n");
@@ -308,7 +345,7 @@ public class Mundo {
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome = new Property_Nome(nome);
 	}
 
 	// public void setHasMilícia(boolean hasMilícia) {
@@ -356,12 +393,12 @@ public class Mundo {
 	// }
 
 	public String toString() {
-		return nome;
+		return nome.getName();
 	}
 
-	public String getNome() {
-		return nome;
-	}
+//	public String getNome() {
+//		return nome;
+//	}
 
 	public boolean hasArqueiro() {
 		return hasArqueiro.getValue();

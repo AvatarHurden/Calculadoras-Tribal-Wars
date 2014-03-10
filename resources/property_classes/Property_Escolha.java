@@ -15,7 +15,7 @@ public class Property_Escolha implements Property {
 		this.options = options;
 		
 		for (int i = 0; i < options.length; i++)
-			if (options[i].equals(selected))
+			if (options[i].equals(selected.replaceAll("_", " ")))
 				selectedOption = i; 
 		
 	}
@@ -25,7 +25,7 @@ public class Property_Escolha implements Property {
 	}
 	
 	public String getSelected() {
-		return options[selectedOption];
+		return options[selectedOption].replaceAll(" ", "_");
 	}
 	
 	public boolean isOption(String s) {

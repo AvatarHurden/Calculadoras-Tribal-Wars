@@ -82,7 +82,7 @@ public class Informações_de_mundo extends JPanel {
 		add(panelProperty("moral"), gbc);
 
 		gbc.gridy++;
-		add(panelProperty("pesquisaDeNiveis"), gbc);
+		add(panelProperty("sistemaDePesquisa"), gbc);
 
 		gbc.gridy++;
 		add(panelProperty("igreja"), gbc);
@@ -127,7 +127,7 @@ public class Informações_de_mundo extends JPanel {
 			return "Modificador de Unidade";
 		case "moral":
 			return "Moral";
-		case "pesquisaDeNiveis":
+		case "sistemaDePesquisa":
 			return "Sistema de Pesquisa";
 		case "igreja":
 			return "Igreja";
@@ -170,8 +170,8 @@ public class Informações_de_mundo extends JPanel {
 				return "Ativado";
 			else
 				return "Desativado";
-		case "pesquisaDeNiveis":
-			if (propertyValue.equals("true"))
+		case "sistemaDePesquisa":
+			if (propertyValue.equals("Pesquisa_de_3_Níveis"))
 				return "Pesquisa de 3 Níveis";
 			else
 				return "Pesquisa Simples";
