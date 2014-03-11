@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -82,6 +83,8 @@ public class EditDialog extends JDialog {
 	private ObjectInterface selectedInterface;
 	
 	JPanel namePanel;
+	
+	JScrollPane scroll;
 	
 	JPanel informationPanel = new JPanel();
 	
@@ -203,7 +206,7 @@ public class EditDialog extends JDialog {
 		namePanel.setLayout(layout);
 		
 		
-		JScrollPane scroll = new JScrollPane(namePanel);
+		scroll = new JScrollPane(namePanel);
 		scroll.setPreferredSize(new Dimension(160,
 //				informationPanel.getPreferredSize().height));
 				300));
@@ -251,24 +254,24 @@ public class EditDialog extends JDialog {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				
-				//TODO create a "getNewObject" method in the classes, so as to
-				// be able to implement here.
 				try {
 					
 					Object obj = objects.get(0).getClass().newInstance();
-					
-					
-					
+						
 					addObject(obj);
-					
-					System.out.println("hi");
-					
-					repaint();
+				
+//					repaint();
 					pack();
+					
+					scroll.getVerticalScrollBar().setValue(
+							scroll.getVerticalScrollBar().getMaximum());
+					
+					selectedInterface.setSelected(false);
+					
+					interfaceList.get(interfaceList.size()-1).setSelected(true);
 					
 				} catch (InstantiationException | IllegalAccessException
 						| IllegalArgumentException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -283,13 +286,7 @@ public class EditDialog extends JDialog {
 			
 			public void actionPerformed(ActionEvent arg0) {
 		
-				System.out.println("hello");
-				
 				selectedInterface.saveObejct();
-				
-				System.out.println("goodbye");
-				
-				System.out.println(Mundo_Reader.getMundosConfig());
 				
 			}
 		});
@@ -319,6 +316,7 @@ public class EditDialog extends JDialog {
 		 * Maps the objects properties to an object that contains the property's value
 		 * <br>This is the mapping that is made depending on the type of property:
 		 * <br>
+		 * <br> Nome : JTextField
 		 * <br> Boolean : JCheckBox
 		 * <br> Escolha : ButtonGroup
 		 * <br> Number : JTextField
@@ -359,10 +357,6 @@ public class EditDialog extends JDialog {
 					selectedInterface.setSelected(false);
 					
 					setSelected(true);
-					
-//					informationPanel.removeAll();
-//					
-//					informationPanel.add(objectInformation);
 				
 				}
 			});
@@ -408,24 +402,6 @@ public class EditDialog extends JDialog {
 				}
 				
 			}
-			
-			JButton savebutton = new JButton("Save");
-			
-			savebutton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent arg0) {
-					
-					saveObejct();
-					
-					int i = objects.indexOf(object);
-					
-					System.out.println(Mundo_Reader.getMundoList().get(i)
-							.getConfigText());
-					
-				}
-			});
-			
-			objectInformation.add(savebutton, c);
 			
 			objectInformation.setBackground(Cores.ALTERNAR_ESCURO);
 			objectInformation.setVisible(false);
@@ -689,17 +665,18 @@ public class EditDialog extends JDialog {
 			
 			for (Entry<Property, Object> i : variableMap.entrySet()) {
 				
+				// Nome case
 				if (i.getKey().getClass().equals(Property_Nome.class)) {
 			
 				i.getKey().setValue(((JTextField) i.getValue()).getText());	
 					
 				// Boolean case
-				} else if (i.getValue().getClass().equals(JCheckBox.class)) {
+				} else if (i.getKey().getClass().equals(Property_Boolean.class)) {
 					
 				i.getKey().setValue(((JCheckBox) i.getValue()).isSelected());
 					
 				// Escolha case
-				} else if (i.getValue().getClass().equals(ButtonGroup.class)) {
+				} else if (i.getKey().getClass().equals(Property_Escolha.class)) {
 					
 					 Enumeration<AbstractButton> enumeration = 
 							 ((ButtonGroup) i.getValue()).getElements();
@@ -714,12 +691,12 @@ public class EditDialog extends JDialog {
 					 }
 					
 				// Number case
-				} else if (i.getValue().getClass().equals(JTextField.class)) {
+				} else if (i.getKey().getClass().equals(Property_Number.class)) {
 					
 					i.getKey().setValue(((JTextField) i.getValue()).getText());
 				
 				// UnidadeList case 
-				} else if (i.getValue().getClass().equals(HashMap.class)) {
+				} else if (i.getKey().getClass().equals(Property_UnidadeList.class)) {
 					
 					Map<Unidade, BigDecimal> map = new HashMap<Unidade, BigDecimal>();
 					
@@ -736,14 +713,12 @@ public class EditDialog extends JDialog {
 				
 			}
 			
-			//TODO test this to see if it really is this simple
 			if (!objects.contains(object))
 				objects.add(object);
 			
-			
-			System.out.println(objects.toString());
-			
-			
+			objectName.removeAll();
+			objectName.add(new JLabel(object.toString()));
+					
 		}
 		
 	}
