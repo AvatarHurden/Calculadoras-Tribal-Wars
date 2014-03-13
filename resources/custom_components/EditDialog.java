@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -292,8 +293,37 @@ public class EditDialog extends JDialog {
 		});
 		
 		c.gridx++;
-		panel.add(saveButton, c);
+//		panel.add(saveButton, c);
 		
+		JButton upButton = new JButton("up");
+		
+		upButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Collections.swap(objects, 
+						objects.indexOf(selectedInterface.object),
+						objects.indexOf(selectedInterface.object)-1);
+				
+			}
+		});
+		
+//		panel.add(upButton, c);
+		
+		JButton downButton = new JButton("down");
+		
+		upButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Collections.swap(objects, 
+						objects.indexOf(selectedInterface.object),
+						objects.indexOf(selectedInterface.object)+1);
+				
+			}
+		});
+		
+		panel.add(downButton, c);
 		
 		return panel;
 		
@@ -668,7 +698,18 @@ public class EditDialog extends JDialog {
 				// Nome case
 				if (i.getKey().getClass().equals(Property_Nome.class)) {
 			
-				i.getKey().setValue(((JTextField) i.getValue()).getText());	
+					// only does this if the name is different
+					if (!i.getKey().getName().equals(((JTextField) i.getValue()).getText())) {
+						
+						i.getKey().setValue(((JTextField) i.getValue()).getText());	
+						
+						objectName.removeAll();
+						objectName.add(new JLabel(object.toString()));
+						
+						objectName.revalidate();
+						objectName.repaint();
+					
+					}
 					
 				// Boolean case
 				} else if (i.getKey().getClass().equals(Property_Boolean.class)) {
@@ -716,8 +757,6 @@ public class EditDialog extends JDialog {
 			if (!objects.contains(object))
 				objects.add(object);
 			
-			objectName.removeAll();
-			objectName.add(new JLabel(object.toString()));
 					
 		}
 		
