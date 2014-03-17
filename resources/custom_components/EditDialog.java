@@ -5,7 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -24,10 +24,12 @@ import java.util.Map.Entry;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -45,6 +47,7 @@ import property_classes.Property_Escolha;
 import property_classes.Property_Nome;
 import property_classes.Property_Number;
 import property_classes.Property_UnidadeList;
+import selecionar_mundo.GUI;
 import config.File_Manager;
 import config.Mundo_Reader;
 import database.Cores;
@@ -74,7 +77,9 @@ public class EditDialog extends JDialog {
 
 	List<Object> objects;
 
-	Field variableList;
+	Map<Object, ArrayList<Property>> variableMap;
+
+	Field variableField;
 	
 //	Map<Object, JComponent> mapping;
 
@@ -98,45 +103,25 @@ public class EditDialog extends JDialog {
 	// all the variables that they have, using that as a parameter for this
 	// dialog;
 
-	public EditDialog(List objects, Field variableList) {
+	public EditDialog(List objects, Field variableField) {
 		
 		this.objects = objects;
 		
-		this.variableList = variableList;
+		this.variableField = variableField;
+		
+		variableMap = new HashMap<Object, ArrayList<Property>>();
+		
+		for(Object o : objects)
+			try {
+				variableMap.put(o, (ArrayList<Property>)variableField.get(o));
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+
 		
 		setLayout(new GridBagLayout());
 
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
-		
-//		JPanel test = new JPanel(new GridBagLayout());
-//		
-//		test.setBackground(Cores.FUNDO_CLARO);
-//		
-//		GridBagConstraints c = new GridBagConstraints();
-//		c.gridy = 0;
-//		
-//		try {
-//			for (Property i : ((ArrayList<Property>) 
-//					variableList.get(objects.get(0)))) {
-//				
-//				ObjectInterface obj = new ObjectInterface();
-//				
-//			}
-//		} catch (IllegalArgumentException | IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		ObjectInterface obj = null;
-//		
-//		try {
-//			obj = new ObjectInterface
-//					(objects.get(0),
-//							((ArrayList<Property>)variableList.get(objects.get(0))));
-//		} catch (IllegalArgumentException | IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
@@ -144,8 +129,10 @@ public class EditDialog extends JDialog {
 		
 		makeScrollPanel(c);
 		
-		for (Object o : objects)
-			addObject(o);
+		for (Object o : objects){
+			createInterface(o);
+			addInterfaceToScroll(interfaceList.get(objects.indexOf(o)), listNumber++);
+		}
 		
 		informationPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		
@@ -165,35 +152,34 @@ public class EditDialog extends JDialog {
 		
 	}
 	
-	private void addObject(Object o) {
+	private void createInterface(Object o) {
 		
-		try {
-			ObjectInterface oi = new ObjectInterface(o,
-					(ArrayList<Property>)variableList.get(o));
-			
+		ObjectInterface oi = new ObjectInterface(o, variableMap.get(o));
+		
+		interfaceList.add(oi);
+		
+	}
+	
+	private void addInterfaceToScroll(ObjectInterface oi, int position) {
+		
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.anchor = GridBagConstraints.NORTH;
-			c.gridy = listNumber++;		
-			
-			interfaceList.add(oi);
+			c.gridy = position;		
 			
 			namePanel.add(oi.objectName,c);
 			
 			c.gridy = 0;
 			informationPanel.add(oi.objectInformation, c);
-			
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
 		
 	}
 	
-//	private void makeObjectInfoPanel(Object object) {
-//		
-//	
-//		
-//	}
+	private void removeInterfaceFromScroll(ObjectInterface oi){
+		
+		namePanel.remove(oi.objectName);
+		informationPanel.remove(oi.objectInformation);
+		
+	}
 
 	private void makeScrollPanel(GridBagConstraints c) {
 		
@@ -209,23 +195,7 @@ public class EditDialog extends JDialog {
 		
 		scroll = new JScrollPane(namePanel);
 		scroll.setPreferredSize(new Dimension(160,
-//				informationPanel.getPreferredSize().height));
-				300));
-		
-//		scroll.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		
-		GridBagConstraints scrollC = new GridBagConstraints();
-		scrollC.anchor = GridBagConstraints.NORTH;
-		
-//		scroll.setBackground(Cores.SEPARAR_ESCURO);
-		
-//		JPanel panel = new JPanel();
-//	
-//		panel.setBackground(Cores.ALTERNAR_ESCURO);
-//		
-//		panel.add(namePanel);
-//		
-//		scroll.add(namePanel, scrollC);
+				informationPanel.getPreferredSize().height));
 		
 		add(scroll,c);
 		
@@ -259,8 +229,13 @@ public class EditDialog extends JDialog {
 					
 					Object obj = objects.get(0).getClass().newInstance();
 						
-					addObject(obj);
-				
+					variableMap.put(obj, (ArrayList<Property>)variableField.get(obj));
+					
+					createInterface(obj);
+					
+					addInterfaceToScroll(interfaceList.get(interfaceList.size()-1),
+							interfaceList.size()-1);
+					
 //					repaint();
 					pack();
 					
@@ -281,6 +256,8 @@ public class EditDialog extends JDialog {
 		
 		panel.add(newButton,c);
 		
+		JPanel rightPanel = new JPanel();
+		
 		JButton saveButton = new JButton("Salvar");
 		
 		saveButton.addActionListener(new ActionListener() {
@@ -293,37 +270,73 @@ public class EditDialog extends JDialog {
 		});
 		
 		c.gridx++;
-//		panel.add(saveButton, c);
+		rightPanel.add(saveButton, c);
 		
-		JButton upButton = new JButton("up");
-		
-		upButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				
-				Collections.swap(objects, 
-						objects.indexOf(selectedInterface.object),
-						objects.indexOf(selectedInterface.object)-1);
-				
-			}
-		});
-		
-//		panel.add(upButton, c);
-		
-		JButton downButton = new JButton("down");
+		JButton upButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				GUI.class.getResource("/images/up_arrow.png"))));
 		
 		upButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
+			
+				int position = objects.indexOf(selectedInterface.object);
 				
-				Collections.swap(objects, 
-						objects.indexOf(selectedInterface.object),
-						objects.indexOf(selectedInterface.object)+1);
+				if (position > 0) {
+				
+					Collections.swap(objects, position, position-1);
+				
+					Collections.swap(interfaceList, position, position-1);
+				
+					removeInterfaceFromScroll(interfaceList.get(position));
+					removeInterfaceFromScroll(interfaceList.get(position-1));
+				
+					addInterfaceToScroll(selectedInterface, position-1);
+					addInterfaceToScroll(interfaceList.get(position), position);
+			
+					revalidate();
+					
+				}
 				
 			}
 		});
 		
-		panel.add(downButton, c);
+		rightPanel.add(upButton, c);
+		
+		JButton downButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				GUI.class.getResource("/images/down_arrow.png"))));
+		
+		downButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int position = objects.indexOf(selectedInterface.object);
+
+				if (position < interfaceList.size()-1) {
+				
+					Collections.swap(objects, position, position+1);
+				
+					Collections.swap(interfaceList, position, position+1);
+					
+					removeInterfaceFromScroll(interfaceList.get(position));
+					removeInterfaceFromScroll(interfaceList.get(position+1));
+				
+					addInterfaceToScroll(selectedInterface, position+1);
+					addInterfaceToScroll(interfaceList.get(position), position);
+					
+					scroll.getVerticalScrollBar().setValue(32*38);
+					
+					revalidate();
+					
+				}
+				
+			}
+		});
+		
+		c.gridx++;
+		rightPanel.add(downButton, c);
+		
+		c.gridx = 1;
+		panel.add(rightPanel,c);
 		
 		return panel;
 		
@@ -754,10 +767,20 @@ public class EditDialog extends JDialog {
 				
 			}
 			
+			for (Object o : objects) {
+				
+				if (o.toString() == object.toString())
+					JOptionPane.showMessageDialog(null, "Esse nome já está sendo utilizado.\nFavor escolher outro.");
+				
+			}
 			if (!objects.contains(object))
 				objects.add(object);
 			
 					
+		}
+		
+		public String toString(){
+			return object.toString();
 		}
 		
 	}

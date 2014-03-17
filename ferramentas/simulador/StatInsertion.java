@@ -697,14 +697,14 @@ public class StatInsertion extends JPanel {
 		Map<Unidade, BigDecimal> tropas = new HashMap<Unidade, BigDecimal>();
 
 		for (Unidade i : Unidade.values())
-			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor))
+			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
 				if (Mundo_Reader.MundoSelecionado.containsUnidade(i)
 						&& !mapQuantidades.get(i).getText().equals(""))
 					tropas.put(i, new BigDecimal(mapQuantidades.get(i)
 							.getText()));
 				else
 					tropas.put(i, BigDecimal.ZERO);
-			else
+			} else
 				tropas.put(i, BigDecimal.ZERO);
 
 		if (tipo == Tipo.Atacante)
@@ -717,9 +717,14 @@ public class StatInsertion extends JPanel {
 		Map<Unidade, Integer> níveis = new HashMap<Unidade, Integer>();
 
 		for (Unidade i : Unidade.values()) {
-			if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
-				níveis.put(i, ((int) mapNiveis.get(i).getSelectedItem()));
-			else
+			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
+				System.out.println(i.toString());
+				if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()
+						&& Mundo_Reader.MundoSelecionado.containsUnidade(i))
+					níveis.put(i, ((int) mapNiveis.get(i).getSelectedItem()));
+				else
+					níveis.put(i, 1);
+			} else
 				níveis.put(i, 1);
 		}
 

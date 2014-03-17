@@ -124,7 +124,7 @@ public class Cálculo {
 		destroyBuildingAndWall();
 
 		setOutputVariables();
-
+		
 	}
 
 	private void setInputVariables() {
@@ -547,8 +547,8 @@ public class Cálculo {
 			// Colocar as tropas perdidas na batalha num map para poder usar
 			// depois
 			tropasPerdidasDefesa.put(i.getKey(),
-					i.getValue().multiply(defenseRatioLoss)).setScale(0,
-					RoundingMode.HALF_UP);
+					i.getValue().multiply(defenseRatioLoss)
+					.setScale(0,RoundingMode.HALF_UP));
 			// Remover as tropas perdidas do mapa adequado
 			i.setValue(i.getValue()
 					.multiply(BigDecimal.ONE.subtract(defenseRatioLoss))
@@ -561,8 +561,8 @@ public class Cálculo {
 				// Colocar as tropas perdidas na batalha num map para poder usar
 				// depois
 				tropasPerdidasAtaque.put(i.getKey(),
-						i.getValue().multiply(ataqueRatioLoss)).setScale(0,
-						RoundingMode.HALF_UP);
+						i.getValue().multiply(ataqueRatioLoss)
+						.setScale(0, RoundingMode.HALF_UP));
 				// Remover as tropas perdidas do mapa adequado
 				i.setValue(i.getValue()
 						.multiply(BigDecimal.ONE.subtract(ataqueRatioLoss))

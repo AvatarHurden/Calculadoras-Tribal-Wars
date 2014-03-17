@@ -42,7 +42,7 @@ public class Mundo {
 	private Unidade[] unidades = new Unidade[13];
 
 	private BigDecimal[] porcentagemDeProdução = new BigDecimal[26];
-
+	
 	public Mundo(String nome) {
 
 		this.nome = new Property_Nome(nome);
