@@ -49,9 +49,10 @@ import property_classes.Property_Number;
 import property_classes.Property_UnidadeList;
 import selecionar_mundo.GUI;
 import config.File_Manager;
+import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.Cores;
-import database.Mundo;
+import database.ModeloTropas;
 import database.Unidade;
 
 /**
@@ -355,6 +356,9 @@ public class EditDialog extends JDialog {
 		
 		private JPanel objectInformation;
 		
+		// JTextField that contains the name of the object. Needed because name is very important
+		private JTextField nameTextField;
+		
 		/**
 		 * Maps the objects properties to an object that contains the property's value
 		 * <br>This is the mapping that is made depending on the type of property:
@@ -464,15 +468,15 @@ public class EditDialog extends JDialog {
 			
 			panel.add(new JLabel("Nome"), c);
 			
-			JTextField nameField = new JTextField(16);
-			nameField.setText(variable.getName());
+			nameTextField = new JTextField(16);
+			nameTextField.setText(variable.getName());
 			
 			c.anchor = GridBagConstraints.EAST;
 			c.gridy++;
 			c.gridwidth = 2;
-			panel.add(nameField, c);
+			panel.add(nameTextField, c);
 			
-			variableMap.put(variable, nameField);
+			variableMap.put(variable, nameTextField);
 			
 			return panel;
 			
@@ -706,77 +710,92 @@ public class EditDialog extends JDialog {
 		
 		private void saveObejct() {
 			
-			for (Entry<Property, Object> i : variableMap.entrySet()) {
+			if (hasUniqueName()) {
+				for (Entry<Property, Object> i : variableMap.entrySet()) {
+					
+					// Nome case
+					if (i.getKey().getClass().equals(Property_Nome.class)) {
 				
-				// Nome case
-				if (i.getKey().getClass().equals(Property_Nome.class)) {
-			
-					// only does this if the name is different
-					if (!i.getKey().getName().equals(((JTextField) i.getValue()).getText())) {
+						// only does this if the name is different
+						if (!i.getKey().getName().equals(((JTextField) i.getValue()).getText())) {
+							
+							i.getKey().setValue(((JTextField) i.getValue()).getText());	
+							
+							objectName.removeAll();
+							objectName.add(new JLabel(object.toString()));
+							
+							objectName.revalidate();
+							objectName.repaint();
 						
-						i.getKey().setValue(((JTextField) i.getValue()).getText());	
+						}
 						
-						objectName.removeAll();
-						objectName.add(new JLabel(object.toString()));
+					// Boolean case
+					} else if (i.getKey().getClass().equals(Property_Boolean.class)) {
 						
-						objectName.revalidate();
-						objectName.repaint();
+					i.getKey().setValue(((JCheckBox) i.getValue()).isSelected());
+						
+					// Escolha case
+					} else if (i.getKey().getClass().equals(Property_Escolha.class)) {
+						
+						 Enumeration<AbstractButton> enumeration = 
+								 ((ButtonGroup) i.getValue()).getElements();
+						
+						 while (enumeration.hasMoreElements()) {
+						
+							 AbstractButton b = enumeration.nextElement();
+						
+							 if (b.isSelected())
+								 i.getKey().setValue(b.getText());
+						 
+						 }
+						
+					// Number case
+					} else if (i.getKey().getClass().equals(Property_Number.class)) {
+						
+						i.getKey().setValue(((JTextField) i.getValue()).getText());
 					
+					// UnidadeList case 
+					} else if (i.getKey().getClass().equals(Property_UnidadeList.class)) {
+						
+						Map<Unidade, BigDecimal> map = new HashMap<Unidade, BigDecimal>();
+						
+						for (Entry<Unidade, TroopFormattedTextField> x 
+								: ((HashMap<Unidade, TroopFormattedTextField>) i .getValue()).entrySet()) {
+							
+							map.put(x.getKey(), x.getValue().getValue());
+							
+						}
+						
+						i.getKey().setValue(map);
+						
 					}
-					
-				// Boolean case
-				} else if (i.getKey().getClass().equals(Property_Boolean.class)) {
-					
-				i.getKey().setValue(((JCheckBox) i.getValue()).isSelected());
-					
-				// Escolha case
-				} else if (i.getKey().getClass().equals(Property_Escolha.class)) {
-					
-					 Enumeration<AbstractButton> enumeration = 
-							 ((ButtonGroup) i.getValue()).getElements();
-					
-					 while (enumeration.hasMoreElements()) {
-					
-						 AbstractButton b = enumeration.nextElement();
-					
-						 if (b.isSelected())
-							 i.getKey().setValue(b.getText());
-					 
-					 }
-					
-				// Number case
-				} else if (i.getKey().getClass().equals(Property_Number.class)) {
-					
-					i.getKey().setValue(((JTextField) i.getValue()).getText());
-				
-				// UnidadeList case 
-				} else if (i.getKey().getClass().equals(Property_UnidadeList.class)) {
-					
-					Map<Unidade, BigDecimal> map = new HashMap<Unidade, BigDecimal>();
-					
-					for (Entry<Unidade, TroopFormattedTextField> x 
-							: ((HashMap<Unidade, TroopFormattedTextField>) i .getValue()).entrySet()) {
-						
-						map.put(x.getKey(), x.getValue().getValue());
-						
-					}
-					
-					i.getKey().setValue(map);
 					
 				}
-				
-			}
 			
-			for (Object o : objects) {
+				if (!objects.contains(object))
+					objects.add(object);
 				
-				if (o.toString() == object.toString())
-					JOptionPane.showMessageDialog(null, "Esse nome já está sendo utilizado.\nFavor escolher outro.");
+			} else {
+				
+				JOptionPane.showInputDialog(null);
+				JOptionPane.showMessageDialog(null, "Esse nome já está sendo utilizado.\nFavor escolher outro.");
+				nameTextField.requestFocus();
+				nameTextField.selectAll();
 				
 			}
-			if (!objects.contains(object))
-				objects.add(object);
 			
 					
+		}
+		
+		private boolean hasUniqueName() {
+			
+			for (Object o : objects)
+				if (o.toString().equals(nameTextField.getText()) 
+						&& o != object)
+					return false;
+			
+			return true;
+			
 		}
 		
 		public String toString(){
@@ -796,8 +815,8 @@ public class EditDialog extends JDialog {
 		File_Manager.defineModelos();
 		
 		try {
-			EditDialog test = new EditDialog(Mundo_Reader.getMundoList(), 
-					Mundo.class.getDeclaredField("variableList"));
+			EditDialog test = new EditDialog(ModeloTropas_Reader.getListModelos(), 
+					ModeloTropas.class.getDeclaredField("variableList"));
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

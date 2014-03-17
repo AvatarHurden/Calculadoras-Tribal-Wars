@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import property_classes.Property;
+import property_classes.Property_Nome;
 import property_classes.Property_UnidadeList;
 
 /**
@@ -19,7 +20,7 @@ import property_classes.Property_UnidadeList;
  */
 public class ModeloTropas {
 
-	private String nome;
+	private Property_Nome nome;
 
 	// private Map<Unidade, BigDecimal> quantidades = new HashMap<Unidade,
 	// BigDecimal>();
@@ -31,13 +32,18 @@ public class ModeloTropas {
 
 	public ModeloTropas() {
 
+		nome = new Property_Nome("Novo Modelo");
+		
+		for (Unidade i : Unidade.values())
+			quantidades.put(i, BigDecimal.ZERO);
+		
 		setVariableList();
 
 	}
-
+	
 	public ModeloTropas(Properties p) {
 
-		nome = p.getProperty("nome");
+		nome = new Property_Nome(p.getProperty("nome"));
 
 		// for (Unidade i : Unidade.values()){
 		// String nome = i.nome().toLowerCase().replace(' ', '_');
@@ -55,7 +61,7 @@ public class ModeloTropas {
 
 	public ModeloTropas(String nome, Map<Unidade, BigDecimal> map) {
 
-		this.nome = nome;
+		this.nome = new Property_Nome(nome);
 
 		for (Entry<Unidade, BigDecimal> i : map.entrySet())
 			quantidades.put(i.getKey(), i.getValue());
@@ -66,16 +72,17 @@ public class ModeloTropas {
 
 	private void setVariableList() {
 
+		variableList.add(nome);
 		variableList.add(quantidades);
 
 	}
 
 	public String toString() {
-		return nome;
+		return nome.getName();
 	}
 
 	public void setNome(String s) {
-		nome = s;
+		nome = new Property_Nome(s);
 	}
 
 	/**
@@ -90,7 +97,7 @@ public class ModeloTropas {
 	}
 
 	public String getNome() {
-		return nome;
+		return nome.getName();
 	}
 
 	public BigDecimal getQuantidade(Unidade i) {
