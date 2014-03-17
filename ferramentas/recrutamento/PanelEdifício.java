@@ -101,8 +101,7 @@ public class PanelEdifício extends JPanel {
 		gbc_finish.gridy++;
 		add(lblNível, gbc_finish);
 
-		txtNível = new EdifícioFormattedComboBox(edifício, 1,
-				Cores.FUNDO_ESCURO) {
+		txtNível = new EdifícioFormattedComboBox(edifício, 1) {
 
 			@Override
 			public void go() {

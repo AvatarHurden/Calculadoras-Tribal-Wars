@@ -62,13 +62,15 @@ public class Bandeira {
 	// e em quais situações ela existe.
 	public enum CategoriaBandeira {
 
-		RECURSOS(Tipo.Produtivo, "produção de recursos", 4, 2), RECRUTAMENTO(
-				Tipo.Produtivo, "velocidade de recrutamento", 6, 2), ATAQUE(
-				Tipo.Militar, "força de ataque", 2, 1), DEFESA(Tipo.Militar,
-				"bônus de defesa", 2, 1), SORTE(Tipo.Sorte, "", 6, 2), POPULAÇÃO(
-				Tipo.Produtivo, "população", 2, 1), MOEDAS(Tipo.Produtivo,
-				"custo de moedas", -10, -2), SAQUE(Tipo.Produtivo,
-				"capacidade de saque", 2, 1), NULL(Tipo.Null, "", 0, 0);
+		RECURSOS 	 (Tipo.Produtivo, "produção de recursos",	    4, 	  2),
+		RECRUTAMENTO (Tipo.Produtivo, "velocidade de recrutamento", 6, 	  2),
+		ATAQUE   	 (Tipo.Militar,   "força de ataque",		    2, 	  1),
+		DEFESA 		 (Tipo.Militar,   "bônus de defesa",			2, 	  1),
+		SORTE	 	 (Tipo.Sorte,     "", 							6, 	  2),
+		POPULAÇÃO 	 (Tipo.Produtivo, "população", 					2,    1),
+		MOEDAS 		 (Tipo.Produtivo, "custo de moedas",			-10, -2),
+		SAQUE 		 (Tipo.Produtivo, "capacidade de saque", 		2,    1),
+		NULL		 (Tipo.Null, 	  "",							0,	  0);
 
 		public enum Tipo {
 			Militar, Produtivo, Sorte, Null;

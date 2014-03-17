@@ -34,17 +34,16 @@ import database.Edifício;
 public abstract class EdifícioFormattedComboBox extends JComboBox<Integer> {
 
 	/**
-	 * @param Edifício
-	 *            ao qual a textField se refere
+	 * @param Edifício ao qual a textField se refere
 	 */
-	public EdifícioFormattedComboBox(final Edifício ed, int initial, Color cor) {
+	public EdifícioFormattedComboBox(final Edifício ed, int initial) {
 
 		for (int i = 0; i < ed.nívelMáximo() + 1; i++)
 			addItem(i);
 
 		setSelectedItem(initial);
 
-		setOpaque(true);
+		setOpaque(false);
 
 		setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 
@@ -68,7 +67,7 @@ public abstract class EdifícioFormattedComboBox extends JComboBox<Integer> {
 				};
 			}
 		});
-
+		
 		addActionListener(new ActionListener() {
 
 			@Override

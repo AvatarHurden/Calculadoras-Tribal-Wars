@@ -168,7 +168,7 @@ public class PanelEdifício {
 
 		addSeparator(constraints, identificadores);
 
-		txtNível = new EdifícioFormattedComboBox(edifício, 0, cor) {
+		txtNível = new EdifícioFormattedComboBox(edifício, 0) {
 
 			@Override
 			public void go() {
