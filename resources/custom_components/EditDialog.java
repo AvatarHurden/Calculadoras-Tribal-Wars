@@ -258,13 +258,14 @@ public class EditDialog extends JDialog {
 		panel.add(newButton,c);
 		
 		JPanel rightPanel = new JPanel();
+		rightPanel.setOpaque(false);
 		
 		JButton saveButton = new JButton("Salvar");
 		
 		saveButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-		
+				
 				selectedInterface.saveObejct();
 				
 			}
@@ -710,7 +711,7 @@ public class EditDialog extends JDialog {
 		
 		private void saveObejct() {
 			
-			if (hasUniqueName()) {
+			if (isUniqueName(nameTextField.getText())) {
 				for (Entry<Property, Object> i : variableMap.entrySet()) {
 					
 					// Nome case
@@ -777,21 +778,37 @@ public class EditDialog extends JDialog {
 				
 			} else {
 				
-				JOptionPane.showInputDialog(null);
-				JOptionPane.showMessageDialog(null, "Esse nome já está sendo utilizado.\nFavor escolher outro.");
-				nameTextField.requestFocus();
-				nameTextField.selectAll();
+				String s;
+				
+				do {					
+//				JOptionPane.showMessageDialog(null, 
+//						 nameTextField, "t", 1);
+					
+				s = (JOptionPane.showInputDialog(null, 
+						new JLabel("<html>Esse nome já está sendo utilizado.<br>Favor escolher outro.</html>"),
+						"Nome já utilizado", JOptionPane.ERROR_MESSAGE));
+				
+				} while (!isUniqueName(s));
+				
+				if (s != null) {
+					nameTextField.setText(s);
+					saveObejct();
+				}
+			
+//				JOptionPane.showInputDialog(null);
+//				JOptionPane.showMessageDialog(null, "Esse nome já está sendo utilizado.\nFavor escolher outro.");
+//				nameTextField.requestFocus();
+//				nameTextField.selectAll();
 				
 			}
 			
 					
 		}
 		
-		private boolean hasUniqueName() {
+		private boolean isUniqueName(String s) {
 			
 			for (Object o : objects)
-				if (o.toString().equals(nameTextField.getText()) 
-						&& o != object)
+				if (o.toString().equals(s) && o != object)
 					return false;
 			
 			return true;

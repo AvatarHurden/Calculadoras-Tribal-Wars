@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -22,7 +21,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
-import javax.swing.Popup;
 import javax.swing.border.LineBorder;
 
 import selecionar_mundo.GUI;
@@ -30,7 +28,6 @@ import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.Cores;
 import database.ModeloTropas;
-import database.Mundo;
 import database.Unidade;
 
 /**
