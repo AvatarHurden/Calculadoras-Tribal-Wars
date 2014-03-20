@@ -21,11 +21,14 @@ import javax.swing.text.PlainDocument;
 /**
  * JTextField that formats the number to add thousands separator
  * 
- * Abstract method is called on every change of text
+ * <br>Abstract method is called on every change of text
  * 
- * By default, contains: - Left horizontal text alignment - PlainDocument to
- * only allow <code>length</code> digits - DocumentListener with abstract class
- * that activates on every change - FocusListener to update when focus is lost
+ * <br>By default, contains: 
+ * <br>- Left horizontal text alignment
+ * <br>- PlainDocument to only allow <code>length</code> digits
+ * <br>- DocumentListener with abstract clas that activates on every change
+ * <br>- FocusListener to update when focus is lost (to not add another, since
+ * focus is lost on every edit of the textField)
  * 
  * @author Arthur
  * 

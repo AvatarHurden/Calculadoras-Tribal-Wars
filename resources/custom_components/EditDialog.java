@@ -37,6 +37,8 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -65,24 +67,11 @@ import database.Unidade;
  */
 public class EditDialog extends JDialog {
 
-	// Pass the list of objects as one parameter: they will be used for the name
-	// and to be
-	// edited
-
-	// Pass another list with the properties of every object: this will be used
-	// to make the
-	// right panel
-	// OR
-	// Interpret the varialbes for every object, creating the right panel
-	// according to it
-
 	List<Object> objects;
 
 	Map<Object, ArrayList<Property>> variableMap;
 
 	Field variableField;
-	
-//	Map<Object, JComponent> mapping;
 
 	// Used for setting the visibility of the information panels
 	List<ObjectInterface> interfaceList = new ArrayList<ObjectInterface>();
@@ -92,18 +81,16 @@ public class EditDialog extends JDialog {
 	JPanel namePanel;
 	
 	JScrollPane scroll;
+	int listNumber = 0;
 	
 	JPanel informationPanel = new JPanel();
 	
-	int listNumber = 0;
-	
-	// TODO create an interface called variable. WIthin it, different classes
-	// with types
-	// that I want (2-choices, boolean, map, etc). Have each class contain a
-	// list of
-	// all the variables that they have, using that as a parameter for this
-	// dialog;
+	JButton saveButton, upButton, downButton;
 
+	//TODO reduce time to run program
+	// 1 object = 991 milissegundos
+	// 56 objects = 2218 milissegundos
+	// teoricamente, a contrução sem objetos demora 968,69 milissegundos
 	public EditDialog(List objects, Field variableField) {
 		
 		this.objects = objects;
@@ -139,13 +126,13 @@ public class EditDialog extends JDialog {
 		
 		c.gridy++;
 		add(informationPanel,c);
-		
-		interfaceList.get(0).setSelected(true);
-		
+
 		c.gridy++;
 		c.gridwidth = 2;
 //		c.insets = new Insets(10,0,0,0);
 		add(makeEditPanel(), c);
+		
+		interfaceList.get(0).setSelected(true);
 		
 		pack();
 		setVisible(true);
@@ -234,6 +221,8 @@ public class EditDialog extends JDialog {
 					
 					createInterface(obj);
 					
+					interfaceList.get(interfaceList.size()-1).isSaved = false;
+					
 					addInterfaceToScroll(interfaceList.get(interfaceList.size()-1),
 							interfaceList.size()-1);
 					
@@ -260,7 +249,7 @@ public class EditDialog extends JDialog {
 		JPanel rightPanel = new JPanel();
 		rightPanel.setOpaque(false);
 		
-		JButton saveButton = new JButton("Salvar");
+		saveButton = new JButton("Salvar");
 		
 		saveButton.addActionListener(new ActionListener() {
 			
@@ -274,7 +263,7 @@ public class EditDialog extends JDialog {
 		c.gridx++;
 		rightPanel.add(saveButton, c);
 		
-		JButton upButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		upButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				GUI.class.getResource("/images/up_arrow.png"))));
 		
 		upButton.addActionListener(new ActionListener() {
@@ -297,6 +286,8 @@ public class EditDialog extends JDialog {
 			
 					revalidate();
 					
+					changeButtons();
+					
 				}
 				
 			}
@@ -304,7 +295,7 @@ public class EditDialog extends JDialog {
 		
 		rightPanel.add(upButton, c);
 		
-		JButton downButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		downButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				GUI.class.getResource("/images/down_arrow.png"))));
 		
 		downButton.addActionListener(new ActionListener() {
@@ -329,6 +320,8 @@ public class EditDialog extends JDialog {
 					
 					revalidate();
 					
+					changeButtons();
+					
 				}
 				
 			}
@@ -341,6 +334,25 @@ public class EditDialog extends JDialog {
 		panel.add(rightPanel,c);
 		
 		return panel;
+		
+	}
+	
+	// Turns the save, up and down buttons on or off as needed
+	private void changeButtons() {
+		
+		saveButton.setEnabled(!selectedInterface.isSaved());
+		
+		if (selectedInterface.isSaved()) {
+			upButton.setEnabled(interfaceList.indexOf(selectedInterface) != 0);
+
+			downButton.setEnabled(interfaceList.indexOf(selectedInterface) 
+					!= interfaceList.size()-1);
+		} else {
+			
+			upButton.setEnabled(false);
+			downButton.setEnabled(false);
+			
+		}
 		
 	}
 	
@@ -359,6 +371,12 @@ public class EditDialog extends JDialog {
 		
 		// JTextField that contains the name of the object. Needed because name is very important
 		private JTextField nameTextField;
+		
+		// Boolean that says if the object has been saved after any changes
+		private boolean isSaved = true;
+		
+		// The symbol to be added to the objectName when it is unsaved
+		private JLabel unsavedSignal;
 		
 		/**
 		 * Maps the objects properties to an object that contains the property's value
@@ -379,6 +397,8 @@ public class EditDialog extends JDialog {
 			createNamePanel(object.toString());
 			
 			createInformationPanel(list);
+			
+			
 			
 		}
 		
@@ -472,6 +492,19 @@ public class EditDialog extends JDialog {
 			nameTextField = new JTextField(16);
 			nameTextField.setText(variable.getName());
 			
+			nameTextField.getDocument().addDocumentListener(new DocumentListener() {
+			
+				public void removeUpdate(DocumentEvent arg0) {
+					changedSomething();
+				}				
+				
+				public void insertUpdate(DocumentEvent arg0) {
+					changedSomething();
+				}
+				
+				public void changedUpdate(DocumentEvent arg0) {}
+			});
+			
 			c.anchor = GridBagConstraints.EAST;
 			c.gridy++;
 			c.gridwidth = 2;
@@ -500,6 +533,13 @@ public class EditDialog extends JDialog {
 			checkBox.setOpaque(false);
 			checkBox.setSelected(variable.getValue());
 			
+			checkBox.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent e) {
+					changedSomething();
+				}
+			});
+			
 			c.gridx++;
 			panel.add(checkBox, c);
 
@@ -523,7 +563,7 @@ public class EditDialog extends JDialog {
 			panel.add(name, c);
 
 			ButtonGroup buttonGroup = new ButtonGroup();
-
+			
 			JPanel buttonPanel = new JPanel(new GridLayout(0,1));
 			buttonPanel.setOpaque(false);
 			
@@ -531,6 +571,13 @@ public class EditDialog extends JDialog {
 				
 				JRadioButton button = new JRadioButton(s);
 				button.setOpaque(false);
+				
+				button.addActionListener(new ActionListener() {
+					
+					public void actionPerformed(ActionEvent arg0) {
+						changedSomething();
+					}
+				});
 				
 				if (variable.isOption(s))
 					button.setSelected(true);
@@ -562,6 +609,7 @@ public class EditDialog extends JDialog {
 
 		}
 
+		@SuppressWarnings("serial")
 		private JPanel makeNumberPanel(Property_Number variable) {
 
 			JPanel panel = makeDefaultPanel();
@@ -623,6 +671,19 @@ public class EditDialog extends JDialog {
 			
 			txt.setColumns(5);
 			
+			txt.getDocument().addDocumentListener(new DocumentListener() {
+				
+				public void removeUpdate(DocumentEvent arg0) {
+					changedSomething();
+				}
+				
+				public void insertUpdate(DocumentEvent arg0) {
+					changedSomething();
+				}
+				
+				public void changedUpdate(DocumentEvent arg0) {}
+			});
+			
 			c.gridx++;
 			panel.add(txt, c);
 
@@ -652,11 +713,23 @@ public class EditDialog extends JDialog {
 				panel.add(new JLabel(i.nome()), c);
 
 				TroopFormattedTextField txt = new TroopFormattedTextField(9) {
-					public void go() {
-					}
+					public void go() {}
 				};
-
+				
 				txt.setText(variable.get(i).toString());
+
+				txt.getDocument().addDocumentListener(new DocumentListener() {
+					
+					public void removeUpdate(DocumentEvent arg0) {
+						changedSomething();
+					}
+					
+					public void insertUpdate(DocumentEvent arg0) {
+						changedSomething();
+					}
+					
+					public void changedUpdate(DocumentEvent arg0) {}
+				});
 
 				c.gridx = 1;
 				panel.add(txt, c);
@@ -688,9 +761,17 @@ public class EditDialog extends JDialog {
 			layout.columnWeights = new double[] { 1, Double.MIN_VALUE };
 			layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 			panel.setLayout(layout);
+			
+			//Adds a listener to turn 'isSaved' false
+			
 
 			return panel;
 
+		}
+		
+		private void changedSomething() {
+			isSaved = false;
+			changeButtons();
 		}
 
 		public void setSelected(boolean isSelected) {
@@ -701,6 +782,7 @@ public class EditDialog extends JDialog {
 				objectName.setBackground(Cores.FUNDO_ESCURO);
 				
 				selectedInterface = this;
+				changeButtons();
 				
 			} else {
 				objectInformation.setVisible(false);
@@ -769,10 +851,13 @@ public class EditDialog extends JDialog {
 						
 						i.getKey().setValue(map);
 						
-					}
+					} // else if (UnidadeList)
 					
-				}
-			
+				} // for (EntrySet)
+				
+				isSaved = true;
+				changeButtons();
+				
 				if (!objects.contains(object))
 					objects.add(object);
 				
@@ -815,6 +900,10 @@ public class EditDialog extends JDialog {
 			
 		}
 		
+		private boolean isSaved() {
+			return isSaved;
+		}
+		
 		public String toString(){
 			return object.toString();
 		}
@@ -832,8 +921,10 @@ public class EditDialog extends JDialog {
 		File_Manager.defineModelos();
 		
 		try {
+	
 			EditDialog test = new EditDialog(ModeloTropas_Reader.getListModelos(), 
 					ModeloTropas.class.getDeclaredField("variableList"));
+			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
