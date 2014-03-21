@@ -51,10 +51,9 @@ import property_classes.Property_Number;
 import property_classes.Property_UnidadeList;
 import selecionar_mundo.GUI;
 import config.File_Manager;
-import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.Cores;
-import database.ModeloTropas;
+import database.Mundo;
 import database.Unidade;
 
 /**
@@ -219,9 +218,9 @@ public class EditDialog extends JDialog {
 						
 					variableMap.put(obj, (ArrayList<Property>)variableField.get(obj));
 					
-					createInterface(obj);
+					objects.add(obj);
 					
-					interfaceList.get(interfaceList.size()-1).isSaved = false;
+					createInterface(obj);
 					
 					addInterfaceToScroll(interfaceList.get(interfaceList.size()-1),
 							interfaceList.size()-1);
@@ -235,6 +234,8 @@ public class EditDialog extends JDialog {
 					selectedInterface.setSelected(false);
 					
 					interfaceList.get(interfaceList.size()-1).setSelected(true);
+					
+					selectedInterface.saveObejct();
 					
 				} catch (InstantiationException | IllegalAccessException
 						| IllegalArgumentException e) {
@@ -342,17 +343,10 @@ public class EditDialog extends JDialog {
 		
 		saveButton.setEnabled(!selectedInterface.isSaved());
 		
-		if (selectedInterface.isSaved()) {
-			upButton.setEnabled(interfaceList.indexOf(selectedInterface) != 0);
+		upButton.setEnabled(interfaceList.indexOf(selectedInterface) != 0);
 
-			downButton.setEnabled(interfaceList.indexOf(selectedInterface) 
-					!= interfaceList.size()-1);
-		} else {
-			
-			upButton.setEnabled(false);
-			downButton.setEnabled(false);
-			
-		}
+		downButton.setEnabled(interfaceList.indexOf(selectedInterface) 
+				!= interfaceList.size()-1);
 		
 	}
 	
@@ -376,10 +370,11 @@ public class EditDialog extends JDialog {
 		private boolean isSaved = true;
 		
 		// The symbol to be added to the objectName when it is unsaved
-		private JLabel unsavedSignal;
+		private JLabel unsavedSignal = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				GUI.class.getResource("/images/teste.png"))));
 		
 		/**
-		 * Maps the objects properties to an object that contains the property's value
+		 * Maps the object's properties to an object that contains the property's value
 		 * <br>This is the mapping that is made depending on the type of property:
 		 * <br>
 		 * <br> Nome : JTextField
@@ -397,8 +392,6 @@ public class EditDialog extends JDialog {
 			createNamePanel(object.toString());
 			
 			createInformationPanel(list);
-			
-			
 			
 		}
 		
@@ -495,11 +488,11 @@ public class EditDialog extends JDialog {
 			nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
 				public void removeUpdate(DocumentEvent arg0) {
-					changedSomething();
+					setSaved(false);
 				}				
 				
 				public void insertUpdate(DocumentEvent arg0) {
-					changedSomething();
+					setSaved(false);
 				}
 				
 				public void changedUpdate(DocumentEvent arg0) {}
@@ -536,7 +529,7 @@ public class EditDialog extends JDialog {
 			checkBox.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
-					changedSomething();
+					setSaved(false);
 				}
 			});
 			
@@ -575,7 +568,7 @@ public class EditDialog extends JDialog {
 				button.addActionListener(new ActionListener() {
 					
 					public void actionPerformed(ActionEvent arg0) {
-						changedSomething();
+						setSaved(false);
 					}
 				});
 				
@@ -674,11 +667,11 @@ public class EditDialog extends JDialog {
 			txt.getDocument().addDocumentListener(new DocumentListener() {
 				
 				public void removeUpdate(DocumentEvent arg0) {
-					changedSomething();
+					setSaved(false);
 				}
 				
 				public void insertUpdate(DocumentEvent arg0) {
-					changedSomething();
+					setSaved(false);
 				}
 				
 				public void changedUpdate(DocumentEvent arg0) {}
@@ -721,11 +714,11 @@ public class EditDialog extends JDialog {
 				txt.getDocument().addDocumentListener(new DocumentListener() {
 					
 					public void removeUpdate(DocumentEvent arg0) {
-						changedSomething();
+						setSaved(false);
 					}
 					
 					public void insertUpdate(DocumentEvent arg0) {
-						changedSomething();
+						setSaved(false);
 					}
 					
 					public void changedUpdate(DocumentEvent arg0) {}
@@ -769,8 +762,18 @@ public class EditDialog extends JDialog {
 
 		}
 		
-		private void changedSomething() {
-			isSaved = false;
+		private void setSaved(boolean saved) {
+			
+			isSaved = saved;
+			
+			if (saved)
+				objectName.remove(unsavedSignal);
+			else
+				objectName.add(unsavedSignal,0);
+			
+			objectName.revalidate();
+			objectName.repaint();
+			
 			changeButtons();
 		}
 
@@ -855,11 +858,7 @@ public class EditDialog extends JDialog {
 					
 				} // for (EntrySet)
 				
-				isSaved = true;
-				changeButtons();
-				
-				if (!objects.contains(object))
-					objects.add(object);
+				setSaved(true);
 				
 			} else {
 				
@@ -922,8 +921,8 @@ public class EditDialog extends JDialog {
 		
 		try {
 	
-			EditDialog test = new EditDialog(ModeloTropas_Reader.getListModelos(), 
-					ModeloTropas.class.getDeclaredField("variableList"));
+			EditDialog test = new EditDialog(Mundo_Reader.getMundoList(), 
+					Mundo.class.getDeclaredField("variableList"));
 			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
