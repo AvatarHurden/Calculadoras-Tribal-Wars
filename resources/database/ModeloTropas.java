@@ -86,8 +86,7 @@ public class ModeloTropas {
 	}
 
 	/**
-	 * @param map
-	 *            A map<Unidade, BigDecimal>
+	 * @param map A map<Unidade, BigDecimal>
 	 */
 	public void setMap(Map<Unidade, BigDecimal> map) {
 
@@ -112,4 +111,27 @@ public class ModeloTropas {
 
 	}
 
+	public String getConfigText() {
+		
+		String s = "";
+		
+		s += ("\tnome=" + nome.getName() + "\n");
+
+		s += ("\tlanceiro=" + quantidades.get(Unidade.LANCEIRO) + "\n");
+		s += ("\tespadachim=" + quantidades.get(Unidade.ESPADACHIM) + "\n");
+		s += ("\tbárbaro=" + quantidades.get(Unidade.BÁRBARO) + "\n");
+		s += ("\tarqueiro=" + quantidades.get(Unidade.ARQUEIRO) + "\n");
+		s += ("\texplorador=" + quantidades.get(Unidade.EXPLORADOR) + "\n");
+		s += ("\tcavalaria_leve=" + quantidades.get(Unidade.CAVALOLEVE) + "\n");
+		s += ("\tarqueiro_a_cavalo=" + quantidades.get(Unidade.ARCOCAVALO) + "\n");
+		s += ("\tcavalaria_pesada=" + quantidades.get(Unidade.CAVALOPESADO) + "\n");
+		s += ("\taríete=" + quantidades.get(Unidade.ARÍETE) + "\n");
+		s += ("\tcatapulta=" + quantidades.get(Unidade.CATAPULTA) + "\n");
+		s += ("\tpaladino=" + quantidades.get(Unidade.PALADINO) + "\n");
+		s += ("\tnobre=" + quantidades.get(Unidade.NOBRE) + "\n");
+		s += ("\tmilícia=" + quantidades.get(Unidade.MILÍCIA) + "\n");
+
+		return s;
+	}
+	
 }

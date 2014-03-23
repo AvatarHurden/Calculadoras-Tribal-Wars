@@ -64,6 +64,7 @@ import database.Unidade;
  * @author Arthur
  * 
  */
+@SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 public class EditDialog extends JDialog {
 
 	List<Object> objects;
@@ -86,6 +87,7 @@ public class EditDialog extends JDialog {
 	
 	JButton saveButton, upButton, downButton;
 
+	//TODO not receive the Field, extract it from the objects
 	//TODO reduce time to run program
 	// 1 object = 991 milissegundos
 	// 56 objects = 2218 milissegundos
@@ -205,7 +207,7 @@ public class EditDialog extends JDialog {
 		c.insets = new Insets(10,0,10,0);
 		c.gridy = 0;
 		c.gridx = 0;
-		
+
 		JButton newButton = new JButton("Novo");
 		
 		newButton.addActionListener(new ActionListener() {
@@ -218,14 +220,16 @@ public class EditDialog extends JDialog {
 						
 					variableMap.put(obj, (ArrayList<Property>)variableField.get(obj));
 					
+					// Puts object in the list
 					objects.add(obj);
 					
+					// Creates the interface for the object
 					createInterface(obj);
 					
+					// Adds interface to the scroll
 					addInterfaceToScroll(interfaceList.get(interfaceList.size()-1),
 							interfaceList.size()-1);
 					
-//					repaint();
 					pack();
 					
 					scroll.getVerticalScrollBar().setValue(
@@ -330,6 +334,8 @@ public class EditDialog extends JDialog {
 		
 		c.gridx++;
 		rightPanel.add(downButton, c);
+		
+		JButton deleteButton = new JButton("Delete");
 		
 		c.gridx = 1;
 		panel.add(rightPanel,c);
@@ -602,7 +608,6 @@ public class EditDialog extends JDialog {
 
 		}
 
-		@SuppressWarnings("serial")
 		private JPanel makeNumberPanel(Property_Number variable) {
 
 			JPanel panel = makeDefaultPanel();
@@ -686,7 +691,6 @@ public class EditDialog extends JDialog {
 
 		}
 
-		@SuppressWarnings("serial")
 		private JPanel makeUnidadeListPanel(Property_UnidadeList variable) {
 
 			JPanel panel = makeDefaultPanel();
@@ -862,22 +866,23 @@ public class EditDialog extends JDialog {
 				
 			} else {
 				
-				String s;
+				String s = nameTextField.getText();
 				
 				do {					
 //				JOptionPane.showMessageDialog(null, 
 //						 nameTextField, "t", 1);
 					
-				s = (JOptionPane.showInputDialog(null, 
+				s = (String)(JOptionPane.showInputDialog(null, 
 						new JLabel("<html>Esse nome já está sendo utilizado.<br>Favor escolher outro.</html>"),
-						"Nome já utilizado", JOptionPane.ERROR_MESSAGE));
+						"Nome já utilizado", JOptionPane.ERROR_MESSAGE, null, null, s));
 				
 				} while (!isUniqueName(s));
 				
 				if (s != null) {
 					nameTextField.setText(s);
 					saveObejct();
-				}
+				} else
+					setSaved(false);
 			
 //				JOptionPane.showInputDialog(null);
 //				JOptionPane.showMessageDialog(null, "Esse nome já está sendo utilizado.\nFavor escolher outro.");

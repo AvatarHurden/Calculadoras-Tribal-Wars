@@ -13,7 +13,6 @@ import java.nio.file.Files;
  * 
  * Includes: - Mundo padrão - Mundos - ModeloTropas
  * 
- * 
  * @author Arthur
  * 
  */
@@ -92,6 +91,7 @@ public class File_Manager {
 
 					while ((s = in.readLine()) == null || !s.contains("}"))
 						modeloTropas += s + "\n";
+					
 
 				}
 
@@ -135,6 +135,8 @@ public class File_Manager {
 			if (!configurações.exists())
 				configurações.createNewFile();
 
+			Files.setAttribute(configurações.toPath(), "dos:hidden", false);
+			
 			FileWriter out = new FileWriter(configurações);
 
 			// save mundoPadrão
@@ -163,7 +165,7 @@ public class File_Manager {
 
 			// TODO add modelo mesmo
 
-			out.write("teste");
+			out.write(ModeloTropas_Reader.getModelosConfig());
 
 			out.write("\n");
 			out.write("}");
@@ -175,8 +177,8 @@ public class File_Manager {
 
 		} catch (IOException e) {
 
-			// TODO create dialog to show this
-
+			e.printStackTrace();
+				
 			System.out.println("Could not save");
 
 		}

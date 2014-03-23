@@ -5,6 +5,12 @@ import javax.swing.JFrame;
 import config.File_Manager;
 import frames.MainWindow;
 
+/**
+ * Calculadora Tribal Wars, uma ferramenta completa para o jogo Tribal Wars
+ * 
+ * @author Arthur
+ * @date 25/07/2013
+ */
 public class Main {
 
 	static selecionar_mundo.GUI selecionar;
@@ -44,7 +50,7 @@ public class Main {
 
 		File_Manager.defineModelos();
 
-		// File_Manager.save();
+//		File_Manager.save();
 
 		mainFrame = new MainWindow();
 		// Adicionando todas as ferramentas criadas

@@ -32,9 +32,11 @@ public class GUI extends JFrame {
 	JPanel panelMundo;
 
 	/**
-	 * Frame inicial, no qual ocorre a escolha do mundo Ele possui: - Logo do
-	 * programa - Tabela com as informações do mundo selecionado - Lista dos
-	 * mundos disponíveis - Botão para abrir o "MainWindow"
+	 * Frame inicial, no qual ocorre a escolha do mundo Ele possui:
+	 * <br> - Logo do programa 
+	 * <br>- Tabela com as informações do mundo selecionado 
+	 * <br>- Lista dos mundos disponíveis 
+	 * <br>- Botão para abrir o "MainWindow"
 	 */
 	public GUI() {
 
@@ -58,7 +60,7 @@ public class GUI extends JFrame {
 		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-
+		
 		constraints.gridwidth = 3;
 		addImage(constraints);
 

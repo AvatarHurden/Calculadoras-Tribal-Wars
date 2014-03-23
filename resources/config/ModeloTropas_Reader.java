@@ -65,9 +65,11 @@ public class ModeloTropas_Reader {
 
 			Properties i = new Properties();
 			i.load(new StringReader(total));
-
-			ModeloTropas modelo = new ModeloTropas(i);
-			listModelos.add(modelo);
+			
+			if (!i.isEmpty()) {
+				ModeloTropas modelo = new ModeloTropas(i);
+				listModelos.add(modelo);
+			}
 		}
 
 		in.close();
@@ -98,4 +100,16 @@ public class ModeloTropas_Reader {
 	public static List<ModeloTropas> getListModelos() {
 		return listModelos;
 	}
+	
+	public static String getModelosConfig() {
+		
+		String section = "";
+
+		for (ModeloTropas i : listModelos)
+			section += i.getConfigText();
+
+		return section;
+		
+	}
+	
 }

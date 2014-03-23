@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import main.Main;
 import config.File_Manager;
 import config.Mundo_Reader;
+import custom_components.EditDialog;
+import database.Mundo;
 
 @SuppressWarnings("serial")
 public class Escolha_de_mundo extends JPanel{
@@ -24,6 +26,9 @@ public class Escolha_de_mundo extends JPanel{
 	private JButton startButton;
 	
 	private JButton padrãoButton;
+	
+	//TODO make this better
+	private JButton editButton;
 	
 	/**
 	 * JPanel com um comboBox para escolher o mundo e um botão para iniciar o frame de ferramentas
@@ -99,6 +104,32 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.gridy = 1;
 		constraints.gridx = 0;
 		add(startButton, constraints);
+		
+		editButton = new JButton("Edit");
+		
+		editButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+					
+					EditDialog dialog = new EditDialog(Mundo_Reader.getMundoList(),
+							Mundo.class.getDeclaredField("variableList"));
+					
+					gui.changeInformationPanel();
+					
+				} catch (NoSuchFieldException | SecurityException e) {
+					e.printStackTrace();
+				}
+				
+				
+				
+			}
+		});
+		
+		constraints.gridy = 2;
+		constraints.gridx = 0;
+		add(editButton, constraints);
 		
 		changePadrãoButton();
 		

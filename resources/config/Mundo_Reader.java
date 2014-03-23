@@ -82,8 +82,7 @@ public class Mundo_Reader {
 	}
 
 	/**
-	 * Saves the configurations into the config files, creating the file if it
-	 * does not exist
+	 * Saves the configurations into a string
 	 */
 	public static String getMundosConfig() {
 
