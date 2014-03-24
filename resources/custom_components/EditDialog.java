@@ -337,6 +337,46 @@ public class EditDialog extends JDialog {
 		
 		JButton deleteButton = new JButton("Delete");
 		
+		deleteButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//TODO change text
+				int delete = JOptionPane.showConfirmDialog(null, 
+						new JLabel("Deseja deletar para sempre?"),
+						"Confirmar", JOptionPane.YES_NO_OPTION);
+				
+				if (delete == JOptionPane.YES_OPTION) {
+					
+					int position = interfaceList.indexOf(selectedInterface);
+					
+					removeInterfaceFromScroll(selectedInterface);
+					
+					interfaceList.remove(selectedInterface);
+					objects.remove(selectedInterface.object);
+					
+					for (int i = position; i < interfaceList.size(); i++) {
+						removeInterfaceFromScroll(interfaceList.get(i));
+						addInterfaceToScroll(interfaceList.get(i), i);
+					}
+					
+					// Se o último objeto foi deletado, seleciona o
+					// anterior. Caso contrário, o seguinte
+					if (position == interfaceList.size())
+						interfaceList.get(position-1).setSelected(true);
+					else
+						interfaceList.get(position).setSelected(true);
+					
+					changeButtons();
+					
+				}
+				
+			}
+		});
+		
+		c.gridx++;
+		rightPanel.add(deleteButton, c);
+		
 		c.gridx = 1;
 		panel.add(rightPanel,c);
 		
