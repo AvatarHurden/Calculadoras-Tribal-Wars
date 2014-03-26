@@ -54,13 +54,14 @@ import selecionar_mundo.GUI;
 import config.File_Manager;
 import config.Mundo_Reader;
 import database.Cores;
-import database.Mundo;
 import database.Unidade;
 
 /**
- * Dialog that contains info to edit a list (Mundos and ModeloTropas)
- * 
- * 
+ * Creates a dialog that enables the user to edit a list of objects (that are compatible with the EditDialog)
+ * <br>It remains always on top, and can allow the user to create new objects, delete objects and
+ * change the order of the objects, besides editing existing ones.
+ * <br>This class edits the original <code>List<//Object></code> provided, accessing the objects variables
+ * through the <variable>variableName</variable> <code>Field</code>.
  * 
  * @author Arthur
  * 
@@ -88,19 +89,39 @@ public class EditDialog extends JDialog {
 	
 	JButton saveButton, upButton, downButton;
 
-	//TODO not receive the Field, extract it from the objects
 	//TODO reduce time to run program
 	// 1 object = 991 milissegundos
 	// 56 objects = 2218 milissegundos
 	// teoricamente, a contrução sem objetos demora 968,69 milissegundos
-	public EditDialog(List objects, Field variableField) {
+	/**
+	 * Creates a dialog that enables the user to edit a list of objects (that are compatible with the EditDialog)
+	 * <br>It remains always on top, and can allow the user to create new objects, delete objects and
+	 * change the order of the objects, besides editing existing ones.
+	 * <br>This class edits the original <code>List<//Object></code> provided, accessing the object's variables
+	 * through the <variable>variableName</variable> <code>Field</code>.
+	 * 
+	 * @param objects 
+	 * 			<br><code>List<//Object></code> with the objects to be edited.
+	 * @param variableName
+	 * 			<br>The name of the <code>Field</code> that contains the object's properties.
+	 * @param selected
+	 * 			<br>The object that will be selected on start.
+	 * @throws NoSuchFieldException
+	 * 			<br>If the provided <code>String</code> does not correspond to a <code>Field</code> of the
+	 * 				objects
+	 * @throws SecurityException
+	 * 			<br>If the <code>Field</code> cannot be accessed.
+	 */
+	public EditDialog(List objects, String variableName, int selected) 
+			throws NoSuchFieldException, SecurityException {
 		
 		this.objects = objects;
 		
-		this.variableField = variableField;
+		variableField = objects.get(0).getClass().getDeclaredField(variableName);
 		
 		variableMap = new HashMap<Object, ArrayList<Property>>();
 		
+		// Puts every object and their variable in a map, for reference
 		for(Object o : objects)
 			try {
 				variableMap.put(o, (ArrayList<Property>)variableField.get(o));
@@ -117,8 +138,10 @@ public class EditDialog extends JDialog {
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(0,0,0,0);
 		
+		// Create and add the right-side Panel
 		makeScrollPanel(c);
 		
+		// Creates an ObjectInterface for every object, adding it to the scrollPanel
 		for (Object o : objects){
 			createInterface(o);
 			addInterfaceToScroll(interfaceList.get(objects.indexOf(o)), listNumber++);
@@ -136,17 +159,25 @@ public class EditDialog extends JDialog {
 		c.gridy++;
 		add(informationPanel,c);
 
+		// Makes and adds the bottom panel, with the buttons
 		c.gridy++;
 		c.gridwidth = 2;
-//		c.insets = new Insets(10,0,0,0);
 		add(makeEditPanel(), c);
 		
-		interfaceList.get(0).setSelected(true);
-		
+		// Packs the dialog and solidifies its size
 		pack();
+		setResizable(false);
+		
+		// Selects the desired object and puts the scroll in the necessary position
+		interfaceList.get(selected).setSelected(true);		
+		scroll.getVerticalScrollBar().setValue(selected*32);
+		
+		// Puts it always on top of the program
+		setModal(true);
+		
 		setVisible(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		
+				
 	}
 	
 	private void createInterface(Object o) {
@@ -1005,8 +1036,8 @@ public class EditDialog extends JDialog {
 		
 		try {
 	
-			EditDialog test = new EditDialog(Mundo_Reader.getMundoList(), 
-					Mundo.class.getDeclaredField("variableList"));
+			new EditDialog(Mundo_Reader.getMundoList(), 
+				"variableList", 0);
 			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block

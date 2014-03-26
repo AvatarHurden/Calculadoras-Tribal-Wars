@@ -109,7 +109,7 @@ public class Escolha_de_mundo extends JPanel{
 				try {
 					
 					EditDialog dialog = new EditDialog(Mundo_Reader.getMundoList(),
-							Mundo.class.getDeclaredField("variableList"));
+							"variableList", getSelectedIndex());
 					
 					selectionBox.removeItemListener(selectionBox.getItemListeners()[0]);
 					selectionBox.removeAllItems();
@@ -119,7 +119,6 @@ public class Escolha_de_mundo extends JPanel{
 				} catch (NoSuchFieldException | SecurityException e) {
 					e.printStackTrace();
 				}
-				
 				
 				
 			}

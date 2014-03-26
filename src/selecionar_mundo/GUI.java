@@ -24,6 +24,7 @@ import database.Cores;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 
+	// Make this use the MundoList, delete propertyList
 	List<Properties> propertyList = new ArrayList<Properties>();
 
 	Informações_de_mundo informationTable;
