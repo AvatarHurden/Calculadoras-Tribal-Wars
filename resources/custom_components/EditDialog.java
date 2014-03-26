@@ -994,7 +994,7 @@ public class EditDialog extends JDialog {
 	}
 	
 	public static void main(String args[]) {
-
+	
 		File_Manager.read();
 
 		File_Manager.defineMundos();

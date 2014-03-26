@@ -88,8 +88,7 @@ public class GUI extends JFrame {
 	/**
 	 * Cria um JLabel com a imagem do logo, e adiciona no frame
 	 * 
-	 * @param c
-	 *            GridBagConstraints para adicionar
+	 * @param c  GridBagConstraints para adicionar
 	 */
 	private void addImage(GridBagConstraints c) {
 
@@ -108,8 +107,7 @@ public class GUI extends JFrame {
 	 * Cria um JPanel com a tabela de informações do mundo, lista de mundos e
 	 * botão para iniciar e o adiciona no frame
 	 * 
-	 * @param c
-	 *            GridBagConstraints para adicionar
+	 * @param c  GridBagConstraints para adicionar
 	 */
 	private void addWorldPanel(GridBagConstraints c) {
 
@@ -140,6 +138,11 @@ public class GUI extends JFrame {
 
 		// Tabela de informações
 		informationTable = new Informações_de_mundo();
+		
+		// Makes the table have a size that will be used as the parameter for te=he size
+		// of the selection panel
+		informationTable.changeProperties(propertyList.get(0));
+		informationTable.revalidate();
 
 		panelMundo.add(informationTable, constraints);
 
@@ -176,5 +179,5 @@ public class GUI extends JFrame {
 		informationTable.revalidate();
 
 	}
-
+	
 }

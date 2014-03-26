@@ -27,47 +27,41 @@ public class Escolha_de_mundo extends JPanel{
 	
 	private JButton padrãoButton;
 	
-	//TODO make this better
 	private JButton editButton;
+	
+	private GUI gui;
 	
 	/**
 	 * JPanel com um comboBox para escolher o mundo e um botão para iniciar o frame de ferramentas
 	 * 
 	 * @param gui Frame em que será inserido
 	 */
-	public Escolha_de_mundo(final GUI gui) {
+	public Escolha_de_mundo (final GUI gui) {
+		
+		this.gui = gui;
+		
+		int height = gui.informationTable.getPreferredSize().height-80;
 		
 		setOpaque(false);
 		
-		setLayout(new GridBagLayout());
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] { 300 };
+		layout.rowHeights = new int[] { height/2, 40, 40, height/2 };
+		layout.columnWeights = new double[] { 0, Double.MIN_VALUE };
+		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+		setLayout(layout);
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.insets = new Insets(5, 5, 5, 5);
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		
-		String[] nomeMundos = new String[Mundo_Reader.getMundoList().size()];
-	
-		// Adiciona o nome de todos os mundos para a lista que será utilizada
-		// no comboBox
-		for (int i = 0; i < Mundo_Reader.getMundoList().size(); i++)
-			nomeMundos[i] = Mundo_Reader.getMundo(i).toString();
+		selectionBox = new JComboBox<String>();
 		
-		selectionBox = new JComboBox<String>(nomeMundos);
+		setSelectionBox();
 		
-		selectionBox.setSelectedItem(File_Manager.getMundoPadrão());
-		
-		selectionBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				
-				// Cada vez que o mundo selecionado é alterado, altera as informações da tabela
-				gui.changeInformationPanel();
-				
-				changePadrãoButton();
-				
-			}
-		});
-		
+		constraints.gridy = 1;
+		constraints.anchor = GridBagConstraints.CENTER;
 		add(selectionBox, constraints);
 		
 		padrãoButton = new JButton("Padrão");
@@ -83,7 +77,8 @@ public class Escolha_de_mundo extends JPanel{
 			}
 		});
 		
-		constraints.gridx = 1;
+		constraints.gridy = 3;
+		constraints.anchor = GridBagConstraints.SOUTHEAST;
 		add(padrãoButton, constraints);
 		
 		startButton = new JButton("Iniciar");
@@ -101,8 +96,8 @@ public class Escolha_de_mundo extends JPanel{
 			}
 		});
 		
-		constraints.gridy = 1;
-		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.CENTER;
 		add(startButton, constraints);
 		
 		editButton = new JButton("Edit");
@@ -116,7 +111,10 @@ public class Escolha_de_mundo extends JPanel{
 					EditDialog dialog = new EditDialog(Mundo_Reader.getMundoList(),
 							Mundo.class.getDeclaredField("variableList"));
 					
-					gui.changeInformationPanel();
+					selectionBox.removeItemListener(selectionBox.getItemListeners()[0]);
+					selectionBox.removeAllItems();
+					
+					setSelectionBox();
 					
 				} catch (NoSuchFieldException | SecurityException e) {
 					e.printStackTrace();
@@ -126,12 +124,34 @@ public class Escolha_de_mundo extends JPanel{
 				
 			}
 		});
-		
-		constraints.gridy = 2;
-		constraints.gridx = 0;
+
+		constraints.gridy = 0;
+		constraints.anchor = GridBagConstraints.NORTHEAST;
 		add(editButton, constraints);
 		
 		changePadrãoButton();
+		
+	}
+	
+	private void setSelectionBox() {
+		
+		// Adiciona o nome de todos os mundos para a lista que será utilizada
+		// no comboBox
+		for (Mundo m : Mundo_Reader.getMundoList())
+			selectionBox.addItem(m.toString());
+				
+		selectionBox.setSelectedItem(File_Manager.getMundoPadrão());
+			
+		selectionBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+						
+				// Cada vez que o mundo selecionado é alterado, altera as informações da tabela
+				gui.changeInformationPanel();
+						
+				changePadrãoButton();
+					
+			}
+		});
 		
 	}
 	
