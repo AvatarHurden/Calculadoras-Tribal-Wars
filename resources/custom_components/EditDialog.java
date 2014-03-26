@@ -32,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -123,6 +124,13 @@ public class EditDialog extends JDialog {
 			addInterfaceToScroll(interfaceList.get(objects.indexOf(o)), listNumber++);
 		}
 		
+		// Makes the information panel as thick as any given objectInformation,
+		// and also makes it as tall as necessary to fit an integer number of namePanels
+		informationPanel.setPreferredSize(new Dimension(
+				interfaceList.get(0).objectInformation.getPreferredSize().width,
+				(int)Math.ceil(interfaceList.get(0).
+						objectInformation.getPreferredSize().height/32+1)*32));
+		
 		informationPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		
 		c.gridy++;
@@ -186,6 +194,9 @@ public class EditDialog extends JDialog {
 		scroll.setPreferredSize(new Dimension(160,
 				informationPanel.getPreferredSize().height));
 		
+		// Half the size of a namePanel per unit
+		scroll.getVerticalScrollBar().setUnitIncrement(11);
+		
 		add(scroll,c);
 		
 	}
@@ -199,10 +210,10 @@ public class EditDialog extends JDialog {
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] { 160, informationPanel.getPreferredSize().width };
 		layout.rowHeights = new int[] { 20 };
-		layout.columnWeights = new double[] { 1, Double.MIN_VALUE };
+		layout.columnWeights = new double[] { 0, Double.MIN_VALUE };
 		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		panel.setLayout(layout);
-
+	
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(10,0,10,0);
 		c.gridy = 0;
@@ -289,6 +300,8 @@ public class EditDialog extends JDialog {
 					addInterfaceToScroll(selectedInterface, position-1);
 					addInterfaceToScroll(interfaceList.get(position), position);
 			
+					setScrollPosition(scroll.getVerticalScrollBar(), true);
+					
 					revalidate();
 					
 					changeButtons();
@@ -321,7 +334,9 @@ public class EditDialog extends JDialog {
 					addInterfaceToScroll(selectedInterface, position+1);
 					addInterfaceToScroll(interfaceList.get(position), position);
 					
-					scroll.getVerticalScrollBar().setValue(32*38);
+					setScrollPosition(scroll.getVerticalScrollBar(), false);
+					
+//					scroll.getVerticalScrollBar().setValue(32*2);
 					
 					revalidate();
 					
@@ -341,10 +356,13 @@ public class EditDialog extends JDialog {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				
-				//TODO change text
-				int delete = JOptionPane.showConfirmDialog(null, 
-						new JLabel("Deseja deletar para sempre?"),
-						"Confirmar", JOptionPane.YES_NO_OPTION);
+				String[] options = {"Sim", "Não" };
+				
+				int delete = JOptionPane.showOptionDialog(null, 
+						new JLabel("<html>Tem certeza que deseja deletar?<br>Essa ação não " +
+								"pode ser desfeita.</html>"),
+						null, JOptionPane.YES_NO_OPTION, 
+						JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 				
 				if (delete == JOptionPane.YES_OPTION) {
 					
@@ -384,6 +402,27 @@ public class EditDialog extends JDialog {
 		
 	}
 	
+	private void setScrollPosition(JScrollBar scrollBar, boolean up) {
+		
+		// This is the size of a single panel in the scroll
+		final int SIZE = 32;
+		
+		// If the UP button was pressed and the interface's top is on top of the scrollbar
+		if (up && (selectedInterface.objectName.getLocation().y <= scrollBar.getValue()))
+			// Puts the scrollbar at the position of the interface, putting it up by a
+			// full "page" of the scroll and then down by a panel
+			scrollBar.setValue(interfaceList.indexOf(selectedInterface)*SIZE
+					-informationPanel.getPreferredSize().height+SIZE);
+		
+		// If the DOWN button was pressed and the interface's bottom is under the
+		// bottom of the scroll (value+height)
+		if (!up && (selectedInterface.objectName.getLocation().y+SIZE
+				>= scrollBar.getValue()+informationPanel.getPreferredSize().height)) 
+			// Sets the scrollbar at the top of the interface
+			scrollBar.setValue(interfaceList.indexOf(selectedInterface)*SIZE);
+			
+	}
+	
 	// Turns the save, up and down buttons on or off as needed
 	private void changeButtons() {
 		
@@ -417,7 +456,7 @@ public class EditDialog extends JDialog {
 		
 		// The symbol to be added to the objectName when it is unsaved
 		private JLabel unsavedSignal = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				GUI.class.getResource("/images/teste.png"))));
+				GUI.class.getResource("/images/asterísco_vermelho.png"))));
 		
 		/**
 		 * Maps the object's properties to an object that contains the property's value
