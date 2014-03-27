@@ -25,6 +25,7 @@ import database.Cores;
 public class GUI extends JFrame {
 
 	// Make this use the MundoList, delete propertyList
+	//TODO import MundoList
 	List<Properties> propertyList = new ArrayList<Properties>();
 
 	Informações_de_mundo informationTable;
@@ -142,7 +143,7 @@ public class GUI extends JFrame {
 		
 		// Makes the table have a size that will be used as the parameter for te=he size
 		// of the selection panel
-		informationTable.changeProperties(propertyList.get(0));
+		informationTable.changeProperties(Mundo_Reader.getMundoList().get(0));
 		informationTable.revalidate();
 
 		panelMundo.add(informationTable, constraints);
@@ -175,7 +176,7 @@ public class GUI extends JFrame {
 	 */
 	public void changeInformationPanel() {
 
-		informationTable.changeProperties(propertyList.get(selectionPanel
+		informationTable.changeProperties(Mundo_Reader.getMundoList().get(selectionPanel
 				.getSelectedIndex()));
 		informationTable.revalidate();
 

@@ -8,10 +8,15 @@ public class Property_Nome implements Property{
 		name = s;
 	}
 	
+	//TODO learn where this is used
 	public String getName() {
-		return name;
+		return "Nome";
 	}
 
+	public String getValueName() {
+		return name;
+	}
+	
 	/**
 	 * Takes a string as parameter
 	 */

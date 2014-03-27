@@ -19,6 +19,15 @@ public class Property_Boolean implements Property{
 		
 	}
 	
+	public String getValueName() {
+		
+		if (isTrue)
+			return "Ativado";
+		else
+			return "Desativado";
+		
+	}
+	
 	public boolean getValue() {
 		return isTrue;
 	}

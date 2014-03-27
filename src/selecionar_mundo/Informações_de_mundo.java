@@ -9,9 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import custom_components.Ferramenta;
+import property_classes.Property;
 
+import custom_components.Ferramenta;
 import database.Cores;
+import database.Mundo;
 
 @SuppressWarnings("serial")
 public class Informações_de_mundo extends JPanel {
@@ -20,6 +22,7 @@ public class Informações_de_mundo extends JPanel {
 	private Ferramenta ferramenta_cor;
 
 	private Properties prop;
+	private Mundo mundo;
 
 	/**
 	 * Basicamente uma tabela com as informações de um mundo específico
@@ -38,11 +41,11 @@ public class Informações_de_mundo extends JPanel {
 	 * @param prop
 	 *            Propriedades básicas
 	 */
-	public void changeProperties(Properties prop) {
+	public void changeProperties(Mundo mundo) {
 
 		removeAll();
 
-		this.prop = prop;
+		this.mundo = mundo;
 
 		ferramenta_cor = new Ferramenta();
 
@@ -69,46 +72,57 @@ public class Informações_de_mundo extends JPanel {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 0;
 
-		gbc.gridy++;
-		add(panelProperty("nome"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("velocidade"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("modificador"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("moral"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("sistemaDePesquisa"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("igreja"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("bonusNoturno"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("bandeira"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("arqueiro"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("paladino"), gbc);
-
-		if (Boolean.parseBoolean(prop.getProperty("paladino")) == true) {
-			gbc.gridy++;
-			add(panelProperty("itensAprimorados"), gbc);
+		for (Property p : mundo.variableList) {
+			
+			// Only adds if paladin is active OR the property to be added is not "Itens Aprimorados"
+			// TODO maybe add a way to subordinar items a outros items.
+			if (!p.getName().equals("Itens Aprimorados") || mundo.hasPaladino() == true) {
+				gbc.gridy++;
+				add(panelProperty(p), gbc);
+			}
+			
 		}
-
-		gbc.gridy++;
-		add(panelProperty("milicia"), gbc);
-
-		gbc.gridy++;
-		add(panelProperty("cunhagemDeMoedas"), gbc);
+		
+//		gbc.gridy++;
+//		add(panelProperty("nome"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("velocidade"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("modificador"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("moral"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("sistemaDePesquisa"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("igreja"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("bonusNoturno"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("bandeira"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("arqueiro"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("paladino"), gbc);
+//
+//		if (Boolean.parseBoolean(prop.getProperty("paladino")) == true) {
+//			gbc.gridy++;
+//			add(panelProperty("itensAprimorados"), gbc);
+//		}
+//
+//		gbc.gridy++;
+//		add(panelProperty("milicia"), gbc);
+//
+//		gbc.gridy++;
+//		add(panelProperty("cunhagemDeMoedas"), gbc);
 
 	}
 
@@ -218,6 +232,38 @@ public class Informações_de_mundo extends JPanel {
 		default:
 			return null;
 		}
+	}
+	
+	private JPanel panelProperty (Property property) {
+		
+		JPanel panel = new JPanel();
+		
+		panel.setBackground(ferramenta_cor.getNextColor());
+
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] { 150, 20, 140 };
+		gbl_panel.rowHeights = new int[] { 20 };
+		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+		panel.setLayout(gbl_panel);
+
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.insets = new Insets(5, 5, 5, 5);
+
+		JLabel lblName = new JLabel(property.getName());
+
+		gbc_panel.gridx = 0;
+		gbc_panel.gridy = 0;
+		panel.add(lblName, gbc_panel);
+
+		JLabel lblValue = new JLabel(property.getValueName());
+
+		gbc_panel.gridx = 2;
+		gbc_panel.gridy = 0;
+		panel.add(lblValue, gbc_panel);
+		
+		return panel;
+		
 	}
 
 	/**

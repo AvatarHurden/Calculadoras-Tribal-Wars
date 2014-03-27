@@ -599,7 +599,7 @@ public class EditDialog extends JDialog {
 			panel.add(new JLabel("Nome"), c);
 			
 			nameTextField = new JTextField(16);
-			nameTextField.setText(variable.getName());
+			nameTextField.setText(variable.getValueName());
 			
 			nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			

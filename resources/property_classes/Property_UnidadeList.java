@@ -29,6 +29,13 @@ public class Property_UnidadeList extends HashMap<Unidade, BigDecimal> implement
 	}
 	
 	/**
+	 * This method does not apply to UnidadeList
+	 */
+	public String getValueName(){
+		return null;
+	}
+	
+	/**
 	 * Takes a hashMap<Unidade, BigDecimal> as parameter
 	 */
 	@SuppressWarnings("unchecked")

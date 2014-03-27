@@ -24,6 +24,13 @@ public class Property_Escolha implements Property {
 		return name;
 	}
 	
+	public String getValueName() {
+		return options[selectedOption];
+	}
+	
+	/**
+	 * @return The selected object with no whitespace, to be written to the file
+	 */
 	public String getSelected() {
 		return options[selectedOption].replaceAll(" ", "_");
 	}

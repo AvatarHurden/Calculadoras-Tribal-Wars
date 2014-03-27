@@ -15,10 +15,10 @@ public class Mundo_Reader {
 
 	// Lista das propriedades lidas
 	static List<Properties> propertyList = new ArrayList<Properties>();
-
+	
 	// Lista dos mundos
 	static List<Mundo> mundoList = new ArrayList<Mundo>();
-
+	
 	// Mundo Selecionado
 	public static Mundo MundoSelecionado;
 

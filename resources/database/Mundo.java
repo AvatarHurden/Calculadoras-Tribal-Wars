@@ -393,7 +393,7 @@ public class Mundo {
 	// }
 
 	public String toString() {
-		return nome.getName();
+		return nome.getValueName();
 	}
 
 //	public String getNome() {

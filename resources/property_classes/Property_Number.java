@@ -17,15 +17,15 @@ public class Property_Number implements Property {
 	}
 	
 	public String getName() {
-		
 		return name;
-		
+	}
+	
+	public String getValueName() {
+		return number.toString();
 	}
 	
 	public BigDecimal getValue() {
-		
 		return number;
-		
 	}
 
 	/**

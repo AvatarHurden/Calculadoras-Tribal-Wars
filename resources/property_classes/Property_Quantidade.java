@@ -21,12 +21,20 @@ public class Property_Quantidade implements Property{
 		return unidade.nome();
 	}
 	
+	public String getValueName() {
+		return unidade.toString();
+	}
+	
 	public Unidade getUnidade() {
 		return unidade;
 	}
 	
 	public BigDecimal getValue(){
 		return quantidade;
+	}
+
+	public void setValue(Object i) {
+		quantidade = (BigDecimal) i;
 	}
 
 }
