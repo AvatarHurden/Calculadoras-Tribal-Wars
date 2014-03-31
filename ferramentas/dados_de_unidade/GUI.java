@@ -3,6 +3,8 @@ package dados_de_unidade;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +18,6 @@ import config.Mundo_Reader;
 import custom_components.Ferramenta;
 import custom_components.ToolPanel;
 import custom_components.TroopFormattedTextField;
-import custom_components.TroopListPanel;
 import database.Cores;
 import database.Unidade;
 
@@ -35,11 +36,15 @@ public class GUI extends Ferramenta {
 	PanelSoma total = new PanelSoma();
 
 	/**
-	 * Ferramenta com informações de unidades Possui: - Ataque - Defesas - Saque
-	 * - Custo de recursos para produção - Uso de população
+	 * Ferramenta com informações de unidades. Possui: 
+	 * <br>- Ataque 
+	 * <br>- Defesas 
+	 * <br>- Saque
+	 * <br>- Custo de recursos para produção 
+	 * <br>- Uso de população
 	 * 
 	 * Em caso de mundo com níveis, é possível escolher o nível das unidades
-	 * (não é limitado a 15)
+	 * (não é limitado a 15 níveis)
 	 */
 	public GUI() {
 
@@ -62,8 +67,23 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 5, 5, 5);
 
+		ActionListener action = new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				for (TroopFormattedTextField i : mapQuantidades.values())
+					i.setText("");
+				
+				for (PanelUnidade p : panelUnidadeList)
+					p.getNível().setSelectedIndex(0);
+				
+			}
+		};
+		
+		ToolPanel test = new ToolPanel(action, mapQuantidades);
+		
 		gbc.anchor = GridBagConstraints.EAST;
-		add(new TroopListPanel(mapQuantidades), gbc);
+		add(test.getModelosPanel(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -85,10 +105,12 @@ public class GUI extends Ferramenta {
 
 		gbc.gridy = 3;
 		gbc.gridx = 0;
+		add(test.getResetPanel(), gbc);
+		
+		gbc.gridx = 0;
 		addPanelTotal(gbc);
 		
 	}
-
 
 	/**
 	 * Adiciona um cabeçalho com os nomes das informações de cada coluna

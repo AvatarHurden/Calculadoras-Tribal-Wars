@@ -7,7 +7,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,21 +34,42 @@ import database.Unidade;
  *
  */
 public class ToolPanel {
-
-	private Method clearMethod;
 	
 	// The class will contain a panel for every function, and the caller will
 	// decide where each one will be placed
-	private JPanel resetPanel, modelosPanel;
+	private JPanel resetPanel, modelosPanel, bandeiraPanel;
 	
-	public ToolPanel(Ferramenta tool, Method test, 
-			Map<Unidade, TroopFormattedTextField> textFields) {
+	/**
+	 * 
+	 * @param reset The actionListener that will be added to the reset button
+	 * @param textFields A Map that contains TroopFormattedTextFields to be used in the ModeloTropas editor
+	 */
+	public ToolPanel(ActionListener reset, Map<Unidade, TroopFormattedTextField> textFields) {
 		
-		clearMethod = test;
+		makeResetPanel(reset);
 		
 		modelosPanel = new ModeloTropasPanel(textFields);
 		
+	}
+	
+	private void makeResetPanel(ActionListener listener) {
 		
+		resetPanel = new JPanel();
+		resetPanel.setOpaque(false);
+		
+		JButton resetButton = new JButton("Reset");
+		resetButton.addActionListener(listener);
+		
+		resetPanel.add(resetButton);
+		
+	}
+	
+	public JPanel getResetPanel() {
+		return resetPanel;
+	}
+	
+	public JPanel getModelosPanel() {
+		return modelosPanel;
 	}
 	
 	private class ModeloTropasPanel extends JPanel {

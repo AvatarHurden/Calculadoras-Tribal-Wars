@@ -533,6 +533,10 @@ public class PanelUnidade {
 	protected TroopFormattedTextField getQuantidade() {
 		return quantidade;
 	}
+	
+	protected JComboBox<Integer> getNível() {
+		return nível;
+	}
 
 	/**
 	 * @return JPanel com as labels dos dados principais

@@ -137,7 +137,7 @@ public class EditDialog extends JDialog {
 		c.insets = new Insets(0,0,0,0);
 		
 		// Create and add the right-side Panel
-		makeScrollPanel(c);
+		getContentPane().add(makeScrollPanel(),c);
 		
 		// Creates an ObjectInterface for every object, adding it to the scrollPanel
 		for (Object o : objects){
@@ -155,12 +155,12 @@ public class EditDialog extends JDialog {
 		informationPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		
 		c.gridy++;
-		add(informationPanel,c);
+		getContentPane().add(informationPanel,c);
 
 		// Makes and adds the bottom panel, with the buttons
 		c.gridy++;
 		c.gridwidth = 2;
-		add(makeEditPanel(), c);
+		getContentPane().add(makeEditPanel(), c);
 		
 		// Packs the dialog and solidifies its size
 		pack();
@@ -207,9 +207,10 @@ public class EditDialog extends JDialog {
 		
 	}
 
-	private void makeScrollPanel(GridBagConstraints c) {
+	private JScrollPane makeScrollPanel() {
 		
 		namePanel = new JPanel();
+		namePanel.setBackground(Cores.FUNDO_CLARO);
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] { 140 };
@@ -226,8 +227,7 @@ public class EditDialog extends JDialog {
 		// Half the size of a namePanel per unit
 		scroll.getVerticalScrollBar().setUnitIncrement(11);
 		
-		add(scroll,c);
-		
+		return scroll;		
 	}
 	
 	private JPanel makeEditPanel() {
