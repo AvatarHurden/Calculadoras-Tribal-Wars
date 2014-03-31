@@ -51,8 +51,6 @@ import property_classes.Property_Nome;
 import property_classes.Property_Number;
 import property_classes.Property_UnidadeList;
 import selecionar_mundo.GUI;
-import config.File_Manager;
-import config.Mundo_Reader;
 import database.Cores;
 import database.Unidade;
 
@@ -1022,34 +1020,6 @@ public class EditDialog extends JDialog {
 			return object.toString();
 		}
 		
-	}
-	
-	public static void main(String args[]) {
-	
-		File_Manager.read();
-
-		File_Manager.defineMundos();
-
-		Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(23));
-
-		File_Manager.defineModelos();
-		
-		try {
-	
-			new EditDialog(Mundo_Reader.getMundoList(), 
-				"variableList", 0);
-			
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 }

@@ -14,6 +14,7 @@ import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
+import custom_components.ToolPanel;
 import custom_components.TroopFormattedTextField;
 import custom_components.TroopListPanel;
 import database.Cores;
@@ -85,8 +86,9 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 3;
 		gbc.gridx = 0;
 		addPanelTotal(gbc);
-
+		
 	}
+
 
 	/**
 	 * Adiciona um cabeçalho com os nomes das informações de cada coluna

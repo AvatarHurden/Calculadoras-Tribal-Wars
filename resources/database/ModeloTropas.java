@@ -78,7 +78,7 @@ public class ModeloTropas {
 	}
 
 	public String toString() {
-		return nome.getName();
+		return nome.getValueName();
 	}
 
 	public void setNome(String s) {
@@ -96,7 +96,7 @@ public class ModeloTropas {
 	}
 
 	public String getNome() {
-		return nome.getName();
+		return nome.getValueName();
 	}
 
 	public BigDecimal getQuantidade(Unidade i) {

@@ -24,25 +24,19 @@ import database.Cores;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 
-	// Make this use the MundoList, delete propertyList
-	//TODO import MundoList
-	List<Properties> propertyList = new ArrayList<Properties>();
-
 	Informações_de_mundo informationTable;
 	Escolha_de_mundo selectionPanel;
 
 	JPanel panelMundo;
 
 	/**
-	 * Frame inicial, no qual ocorre a escolha do mundo Ele possui:
+	 * Frame inicial, no qual ocorre a escolha do mundo. Ele possui:
 	 * <br> - Logo do programa 
 	 * <br>- Tabela com as informações do mundo selecionado 
 	 * <br>- Lista dos mundos disponíveis 
 	 * <br>- Botão para abrir o "MainWindow"
 	 */
 	public GUI() {
-
-		propertyList = Mundo_Reader.getPropertiesList();
 
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 

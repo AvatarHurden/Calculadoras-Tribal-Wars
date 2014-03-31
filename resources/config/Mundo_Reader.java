@@ -13,9 +13,6 @@ import database.Mundo;
 
 public class Mundo_Reader {
 
-	// Lista das propriedades lidas
-	static List<Properties> propertyList = new ArrayList<Properties>();
-	
 	// Lista dos mundos
 	static List<Mundo> mundoList = new ArrayList<Mundo>();
 	
@@ -70,7 +67,6 @@ public class Mundo_Reader {
 
 			Properties i = new Properties();
 			i.load(new StringReader(total));
-			propertyList.add(i);
 
 			Mundo mundo = new Mundo(i);
 //			mundo.setAll(i);
@@ -103,14 +99,6 @@ public class Mundo_Reader {
 
 		MundoSelecionado.setUnidadeList();
 
-	}
-
-	public static Properties getProperties(int index) {
-		return propertyList.get(index);
-	}
-
-	public static List<Properties> getPropertiesList() {
-		return propertyList;
 	}
 
 	public static Mundo getMundo(int index) {
