@@ -190,7 +190,7 @@ public class PanelUnidade {
 			lblOD.setText(quantidade.numberFormat.format(gui.getODD(unidade)
 					.multiply(quantia)));
 	}
-
+	
 	private void resetOD() {
 		lblOD.setText("");
 	}
@@ -199,12 +199,20 @@ public class PanelUnidade {
 		return unidade;
 	}
 
+	protected TroopFormattedTextField getTextField() {
+		return quantidade;
+	}
+	
 	protected String getQuantidade() {
 		return quantidade.getText();
 	}
 
-	protected String getOD() throws ParseException {
-		return quantidade.numberFormat.parse(lblOD.getText()).toString();
+	protected String getOD() {
+		try {
+			return quantidade.numberFormat.parse(lblOD.getText()).toString();
+		} catch (ParseException e) {
+			return "";
+		}
 	}
 
 	protected JPanel getPanelDados() {

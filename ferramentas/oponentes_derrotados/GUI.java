@@ -3,6 +3,8 @@ package oponentes_derrotados;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.math.BigDecimal;
@@ -18,23 +20,30 @@ import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
+import custom_components.ToolPanel;
+import custom_components.TroopFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
 
+	//TODO make this better
 	private List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
 
+	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
+	
 	private final Map<Unidade, Integer> pontos_ODA = new HashMap<Unidade, Integer>();
 	private final Map<Unidade, Integer> pontos_ODD = new HashMap<Unidade, Integer>();
 
+	private ToolPanel tools;
+	
 	PanelSoma total = new PanelSoma();
 
 	JPanel panelButtons;
 	JRadioButton buttonDefesa;
 	JRadioButton buttonAtaque;
-
+	
 	public GUI() {
 
 		super("Cálculo de OD");
@@ -49,7 +58,7 @@ public class GUI extends Ferramenta {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gridBagLayout.columnWeights = new double[] { 0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		setLayout(gridBagLayout);
 
@@ -58,10 +67,15 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 5, 5, 5);
 
-		createPanelButtons();
-		gbc.gridwidth = 2;
-		add(panelButtons, gbc);
-
+		setToolPanel();
+		
+		gbc.anchor = GridBagConstraints.EAST;
+		add(tools.getModelosPanel(), gbc);
+		
+		gbc.anchor = GridBagConstraints.WEST;
+		add(tools.getResetPanel(), gbc);
+		
+		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.gridy++;
 		gbc.gridwidth = 1;
 		addHeader(true, gbc);
@@ -73,16 +87,36 @@ public class GUI extends Ferramenta {
 		gbc.gridx++;
 		add(unitePanels("od"), gbc);
 
+		createPanelButtons();
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.gridheight = 2;
+		add(panelButtons, gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridheight = 1;
 		addHeader(false, gbc);
 
-		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.gridy++;
 		addPanelTotal(gbc);
+		
 
 	}
 
+	private void setToolPanel() {
+		
+		ActionListener reset = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for (TroopFormattedTextField t : mapQuantidades.values())
+					t.setText("");
+			}
+		};
+		
+		tools = new ToolPanel(reset, mapQuantidades);
+	
+	}
+	
 	// Cria um painel com os botões para selecionar se o OD mostrado é de ataque
 	// ou defesa
 	private void createPanelButtons() {
@@ -193,45 +227,52 @@ public class GUI extends Ferramenta {
 	 * Define quais unidades serão utilizadas, com as configurações do mundo
 	 */
 	private void setUnidades() {
-
-		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.LANCEIRO,
-				this));
-		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-				Unidade.ESPADACHIM, this));
-
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-					Unidade.ARQUEIRO, this));
-
-		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.BÁRBARO,
-				this));
-
-		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-				Unidade.EXPLORADOR, this));
-		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-				Unidade.CAVALOLEVE, this));
-
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-					Unidade.ARCOCAVALO, this));
-
-		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-				Unidade.CAVALOPESADO, this));
-
-		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.ARÍETE,
-				this));
-		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-				Unidade.CATAPULTA, this));
-		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.NOBRE,
-				this));
-
-		if (Mundo_Reader.MundoSelecionado.hasMilícia())
-			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-					Unidade.MILÍCIA, this));
-
-		if (Mundo_Reader.MundoSelecionado.hasPaladino())
-			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-					Unidade.PALADINO, this));
+		
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades())
+			if (i != null) {
+				panelUnidadeList.add(new PanelUnidade(getNextColor(), i, this));
+				mapQuantidades.put(i, panelUnidadeList.get(panelUnidadeList.size() - 1)
+						.getTextField());
+			}
+		
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.LANCEIRO,
+//				this));
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//				Unidade.ESPADACHIM, this));
+//
+//		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
+//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//					Unidade.ARQUEIRO, this));
+//
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.BÁRBARO,
+//				this));
+//
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//				Unidade.EXPLORADOR, this));
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//				Unidade.CAVALOLEVE, this));
+//
+//		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
+//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//					Unidade.ARCOCAVALO, this));
+//
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//				Unidade.CAVALOPESADO, this));
+//
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.ARÍETE,
+//				this));
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//				Unidade.CATAPULTA, this));
+//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.NOBRE,
+//				this));
+//
+//		if (Mundo_Reader.MundoSelecionado.hasMilícia())
+//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//					Unidade.MILÍCIA, this));
+//
+//		if (Mundo_Reader.MundoSelecionado.hasPaladino())
+//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
+//					Unidade.PALADINO, this));
 
 	}
 

@@ -187,6 +187,10 @@ public class PanelUnidade extends JPanel {
 
 	}
 
+	public void setEdifício(PanelEdifício d) {
+		edifício = d;
+	}
+	
 	public JLabel getTempoUnitário() {
 		return tempoUnitário;
 	}

@@ -72,6 +72,7 @@ public class ToolPanel {
 		return modelosPanel;
 	}
 	
+	@SuppressWarnings("serial")
 	private class ModeloTropasPanel extends JPanel {
 
 		private Map<Unidade, TroopFormattedTextField> mapTextFields;

@@ -3,7 +3,9 @@ package recrutamento;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -12,6 +14,8 @@ import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
+import custom_components.ToolPanel;
+import custom_components.TroopFormattedTextField;
 import database.Cores;
 import database.Edifício;
 import database.Unidade;
@@ -19,12 +23,22 @@ import database.Unidade;
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
 
+	//TODO omigod this is gross
+	
+	private List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
+	
 	private Map<Edifício, PanelEdifício> mapaEdifício = new HashMap<Edifício, PanelEdifício>();
 
+	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
+	
+	private ToolPanel tools;
+	
 	/**
-	 * Ferramenta para calcular o tempo necessário de produção de unidades Ela
-	 * mostra: - tempo de produção unitária de cada unidade - tempo de produção
-	 * total para cada unidade - tempo de produção total para cada edifício
+	 * Ferramenta para calcular o tempo necessário de produção de unidades. 
+	 * <br>Ela mostra: 
+	 * <br>- tempo de produção unitária de cada unidade 
+	 * <br>- tempo de produção total para cada unidade 
+	 * <br>- tempo de produção total para cada edifício
 	 */
 	public GUI() {
 
@@ -176,6 +190,14 @@ public class GUI extends Ferramenta {
 
 	}
 
+	private void createPanelUnidadeList() {
+		
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades())
+			if (i != null && !i.equals(Unidade.MILÍCIA))
+				panelUnidadeList.add(new PanelUnidade(getNextColor(), i, edifício));
+			//TODO remover edifício do constructor
+	}
+	
 	/**
 	 * Adiciona a barra com os nomes de cada coluna
 	 */

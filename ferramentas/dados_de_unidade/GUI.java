@@ -34,6 +34,9 @@ public class GUI extends Ferramenta {
 	Map<String, BigInteger> somaTotal = new HashMap<String, BigInteger>();
 
 	PanelSoma total = new PanelSoma();
+	
+	// Painéis de ferramentas (modeloTropas e resetar)
+	ToolPanel tools;
 
 	/**
 	 * Ferramenta com informações de unidades. Possui: 
@@ -80,10 +83,10 @@ public class GUI extends Ferramenta {
 			}
 		};
 		
-		ToolPanel test = new ToolPanel(action, mapQuantidades);
+		tools = new ToolPanel(action, mapQuantidades);
 		
 		gbc.anchor = GridBagConstraints.EAST;
-		add(test.getModelosPanel(), gbc);
+		add(tools.getModelosPanel(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -105,7 +108,7 @@ public class GUI extends Ferramenta {
 
 		gbc.gridy = 3;
 		gbc.gridx = 0;
-		add(test.getResetPanel(), gbc);
+		add(tools.getResetPanel(), gbc);
 		
 		gbc.gridx = 0;
 		addPanelTotal(gbc);

@@ -5,7 +5,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -19,7 +18,7 @@ public class PanelSoma {
 
 	private List<PanelUnidade> panelUnidadeList;
 
-	private BigInteger ODTotal;
+	private BigInteger ODTotal = BigInteger.ZERO;
 
 	public PanelSoma() {
 
@@ -64,23 +63,20 @@ public class PanelSoma {
 	}
 
 	// Precisa throw a exceção porque java é estranho
-	private void soma() throws ParseException {
+	private void soma() {
 
 		ODTotal = new BigInteger("0");
 		for (PanelUnidade i : panelUnidadeList)
 			if (!i.getOD().equals(""))
 				ODTotal = ODTotal.add(new BigInteger(i.getOD()));
-
+			
 	}
 
 	// Define o texto das labels
 	protected void setTotal() {
 
-		try {
-			soma();
-		} catch (ParseException e) {
-		}
-
+		soma();
+		
 		// Checa se os valores são diferentes de zero (como toda unidade tem
 		// defesa geral, usei essa
 		// característica como teste
