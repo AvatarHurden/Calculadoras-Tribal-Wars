@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
-import config.Mundo_Reader;
 import custom_components.EdifícioFormattedComboBox;
 import database.Cores;
 import database.Edifício;
@@ -66,7 +65,9 @@ public class PanelEdifício extends JPanel {
 
 		unidades.add(panel);
 		// panel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-
+		panel.setEdifício(this);
+		
+		
 		gbc.gridy++;
 		add(panel, gbc);
 
@@ -76,7 +77,7 @@ public class PanelEdifício extends JPanel {
 	 * Finaliza o Panel, colocando o seletor de nível e JLabel com tempo total
 	 * de produção
 	 */
-	public void addFinish(PanelUnidade lastPanel) {
+	public void finish() {
 
 		// Adiciona a border para separar as unidades do resto
 		unidades.get(unidades.size() - 1).setBorder(
@@ -109,15 +110,8 @@ public class PanelEdifício extends JPanel {
 				// Passa por todas as unidades do edifício, definindo o tempo
 				// individual
 				for (PanelUnidade panel : unidades) {
-					BigDecimal tempo = panel
-							.getUnidade()
-							.tempoDeProdução()
-							.multiply(
-									Mundo_Reader.MundoSelecionado
-											.getPorcentagemDeProdução(txtNível
-													.getSelectedIndex()));
-
-					panel.getTempoUnitário().setText(Cálculos.format(tempo));
+	
+					panel.setTempoUnitário(txtNível.getSelectedIndex());
 					panel.changeTimes();
 
 				}
@@ -127,18 +121,9 @@ public class PanelEdifício extends JPanel {
 		};
 
 		// Primeira passada para definir os tempos logo que o panel é formado
-		for (PanelUnidade panel : unidades) {
-
-			BigDecimal tempo = panel
-					.getUnidade()
-					.tempoDeProdução()
-					.multiply(
-							Mundo_Reader.MundoSelecionado
-									.getPorcentagemDeProdução(txtNível
-											.getSelectedIndex()));
-
-			panel.getTempoUnitário().setText(Cálculos.format(tempo));
-		}
+//		for (PanelUnidade panel : unidades) {
+//			panel.setTempoUnitário(txtNível.getSelectedIndex());
+//		}
 
 		gbc_finish.anchor = GridBagConstraints.WEST;
 		gbc_finish.fill = GridBagConstraints.VERTICAL;

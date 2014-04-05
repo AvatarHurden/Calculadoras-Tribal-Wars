@@ -36,8 +36,10 @@ public class PanelUnidade extends JPanel {
 	 * @param Edifício
 	 *            em que é construída
 	 */
-	public PanelUnidade(Color cor, Unidade unidade, PanelEdifício edifício) {
-
+	public PanelUnidade(Color cor, Unidade unidade) {
+		
+		this.unidade = unidade;
+		edifício = null;
 		this.cor = cor;
 
 		setBackground(cor);
@@ -47,14 +49,15 @@ public class PanelUnidade extends JPanel {
 		gbl.columnWeights = new double[] { 1.0, 0.0, 0.0, 1.0, 0.0 };
 		gbl.rowWeights = new double[] { 0.0, 0.0, 1.0 };
 		setLayout(gbl);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.insets = new Insets(5, 5, 5, 5);
+		c.gridx = 0;
+		c.gridy = 0;
 
 		nome = new JLabel(unidade.nome());
-		GridBagConstraints gbc_nome = new GridBagConstraints();
-		gbc_nome.anchor = GridBagConstraints.WEST;
-		gbc_nome.insets = new Insets(5, 5, 5, 5);
-		gbc_nome.gridx = 0;
-		gbc_nome.gridy = 0;
-		add(nome, gbc_nome);
+		add(nome, c);
 
 		quantidade = new TroopFormattedTextField(9) {
 
@@ -69,39 +72,23 @@ public class PanelUnidade extends JPanel {
 			}
 		};
 
-		GridBagConstraints gbc_quantidade = new GridBagConstraints();
-		gbc_quantidade.insets = new Insets(5, 0, 5, 5);
-		gbc_quantidade.gridx = 1;
-		gbc_quantidade.gridy = 0;
-		add(quantidade, gbc_quantidade);
+		c.insets = new Insets(5, 0, 5, 5);
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridx = 1;
+		add(quantidade, c);
 
 		tempoUnitário = new JLabel();
-		GridBagConstraints gbc_tempoUnitário = new GridBagConstraints();
-		gbc_tempoUnitário.insets = new Insets(5, 0, 5, 5);
-		gbc_tempoUnitário.gridx = 3;
-		gbc_tempoUnitário.gridy = 0;
-		add(getTempoUnitário(), gbc_tempoUnitário);
+		c.insets = new Insets(5, 0, 5, 5);
+		c.gridx = 3;
+		add(getTempoUnitário(), c);
 
 		tempoTotal = new JLabel();
-		GridBagConstraints gbc_tempoTotal = new GridBagConstraints();
-		gbc_tempoTotal.insets = new Insets(0, 0, 5, 0);
-		gbc_tempoTotal.gridx = 4;
-		gbc_tempoTotal.gridy = 0;
-		add(tempoTotal, gbc_tempoTotal);
+		c.insets = new Insets(0, 0, 5, 0);
+		c.gridx = 4;
+		add(tempoTotal, c);
 
-		this.edifício = edifício;
-		this.unidade = unidade;
-
-		// Caso não tenha edifício (paladino ou nobre)
-		if (edifício == null)
-			if (unidade.equals(Unidade.PALADINO))
-				setTempoUnitário(unidade.tempoDeProdução().multiply(
-						Mundo_Reader.MundoSelecionado
-								.getPorcentagemDeProdução(0)));
-			else
-				setTempoUnitário(unidade.tempoDeProdução().multiply(
-						Mundo_Reader.MundoSelecionado
-								.getPorcentagemDeProdução(1)));
+		setTempoUnitário(1);
+		
 
 	}
 
@@ -146,8 +133,17 @@ public class PanelUnidade extends JPanel {
 	 * @param BigDecimal
 	 *            tempo, em segundos
 	 */
-	public void setTempoUnitário(BigDecimal tempo) {
+	public void setTempoUnitário(int nível) {
 
+		if (edifício == null)
+			if (unidade.equals(Unidade.PALADINO))
+				nível = 0;
+			else
+				nível = 1;
+		
+		BigDecimal tempo = unidade.tempoDeProdução().multiply(Mundo_Reader.MundoSelecionado
+								.getPorcentagemDeProdução(nível));
+		
 		tempoUnitário.setText(Cálculos.format(tempo));
 
 	}
@@ -189,6 +185,10 @@ public class PanelUnidade extends JPanel {
 
 	public void setEdifício(PanelEdifício d) {
 		edifício = d;
+	}
+	
+	public TroopFormattedTextField getTextField() {
+		return quantidade;
 	}
 	
 	public JLabel getTempoUnitário() {

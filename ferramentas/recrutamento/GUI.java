@@ -3,9 +3,7 @@ package recrutamento;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -23,12 +21,8 @@ import database.Unidade;
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
 
-	//TODO omigod this is gross
+	private Map<Unidade, PanelUnidade> panelUnidadeMap = new HashMap<Unidade, PanelUnidade>();
 	
-	private List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
-	
-	private Map<Edifício, PanelEdifício> mapaEdifício = new HashMap<Edifício, PanelEdifício>();
-
 	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
 	
 	private ToolPanel tools;
@@ -54,154 +48,103 @@ public class GUI extends Ferramenta {
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		setLayout(gridBagLayout);
 
-		addHeader();
-
-		PanelEdifício quartel = new PanelEdifício(Edifício.QUARTEL);
-		mapaEdifício.put(Edifício.QUARTEL, quartel);
-
-		GridBagConstraints gbc_quartel = new GridBagConstraints();
-		gbc_quartel.anchor = GridBagConstraints.CENTER;
-		gbc_quartel.fill = GridBagConstraints.BOTH;
-		gbc_quartel.insets = new Insets(0, 5, 5, 5);
-		gbc_quartel.gridx = 0;
-		gbc_quartel.gridy = 1;
-		add(quartel, gbc_quartel);
-
-		PanelUnidade lanceiro = new PanelUnidade(getNextColor(),
-				Unidade.LANCEIRO, quartel);
-		quartel.addPanel(lanceiro);
-
-		PanelUnidade espadachim = new PanelUnidade(getNextColor(),
-				Unidade.ESPADACHIM, quartel);
-		quartel.addPanel(espadachim);
-
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
-			PanelUnidade arqueiro = new PanelUnidade(getNextColor(),
-					Unidade.ARQUEIRO, quartel);
-			quartel.addPanel(arqueiro);
-		}
-
-		PanelUnidade bárbaro = new PanelUnidade(getNextColor(),
-				Unidade.BÁRBARO, quartel);
-		quartel.addPanel(bárbaro);
-
-		quartel.addFinish(bárbaro);
-
-		PanelEdifício estábulo = new PanelEdifício(Edifício.ESTÁBULO);
-		mapaEdifício.put(Edifício.ESTÁBULO, estábulo);
-
-		GridBagConstraints gbc_estábulo = new GridBagConstraints();
-		gbc_estábulo.anchor = GridBagConstraints.CENTER;
-		gbc_estábulo.fill = GridBagConstraints.BOTH;
-		gbc_estábulo.insets = new Insets(0, 5, 5, 5);
-		gbc_estábulo.gridx = 0;
-		gbc_estábulo.gridy = 2;
-		add(estábulo, gbc_estábulo);
-
-		PanelUnidade explorador = new PanelUnidade(getNextColor(),
-				Unidade.EXPLORADOR, estábulo);
-		estábulo.addPanel(explorador);
-
-		PanelUnidade cavalariaLeve = new PanelUnidade(getNextColor(),
-				Unidade.CAVALOLEVE, estábulo);
-		estábulo.addPanel(cavalariaLeve);
-
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
-			PanelUnidade arqueiroCavalo = new PanelUnidade(getNextColor(),
-					Unidade.ARCOCAVALO, estábulo);
-			estábulo.addPanel(arqueiroCavalo);
-		}
-
-		PanelUnidade cavalariaPesada = new PanelUnidade(getNextColor(),
-				Unidade.CAVALOPESADO, estábulo);
-		estábulo.addPanel(cavalariaPesada);
-
-		estábulo.addFinish(cavalariaPesada);
-
-		PanelEdifício oficina = new PanelEdifício(Edifício.OFICINA);
-		mapaEdifício.put(Edifício.OFICINA, oficina);
-
-		GridBagConstraints gbc_oficina = new GridBagConstraints();
-		gbc_oficina.anchor = GridBagConstraints.CENTER;
-		gbc_oficina.fill = GridBagConstraints.BOTH;
-		gbc_oficina.insets = new Insets(0, 5, 5, 5);
-		gbc_oficina.gridx = 0;
-		gbc_oficina.gridy = 3;
-		add(oficina, gbc_oficina);
-
-		PanelUnidade aríete = new PanelUnidade(getNextColor(), Unidade.ARÍETE,
-				oficina);
-		oficina.addPanel(aríete);
-
-		PanelUnidade catapulta = new PanelUnidade(getNextColor(),
-				Unidade.CATAPULTA, oficina);
-		oficina.addPanel(catapulta);
-
-		oficina.addFinish(catapulta);
-
-		PanelEdifício academia;
-
-		if (Mundo_Reader.MundoSelecionado.isAcademiaDeNíveis()) {
-
-			academia = new PanelEdifício(Edifício.ACADEMIA_3NÍVEIS);
-			mapaEdifício.put(Edifício.ACADEMIA_3NÍVEIS, academia);
-
-			GridBagConstraints gbc_academia = new GridBagConstraints();
-			gbc_academia.anchor = GridBagConstraints.CENTER;
-			gbc_academia.fill = GridBagConstraints.BOTH;
-			gbc_academia.insets = new Insets(0, 5, 5, 5);
-			gbc_academia.gridx = 0;
-			gbc_academia.gridy = 4;
-			add(academia, gbc_academia);
-
-			PanelUnidade nobre = new PanelUnidade(getNextColor(),
-					Unidade.NOBRE, academia);
-			academia.addPanel(nobre);
-
-			academia.addFinish(nobre);
-
-		} else {
-
-			PanelUnidade nobre = new PanelUnidade(getNextColor(),
-					Unidade.NOBRE, null);
-			nobre.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-
-			GridBagConstraints gbc_nobre = new GridBagConstraints();
-			gbc_nobre.anchor = GridBagConstraints.CENTER;
-			gbc_nobre.fill = GridBagConstraints.HORIZONTAL;
-			gbc_nobre.insets = new Insets(0, 5, 5, 5);
-			gbc_nobre.gridx = 0;
-			gbc_nobre.gridy = 4;
-			add(nobre, gbc_nobre);
-		}
-
-		if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
-			PanelUnidade paladino = new PanelUnidade(getNextColor(),
-					Unidade.PALADINO, null);
-			paladino.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-			GridBagConstraints gbc_paladino = new GridBagConstraints();
-			gbc_paladino.anchor = GridBagConstraints.CENTER;
-			gbc_paladino.fill = GridBagConstraints.BOTH;
-			gbc_paladino.insets = new Insets(0, 5, 5, 5);
-			gbc_paladino.gridx = 0;
-			gbc_paladino.gridy = 5;
-			add(paladino, gbc_paladino);
-		}
-
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.BOTH;
+		c.insets = new Insets(5, 5, 5, 5);
+		c.gridy = 0;
+		c.gridx = 0;
+		
+		add(createHeader(), c);
+		
+		createPanelUnidadeList();
+		
+		c.gridy++;
+		c.insets = new Insets(0, 5, 5, 5);
+		addPanelsToGUI(c);
+	
 	}
 
 	private void createPanelUnidadeList() {
 		
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades())
-			if (i != null && !i.equals(Unidade.MILÍCIA))
-				panelUnidadeList.add(new PanelUnidade(getNextColor(), i, edifício));
-			//TODO remover edifício do constructor
+			if (i != null && !i.equals(Unidade.MILÍCIA)) {
+				panelUnidadeMap.put(i, new PanelUnidade(getNextColor(), i));
+				mapQuantidades.put(i, panelUnidadeMap.get(i).getTextField());
+			}
+		
+		
+	}
+	
+	private void addPanelsToGUI(GridBagConstraints c) {
+		
+		PanelEdifício quartel = new PanelEdifício(Edifício.QUARTEL);
+
+		quartel.addPanel(panelUnidadeMap.get(Unidade.LANCEIRO));
+		quartel.addPanel(panelUnidadeMap.get(Unidade.ESPADACHIM));
+		quartel.addPanel(panelUnidadeMap.get(Unidade.BÁRBARO));
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
+			quartel.addPanel(panelUnidadeMap.get(Unidade.ARQUEIRO));
+		quartel.finish();
+		
+		
+		add(quartel, c);
+		
+		PanelEdifício estábulo = new PanelEdifício(Edifício.ESTÁBULO);
+
+		estábulo.addPanel(panelUnidadeMap.get(Unidade.EXPLORADOR));
+		estábulo.addPanel(panelUnidadeMap.get(Unidade.CAVALOLEVE));
+		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
+			estábulo.addPanel(panelUnidadeMap.get(Unidade.ARCOCAVALO));
+		estábulo.addPanel(panelUnidadeMap.get(Unidade.CAVALOPESADO));
+		estábulo.finish();
+		
+		c.gridy++;
+		add(estábulo, c);
+		
+		PanelEdifício oficina = new PanelEdifício(Edifício.OFICINA);
+
+		oficina.addPanel(panelUnidadeMap.get(Unidade.ARÍETE));
+		oficina.addPanel(panelUnidadeMap.get(Unidade.CATAPULTA));
+		oficina.finish();
+		
+		c.gridy++;
+		add(oficina, c);
+		
+		if (Mundo_Reader.MundoSelecionado.isAcademiaDeNíveis()) {
+			
+			PanelEdifício academia = new PanelEdifício(Edifício.ACADEMIA_3NÍVEIS);
+			academia.addPanel(panelUnidadeMap.get(Unidade.NOBRE));
+			academia.finish();
+			
+			c.gridy++;
+			add(academia, c);
+			
+		} else {
+			
+			panelUnidadeMap.get(Unidade.NOBRE).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+			
+			c.gridy++;
+			add(panelUnidadeMap.get(Unidade.NOBRE), c);
+			
+		}
+		
+		if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
+			
+			panelUnidadeMap.get(Unidade.PALADINO).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+			
+			c.gridy++;
+			add(panelUnidadeMap.get(Unidade.PALADINO), c);
+			
+		}
+			
+		
 	}
 	
 	/**
 	 * Adiciona a barra com os nomes de cada coluna
 	 */
-	private void addHeader() {
+	private JPanel createHeader() {
 
 		JPanel header = new JPanel();
 
@@ -216,42 +159,33 @@ public class GUI extends Ferramenta {
 				Double.MIN_VALUE };
 		header.setLayout(gbl);
 
-		GridBagConstraints gbc_header = new GridBagConstraints();
-		gbc_header.anchor = GridBagConstraints.CENTER;
-		gbc_header.fill = GridBagConstraints.BOTH;
-		gbc_header.insets = new Insets(5, 5, 5, 5);
-		gbc_header.gridx = 0;
-		gbc_header.gridy = 0;
-		add(header, gbc_header);
-
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5, 5, 5, 5);
+		c.gridx = 0;
+		c.gridy = 0;
+		
 		JLabel lblUnidades = new JLabel("Unidade");
-		GridBagConstraints gbc_lblUnidades = new GridBagConstraints();
-		gbc_lblUnidades.insets = new Insets(5, 5, 5, 5);
-		gbc_lblUnidades.gridx = 0;
-		gbc_lblUnidades.gridy = 0;
-		header.add(lblUnidades, gbc_lblUnidades);
+		header.add(lblUnidades, c);
 
 		JLabel lblQuantidade = new JLabel("Quantidade");
-		GridBagConstraints gbc_lblQuantidade = new GridBagConstraints();
-		gbc_lblQuantidade.insets = new Insets(5, 0, 5, 5);
-		gbc_lblQuantidade.gridx = 1;
-		gbc_lblQuantidade.gridy = 0;
-		header.add(lblQuantidade, gbc_lblQuantidade);
+	
+		c.insets = new Insets(5, 0, 5, 5);
+		c.gridx++;
+		header.add(lblQuantidade, c);
 
 		JLabel lblTempoPorUnidade = new JLabel("Tempo por unidade");
-		GridBagConstraints gbc_lblTempoPorUnidade = new GridBagConstraints();
-		gbc_lblTempoPorUnidade.insets = new Insets(5, 0, 5, 5);
-		gbc_lblTempoPorUnidade.gridx = 2;
-		gbc_lblTempoPorUnidade.gridy = 0;
-		header.add(lblTempoPorUnidade, gbc_lblTempoPorUnidade);
+	
+		c.gridx++;	
+		header.add(lblTempoPorUnidade, c);
 
 		JLabel lblTempoTotal = new JLabel("Tempo total");
-		GridBagConstraints gbc_lblTempoTotal = new GridBagConstraints();
-		gbc_lblTempoTotal.insets = new Insets(5, 0, 5, 0);
-		gbc_lblTempoTotal.gridx = 3;
-		gbc_lblTempoTotal.gridy = 0;
-		header.add(lblTempoTotal, gbc_lblTempoTotal);
+		
+		c.insets = new Insets(5, 0, 5, 0);
+		c.gridx++;
+		header.add(lblTempoTotal, c);
 
+		return header;
+		
 	}
 
 }

@@ -421,7 +421,7 @@ public class Mundo {
 	}
 
 	public boolean isAcademiaDeNíveis() {
-		return cunhagemDeMoedas.getValue();
+		return !cunhagemDeMoedas.getValue();
 	}
 
 	public boolean isPesquisaDeNíveis() {
