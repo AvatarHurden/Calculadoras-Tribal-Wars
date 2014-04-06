@@ -163,4 +163,8 @@ public class PanelEdifício extends JPanel {
 			this.tempoTotal.setText("");
 
 	}
+	
+	public EdifícioFormattedComboBox getComboBox(){
+		return txtNível;
+	}
 }

@@ -88,6 +88,9 @@ public class GUI extends Ferramenta {
 		gbc.anchor = GridBagConstraints.EAST;
 		add(tools.getModelosPanel(), gbc);
 
+		gbc.anchor = GridBagConstraints.WEST;
+		add(tools.getResetPanel(), gbc);
+		
 		gbc.gridy++;
 		gbc.gridx = 0;
 		addHeader(true, gbc);
@@ -105,11 +108,8 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 2;
 		gbc.gridx = 0;
 		addHeader(false, gbc);
-
-		gbc.gridy = 3;
-		gbc.gridx = 0;
-		add(tools.getResetPanel(), gbc);
 		
+		gbc.gridy = 3;
 		gbc.gridx = 0;
 		addPanelTotal(gbc);
 		

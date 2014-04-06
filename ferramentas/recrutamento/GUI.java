@@ -3,7 +3,11 @@ package recrutamento;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -20,7 +24,9 @@ import database.Unidade;
 
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
-
+	
+	private List<PanelEdifício> edifícioList = new ArrayList<PanelEdifício>();
+	
 	private Map<Unidade, PanelUnidade> panelUnidadeMap = new HashMap<Unidade, PanelUnidade>();
 	
 	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
@@ -43,11 +49,13 @@ public class GUI extends Ferramenta {
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 200, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 100, 100, 50, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 100, 100, 50, 0 };
 		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		setLayout(gridBagLayout);
 
+		createPanelUnidadeList();
+		
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;
@@ -55,9 +63,26 @@ public class GUI extends Ferramenta {
 		c.gridy = 0;
 		c.gridx = 0;
 		
-		add(createHeader(), c);
+		ActionListener reset = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				for (TroopFormattedTextField i : mapQuantidades.values())
+					i.setText("");
+				
+				for (PanelEdifício i : edifícioList)
+					i.getComboBox().setSelectedIndex(1);
+				
+				mapQuantidades.get(Unidade.LANCEIRO).requestFocus();
+				
+			}
+		};
 		
-		createPanelUnidadeList();
+		tools = new ToolPanel(reset, mapQuantidades);
+		
+		add(createToolPanel(), c);
+		
+		c.gridy++;
+		add(createHeader(), c);
 		
 		c.gridy++;
 		c.insets = new Insets(0, 5, 5, 5);
@@ -79,7 +104,8 @@ public class GUI extends Ferramenta {
 	private void addPanelsToGUI(GridBagConstraints c) {
 		
 		PanelEdifício quartel = new PanelEdifício(Edifício.QUARTEL);
-
+		edifícioList.add(quartel);
+		
 		quartel.addPanel(panelUnidadeMap.get(Unidade.LANCEIRO));
 		quartel.addPanel(panelUnidadeMap.get(Unidade.ESPADACHIM));
 		quartel.addPanel(panelUnidadeMap.get(Unidade.BÁRBARO));
@@ -87,11 +113,11 @@ public class GUI extends Ferramenta {
 			quartel.addPanel(panelUnidadeMap.get(Unidade.ARQUEIRO));
 		quartel.finish();
 		
-		
 		add(quartel, c);
 		
 		PanelEdifício estábulo = new PanelEdifício(Edifício.ESTÁBULO);
-
+		edifícioList.add(estábulo);
+		
 		estábulo.addPanel(panelUnidadeMap.get(Unidade.EXPLORADOR));
 		estábulo.addPanel(panelUnidadeMap.get(Unidade.CAVALOLEVE));
 		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
@@ -103,7 +129,8 @@ public class GUI extends Ferramenta {
 		add(estábulo, c);
 		
 		PanelEdifício oficina = new PanelEdifício(Edifício.OFICINA);
-
+		edifícioList.add(oficina);
+		
 		oficina.addPanel(panelUnidadeMap.get(Unidade.ARÍETE));
 		oficina.addPanel(panelUnidadeMap.get(Unidade.CATAPULTA));
 		oficina.finish();
@@ -114,6 +141,8 @@ public class GUI extends Ferramenta {
 		if (Mundo_Reader.MundoSelecionado.isAcademiaDeNíveis()) {
 			
 			PanelEdifício academia = new PanelEdifício(Edifício.ACADEMIA_3NÍVEIS);
+			edifícioList.add(academia);
+			
 			academia.addPanel(panelUnidadeMap.get(Unidade.NOBRE));
 			academia.finish();
 			
@@ -138,6 +167,33 @@ public class GUI extends Ferramenta {
 			
 		}
 			
+		
+	}
+	
+	private JPanel createToolPanel() {
+		
+		JPanel toolPanel = new JPanel();
+		toolPanel.setOpaque(false);
+		
+		GridBagLayout gbl = new GridBagLayout();
+		gbl.columnWidths = new int[] { 125, 100, 100, 125 };
+		gbl.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl.columnWeights = new double[] { 0.0, 1.0, 0.0 };
+		gbl.rowWeights = new double[] { Double.MIN_VALUE };
+		toolPanel.setLayout(gbl);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.gridy = 0;
+		c.gridx = 0;
+		
+		toolPanel.add(tools.getResetPanel(), c);
+		
+		c.gridx++;
+		toolPanel.add(tools.getModelosPanel(), c);
+
+		return toolPanel;
 		
 	}
 	
