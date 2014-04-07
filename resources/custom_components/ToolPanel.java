@@ -37,18 +37,19 @@ public class ToolPanel {
 	
 	// The class will contain a panel for every function, and the caller will
 	// decide where each one will be placed
-	private JPanel resetPanel, modelosPanel, bandeiraPanel;
+	private JPanel resetPanel, bandeiraPanel;
+	private ModeloTropasPanel modelosPanel;
 	
 	/**
 	 * 
 	 * @param reset The actionListener that will be added to the reset button
 	 * @param textFields A Map that contains TroopFormattedTextFields to be used in the ModeloTropas editor
 	 */
-	public ToolPanel(ActionListener reset, Map<Unidade, TroopFormattedTextField> textFields) {
+	public ToolPanel(boolean edit, ActionListener reset, Map<Unidade, TroopFormattedTextField> textFields) {
 		
 		makeResetPanel(reset);
 		
-		modelosPanel = new ModeloTropasPanel(textFields);
+		modelosPanel = new ModeloTropasPanel(edit, textFields);
 		
 	}
 	
@@ -72,6 +73,10 @@ public class ToolPanel {
 		return modelosPanel;
 	}
 	
+	public void refresh() {
+		modelosPanel.refresh();
+	}
+	
 	@SuppressWarnings("serial")
 	private class ModeloTropasPanel extends JPanel {
 
@@ -79,11 +84,11 @@ public class ToolPanel {
 
 		private JPopupMenu popup;
 
-		public ModeloTropasPanel(Map<Unidade, TroopFormattedTextField> textFields) {
+		public ModeloTropasPanel(boolean edit, Map<Unidade, TroopFormattedTextField> textFields) {
 
 			mapTextFields = textFields;
 
-			popup = makePopupMenu();
+			makePopupMenu();
 
 			GridBagLayout layout = new GridBagLayout();
 			layout.columnWidths = new int[] { 54, 20, 20 };
@@ -103,15 +108,22 @@ public class ToolPanel {
 
 			c.insets = new Insets(0, 2, 0, 0);
 			add(makeNameLabel(), c);
-
-			c.gridx = 1;
+			
+			if (!edit)
+				c.gridwidth = 2;
 			c.insets = new Insets(0, 0, 0, 0);
+			c.gridx = 1;
 			add(makeSelectionButton(), c);
 
-			c.gridx = 2;
-			c.insets = new Insets(0, 0, 0, 2);
-			add(makeEditButton(), c);
-
+			if (edit) {
+				c.insets = new Insets(0, 0, 0, 2);
+				c.gridx = 2;
+				add(makeEditButton(), c);
+			}
+		}
+		
+		public void refresh(){
+			makePopupMenu();
 		}
 
 		private JLabel makeNameLabel() {
@@ -153,7 +165,7 @@ public class ToolPanel {
 
 		}
 
-		private JPopupMenu makePopupMenu() {
+		private void makePopupMenu() {
 
 			JPopupMenu popup = new JPopupMenu();
 
@@ -163,8 +175,6 @@ public class ToolPanel {
 				popup.add(makeMenuItem(i));
 
 			}
-
-			return popup;
 
 		}
 		
@@ -212,25 +222,14 @@ public class ToolPanel {
 				public void actionPerformed(ActionEvent arg0) {
 
 					try {
-						EditDialog dialog = new EditDialog(ModeloTropas_Reader.getListModelos(),
-								"variableList", 0);
 						
-						int x = button.getLocation().x
-								+ button.getPreferredSize().width / 2
-								- popup.getPreferredSize().width / 2;
-
-						int y = button.getLocation().y
-								+ button.getPreferredSize().height;
+						new EditDialog(ModeloTropas_Reader.getListModelos(), "variableList", 0);
 						
-						dialog.setLocation(x, y);
-						
-						popup = makePopupMenu();
+						makePopupMenu();
 						
 					} catch (NoSuchFieldException | SecurityException e) {
 						e.printStackTrace();
 					}
-
-					
 
 				}
 			});
@@ -238,7 +237,6 @@ public class ToolPanel {
 			return button;
 
 		}
-		
 		
 	}
 	

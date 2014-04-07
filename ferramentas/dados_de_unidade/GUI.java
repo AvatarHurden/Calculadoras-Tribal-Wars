@@ -83,7 +83,7 @@ public class GUI extends Ferramenta {
 			}
 		};
 		
-		tools = new ToolPanel(action, mapQuantidades);
+		tools = new ToolPanel(true, action, mapQuantidades);
 		
 		gbc.anchor = GridBagConstraints.EAST;
 		add(tools.getModelosPanel(), gbc);

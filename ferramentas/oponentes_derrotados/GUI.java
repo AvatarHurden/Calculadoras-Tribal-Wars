@@ -113,7 +113,7 @@ public class GUI extends Ferramenta {
 			}
 		};
 		
-		tools = new ToolPanel(reset, mapQuantidades);
+		tools = new ToolPanel(true, reset, mapQuantidades);
 	
 	}
 	

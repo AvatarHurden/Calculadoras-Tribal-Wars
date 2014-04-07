@@ -31,6 +31,8 @@ import javax.swing.text.PlainDocument;
 
 import simulador.GUI.InputInfo;
 import config.Mundo_Reader;
+import custom_components.ToolPanel;
+import custom_components.TroopFormattedTextField;
 import database.Bandeira;
 import database.Bandeira.CategoriaBandeira;
 import database.Cores;
@@ -51,7 +53,7 @@ public class StatInsertion extends JPanel {
 
 	private InputInfo info;
 
-	private Map<Unidade, JTextField> mapQuantidades = new HashMap<Unidade, JTextField>();
+	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
 	private Map<Unidade, JComboBox<Integer>> mapNiveis = new HashMap<Unidade, JComboBox<Integer>>();
 
 	private JCheckBox religião, noite;
@@ -63,6 +65,8 @@ public class StatInsertion extends JPanel {
 
 	// variável para a cor dos panels
 	int loop = 0;
+	
+	private ToolPanel tools;
 
 	/**
 	 * @param tipo
@@ -73,7 +77,10 @@ public class StatInsertion extends JPanel {
 		this.tipo = tipo;
 
 		this.info = info;
-
+		
+		//TODO update both panels on edit
+		tools = new ToolPanel((tipo == Tipo.Atacante), null, mapQuantidades);
+		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] { 110 };
 		layout.rowHeights = new int[] { 0 };
@@ -84,19 +91,27 @@ public class StatInsertion extends JPanel {
 		setOpaque(false);
 
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 5, 0);
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
+		
+		c.insets = new Insets(5, 0, 5, 0);
+		c.fill = GridBagConstraints.NONE;
+		add(tools.getModelosPanel(), c);
 
+		
 		// Adding the space to allow for militia on defensive side
 		if (tipo == Tipo.Atacante && Mundo_Reader.MundoSelecionado.hasMilícia())
 			c.insets = new Insets(0, 0, 30, 0);
-
+		else
+			c.insets = new Insets(0, 0, 5, 0);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridy++;
 		add(addUnitPanel(), c);
 
 		c.insets = new Insets(5, 0, 0, 0);
-
+		
+		// If militia is active, ensures that the right colors are given to all
 		loop = Mundo_Reader.MundoSelecionado.getNúmeroDeTropas();
 
 		// Diferenciando os diferentes tipos de inserção
@@ -185,7 +200,7 @@ public class StatInsertion extends JPanel {
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
-
+		
 		// Adding the headers
 
 		JLabel lblTipo = new JLabel(tipo.toString());
@@ -201,11 +216,13 @@ public class StatInsertion extends JPanel {
 			lblTipo.setBorder(new MatteBorder(0, 0, 2, 0, Cores.SEPARAR_ESCURO));
 		else
 			lblTipo.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
-
+		
+		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = 2;
 		c.insets = new Insets(0, 0, 0, 0);
+		c.gridy++;
 		panel.add(lblTipo, c);
-
+		
 		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 
 			c.fill = GridBagConstraints.NONE;
@@ -246,7 +263,9 @@ public class StatInsertion extends JPanel {
 					tropaC.gridwidth = 2;
 
 				// Creating the TextField for the quantity of troops
-				JTextField txt = new JTextField(9);
+				TroopFormattedTextField txt = new TroopFormattedTextField(9) {
+					public void go() {}
+				};
 				// Adding the text to a map with the units
 				mapQuantidades.put(i, txt);
 
@@ -698,10 +717,8 @@ public class StatInsertion extends JPanel {
 
 		for (Unidade i : Unidade.values())
 			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
-				if (Mundo_Reader.MundoSelecionado.containsUnidade(i)
-						&& !mapQuantidades.get(i).getText().equals(""))
-					tropas.put(i, new BigDecimal(mapQuantidades.get(i)
-							.getText()));
+				if (Mundo_Reader.MundoSelecionado.containsUnidade(i))
+					tropas.put(i, mapQuantidades.get(i).getValue());
 				else
 					tropas.put(i, BigDecimal.ZERO);
 			} else
@@ -718,7 +735,6 @@ public class StatInsertion extends JPanel {
 
 		for (Unidade i : Unidade.values()) {
 			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
-				System.out.println(i.toString());
 				if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()
 						&& Mundo_Reader.MundoSelecionado.containsUnidade(i))
 					níveis.put(i, ((int) mapNiveis.get(i).getSelectedItem()));
@@ -825,6 +841,10 @@ public class StatInsertion extends JPanel {
 
 		}
 
+	}
+	
+	public ToolPanel getToolPanel(){
+		return tools;
 	}
 
 }

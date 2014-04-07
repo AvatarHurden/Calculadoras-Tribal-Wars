@@ -163,19 +163,20 @@ public class GUI extends Ferramenta {
 
 	private void addEmptySpace(GridBagConstraints c) {
 
-		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
-
-			// If mundo has levels, add space so that the units align with the
-			// input panels
-
-			JLabel space = new JLabel("");
+		JLabel space = new JLabel("");
+		
+		// If mundo has levels, adds extra space so that the units align with the
+		// input panels
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			space.setPreferredSize(new Dimension(
-					space.getPreferredSize().width, 16));
-
-			c.gridy = 0;
-			add(space, c);
-
-		}
+					space.getPreferredSize().width, 50));
+		else
+			space.setPreferredSize(new Dimension(
+					space.getPreferredSize().width, 24));
+		
+		
+		c.gridy = 0;
+		add(space, c);
 
 	}
 
