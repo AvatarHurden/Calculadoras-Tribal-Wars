@@ -16,7 +16,6 @@ import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
-import custom_components.ToolPanel;
 import custom_components.TroopFormattedTextField;
 import database.Cores;
 import database.Edifício;
@@ -30,8 +29,6 @@ public class GUI extends Ferramenta {
 	private Map<Unidade, PanelUnidade> panelUnidadeMap = new HashMap<Unidade, PanelUnidade>();
 	
 	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
-	
-	private ToolPanel tools;
 	
 	/**
 	 * Ferramenta para calcular o tempo necessário de produção de unidades. 
@@ -62,22 +59,6 @@ public class GUI extends Ferramenta {
 		c.insets = new Insets(5, 5, 5, 5);
 		c.gridy = 0;
 		c.gridx = 0;
-		
-		ActionListener reset = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				for (TroopFormattedTextField i : mapQuantidades.values())
-					i.setText("");
-				
-				for (PanelEdifício i : edifícioList)
-					i.getComboBox().setSelectedIndex(1);
-				
-				mapQuantidades.get(Unidade.LANCEIRO).requestFocus();
-				
-			}
-		};
-		
-		tools = new ToolPanel(true, reset, mapQuantidades);
 		
 		add(createToolPanel(), c);
 		
@@ -188,10 +169,24 @@ public class GUI extends Ferramenta {
 		c.gridy = 0;
 		c.gridx = 0;
 		
-		toolPanel.add(tools.getResetPanel(), c);
+		ActionListener reset = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				for (TroopFormattedTextField i : mapQuantidades.values())
+					i.setText("");
+				
+				for (PanelEdifício i : edifícioList)
+					i.getComboBox().setSelectedIndex(1);
+				
+				mapQuantidades.get(Unidade.LANCEIRO).requestFocus();
+				
+			}
+		};
+		
+		toolPanel.add(tools.addResetPanel(reset), c);
 		
 		c.gridx++;
-		toolPanel.add(tools.getModelosPanel(), c);
+		toolPanel.add(tools.addModelosPanel(true, mapQuantidades), c);
 
 		return toolPanel;
 		

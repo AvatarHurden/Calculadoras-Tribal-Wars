@@ -23,11 +23,15 @@ public class Ferramenta extends JPanel{
 	
 	private MainWindow frame;
 	
+	protected ToolPanel tools;
+	
 	private boolean corEscuraUsada;
 	
 	public Ferramenta() {}
 	
 	public Ferramenta(String nome) {
+	
+		tools = new ToolPanel();
 		
 		setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 		
@@ -48,6 +52,8 @@ public class Ferramenta extends JPanel{
 			public void mouseEntered(MouseEvent arg0) {}
 			
 			public void mouseClicked(MouseEvent arg0) {
+				
+				tools.refresh();
 				
 				for (Ferramenta i : frame.ferramentas)
 					i.setSelected(false);

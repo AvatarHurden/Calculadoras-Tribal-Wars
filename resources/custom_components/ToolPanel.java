@@ -8,6 +8,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -37,44 +39,68 @@ public class ToolPanel {
 	
 	// The class will contain a panel for every function, and the caller will
 	// decide where each one will be placed
-	private JPanel resetPanel, bandeiraPanel;
-	private ModeloTropasPanel modelosPanel;
+	private JPanel bandeiraPanel;
+
+	//TODO check if this is necessary
+	private List<JPanel> resetPanelList = new ArrayList<JPanel>();
 	
-	/**
-	 * 
-	 * @param reset The actionListener that will be added to the reset button
-	 * @param textFields A Map that contains TroopFormattedTextFields to be used in the ModeloTropas editor
-	 */
-	public ToolPanel(boolean edit, ActionListener reset, Map<Unidade, TroopFormattedTextField> textFields) {
-		
-		makeResetPanel(reset);
-		
-		modelosPanel = new ModeloTropasPanel(edit, textFields);
-		
-	}
+	private List<ModeloTropasPanel> modelosPanelList = new ArrayList<ModeloTropasPanel>();
 	
-	private void makeResetPanel(ActionListener listener) {
+	
+	public ToolPanel() {}
+	
+	private JPanel makeResetPanel(ActionListener listener) {
 		
-		resetPanel = new JPanel();
+		JPanel resetPanel = new JPanel();
 		resetPanel.setOpaque(false);
 		
 		JButton resetButton = new JButton("Reset");
 		resetButton.addActionListener(listener);
 		
 		resetPanel.add(resetButton);
+		resetPanelList.add(resetPanel);
+		
+		return resetPanel;
 		
 	}
 	
-	public JPanel getResetPanel() {
-		return resetPanel;
+	/**
+	 * Cria um panel com um botão com o nome "Reset" que, quando clicado, faz a ação dada
+	 * 
+	 * @param listener Ação a ser feita no clique
+	 * @return Um Panel com o botão 
+	 */
+	public JPanel addResetPanel(ActionListener action) {
+		
+		return makeResetPanel(action);
+		
 	}
 	
-	public JPanel getModelosPanel() {
-		return modelosPanel;
+	/**
+	 * Cria um panel que fornece a habilidade de utilizar os ModelosTropas, além de editá-los
+	 * 
+	 * @param edit Se o painel possui o botão de edição
+	 * @param textFields  Map com TroopFormattedTextField ligados a unidades, para utilizar os Modelos
+	 * @return Um JPanel com as coisas faladas
+	 */
+	public JPanel addModelosPanel(boolean edit, Map<Unidade, TroopFormattedTextField> textFields) {
+		
+		ModeloTropasPanel panel = new ModeloTropasPanel(edit, textFields);
+		
+		modelosPanelList.add(panel);
+		
+		return panel;
+		
 	}
 	
+	/**
+	 * Refreshes the option menu to reflect all changes that might have occurred
+	 */
 	public void refresh() {
-		modelosPanel.refresh();
+		
+		for (ModeloTropasPanel i : modelosPanelList)
+			i.refresh();
+		
 	}
 	
 	@SuppressWarnings("serial")
@@ -167,7 +193,7 @@ public class ToolPanel {
 
 		private void makePopupMenu() {
 
-			JPopupMenu popup = new JPopupMenu();
+			popup = new JPopupMenu();
 
 			// Adds all the models to the dropdown menu
 			for (final ModeloTropas i : ModeloTropas_Reader.getListModelos()) {

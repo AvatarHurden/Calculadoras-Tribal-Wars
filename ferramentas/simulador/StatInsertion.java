@@ -79,7 +79,7 @@ public class StatInsertion extends JPanel {
 		this.info = info;
 		
 		//TODO update both panels on edit
-		tools = new ToolPanel((tipo == Tipo.Atacante), null, mapQuantidades);
+//		tools = new ToolPanel((tipo == Tipo.Atacante), null, mapQuantidades);
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] { 110 };
@@ -96,7 +96,7 @@ public class StatInsertion extends JPanel {
 		
 		c.insets = new Insets(5, 0, 5, 0);
 		c.fill = GridBagConstraints.NONE;
-		add(tools.getModelosPanel(), c);
+//		add(tools.getModelosPanel(), c);
 
 		
 		// Adding the space to allow for militia on defensive side

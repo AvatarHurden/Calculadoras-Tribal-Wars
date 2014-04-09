@@ -67,6 +67,12 @@ import database.Unidade;
 @SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 public class EditDialog extends JDialog {
 
+	//TODO find out why it changes size when "NEW" is pressed
+	
+	//TODO make a way to allow no objects
+	// - On startup, store one object as a template for future ones
+	// - Somehow extract which object was supposed to be in the list
+	
 	List<Object> objects;
 
 	Map<Object, ArrayList<Property>> variableMap;
@@ -409,10 +415,15 @@ public class EditDialog extends JDialog {
 					
 					// Se o último objeto foi deletado, seleciona o
 					// anterior. Caso contrário, o seguinte
+					
+					
 					if (position == interfaceList.size())
 						interfaceList.get(position-1).setSelected(true);
 					else
 						interfaceList.get(position).setSelected(true);
+					
+					revalidate();
+					repaint();
 					
 					changeButtons();
 					

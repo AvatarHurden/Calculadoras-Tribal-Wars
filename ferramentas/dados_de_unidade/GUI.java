@@ -16,7 +16,6 @@ import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
-import custom_components.ToolPanel;
 import custom_components.TroopFormattedTextField;
 import database.Cores;
 import database.Unidade;
@@ -34,9 +33,6 @@ public class GUI extends Ferramenta {
 	Map<String, BigInteger> somaTotal = new HashMap<String, BigInteger>();
 
 	PanelSoma total = new PanelSoma();
-	
-	// Painéis de ferramentas (modeloTropas e resetar)
-	ToolPanel tools;
 
 	/**
 	 * Ferramenta com informações de unidades. Possui: 
@@ -83,13 +79,11 @@ public class GUI extends Ferramenta {
 			}
 		};
 		
-		tools = new ToolPanel(true, action, mapQuantidades);
+		gbc.anchor = GridBagConstraints.WEST;
+		add(tools.addResetPanel(action), gbc);
 		
 		gbc.anchor = GridBagConstraints.EAST;
-		add(tools.getModelosPanel(), gbc);
-
-		gbc.anchor = GridBagConstraints.WEST;
-		add(tools.getResetPanel(), gbc);
+		add(tools.addModelosPanel(true, mapQuantidades), gbc);
 		
 		gbc.gridy++;
 		gbc.gridx = 0;

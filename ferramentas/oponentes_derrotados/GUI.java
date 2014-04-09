@@ -20,7 +20,6 @@ import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
-import custom_components.ToolPanel;
 import custom_components.TroopFormattedTextField;
 import database.Cores;
 import database.Unidade;
@@ -36,8 +35,6 @@ public class GUI extends Ferramenta {
 	private final Map<Unidade, Integer> pontos_ODA = new HashMap<Unidade, Integer>();
 	private final Map<Unidade, Integer> pontos_ODD = new HashMap<Unidade, Integer>();
 
-	private ToolPanel tools;
-	
 	PanelSoma total = new PanelSoma();
 
 	JPanel panelButtons;
@@ -67,13 +64,18 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 5, 5, 5);
 
-		setToolPanel();
-		
-		gbc.anchor = GridBagConstraints.EAST;
-		add(tools.getModelosPanel(), gbc);
+		ActionListener reset = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for (TroopFormattedTextField t : mapQuantidades.values())
+					t.setText("");
+			}
+		};
 		
 		gbc.anchor = GridBagConstraints.WEST;
-		add(tools.getResetPanel(), gbc);
+		add(tools.addResetPanel(reset), gbc);
+		
+		gbc.anchor = GridBagConstraints.EAST;
+		add(tools.addModelosPanel(true, mapQuantidades), gbc);
 		
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.gridy++;
@@ -102,19 +104,6 @@ public class GUI extends Ferramenta {
 		addPanelTotal(gbc);
 		
 
-	}
-
-	private void setToolPanel() {
-		
-		ActionListener reset = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				for (TroopFormattedTextField t : mapQuantidades.values())
-					t.setText("");
-			}
-		};
-		
-		tools = new ToolPanel(true, reset, mapQuantidades);
-	
 	}
 	
 	// Cria um painel com os botões para selecionar se o OD mostrado é de ataque
