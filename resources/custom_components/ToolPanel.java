@@ -249,11 +249,12 @@ public class ToolPanel {
 
 					try {
 						
-						new EditDialog(ModeloTropas_Reader.getListModelos(), "variableList", 0);
+						new EditDialog(ModeloTropas.class,
+								ModeloTropas_Reader.getListModelos(), "variableList", 0);
 						
 						makePopupMenu();
 						
-					} catch (NoSuchFieldException | SecurityException e) {
+					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | InstantiationException e) {
 						e.printStackTrace();
 					}
 

@@ -108,7 +108,7 @@ public class Escolha_de_mundo extends JPanel{
 				
 				try {
 					
-					EditDialog dialog = new EditDialog(Mundo_Reader.getMundoList(),
+					new EditDialog(Mundo.class, Mundo_Reader.getMundoList(),
 							"variableList", getSelectedIndex());
 					
 					selectionBox.removeItemListener(selectionBox.getItemListeners()[0]);
@@ -116,7 +116,9 @@ public class Escolha_de_mundo extends JPanel{
 					
 					setSelectionBox();
 					
-				} catch (NoSuchFieldException | SecurityException e) {
+					gui.changeInformationPanel();
+					
+				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | InstantiationException e) {
 					e.printStackTrace();
 				}
 				

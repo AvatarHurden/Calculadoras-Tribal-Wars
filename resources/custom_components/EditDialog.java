@@ -67,11 +67,11 @@ import database.Unidade;
 @SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 public class EditDialog extends JDialog {
 
-	//TODO find out why it changes size when "NEW" is pressed
-	
 	//TODO make a way to allow no objects
 	// - On startup, store one object as a template for future ones
 	// - Somehow extract which object was supposed to be in the list
+	
+	Class objectClass;
 	
 	List<Object> objects;
 
@@ -84,8 +84,10 @@ public class EditDialog extends JDialog {
 	
 	private ObjectInterface selectedInterface;
 	
-	JPanel namePanel;
+	// Used if the list given has 0 length, turning this into the first "selected" interface
+	private ObjectInterface nullInterface;
 	
+	JPanel namePanel;
 	JScrollPane scroll;
 	int listNumber = 0;
 	
@@ -115,24 +117,25 @@ public class EditDialog extends JDialog {
 	 * 				objects
 	 * @throws SecurityException
 	 * 			<br>If the <code>Field</code> cannot be accessed.
+	 * @throws IllegalAccessException 
+	 *     //TODO document this
+	 * @throws IllegalArgumentException 
+	 * @throws InstantiationException 
 	 */
-	public EditDialog(List objects, String variableName, int selected) 
-			throws NoSuchFieldException, SecurityException {
+	public EditDialog(Class objectClass ,List objects, String variableName, int selected) 
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InstantiationException {
+		
+		this.objectClass = objectClass;
 		
 		this.objects = objects;
 		
-		variableField = objects.get(0).getClass().getDeclaredField(variableName);
+		variableField = objectClass.getDeclaredField(variableName);
 		
 		variableMap = new HashMap<Object, ArrayList<Property>>();
 		
 		// Puts every object and their variable in a map, for reference
 		for(Object o : objects)
-			try {
-				variableMap.put(o, (ArrayList<Property>)variableField.get(o));
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-
+			variableMap.put(o, (ArrayList<Property>)variableField.get(o));
 		
 		setLayout(new GridBagLayout());
 
@@ -140,7 +143,7 @@ public class EditDialog extends JDialog {
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
-		c.insets = new Insets(0,0,0,0);
+//		c.insets = new Insets(0,0,0,0);
 		
 		// Create and add the right-side Panel
 		getContentPane().add(makeScrollPanel(),c);
@@ -153,9 +156,13 @@ public class EditDialog extends JDialog {
 		
 		// Makes the information panel as thick as any given objectInformation,
 		// and also makes it as tall as necessary to fit an integer number of namePanels
+		
+		nullInterface = new ObjectInterface(objectClass.newInstance(), 
+				(ArrayList<Property>)variableField.get(objectClass.newInstance()));
+		
 		informationPanel.setPreferredSize(new Dimension(
-				interfaceList.get(0).objectInformation.getPreferredSize().width,
-				(int)Math.ceil(interfaceList.get(0).
+				nullInterface.objectInformation.getPreferredSize().width,
+				(int)Math.ceil(nullInterface.
 						objectInformation.getPreferredSize().height/32+1)*32));
 		
 		informationPanel.setBackground(Cores.ALTERNAR_ESCURO);
@@ -168,20 +175,29 @@ public class EditDialog extends JDialog {
 		c.gridwidth = 2;
 		getContentPane().add(makeEditPanel(), c);
 		
-		// Packs the dialog and solidifies its size
-		pack();
-		setResizable(false);
+		
 		
 		// Selects the desired object and puts the scroll in the necessary position
-		interfaceList.get(selected).setSelected(true);		
-		scroll.getVerticalScrollBar().setValue(selected*32);
+		// If there are no interfaces, select the "null" one.
+		if (interfaceList.size() > 0)
+			interfaceList.get(selected).setSelected(true);
+		else
+			nullInterface.setSelected(true);
+		
 		
 		// Puts it always on top of the program
 		setModal(true);
 		
+		// Packs the dialog and solidifies its size
+		pack();
+		setResizable(false);
+		
+		//Sets the scroll in correct position
+		scroll.getVerticalScrollBar().setValue(selected*32);
+		
 		setVisible(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				
+			
 	}
 	
 	private void createInterface(Object o) {
@@ -262,7 +278,7 @@ public class EditDialog extends JDialog {
 				
 				try {
 					
-					Object obj = objects.get(0).getClass().newInstance();
+					Object obj = objectClass.newInstance();
 						
 					variableMap.put(obj, (ArrayList<Property>)variableField.get(obj));
 					
@@ -276,8 +292,8 @@ public class EditDialog extends JDialog {
 					addInterfaceToScroll(interfaceList.get(interfaceList.size()-1),
 							interfaceList.size()-1);
 					
-					pack();
-					
+					revalidate();
+										
 					scroll.getVerticalScrollBar().setValue(
 							scroll.getVerticalScrollBar().getMaximum());
 					
@@ -416,11 +432,11 @@ public class EditDialog extends JDialog {
 					// Se o último objeto foi deletado, seleciona o
 					// anterior. Caso contrário, o seguinte
 					
-					
-					if (position == interfaceList.size())
-						interfaceList.get(position-1).setSelected(true);
-					else
-						interfaceList.get(position).setSelected(true);
+					if (interfaceList.size() != 0)
+						if (position == interfaceList.size())
+							interfaceList.get(position-1).setSelected(true);
+						else
+							interfaceList.get(position).setSelected(true);
 					
 					revalidate();
 					repaint();
@@ -560,27 +576,27 @@ public class EditDialog extends JDialog {
 			
 			for (Property i : list) {
 				
-				if (i.getClass().equals(Property_Nome.class)) {
-				
+				if (i instanceof Property_Nome) {
+			
 				objectInformation.add(makeNamePanel((Property_Nome) i), c);
 				c.gridy++;	
 					
-				} else if (i.getClass().equals(Property_Boolean.class)) {
+				} else if (i instanceof Property_Boolean) {
 					
 				objectInformation.add(makeBooleanPanel((Property_Boolean) i), c);	
 				c.gridy++;	
 				
-				} else if (i.getClass().equals(Property_Escolha.class)) {
+				} else if (i instanceof Property_Escolha) {
 					
 				objectInformation.add(makeEscolhaPanel((Property_Escolha) i), c);		
 				c.gridy++;
 				
-				} else if (i.getClass().equals(Property_Number.class)) {
+				} else if (i instanceof Property_Number) {
 					
 				objectInformation.add(makeNumberPanel((Property_Number) i), c);	
 				c.gridy++;
 				
-				} else if (i.getClass().equals(Property_UnidadeList.class)) {
+				} else if (i instanceof Property_UnidadeList) {
 				
 				objectInformation.add(makeUnidadeListPanel((Property_UnidadeList) i), c);		
 				c.gridy++;
@@ -923,7 +939,7 @@ public class EditDialog extends JDialog {
 				for (Entry<Property, Object> i : variableMap.entrySet()) {
 					
 					// Nome case
-					if (i.getKey().getClass().equals(Property_Nome.class)) {
+					if (i.getKey() instanceof Property_Nome) {
 				
 						// only does this if the name is different
 						if (!i.getKey().getName().equals(((JTextField) i.getValue()).getText())) {
@@ -939,12 +955,12 @@ public class EditDialog extends JDialog {
 						}
 						
 					// Boolean case
-					} else if (i.getKey().getClass().equals(Property_Boolean.class)) {
+					} else if (i.getKey() instanceof Property_Boolean) {
 						
 					i.getKey().setValue(((JCheckBox) i.getValue()).isSelected());
 						
 					// Escolha case
-					} else if (i.getKey().getClass().equals(Property_Escolha.class)) {
+					} else if (i.getKey() instanceof Property_Escolha) {
 						
 						 Enumeration<AbstractButton> enumeration = 
 								 ((ButtonGroup) i.getValue()).getElements();
@@ -959,12 +975,12 @@ public class EditDialog extends JDialog {
 						 }
 						
 					// Number case
-					} else if (i.getKey().getClass().equals(Property_Number.class)) {
+					} else if (i.getKey() instanceof Property_Number) {
 						
 						i.getKey().setValue(((JTextField) i.getValue()).getText());
 					
 					// UnidadeList case 
-					} else if (i.getKey().getClass().equals(Property_UnidadeList.class)) {
+					} else if (i.getKey() instanceof Property_UnidadeList) {
 						
 						Map<Unidade, BigDecimal> map = new HashMap<Unidade, BigDecimal>();
 						
