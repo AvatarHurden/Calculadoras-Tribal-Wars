@@ -721,19 +721,6 @@ public class EditDialog extends JDialog {
 
 			}
 
-			// Code for retrieving the selected value
-
-			// Enumeration<AbstractButton> enumeration = buttonGroup.getElements();
-			//
-			// while (enumeration.hasMoreElements()) {
-			//
-			// AbstractButton b = enumeration.nextElement();
-			//
-			// if (b.isSelected())
-			// System.out.println(b.getText());
-			//
-			// }
-
 			c.gridx++;
 			panel.add(buttonPanel, c);
 
@@ -893,9 +880,6 @@ public class EditDialog extends JDialog {
 			layout.columnWeights = new double[] { 1, Double.MIN_VALUE };
 			layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 			panel.setLayout(layout);
-			
-			//Adds a listener to turn 'isSaved' false
-			
 
 			return panel;
 
@@ -946,6 +930,7 @@ public class EditDialog extends JDialog {
 							
 							i.getKey().setValue(((JTextField) i.getValue()).getText());	
 							
+							//TODO have this done always
 							objectName.removeAll();
 							objectName.add(new JLabel(object.toString()));
 							
@@ -962,17 +947,17 @@ public class EditDialog extends JDialog {
 					// Escolha case
 					} else if (i.getKey() instanceof Property_Escolha) {
 						
-						 Enumeration<AbstractButton> enumeration = 
+						Enumeration<AbstractButton> enumeration = 
 								 ((ButtonGroup) i.getValue()).getElements();
 						
-						 while (enumeration.hasMoreElements()) {
+						while (enumeration.hasMoreElements()) {
 						
-							 AbstractButton b = enumeration.nextElement();
+							AbstractButton b = enumeration.nextElement();
 						
-							 if (b.isSelected())
-								 i.getKey().setValue(b.getText());
+							if (b.isSelected())
+								i.getKey().setValue(b.getText());
 						 
-						 }
+						}
 						
 					// Number case
 					} else if (i.getKey() instanceof Property_Number) {
@@ -1004,10 +989,8 @@ public class EditDialog extends JDialog {
 				String s = nameTextField.getText();
 				
 				do {					
-//				JOptionPane.showMessageDialog(null, 
-//						 nameTextField, "t", 1);
 					
-				s = (String)(JOptionPane.showInputDialog(null, 
+					s = (String)(JOptionPane.showInputDialog(null, 
 						new JLabel("<html>Esse nome já está sendo utilizado.<br>Favor escolher outro.</html>"),
 						"Nome já utilizado", JOptionPane.ERROR_MESSAGE, null, null, s));
 				
