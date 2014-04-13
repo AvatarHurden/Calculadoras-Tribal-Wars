@@ -2,6 +2,7 @@ package property_classes;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
@@ -50,7 +51,7 @@ public class Property_Boolean implements Property{
 		isTrue = (boolean)i;
 	}
 
-	public JPanel makeEditDialogPanel(JPanel defaultPanel, ActionListener listener) {
+	public JPanel makeEditDialogPanel(JPanel defaultPanel, final OnChange onChange) {
 		
 		JPanel panel = defaultPanel;
 
@@ -67,7 +68,11 @@ public class Property_Boolean implements Property{
 		checkBox.setOpaque(false);
 		checkBox.setSelected(isTrue);
 		
-		checkBox.addActionListener(listener);
+		checkBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				onChange.run();
+			}
+		});
 		
 		c.gridx++;
 		panel.add(checkBox, c);
@@ -77,11 +82,10 @@ public class Property_Boolean implements Property{
 		
 	}
 
-	@Override
 	public void setValue() {
 		
 		isTrue = checkBox.isSelected();
 		
 	}
-	
+
 }

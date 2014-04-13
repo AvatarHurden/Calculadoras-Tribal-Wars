@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -97,7 +96,7 @@ public class Property_Escolha implements Property {
 	}
 	
 	// TODO perhaps take the "basic" panel as input (to allow the caller to define visual style)
-	public JPanel makeEditDialogPanel(JPanel defaultPanel, Method onEdit) {
+	public JPanel makeEditDialogPanel(JPanel defaultPanel, final OnChange onChange) {
 		
 		JPanel panel = defaultPanel;
 		
@@ -123,7 +122,7 @@ public class Property_Escolha implements Property {
 			button.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {
-					onEdit.invoke(null, null);
+					onChange.run();
 				}
 			});
 			

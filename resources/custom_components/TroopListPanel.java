@@ -173,7 +173,8 @@ public class TroopListPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
-					EditDialog dialog = new EditDialog(ModeloTropas_Reader.getListModelos(),
+					EditDialog dialog = new EditDialog(ModeloTropas.class,
+							ModeloTropas_Reader.getListModelos(),
 							"variableList", 0);
 					
 					int x = button.getLocation().x
@@ -187,7 +188,7 @@ public class TroopListPanel extends JPanel {
 					
 					popup = makePopupMenu();
 					
-				} catch (NoSuchFieldException | SecurityException e) {
+				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | InstantiationException e) {
 					e.printStackTrace();
 				}
 
@@ -200,17 +201,6 @@ public class TroopListPanel extends JPanel {
 
 	}
 
-	private JButton makeHelpButton() {
-
-		final JButton button = new JButton();
-
-		button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				GUI.class.getResource("/images/help_icon.png"))));
-
-		button.setPreferredSize(new Dimension(32, 20));
-
-		return button;
-
-	}
+	
 
 }

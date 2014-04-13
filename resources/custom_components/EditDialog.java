@@ -3,56 +3,37 @@ package custom_components;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
 
+import property_classes.OnChange;
 import property_classes.Property;
-import property_classes.Property_Boolean;
-import property_classes.Property_Escolha;
 import property_classes.Property_Nome;
-import property_classes.Property_Number;
-import property_classes.Property_UnidadeList;
 import selecionar_mundo.GUI;
 import database.Cores;
-import database.Unidade;
 
 /**
  * Creates a dialog that enables the user to edit a list of objects (that are compatible with the EditDialog)
@@ -514,25 +495,27 @@ public class EditDialog extends JDialog {
 		private JLabel unsavedSignal = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				GUI.class.getResource("/images/asterísco_vermelho.png"))));
 		
-		/**
-		 * Maps the object's properties to an object that contains the property's value
-		 * <br>This is the mapping that is made depending on the type of property:
-		 * <br>
-		 * <br> Nome : JTextField
-		 * <br> Boolean : JCheckBox
-		 * <br> Escolha : ButtonGroup
-		 * <br> Number : JTextField
-		 * <br> UnidadeList : HashMap<\Unidade, TroopFormattedTextField>
-		 */
-		private Map<Property, Object> variableMap = new HashMap<Property, Object>();
+		// Object with the function that will be called when any one the Property's
+		// "textFields" are changed 
+		private OnChange onChange;
+		
+		private List<Property> propertyList;
 		
 		public ObjectInterface(Object object, List<Property> list) {
 			
+			propertyList = list;
+			
 			this.object = object;
+			
+			onChange = new OnChange() {
+				public void run() {
+					setSaved(false);
+				}
+			};
 			
 			createNamePanel(object.toString());
 			
-			createInformationPanel(list);
+			createInformationPanel();
 			
 		}
 		
@@ -565,7 +548,7 @@ public class EditDialog extends JDialog {
 			
 		}
 		
-		private void createInformationPanel(List<Property> list) {
+		private void createInformationPanel() {
 			
 			objectInformation = new JPanel(new GridBagLayout());
 			
@@ -574,293 +557,19 @@ public class EditDialog extends JDialog {
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridy = 0;
 			
-			for (Property i : list) {
-				
-				if (i instanceof Property_Nome) {
-			
-				objectInformation.add(makeNamePanel((Property_Nome) i), c);
-				c.gridy++;	
-					
-				} else if (i instanceof Property_Boolean) {
-					
-				objectInformation.add(makeBooleanPanel((Property_Boolean) i), c);	
-				c.gridy++;	
-				
-				} else if (i instanceof Property_Escolha) {
-					
-				objectInformation.add(makeEscolhaPanel((Property_Escolha) i), c);		
+			for (Property i : propertyList) {
+								
+				objectInformation.add(i.makeEditDialogPanel(makeDefaultPanel(), onChange), c);
 				c.gridy++;
 				
-				} else if (i instanceof Property_Number) {
-					
-				objectInformation.add(makeNumberPanel((Property_Number) i), c);	
-				c.gridy++;
-				
-				} else if (i instanceof Property_UnidadeList) {
-				
-				objectInformation.add(makeUnidadeListPanel((Property_UnidadeList) i), c);		
-				c.gridy++;
-				
-				}
+				if (i instanceof Property_Nome)
+					nameTextField = ((Property_Nome) i).getTextField();
 				
 			}
 			
 			objectInformation.setBackground(Cores.ALTERNAR_ESCURO);
 			objectInformation.setVisible(false);
 			
-		}
-		
-		private JPanel makeNamePanel(Property_Nome variable) {
-			
-			JPanel panel = makeDefaultPanel();
-			
-			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(5, 5, 5, 5);
-			c.gridy = 0;
-			c.gridx = 0;
-			c.gridwidth = 1;
-			c.anchor = GridBagConstraints.WEST;
-			
-			panel.add(new JLabel("Nome"), c);
-			
-			nameTextField = new JTextField(16);
-			nameTextField.setText(variable.getValueName());
-			
-			nameTextField.getDocument().addDocumentListener(new DocumentListener() {
-			
-				public void removeUpdate(DocumentEvent arg0) {
-					setSaved(false);
-				}				
-				
-				public void insertUpdate(DocumentEvent arg0) {
-					setSaved(false);
-				}
-				
-				public void changedUpdate(DocumentEvent arg0) {}
-			});
-			
-			c.anchor = GridBagConstraints.EAST;
-			c.gridy++;
-			c.gridwidth = 2;
-			panel.add(nameTextField, c);
-			
-			variableMap.put(variable, nameTextField);
-			
-			return panel;
-			
-		}
-
-		private JPanel makeBooleanPanel(Property_Boolean variable) {
-
-			JPanel panel = makeDefaultPanel();
-
-			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(5, 5, 5, 5);
-			c.gridy = 0;
-			c.gridx = 0;
-			c.gridwidth = 1;
-
-			JLabel name = new JLabel(variable.getName());
-			panel.add(name, c);
-
-			JCheckBox checkBox = new JCheckBox();
-			checkBox.setOpaque(false);
-			checkBox.setSelected(variable.getValue());
-			
-			checkBox.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e) {
-					setSaved(false);
-				}
-			});
-			
-			c.gridx++;
-			panel.add(checkBox, c);
-
-			variableMap.put(variable, checkBox);
-			
-			return panel;
-
-		}
-
-		private JPanel makeEscolhaPanel(Property_Escolha variable) {
-
-			JPanel panel = makeDefaultPanel();
-
-			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(5, 5, 5, 5);
-			c.gridy = 0;
-			c.gridx = 0;
-			c.gridwidth = 1;
-
-			JLabel name = new JLabel(variable.getName());
-			panel.add(name, c);
-
-			ButtonGroup buttonGroup = new ButtonGroup();
-			
-			JPanel buttonPanel = new JPanel(new GridLayout(0,1));
-			buttonPanel.setOpaque(false);
-			
-			for (String s : variable.getOptions()) {
-				
-				JRadioButton button = new JRadioButton(s);
-				button.setOpaque(false);
-				
-				button.addActionListener(new ActionListener() {
-					
-					public void actionPerformed(ActionEvent arg0) {
-						setSaved(false);
-					}
-				});
-				
-				if (variable.isOption(s))
-					button.setSelected(true);
-
-				buttonGroup.add(button);
-				buttonPanel.add(button);
-
-			}
-
-			c.gridx++;
-			panel.add(buttonPanel, c);
-
-			variableMap.put(variable, buttonGroup);
-			
-			return panel;
-
-		}
-
-		private JPanel makeNumberPanel(Property_Number variable) {
-
-			JPanel panel = makeDefaultPanel();
-
-			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(5, 5, 5, 5);
-			c.gridy = 0;
-			c.gridx = 0;
-			c.gridwidth = 1;
-
-			JLabel name = new JLabel(variable.getName());
-			panel.add(name, c);
-
-			JTextField txt = new JTextField(variable.getValue().toString());
-			
-			txt.setDocument(new PlainDocument() {
-
-				@Override
-				public void insertString(int offset, String str, AttributeSet attr)
-						throws BadLocationException {
-					if (str == null)
-						return;
-
-					// Only does anything if it is a comma, period or number
-					if (str.charAt(0) == '.' || str.charAt(0) == ',' ||
-							 Character.isDigit(str.charAt(0))) {
-						
-						// If it is a comma or perido, check if it already has one
-						if (!Character.isDigit(str.charAt(0)) && 
-								super.getText(0, getLength()).contains(".")) {}
-						else
-							// If it does not and the inserted is a comma, add a period
-							if (str.charAt(0) == ',')
-								super.insertString(offset, ".", attr);
-							else
-								// Else, add the inserted character (period or number)
-								super.insertString(offset, str, attr);
-					}
-
-
-				}
-
-			});
-			
-			txt.addFocusListener(new FocusListener() {
-			
-				public void focusLost(FocusEvent f) {
-					
-					if (((JTextField) f.getSource()).getText().equals("")) {
-						((JTextField) f.getSource()).setText("1");
-					}
-					
-				}
-				
-				public void focusGained(FocusEvent arg0) {}
-			});
-			
-			txt.setText(variable.getValue().toString());
-			
-			txt.setColumns(5);
-			
-			txt.getDocument().addDocumentListener(new DocumentListener() {
-				
-				public void removeUpdate(DocumentEvent arg0) {
-					setSaved(false);
-				}
-				
-				public void insertUpdate(DocumentEvent arg0) {
-					setSaved(false);
-				}
-				
-				public void changedUpdate(DocumentEvent arg0) {}
-			});
-			
-			c.gridx++;
-			panel.add(txt, c);
-
-			variableMap.put(variable, txt);
-			
-			return panel;
-
-		}
-
-		private JPanel makeUnidadeListPanel(Property_UnidadeList variable) {
-
-			JPanel panel = makeDefaultPanel();
-
-			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(5, 5, 5, 5);
-			c.gridy = -1;
-			c.gridx = 0;
-			c.gridwidth = 1;
-
-			Map<Unidade, TroopFormattedTextField> map = new HashMap<Unidade, TroopFormattedTextField>();
-			
-			for (Unidade i : Unidade.values()) {
-
-				c.gridx = 0;
-				c.gridy++;
-				panel.add(new JLabel(i.nome()), c);
-
-				TroopFormattedTextField txt = new TroopFormattedTextField(9) {
-					public void go() {}
-				};
-				
-				txt.setText(variable.get(i).toString());
-
-				txt.getDocument().addDocumentListener(new DocumentListener() {
-					
-					public void removeUpdate(DocumentEvent arg0) {
-						setSaved(false);
-					}
-					
-					public void insertUpdate(DocumentEvent arg0) {
-						setSaved(false);
-					}
-					
-					public void changedUpdate(DocumentEvent arg0) {}
-				});
-
-				c.gridx = 1;
-				panel.add(txt, c);
-				
-				map.put(i, txt);
-
-			}
-			
-			variableMap.put(variable, map);
-
-			return panel;
-
 		}
 
 		/**
@@ -920,67 +629,15 @@ public class EditDialog extends JDialog {
 		private void saveObejct() {
 			
 			if (isUniqueName(nameTextField.getText())) {
-				for (Entry<Property, Object> i : variableMap.entrySet()) {
-					
-					// Nome case
-					if (i.getKey() instanceof Property_Nome) {
 				
-						// only does this if the name is different
-						if (!i.getKey().getName().equals(((JTextField) i.getValue()).getText())) {
-							
-							i.getKey().setValue(((JTextField) i.getValue()).getText());	
-							
-							//TODO have this done always
-							objectName.removeAll();
-							objectName.add(new JLabel(object.toString()));
-							
-							objectName.revalidate();
-							objectName.repaint();
-						
-						}
-						
-					// Boolean case
-					} else if (i.getKey() instanceof Property_Boolean) {
-						
-					i.getKey().setValue(((JCheckBox) i.getValue()).isSelected());
-						
-					// Escolha case
-					} else if (i.getKey() instanceof Property_Escolha) {
-						
-						Enumeration<AbstractButton> enumeration = 
-								 ((ButtonGroup) i.getValue()).getElements();
-						
-						while (enumeration.hasMoreElements()) {
-						
-							AbstractButton b = enumeration.nextElement();
-						
-							if (b.isSelected())
-								i.getKey().setValue(b.getText());
-						 
-						}
-						
-					// Number case
-					} else if (i.getKey() instanceof Property_Number) {
-						
-						i.getKey().setValue(((JTextField) i.getValue()).getText());
-					
-					// UnidadeList case 
-					} else if (i.getKey() instanceof Property_UnidadeList) {
-						
-						Map<Unidade, BigDecimal> map = new HashMap<Unidade, BigDecimal>();
-						
-						for (Entry<Unidade, TroopFormattedTextField> x 
-								: ((HashMap<Unidade, TroopFormattedTextField>) i .getValue()).entrySet()) {
-							
-							map.put(x.getKey(), x.getValue().getValue());
-							
-						}
-						
-						i.getKey().setValue(map);
-						
-					} // else if (UnidadeList)
-					
-				} // for (EntrySet)
+				for (Property i : propertyList)
+					i.setValue();
+	
+				objectName.removeAll();
+				objectName.add(new JLabel(object.toString()));
+				
+				objectName.revalidate();
+				objectName.repaint();
 				
 				setSaved(true);
 				
@@ -1002,11 +659,6 @@ public class EditDialog extends JDialog {
 				} else
 					setSaved(false);
 			
-//				JOptionPane.showInputDialog(null);
-//				JOptionPane.showMessageDialog(null, "Esse nome já está sendo utilizado.\nFavor escolher outro.");
-//				nameTextField.requestFocus();
-//				nameTextField.selectAll();
-				
 			}
 			
 					

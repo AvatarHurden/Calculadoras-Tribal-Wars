@@ -2,7 +2,6 @@ package property_classes;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,7 +36,7 @@ public class Property_Nome implements Property{
 		
 	}
 
-	public JPanel makeEditDialogPanel(JPanel defaultPanel, ActionListener listener) {
+	public JPanel makeEditDialogPanel(JPanel defaultPanel, final OnChange onChange) {
 		
 		JPanel panel = defaultPanel;
 		
@@ -56,11 +55,11 @@ public class Property_Nome implements Property{
 		txtName.getDocument().addDocumentListener(new DocumentListener() {
 		
 			public void removeUpdate(DocumentEvent arg0) {
-				setSaved(false);
+				onChange.run();
 			}				
 			
 			public void insertUpdate(DocumentEvent arg0) {
-				setSaved(false);
+				onChange.run();
 			}
 			
 			public void changedUpdate(DocumentEvent arg0) {}
@@ -69,9 +68,7 @@ public class Property_Nome implements Property{
 		c.anchor = GridBagConstraints.EAST;
 		c.gridy++;
 		c.gridwidth = 2;
-		panel.add(nameTextField, c);
-		
-		variableMap.put(variable, nameTextField);
+		panel.add(txtName, c);
 		
 		return panel;
 
@@ -85,7 +82,13 @@ public class Property_Nome implements Property{
 			name = txtName.getText();	
 		
 	}
+	
+	/**
+	 * This is used to check if the name the user wants is unique
+	 * @return the TextField
+	 */
+	public JTextField getTextField() {
+		return txtName;
+	}
 
-	
-	
 }

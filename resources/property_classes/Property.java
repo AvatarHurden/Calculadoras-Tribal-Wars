@@ -1,8 +1,5 @@
 package property_classes;
 
-import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
-
 import javax.swing.JPanel;
 
 public interface Property {
@@ -19,7 +16,7 @@ public interface Property {
 	 * Creates the panel to be added to EditDialog.
 	 * @return JPanel
 	 */
-	JPanel makeEditDialogPanel(JPanel panel, Method onChange);
+	JPanel makeEditDialogPanel(JPanel panel, final OnChange change);
 	
 	/**
 	 * Gives the user-friendly name of the property
