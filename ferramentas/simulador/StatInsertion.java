@@ -65,21 +65,16 @@ public class StatInsertion extends JPanel {
 
 	// variável para a cor dos panels
 	int loop = 0;
-	
-	private ToolPanel tools;
 
 	/**
 	 * @param tipo
 	 *            Se o panel é de atacante ou defensor
 	 */
-	public StatInsertion(Tipo tipo, InputInfo info) {
+	public StatInsertion(Tipo tipo, InputInfo info, ToolPanel tool) {
 
 		this.tipo = tipo;
 
 		this.info = info;
-		
-		//TODO update both panels on edit
-//		tools = new ToolPanel((tipo == Tipo.Atacante), null, mapQuantidades);
 		
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] { 110 };
@@ -94,16 +89,16 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		
-		c.insets = new Insets(5, 0, 5, 0);
+		c.insets = new Insets(6, 0, 6, 0);
 		c.fill = GridBagConstraints.NONE;
-//		add(tools.getModelosPanel(), c);
+		add(tool.addModelosPanel((tipo == Tipo.Atacante), mapQuantidades), c);
 
 		
 		// Adding the space to allow for militia on defensive side
 		if (tipo == Tipo.Atacante && Mundo_Reader.MundoSelecionado.hasMilícia())
-			c.insets = new Insets(0, 0, 30, 0);
+			c.insets = new Insets(5, 0, 30, 0);
 		else
-			c.insets = new Insets(0, 0, 5, 0);
+			c.insets = new Insets(5, 0, 5, 0);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridy++;
@@ -210,12 +205,12 @@ public class StatInsertion extends JPanel {
 		lblTipo.setOpaque(true);
 		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
 
-		// Caso o mundo possua nível de tropas, torna a borda mais grossa para
+		// Caso o mundo possua nível de tropas, coloca uma borda mais grossa para
 		// facilitar a visualização da separação.
 		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			lblTipo.setBorder(new MatteBorder(0, 0, 2, 0, Cores.SEPARAR_ESCURO));
-		else
-			lblTipo.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
+//		else
+//			lblTipo.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
 		
 		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = 2;
@@ -250,8 +245,11 @@ public class StatInsertion extends JPanel {
 				JPanel tropaPanel = new JPanel();
 				tropaPanel.setLayout(layout);
 				tropaPanel.setBackground(Cores.getAlternar(loop));
-				// tropaPanel.setBorder(new
-				// MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+				
+				// Separação entre a parte de nomenclatura e as unidades
+				if (i.equals(Unidade.LANCEIRO))
+					tropaPanel.setBorder(new
+							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
 				GridBagConstraints tropaC = new GridBagConstraints();
 				tropaC.insets = new Insets(3, 5, 3, 5);
@@ -842,9 +840,33 @@ public class StatInsertion extends JPanel {
 		}
 
 	}
-	
-	public ToolPanel getToolPanel(){
-		return tools;
-	}
 
+	public void resetValues() {
+		
+		for (TroopFormattedTextField i : mapQuantidades.values())
+			i.setText("");
+		
+		for (JComboBox<Integer> i : mapNiveis.values())
+			i.setSelectedIndex(0);
+		
+		if (religião != null)
+			religião.setSelected(false);
+		if (noite != null)
+			noite.setSelected(false);
+		
+		if (tipo == Tipo.Atacante) {
+			sorte.setText("");
+			if (moral != null)
+				moral.setText("");
+		} else {
+			muralha.setText("");
+			edifício.setText("");
+		}
+		
+		if (item != null)
+			item.setSelectedIndex(0);
+		if (bandeira != null)
+			bandeira.setSelectedIndex(0);
+	}
+	
 }

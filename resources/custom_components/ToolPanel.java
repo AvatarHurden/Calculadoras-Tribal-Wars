@@ -99,7 +99,7 @@ public class ToolPanel {
 	public void refresh() {
 		
 		for (ModeloTropasPanel i : modelosPanelList)
-			i.refresh();
+			i.makePopupMenu();
 		
 	}
 	
@@ -148,10 +148,6 @@ public class ToolPanel {
 			}
 		}
 		
-		public void refresh(){
-			makePopupMenu();
-		}
-
 		private JLabel makeNameLabel() {
 
 			JLabel label = new JLabel("Modelos:");
@@ -253,6 +249,8 @@ public class ToolPanel {
 								ModeloTropas_Reader.getListModelos(), "variableList", 0);
 						
 						makePopupMenu();
+						
+						refresh();
 						
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | InstantiationException e) {
 						e.printStackTrace();

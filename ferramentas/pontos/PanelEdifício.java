@@ -315,6 +315,10 @@ public class PanelEdifício {
 	protected int getNível() {
 		return txtNível.getSelectedIndex();
 	}
+	
+	protected EdifícioFormattedComboBox getComboBox() {
+		return txtNível;
+	}
 
 	/**
 	 * @return JPanel com as labels dos dados principais

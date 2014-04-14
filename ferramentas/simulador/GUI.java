@@ -27,19 +27,15 @@ import database.Unidade;
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
 
-	InputInfo input = new InputInfo();
+	InputInfo input;
+	OutputInfo output;
 
-	OutputInfo output = new OutputInfo();
+	Cálculo cálculo;
 
-	Cálculo cálculo = new Cálculo(input, output);
+	StatInsertion statAtacante;
+	StatInsertion statDefensor;
 
-	StatInsertion statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante,
-			input);
-
-	StatInsertion statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor,
-			input);
-
-	ResultTroopDisplay display = new ResultTroopDisplay(output);
+	ResultTroopDisplay display;
 
 	public GUI() {
 
@@ -47,31 +43,69 @@ public class GUI extends Ferramenta {
 
 		setBackground(Cores.FUNDO_CLARO);
 
+		
+		input = new InputInfo();
+		
+		output = new OutputInfo();
+		
+		cálculo = new Cálculo(input, output);
+		
+		statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante, input, tools);
+		
+		statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor, input, tools);
+		
+		display = new ResultTroopDisplay(output);
+		
+		
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 5, 5);
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 0;
-		c.gridy = -1;
+		c.gridy = 0;
 
-		addEmptySpace(c);
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				statAtacante.resetValues();
+				statDefensor.resetValues();
+				
+				statAtacante.setInputInfo();
+
+				statDefensor.setInputInfo();
+
+				display.resetValues();
+			}
+		};
+		
+		c.anchor = GridBagConstraints.NORTHWEST;
+		add(tools.addResetPanel(action), c);
+		
+		c.anchor = GridBagConstraints.NORTH;
+		
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
+			addEmptySpace(c);
 
 		c.gridy++;
+		c.insets = new Insets(0, 5, 5, 5);
 		add(addUnitNames(), c);
 
 		c.gridx++;
 		c.gridy = 0;
+		c.insets = new Insets(5, 5, 5, 5);
 		c.gridheight = 2;
 		add(statAtacante, c);
 
 		c.gridx++;
 		add(statDefensor, c);
 
-		c.gridy = -1;
+		c.gridy = 0;
 		c.gridx++;
 		c.gridheight = 1;
-		addEmptySpace(c);
+		c.insets = new Insets(0, 5, 5, 5);
+		
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
+			addEmptySpace(c);
 
 		c.gridy++;
 		add(display, c);
@@ -119,7 +153,6 @@ public class GUI extends Ferramenta {
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
 
 		c.gridy++;
 		panel.add(lblNome, c);
@@ -137,8 +170,11 @@ public class GUI extends Ferramenta {
 				JPanel tropaPanel = new JPanel();
 				tropaPanel.setLayout(new GridBagLayout());
 				tropaPanel.setBackground(Cores.getAlternar(loop));
-				// tropaPanel.setBorder(new
-				// MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+
+				// Separação entre a parte de nomenclatura e as unidades
+				if (i.equals(Unidade.LANCEIRO))
+					tropaPanel.setBorder(new
+							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
 				GridBagConstraints tropaC = new GridBagConstraints();
 				tropaC.insets = new Insets(5, 5, 5, 5);
@@ -167,13 +203,8 @@ public class GUI extends Ferramenta {
 		
 		// If mundo has levels, adds extra space so that the units align with the
 		// input panels
-		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
-			space.setPreferredSize(new Dimension(
-					space.getPreferredSize().width, 50));
-		else
-			space.setPreferredSize(new Dimension(
-					space.getPreferredSize().width, 24));
-		
+		space.setPreferredSize(new Dimension(
+				space.getPreferredSize().width, 62));
 		
 		c.gridy = 0;
 		add(space, c);

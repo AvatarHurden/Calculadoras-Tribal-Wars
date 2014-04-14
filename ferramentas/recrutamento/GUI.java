@@ -164,7 +164,6 @@ public class GUI extends Ferramenta {
 		toolPanel.setLayout(gbl);
 		
 		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridy = 0;
 		c.gridx = 0;
@@ -183,9 +182,11 @@ public class GUI extends Ferramenta {
 			}
 		};
 		
+		c.anchor = GridBagConstraints.WEST;
 		toolPanel.add(tools.addResetPanel(reset), c);
 		
 		c.gridx++;
+		c.anchor = GridBagConstraints.CENTER;
 		toolPanel.add(tools.addModelosPanel(true, mapQuantidades), c);
 
 		return toolPanel;

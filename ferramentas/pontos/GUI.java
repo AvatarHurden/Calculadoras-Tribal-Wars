@@ -3,6 +3,8 @@ package pontos;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,20 +55,34 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 5, 5, 5);
 
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				for (PanelEdifício i : panelEdifícioList)
+					i.getComboBox().setSelectedIndex(0);
+				
+			}
+		};
+		
+		gbc.anchor = GridBagConstraints.WEST;
+		add(tools.addResetPanel(action), gbc);
+		
+		gbc.gridy++;
+		gbc.anchor = GridBagConstraints.CENTER;
 		addHeader(true, gbc);
 
-		gbc.gridy = 1;
+		gbc.gridy++;
 		gbc.gridx = 0;
 		add(unitePanels("identificadores"), gbc);
 
 		gbc.gridx++;
 		add(unitePanels("dadosPanel"), gbc);
 
-		gbc.gridy = 2;
+		gbc.gridy++;
 		gbc.gridx = 0;
 		addHeader(false, gbc);
 
-		gbc.gridy = 3;
+		gbc.gridy++;
 		gbc.gridx = 0;
 		addPanelTotal(gbc);
 

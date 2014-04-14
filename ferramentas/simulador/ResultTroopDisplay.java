@@ -19,6 +19,7 @@ import config.Mundo_Reader;
 import database.Cores;
 import database.Unidade;
 
+@SuppressWarnings("serial")
 public class ResultTroopDisplay extends JPanel {
 
 	private OutputInfo output;
@@ -109,7 +110,6 @@ public class ResultTroopDisplay extends JPanel {
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
 
 		panel.add(lblNome, c);
 
@@ -126,8 +126,11 @@ public class ResultTroopDisplay extends JPanel {
 				JPanel tropaPanel = new JPanel();
 				tropaPanel.setLayout(new GridBagLayout());
 				tropaPanel.setBackground(Cores.getAlternar(loop));
-				// tropaPanel.setBorder(new
-				// MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+
+				// Separação entre a parte de nomenclatura e as unidades
+				if (i.equals(Unidade.LANCEIRO))
+					tropaPanel.setBorder(new
+							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
 				GridBagConstraints tropaC = new GridBagConstraints();
 				tropaC.insets = new Insets(5, 5, 5, 5);
@@ -173,7 +176,6 @@ public class ResultTroopDisplay extends JPanel {
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
 
 		panel.add(lblNome, c);
 
@@ -190,8 +192,11 @@ public class ResultTroopDisplay extends JPanel {
 				JPanel tropaPanel = new JPanel();
 				tropaPanel.setLayout(new GridBagLayout());
 				tropaPanel.setBackground(Cores.getAlternar(loop));
-				// tropaPanel.setBorder(new
-				// MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+
+				// Separação entre a parte de nomenclatura e as unidades
+				if (i.equals(Unidade.LANCEIRO))
+					tropaPanel.setBorder(new
+							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
 				GridBagConstraints tropaC = new GridBagConstraints();
 				tropaC.insets = new Insets(5, 5, 5, 5);
@@ -238,7 +243,6 @@ public class ResultTroopDisplay extends JPanel {
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
 
 		panel.add(lblNome, c);
 
@@ -256,8 +260,11 @@ public class ResultTroopDisplay extends JPanel {
 				JPanel tropaPanel = new JPanel();
 				tropaPanel.setLayout(new GridBagLayout());
 				tropaPanel.setBackground(Cores.getAlternar(loop));
-				// tropaPanel.setBorder(new
-				// MatteBorder(1,0,0,0,Cores.SEPARAR_CLARO));
+
+				// Separação entre a parte de nomenclatura e as unidades
+				if (i.equals(Unidade.LANCEIRO))
+					tropaPanel.setBorder(new
+							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
 				GridBagConstraints tropaC = new GridBagConstraints();
 				tropaC.insets = new Insets(5, 5, 5, 5);
@@ -363,33 +370,19 @@ public class ResultTroopDisplay extends JPanel {
 		edifício.setText(String.valueOf(output.getEdifício()));
 
 	}
+	
+	public void resetValues() {
+		
+		for (Entry<Unidade, JLabel> i : tropasAtacantesPerdidas.entrySet())
+			i.getValue().setText(" ");
 
-	// public static void main (String args[]) {
-	//
-	// Mundo_Reader.read();
-	//
-	// Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(0));
-	//
-	//
-	// JFrame test = new JFrame();
-	//
-	// test.setLayout(new GridBagLayout());
-	//
-	// GUI gui = new GUI();
-	//
-	// GridBagConstraints c = new GridBagConstraints();
-	// c.anchor = GridBagConstraints.NORTH;
-	//
-	// test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	//
-	// ResultTroopDisplay display = new ResultTroopDisplay(gui.output);
-	//
-	// test.add(display,c);
-	// test.pack();
-	// test.setVisible(true);
-	//
-	// display.setValues();
-	//
-	// }
+		for (Entry<Unidade, JLabel> i : tropasDefensorasPerdidas.entrySet())
+			i.getValue().setText(" ");
 
+		muralha.setText(" ");
+
+		edifício.setText(" ");
+		
+	}
+	
 }

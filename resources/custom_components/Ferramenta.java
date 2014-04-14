@@ -6,11 +6,9 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import database.Cores;
-
 import frames.MainWindow;
 
 @SuppressWarnings("serial")
@@ -33,7 +31,7 @@ public class Ferramenta extends JPanel{
 	
 		tools = new ToolPanel();
 		
-		setBorder(new LineBorder(Cores.SEPARAR_CLARO));
+//		setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 		
 		tab = new JPanel();
 		tab.add(new JLabel(nome));
