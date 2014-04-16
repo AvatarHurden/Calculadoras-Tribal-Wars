@@ -75,6 +75,8 @@ public class File_Manager {
 		do {
 			s = in.readLine();
 
+			
+			// TODO allow empty spaces in config file
 			if (s != null) {
 
 				if (s.contains("Mundo_Padrão="))

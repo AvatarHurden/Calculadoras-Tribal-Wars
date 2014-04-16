@@ -786,10 +786,10 @@ Mundos {
 	itensAprimorados=false
 	milicia=true
 	cunhagemDeMoedas=false
-	
+
 	nome=Mundo 58
-	velocidade=1
-	modificador=1
+	velocidade=1.0
+	modificador=1.0
 	moral=true
 	sistemaDePesquisa=Pesquisa_Simples
 	igreja=true
@@ -802,7 +802,7 @@ Mundos {
 	cunhagemDeMoedas=true
 	
 	nome=Mundo 59
-	velocidade=2
+	velocidade=2.0
 	modificador=0.5
 	moral=true
 	sistemaDePesquisa=Pesquisa_Simples

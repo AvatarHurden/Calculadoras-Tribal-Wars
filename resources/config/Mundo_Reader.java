@@ -56,12 +56,11 @@ public class Mundo_Reader {
 			total += "\n";
 
 			// reads the lines to gather all of the properties, breaking once
-			// the line
-			// contains no more properties (i.e. the world will change)
+			// the line contains no more properties (i.e. the world will change)
 			while ((s = in.readLine()) != null) {
 				if (!s.equals(""))
 					total += s + "\n";
-				else
+				else 
 					break;
 			}
 
@@ -69,7 +68,6 @@ public class Mundo_Reader {
 			i.load(new StringReader(total));
 
 			Mundo mundo = new Mundo(i);
-//			mundo.setAll(i);
 			mundoList.add(mundo);
 		}
 
