@@ -81,25 +81,6 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.anchor = GridBagConstraints.SOUTHEAST;
 		add(padrãoButton, constraints);
 		
-		startButton = new JButton("Iniciar");
-		
-		startButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-			
-				// Define as características da classe estática "MundoSelecionado", que será
-				// utilizado por todas as ferramentas
-				Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
-				
-				Main.openMainFrame();
-				
-			}
-		});
-		
-		constraints.gridy = 2;
-		constraints.anchor = GridBagConstraints.CENTER;
-		add(startButton, constraints);
-		
 		editButton = new JButton("Edit");
 		
 		editButton.addActionListener(new ActionListener() {
@@ -130,8 +111,33 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.anchor = GridBagConstraints.NORTHEAST;
 		add(editButton, constraints);
 		
+		startButton = new JButton("Iniciar");
+		
+		startButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+			
+				// Define as características da classe estática "MundoSelecionado", que será
+				// utilizado por todas as ferramentas
+				Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
+				
+				Main.openMainFrame();
+				
+			}
+		});
+		
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.CENTER;
+		add(startButton, constraints);
+		
 		changePadrãoButton();
 		
+		editButton.setFocusable(false);
+		selectionBox.setFocusable(false);
+		selectionBox.setFocusable(true);
+		
+		startButton.requestFocusInWindow();
+
 	}
 	
 	private void setSelectionBox() {
@@ -174,4 +180,8 @@ public class Escolha_de_mundo extends JPanel{
 		return selectionBox.getSelectedIndex();
 		
 	}	
+	
+	public JButton getStartButton() {
+		return startButton;
+	}
 }

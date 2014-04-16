@@ -75,7 +75,8 @@ public class GUI extends JFrame {
 		add(lblAuthor, constraints);
 
 		changeInformationPanel();
-
+		
+		getRootPane().setDefaultButton(selectionPanel.getStartButton());
 	}
 
 	/**

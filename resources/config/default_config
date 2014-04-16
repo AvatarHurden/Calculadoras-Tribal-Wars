@@ -787,6 +787,33 @@ Mundos {
 	milicia=true
 	cunhagemDeMoedas=false
 	
+	nome=Mundo 58
+	velocidade=1
+	modificador=1
+	moral=true
+	sistemaDePesquisa=Pesquisa_Simples
+	igreja=true
+	bonusNoturno=true
+	bandeira=true
+	arqueiro=true
+	paladino=true
+	itensAprimorados=true
+	milicia=true
+	cunhagemDeMoedas=true
+	
+	nome=Mundo 59
+	velocidade=2
+	modificador=0.5
+	moral=true
+	sistemaDePesquisa=Pesquisa_Simples
+	igreja=false
+	bonusNoturno=false
+	bandeira=false
+	arqueiro=false
+	paladino=false
+	itensAprimorados=false
+	milicia=false
+	cunhagemDeMoedas=true
 }
 
 Modelos_de_Tropas {

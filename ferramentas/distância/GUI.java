@@ -3,6 +3,8 @@ package distância;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +46,27 @@ public class GUI extends Ferramenta {
 		setLayout(gridBagLayout);
 
 		GridBagConstraints constraints = new GridBagConstraints();
-
+		constraints.gridy = 0;
+		constraints.gridx = 0;
+		
+		ActionListener action = new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				aldeiaOrigem.reset();
+				aldeiaDestino.reset();
+				
+			}
+		};
+		
+		constraints.anchor = GridBagConstraints.WEST;
+		add(tools.addResetPanel(action), constraints);
+		
 		aldeiaOrigem = new PanelAldeia("Aldeia de Origem", this);
 
+		constraints.gridy++;
 		constraints.insets = new Insets(5, 5, 5, 5);
+		constraints.anchor = GridBagConstraints.CENTER;
 		add(aldeiaOrigem, constraints);
 
 		aldeiaDestino = new PanelAldeia("Aldeia de Destino", this);
@@ -60,7 +79,7 @@ public class GUI extends Ferramenta {
 		constraints.insets = new Insets(5, 5, 0, 5);
 		addHeader(constraints);
 
-		constraints.gridy = 2;
+		constraints.gridy++;
 		constraints.gridx = 0;
 		constraints.gridwidth = 2;
 		constraints.insets = new Insets(5, 5, 5, 5);
@@ -73,42 +92,10 @@ public class GUI extends Ferramenta {
 	 */
 	private void setUnidades() {
 
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.LANCEIRO));
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.ESPADACHIM));
-
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-			unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-					Unidade.ARQUEIRO));
-
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.BÁRBARO));
-
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.EXPLORADOR));
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.CAVALOLEVE));
-
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-			unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-					Unidade.ARCOCAVALO));
-
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.CAVALOPESADO));
-
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.ARÍETE));
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.CATAPULTA));
-
-		if (Mundo_Reader.MundoSelecionado.hasPaladino())
-			unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-					Unidade.PALADINO));
-
-		unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(),
-				Unidade.NOBRE));
-
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades())
+			if (i != null && !i.equals(Unidade.MILÍCIA))
+				unidadesUtilizadas.add(new PanelTempoUnidade(getNextColor(), i));
+	
 	}
 
 	protected void calculateDistanceAndTimes() {
@@ -139,7 +126,7 @@ public class GUI extends Ferramenta {
 
 	private void addHeader(GridBagConstraints c) {
 
-		c.gridy = 1;
+		c.gridy++;
 		add(new PanelTempoUnidade(), c);
 
 	}

@@ -183,5 +183,12 @@ public class PanelAldeia extends JPanel {
 	protected int getCoordenadaY() {
 		return Integer.parseInt(y.getText());
 	}
+	
+	public void reset() {
+		
+		x.setText("");
+		y.setText("");
+		
+	}
 
 }

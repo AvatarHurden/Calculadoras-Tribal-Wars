@@ -14,13 +14,16 @@ public class Cálculos {
 	 * @return String com a configuração 0d 0h0m0s
 	 */
 	public static String format(BigDecimal number) {
-
+		
 		BigDecimal dias = number.divideToIntegralValue(new BigDecimal(86400));
+		
 		BigDecimal horas = number.divideToIntegralValue(new BigDecimal(3600))
 				.subtract(dias.multiply(new BigDecimal(24)));
+		
 		BigDecimal minutos = number.divideToIntegralValue(new BigDecimal(60))
 				.subtract(horas.multiply(new BigDecimal(60)))
 				.subtract(dias.multiply(new BigDecimal(1440)));
+		
 		BigDecimal segundos = number
 				.subtract(minutos.multiply(new BigDecimal(60)))
 				.subtract(horas.multiply(new BigDecimal(3600)))

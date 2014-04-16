@@ -51,7 +51,9 @@ public class ResultTroopDisplay extends JPanel {
 
 		c.insets = new Insets(0, 5, 5, 5);
 		add(addUnitNames(), c);
-
+		
+		// TODO specify that these are lost units
+		
 		// Panel to store both attack and defense unit panels
 		JPanel unitPanels = new JPanel(new GridBagLayout());
 		// unitPanels.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
