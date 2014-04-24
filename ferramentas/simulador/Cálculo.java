@@ -122,7 +122,7 @@ public class Cálculo {
 			itemAtacante = ItemPaladino.FOGUEIRA;
 
 		destroyBuildingAndWall();
-
+		
 		setOutputVariables();
 		
 	}
@@ -140,6 +140,8 @@ public class Cálculo {
 
 		muralhaInicial = input.getMuralha();
 
+		edifícioInicial = input.getEdifício();
+		
 		moral = input.getMoral();
 
 		sorte = input.getSorte();
@@ -587,18 +589,18 @@ public class Cálculo {
 		BigDecimal somaTropasDefensoras = BigDecimal.ZERO;
 		for (BigDecimal i : tropasDefensoras.values())
 			somaTropasDefensoras = somaTropasDefensoras.add(i);
-
+			
 		BigDecimal somaTropasDefensorasPerdidas = BigDecimal.ZERO;
 		for (BigDecimal i : tropasPerdidasDefesa.values())
 			somaTropasDefensorasPerdidas = somaTropasDefensorasPerdidas.add(i);
-
+		
 		// Downgrading wall
 
 		if (tropasAtacantes.get(Unidade.ARÍETE).compareTo(BigDecimal.ZERO) > 0
 				&& muralhaInicial > 0) {
 
-			if (somaTropasDefensorasPerdidas.compareTo(somaTropasDefensoras) == 0) // Defensor
-																					// perdeu
+			if (somaTropasDefensoras.equals(BigDecimal.ZERO)) // Defensor
+															// perdeu
 
 				// final = initial - round(max * (2-
 				// lostAttackers/totalAttackers))
@@ -630,6 +632,8 @@ public class Cálculo {
 		}
 
 		// Downgrading Building
+		
+		edifícioFinal = edifícioInicial;
 
 		if (tropasAtacantes.get(Unidade.CATAPULTA).compareTo(BigDecimal.ZERO) > 0
 				&& edifícioInicial > 0) {
@@ -645,8 +649,8 @@ public class Cálculo {
 							new BigDecimal(edifícioInicial))), rounding,
 					RoundingMode.HALF_EVEN);
 
-			if (tropasPerdidasDefesa.equals(tropasDefensoras)) // Defensor
-																// perdeu
+			if (somaTropasDefensoras.equals(BigDecimal.ZERO)) // Defensor
+															// perdeu
 
 				// final = initial - round(max * (2-
 				// lostAttackers/totalAttackers))

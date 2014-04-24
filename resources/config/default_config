@@ -800,7 +800,7 @@ Mundos {
 	itensAprimorados=true
 	milicia=true
 	cunhagemDeMoedas=true
-	
+
 	nome=Mundo 59
 	velocidade=2.0
 	modificador=0.5

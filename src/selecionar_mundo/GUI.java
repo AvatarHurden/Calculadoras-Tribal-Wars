@@ -38,7 +38,7 @@ public class GUI extends JFrame {
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
-				GUI.class.getResource("/images/Sem título.png")));
+				GUI.class.getResource("/images/test.png")));
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 546, 1, 350 };
@@ -118,8 +118,6 @@ public class GUI extends JFrame {
 				Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		panelMundo.setLayout(gridBagLayout);
-
-		// TODO set size to not change for less information
 
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = 0;

@@ -79,35 +79,51 @@ public class GUI extends Ferramenta {
 		};
 		
 		c.anchor = GridBagConstraints.NORTHWEST;
+		c.gridheight = 2;
 		add(tools.addResetPanel(action), c);
 		
 		c.anchor = GridBagConstraints.NORTH;
+		c.gridheight = 1;
+		c.gridy += 2;
 		
-		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			addEmptySpace(c);
+			
+			c.gridy++;
+		} else
+			c.gridheight = 2;
 
-		c.gridy++;
 		c.insets = new Insets(0, 5, 5, 5);
 		add(addUnitNames(), c);
 
 		c.gridx++;
 		c.gridy = 0;
 		c.insets = new Insets(5, 5, 5, 5);
-		c.gridheight = 2;
+		c.gridheight = 4;
 		add(statAtacante, c);
 
 		c.gridx++;
 		add(statDefensor, c);
 
 		c.gridy = 0;
-		c.gridx++;
-		c.gridheight = 1;
-		c.insets = new Insets(0, 5, 5, 5);
+		c.gridx++;	
 		
-		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
+		if (!Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
+			
+			c.insets = new Insets(0, 5, 4, 5);
+			c.gridheight = 1;
 			addEmptySpace(c);
-
-		c.gridy++;
+			
+			c.insets = new Insets(0, 5, 5, 5);
+			c.gridheight = 3;
+			c.gridy++;
+			
+		} else {
+			c.insets = new Insets(0, 5, 5, 5);
+			c.gridheight = 2;
+			c.gridy += 2;
+		}
+		
 		add(display, c);
 
 		JButton button = new JButton("Go");
@@ -125,8 +141,8 @@ public class GUI extends Ferramenta {
 
 			}
 		});
-
-		c.gridy++;
+		
+		c.anchor = GridBagConstraints.SOUTH;
 		add(button, c);
 
 	}
@@ -204,9 +220,8 @@ public class GUI extends Ferramenta {
 		// If mundo has levels, adds extra space so that the units align with the
 		// input panels
 		space.setPreferredSize(new Dimension(
-				space.getPreferredSize().width, 62));
+				space.getPreferredSize().width, 16));
 		
-		c.gridy = 0;
 		add(space, c);
 
 	}

@@ -27,7 +27,6 @@ import database.Unidade;
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
 
-	//TODO make this better
 	private List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
 
 	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
@@ -224,45 +223,6 @@ public class GUI extends Ferramenta {
 						.getTextField());
 			}
 		
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.LANCEIRO,
-//				this));
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//				Unidade.ESPADACHIM, this));
-//
-//		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//					Unidade.ARQUEIRO, this));
-//
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.BÁRBARO,
-//				this));
-//
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//				Unidade.EXPLORADOR, this));
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//				Unidade.CAVALOLEVE, this));
-//
-//		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//					Unidade.ARCOCAVALO, this));
-//
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//				Unidade.CAVALOPESADO, this));
-//
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.ARÍETE,
-//				this));
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//				Unidade.CATAPULTA, this));
-//		panelUnidadeList.add(new PanelUnidade(getNextColor(), Unidade.NOBRE,
-//				this));
-//
-//		if (Mundo_Reader.MundoSelecionado.hasMilícia())
-//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//					Unidade.MILÍCIA, this));
-//
-//		if (Mundo_Reader.MundoSelecionado.hasPaladino())
-//			panelUnidadeList.add(new PanelUnidade(getNextColor(),
-//					Unidade.PALADINO, this));
-
 	}
 
 	// Cria os mapas com os valores de OD

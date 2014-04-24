@@ -435,11 +435,22 @@ public class StatInsertion extends JPanel {
 				// dígitos
 				if ((getLength() + str.length()) <= 3
 						&& (Character.isDigit(str.charAt(0)) || str.charAt(0) == '-')) {
-					if (getLength() == 0)
 						super.insertString(offset, str, attr);
-					else if (Math.abs(Integer.parseInt(getText(0, getLength())
-							+ str)) <= 100)
-						super.insertString(offset, str, attr);
+						
+				// TODO study if this is good
+				if (!super.getText(0, getLength()).equals("-") &&
+						Math.abs(Integer.parseInt(getText(0, getLength()))) > 25) {
+					
+					if (super.getText(0, 1).equals("-")) {
+						super.remove(1, getLength()-1);
+						super.insertString(1, "25", attr);
+					} else {
+						super.remove(0, getLength());
+						super.insertString(0, "25", attr);
+					}
+					
+				}
+
 
 				}
 			}
@@ -544,6 +555,12 @@ public class StatInsertion extends JPanel {
 				if ((getLength() + str.length()) <= 2
 						&& (Character.isDigit(str.charAt(0))))
 					super.insertString(offset, str, attr);
+				
+				// TODO study if this is good
+				if (Math.abs(Integer.parseInt(getText(0, getLength()))) > 20) {
+					super.remove(0, getLength());
+					super.insertString(0, "20", attr);
+				}
 
 			}
 		});

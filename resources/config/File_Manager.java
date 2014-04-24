@@ -75,8 +75,6 @@ public class File_Manager {
 		do {
 			s = in.readLine();
 
-			
-			// TODO allow empty spaces in config file
 			if (s != null) {
 
 				if (s.contains("Mundo_Padrão="))
@@ -164,8 +162,6 @@ public class File_Manager {
 			out.write("\n");
 			out.write("Modelos_de_Tropas {");
 			out.write("\n");
-
-			// TODO add modelo mesmo
 
 			out.write(ModeloTropas_Reader.getModelosConfig());
 

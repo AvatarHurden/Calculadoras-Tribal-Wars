@@ -1,6 +1,5 @@
 package config;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 
 import database.ModeloTropas;
 
@@ -28,7 +28,7 @@ public class ModeloTropas_Reader {
 		try {
 
 			// read the user-alterable config file
-			BufferedReader in = new BufferedReader(new StringReader(section));
+			Scanner in = new Scanner(new StringReader(section));
 
 			store(in);
 
@@ -41,22 +41,24 @@ public class ModeloTropas_Reader {
 
 	}
 
-	private static void store(BufferedReader in) throws IOException {
+	private static void store(Scanner in) throws IOException {
 
 		String total = "";
 
 		// reads the lines to gather all the properties of each world, running
 		// once per world
 		// breaks once there are no more worlds to read
-		while ((total = in.readLine()) != null) {
+		while (in.hasNextLine()) {
 
 			String s;
-			total += "\n";
+			total += in.nextLine()+"\n";
 
 			// reads the lines to gather all of the properties, breaking once
 			// the line
 			// contains no more properties (i.e. the world will change)
-			while ((s = in.readLine()) != null) {
+			while (in.hasNextLine()) {
+				
+				s = in.nextLine().trim();
 				if (!s.equals(""))
 					total += s + "\n";
 				else
@@ -107,7 +109,7 @@ public class ModeloTropas_Reader {
 
 		for (ModeloTropas i : listModelos)
 			section += i.getConfigText();
-
+		
 		return section;
 		
 	}

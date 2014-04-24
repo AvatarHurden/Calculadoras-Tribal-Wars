@@ -75,7 +75,6 @@ public class Property_Escolha implements Property {
 		
 	}
 	
-	// TODO test how this would work
 	// i.e Make the class itself define the value, since it will contain the object that has
 	// the information
 	public void setValue() {
@@ -95,7 +94,6 @@ public class Property_Escolha implements Property {
 		
 	}
 	
-	// TODO perhaps take the "basic" panel as input (to allow the caller to define visual style)
 	public JPanel makeEditDialogPanel(JPanel defaultPanel, final OnChange onChange) {
 		
 		JPanel panel = defaultPanel;

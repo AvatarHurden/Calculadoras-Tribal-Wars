@@ -47,10 +47,6 @@ import database.Cores;
  */
 @SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 public class EditDialog extends JDialog {
-
-	//TODO make a way to allow no objects
-	// - On startup, store one object as a template for future ones
-	// - Somehow extract which object was supposed to be in the list
 	
 	Class objectClass;
 	

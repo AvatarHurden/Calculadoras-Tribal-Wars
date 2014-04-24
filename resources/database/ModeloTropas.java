@@ -113,9 +113,9 @@ public class ModeloTropas {
 
 	public String getConfigText() {
 		
-		String s = "";
+		String s = "\n";
 		
-		s += ("\tnome=" + nome.getName() + "\n");
+		s += ("\tnome=" + nome.getValueName() + "\n");
 
 		s += ("\tlanceiro=" + quantidades.get(Unidade.LANCEIRO) + "\n");
 		s += ("\tespadachim=" + quantidades.get(Unidade.ESPADACHIM) + "\n");

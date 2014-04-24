@@ -4,7 +4,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,12 +46,27 @@ public class ResultTroopDisplay extends JPanel {
 		setLayout(layout);
 
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 5, 0);
 		c.gridx = 0;
 		c.gridy = 0;
+		
+		// Panel that says that the shown units are lost units
+		JPanel identificationPanel = new JPanel();
+		identificationPanel.setBackground(Cores.FUNDO_ESCURO);
+		identificationPanel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		
+		identificationPanel.add(new JLabel("Unidades Perdidas"));
+		
+		identificationPanel.setPreferredSize(new Dimension(
+				identificationPanel.getPreferredSize().width-2, identificationPanel.getPreferredSize().height-3));
+		
+		c.insets = new Insets(0, 5, 1, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 2;
+		add(identificationPanel, c);
+		
 		c.gridwidth = 1;
-
-		c.insets = new Insets(0, 5, 5, 5);
+		c.gridy++;
+		c.insets = new Insets(0, 5, 5, 6);
 		add(addUnitNames(), c);
 		
 		// TODO specify that these are lost units
@@ -108,7 +125,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		JLabel lblNome = new JLabel("Unidade");
 		lblNome.setPreferredSize(new Dimension(
-				lblNome.getPreferredSize().width + 10, 26));
+				lblNome.getPreferredSize().width + 12, 26));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
@@ -357,15 +374,16 @@ public class ResultTroopDisplay extends JPanel {
 
 	public void setValues() {
 
+		NumberFormat numberFormat = NumberFormat
+				.getNumberInstance(Locale.GERMANY);
+		
 		for (Entry<Unidade, JLabel> i : tropasAtacantesPerdidas.entrySet())
-			i.getValue().setText(
-					output.getTropasAtacantesPerdidas().get(i.getKey())
-							.toString());
+			i.getValue().setText(numberFormat.format(
+					output.getTropasAtacantesPerdidas().get(i.getKey())));
 
 		for (Entry<Unidade, JLabel> i : tropasDefensorasPerdidas.entrySet())
-			i.getValue().setText(
-					output.getTropasDefensorasPerdidas().get(i.getKey())
-							.toString());
+			i.getValue().setText(numberFormat.format(
+					output.getTropasDefensorasPerdidas().get(i.getKey())));
 
 		muralha.setText(String.valueOf(output.getMuralha()));
 

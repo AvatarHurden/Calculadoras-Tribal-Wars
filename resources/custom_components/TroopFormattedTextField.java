@@ -148,9 +148,8 @@ public abstract class TroopFormattedTextField extends JTextField {
 
 		for (String s : pieces) {
 
-			if (pieces.indexOf(s) != 0 && s.length() != 3) {
+			if (pieces.indexOf(s) != 0 && s.length() != 3)
 				return false;
-			}
 
 		}
 

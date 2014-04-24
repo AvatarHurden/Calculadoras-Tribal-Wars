@@ -82,7 +82,7 @@ NULL				(null, 					1,	 "0",      0,	  0);
 	 * @param int segundo elemento do conjunto
 	 * @param int razão geométrica
 	 * @param int número de componentes, a partir do segundo
-	 * @return
+	 * @return in[] O array desejado
 	 */
 	private int[] createList(int inicial, BigDecimal razão, int componentes) {
 
