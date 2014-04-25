@@ -126,7 +126,7 @@ public class GUI extends Ferramenta {
 		
 		add(display, c);
 
-		JButton button = new JButton("Go");
+		JButton button = new JButton("Calcular");
 		button.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {

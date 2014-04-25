@@ -39,6 +39,9 @@ public class Main {
 		selecionar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		selecionar.pack();
 		selecionar.setVisible(true);
+		selecionar.setResizable(false);
+		
+		selecionar.setLocationRelativeTo(null);
 
 	}
 
@@ -48,14 +51,13 @@ public class Main {
 	 * configurações
 	 */
 	public static void openMainFrame() {
-
-		selecionar.dispose();
-
+		
 		File_Manager.defineModelos();
 
 //		File_Manager.save();
 
 		mainFrame = new MainWindow();
+		
 		// Adicionando todas as ferramentas criadas
 		mainFrame.addPanel(new recrutamento.GUI());
 		mainFrame.addPanel(new dados_de_unidade.GUI());
@@ -67,10 +69,15 @@ public class Main {
 		mainFrame.selectFirst();
 
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setVisible(true);
 		mainFrame.pack();
 		mainFrame.setResizable(false);
-
+		
+		// Puts the mainFrame where the world-selection frame was
+		mainFrame.setLocationRelativeTo(selecionar);
+		selecionar.dispose();
+		
+		mainFrame.setVisible(true);
+		
 		mainFrame.addWindowListener(new WindowListener() {
 			
 			public void windowOpened(WindowEvent arg0) {}

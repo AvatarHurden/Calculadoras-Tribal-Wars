@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import selecionar_mundo.GUI;
 import custom_components.Ferramenta;
-
 import database.Cores;
 
 @SuppressWarnings("serial")
@@ -27,6 +28,11 @@ public class MainWindow extends JFrame {
 	 * Frame que contém todas as ferramentas
 	 */
 	public MainWindow() {
+		
+		// Setting the visuals for the frame
+		setTitle("Calculadoras Tribal Wars");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+				GUI.class.getResource("/images/Icon.png")));
 
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		setBackground(Cores.FUNDO_CLARO);

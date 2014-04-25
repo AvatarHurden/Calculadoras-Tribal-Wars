@@ -36,10 +36,12 @@ public class GUI extends JFrame {
 	public GUI() {
 
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
-
+		
+		setTitle("Calculadoras Tribal Wars");
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
-				GUI.class.getResource("/images/test.png")));
-
+				GUI.class.getResource("/images/Icon.png")));
+	
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 546, 1, 350 };
 		gridBagLayout.rowHeights = new int[] { 0, 0 };
@@ -49,17 +51,17 @@ public class GUI extends JFrame {
 		setLayout(gridBagLayout);
 
 		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.insets = new Insets(5, 5, 5, 5);
 		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		
 		constraints.gridwidth = 3;
+		constraints.insets = new Insets(10, 5, 10, 5);
 		addImage(constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		constraints.insets = new Insets(30, 5, 20, 5);
+		constraints.insets = new Insets(0, 5, 20, 5);
 		addWorldPanel(constraints);
 
 		JTextPane lblAuthor = new JTextPane();
@@ -77,6 +79,7 @@ public class GUI extends JFrame {
 		changeInformationPanel();
 		
 		getRootPane().setDefaultButton(selectionPanel.getStartButton());
+	
 	}
 
 	/**
@@ -91,7 +94,7 @@ public class GUI extends JFrame {
 		// No ideia how or why this works, but do not remove "resources" folder
 		// from src
 		lblTítulo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				GUI.class.getResource("/images/Título.png"))));
+				GUI.class.getResource("/images/Logo.png"))));
 
 		add(lblTítulo, c);
 

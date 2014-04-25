@@ -54,7 +54,7 @@ public class ToolPanel {
 		JPanel resetPanel = new JPanel();
 		resetPanel.setOpaque(false);
 		
-		JButton resetButton = new JButton("Reset");
+		JButton resetButton = new JButton("Resetar");
 		resetButton.addActionListener(listener);
 		
 		resetPanel.add(resetButton);

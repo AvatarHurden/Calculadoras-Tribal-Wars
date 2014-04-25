@@ -1,19 +1,42 @@
-- Ferramenta pra calcular saques
 
-- Criar listas de tropas, para adicionar em qualquer seção (nomes para listas)
-	- Listas de edifícios, com níveis pré-definidos
-
-- Put flag selection on same y-level as troop-list selection
-
-- On WorldSelection, edit informations on same panel
-
-- Create improved JTextField to add all funcionality to format numbers
-	to see the code, go to dados_de_unidade and PanelUnidade
-	
-- Adicionar mais informações no simulador
-
+ ==== OPÇÕES GERAIS ====
+ 
+- Adicionar línguas
+ 
 - Permitir configurações de cor ou outras coisas
 
+ 
+ ==== MELHORIAS NAS FERRAMENTAS ====
+ 
+
+- Put flag selection on tools
+
+- Adicionar mais informações no simulador
+	- Tropas mínimas para derrotar certa defesa/ataque (preciso/posso usar derivadas pra isso?)
+
+
+ ==== IDEIAS DE FERRAMENTAS ====
+
+- Ferramenta pra calcular saques com base no restante e níveis dos edifícios
+
+- Ferramenta de planejamento de ataque
+
+- Editor com códigos BB
+
+- Custo total para upar edifícios (colocar junto ao de pontos?)
+
+- Custo de nobres por armazenamento
+
+== IDEIAS FEITAS OU ABANDONADAS ==
+
+- // Criar listas de tropas, para adicionar em qualquer seção (nomes para listas)
+	- Listas de edifícios, com níveis pré-definidos
+
+- // On WorldSelection, edit informations on same panel
+
+- // Create improved JTextField to add all funcionality to format numbers
+	//	to see the code, go to dados_de_unidade and PanelUnidade
+	
 - // Salvar mundo padrão
 
 - // tornar MundoSelecionado um static object de Mundo

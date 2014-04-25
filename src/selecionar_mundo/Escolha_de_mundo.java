@@ -81,7 +81,7 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.anchor = GridBagConstraints.SOUTHEAST;
 		add(padrãoButton, constraints);
 		
-		editButton = new JButton("Edit");
+		editButton = new JButton("Editar");
 		
 		editButton.addActionListener(new ActionListener() {
 			
@@ -116,10 +116,13 @@ public class Escolha_de_mundo extends JPanel{
 		startButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-			
+				
+				gui.setVisible(false);
+				
 				// Define as características da classe estática "MundoSelecionado", que será
 				// utilizado por todas as ferramentas
-				Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
+				Mundo_Reader.setMundoSelecionado(
+						Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
 				
 				Main.openMainFrame();
 				
