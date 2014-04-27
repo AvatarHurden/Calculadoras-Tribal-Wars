@@ -94,7 +94,7 @@ public class GUI extends JFrame {
 		// No ideia how or why this works, but do not remove "resources" folder
 		// from src
 		lblTítulo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				GUI.class.getResource("/images/Logo.png"))));
+				GUI.class.getResource("/images/Logo engine centralized.png"))));
 
 		add(lblTítulo, c);
 

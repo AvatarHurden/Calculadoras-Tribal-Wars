@@ -189,7 +189,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		// Adding the headers
 
-		JLabel lblNome = new JLabel(" Atacante ");
+		JLabel lblNome = new JLabel("Atacante");
 		lblNome.setPreferredSize(new Dimension(
 				lblNome.getPreferredSize().width + 10, 26));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);

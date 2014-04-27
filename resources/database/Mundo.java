@@ -72,8 +72,13 @@ public class Mundo {
 
 		hasBonusNoturno = new Property_Boolean("Bônus Noturno", false);
 
+		// mudar para escolha com "moeda" ou "nivel"
+		// chamar de "sistemaDeAcademia"
+		
 		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas", false);
 
+		// mudar para "simples" ou "nivel"
+		
 		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
 			"Pesquisa Simples", "Pesquisa Simples", "Pesquisa de 3 Níveis");
 

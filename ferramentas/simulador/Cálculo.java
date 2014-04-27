@@ -22,12 +22,13 @@ import database.Unidade.Type;
  * Requer o nível de muralha, moral, sorte, tropas atacantes e tropas
  * defensoras.
  * 
- * Variáveis disponíveis são: - Porcentagem de tropas defensivas perdidas
- * (percDefesa) - Porcentagem de tropas ofensivas geral perdidas (percGeral) -
- * Porcentagem de tropas ofensivas cavalaria perdidas (percCavalaria) -
- * Porcentagem de troaps ofensivas arqueiro perdidas (percArqueiro) - HashMap
- * com tropas perdidas (ataque e defesa) - HashMap com tropas restantes (ataque
- * e defesa)
+ * Variáveis disponíveis são: 
+ * <br>- Porcentagem de tropas defensivas perdidas (percDefesa) 
+ * <br>- Porcentagem de tropas ofensivas geral perdidas (percGeral) 
+ * <br>- Porcentagem de tropas ofensivas cavalaria perdidas (percCavalaria) 
+ * <br>- Porcentagem de troaps ofensivas arqueiro perdidas (percArqueiro) 
+ * <br>- HashMap com tropas perdidas (ataque e defesa) 
+ * <br>- HashMap com tropas restantes (ataque e defesa)
  * 
  * @author Arthur
  * 
@@ -280,25 +281,17 @@ public class Cálculo {
 			religião = "0.5";
 
 		for (Type i : Type.values())
-			ataqueTipos.put(
-					i,
-					ataqueTipos
-							.get(i)
-							.multiply(
-									new BigDecimal(moral)
-											.divide(new BigDecimal("100")))
-							.multiply(
-									BigDecimal.ONE.add(
+			ataqueTipos.put( i,
+					ataqueTipos.get(i).multiply(
+							new BigDecimal(moral).divide(new BigDecimal("100")))
+								.multiply(BigDecimal.ONE.add(
 											new BigDecimal(sorte)
-													.divide(new BigDecimal(
-															"100"))).multiply(
-											new BigDecimal(religião))));
+													.divide(new BigDecimal("100")))
+													.multiply(new BigDecimal(religião))));
 
 		if (bandeiraAtacante != null)
 			for (Type i : Type.values())
-				ataqueTipos.put(
-						i,
-						ataqueTipos.get(i).multiply(
+				ataqueTipos.put(i,	ataqueTipos.get(i).multiply(
 								new BigDecimal(bandeiraAtacante.getValue())));
 
 		for (Type i : Type.values())
@@ -317,11 +310,9 @@ public class Cálculo {
 
 			// I don't even know
 
-			defesaTipos.put(
-					Type.Geral,
+			defesaTipos.put(Type.Geral,
 					defesaTipos.get(Type.Geral).add(
-							i.getValue().multiply(
-									i.getKey().defGeral(
+							i.getValue().multiply(i.getKey().defGeral(
 											nívelTropasDefesa.get(i.getKey()),
 											itemDefensor))));
 
@@ -343,7 +334,7 @@ public class Cálculo {
 
 		}
 
-		// Calculando os modificadores (religião e noite)
+		// Calculando os modificadores (religião, noite e bandeira)
 
 		if (religiãoDefensor == false)
 			for (Type i : Type.values())
@@ -403,16 +394,11 @@ public class Cálculo {
 			for (Type i : Type.values()) {
 
 				// Adiciona o bônus de muralha na defesa
-				defesaTipos
-						.put(i,
-								defesaTipos
-										.get(i)
-										.multiply(
-												Edifício.MURALHA
-														.bônusPercentual(muralhaBônusPercentual)));
+				defesaTipos.put(i,
+								defesaTipos.get(i).multiply(
+									Edifício.MURALHA.bônusPercentual(muralhaBônusPercentual)));
 
-				defesaTipos.put(
-						i,
+				defesaTipos.put(i,
 						defesaTipos.get(i).add(
 								Edifício.MURALHA.bônusFlat(muralhaBônusFlat)));
 
@@ -422,20 +408,26 @@ public class Cálculo {
 
 				if (ataqueTotal.compareTo(BigDecimal.ZERO) == 0
 						&& defesaTipos.get(i).compareTo(BigDecimal.ZERO) == 0) {
+					
 					ataqueRatioLoss.put(i, BigDecimal.ZERO);
 					defenseRatioLoss.put(i, BigDecimal.ZERO);
+					
 				} else if (ataqueTotal.compareTo(defesaTipos.get(i)) == 1) {
+					
 					ataqueRatioLoss.put(i, BigOperation.pow(
 							defesaTipos.get(i).divide(ataqueTotal, rounding,
 									RoundingMode.HALF_EVEN), new BigDecimal(
 									"1.5")));
 					defenseRatioLoss.put(i, BigDecimal.ONE);
+					
 				} else {
+					
 					ataqueRatioLoss.put(i, BigDecimal.ONE);
 					defenseRatioLoss.put(i, BigOperation.pow(ataqueTotal
 							.divide(defesaTipos.get(i), rounding,
 									RoundingMode.HALF_EVEN), new BigDecimal(
 							"1.5")));
+					
 				}
 
 			}
@@ -443,20 +435,17 @@ public class Cálculo {
 			for (Entry<Unidade, BigDecimal> i : atacantesSobrando.entrySet()) {
 				// Colocar as tropas perdidas na batalha num map para poder usar
 				// depois
-				tropasPerdidasAtaque
-						.put(i.getKey(),
-								tropasPerdidasAtaque
-										.get(i.getKey())
+				// Adiciona às tropas perdidas a quantidade que foi morta nessa batalha
+				tropasPerdidasAtaque.put(i.getKey(),
+								tropasPerdidasAtaque.get(i.getKey())
 										.add(i.getValue().multiply(
-												ataqueRatioLoss.get(i.getKey()
-														.type())))
+												ataqueRatioLoss.get(i.getKey().type())))
 										.setScale(0, RoundingMode.HALF_UP));
-				// remover as tropas perdidas do mapa adequado
-				i.setValue(i
-						.getValue()
-						.multiply(
-								BigDecimal.ONE.subtract(ataqueRatioLoss.get(i
-										.getKey().type())))
+				
+				// remover as tropas perdidas de atacantesSobrando
+				i.setValue(i.getValue().multiply(
+								BigDecimal.ONE.subtract(ataqueRatioLoss.get(
+										i.getKey().type())))
 						.setScale(0, RoundingMode.HALF_UP));
 			}
 
@@ -474,11 +463,11 @@ public class Cálculo {
 			for (Entry<Unidade, BigDecimal> i : defensoresSobrando.entrySet()) {
 				// Colocar as tropas perdidas na batalha num map para poder usar
 				// depois
-				tropasPerdidasDefesa.put(
-						i.getKey(),
+				tropasPerdidasDefesa.put(i.getKey(),
 						tropasPerdidasDefesa.get(i.getKey())
 								.add(i.getValue().multiply(defenseTotalLoss))
 								.setScale(0, RoundingMode.HALF_UP));
+				
 				// Remover as tropas perdidas do mapa adequado
 				i.setValue(i.getValue()
 						.multiply(BigDecimal.ONE.subtract(defenseTotalLoss))

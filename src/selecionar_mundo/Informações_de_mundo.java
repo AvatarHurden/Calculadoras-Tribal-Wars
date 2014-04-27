@@ -79,48 +79,7 @@ public class Informações_de_mundo extends JPanel {
 			}
 			
 		}
-		
-//		gbc.gridy++;
-//		add(panelProperty("nome"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("velocidade"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("modificador"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("moral"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("sistemaDePesquisa"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("igreja"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("bonusNoturno"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("bandeira"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("arqueiro"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("paladino"), gbc);
-//
-//		if (Boolean.parseBoolean(prop.getProperty("paladino")) == true) {
-//			gbc.gridy++;
-//			add(panelProperty("itensAprimorados"), gbc);
-//		}
-//
-//		gbc.gridy++;
-//		add(panelProperty("milicia"), gbc);
-//
-//		gbc.gridy++;
-//		add(panelProperty("cunhagemDeMoedas"), gbc);
-
+	
 	}
 	
 	private JPanel panelProperty (Property property) {

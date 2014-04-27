@@ -182,53 +182,6 @@ public class PanelEdifício {
 
 			}
 		};
-		// txtNível.setHorizontalAlignment(SwingConstants.CENTER);
-		// txtNível.setColumns(3);
-		// txtNível.setDocument(new PlainDocument() {
-		//
-		// public void insertString(int offset, String str, AttributeSet attr)
-		// throws BadLocationException {
-		// if (str == null)
-		// return;
-		//
-		// // permite no máximo 2 dígitos
-		//
-		// if ((getLength() + str.length()) <= 2 &&
-		// Character.isDigit(str.charAt(0))) {
-		// super.insertString(offset, str, attr);
-		// }
-		// }
-		//
-		// });
-		//
-		// txtNível.addKeyListener(new KeyListener() {
-		//
-		// public void keyTyped(KeyEvent arg0) {}
-		//
-		// public void keyReleased(KeyEvent e) {
-		//
-		// if (Character.isDigit(e.getKeyChar()) || e.getKeyChar() ==
-		// KeyEvent.VK_BACK_SPACE ) {
-		//
-		// if (!txtNível.getText().equals("")) {
-		// if (Integer.parseInt(txtNível.getText()) > edifício.nívelMáximo())
-		// txtNível.setText(""+edifício.nívelMáximo());
-		// changeValues(Integer.parseInt(txtNível.getText()));
-		// } else
-		// resetValues();
-		//
-		// }
-		//
-		// soma.setTotal();
-		//
-		// }
-		//
-		// public void keyPressed(KeyEvent arg0) {}
-		// });
-
-		// changeValues(txtNível.getSelectedIndex());
-
-		// soma.setTotal();
 
 		constraints.insets = new Insets(4, 5, 4, 5);
 		constraints.gridx++;
