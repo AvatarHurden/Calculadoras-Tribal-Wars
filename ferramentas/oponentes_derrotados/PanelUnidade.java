@@ -10,8 +10,8 @@ import java.text.ParseException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import config.Lang;
 import custom_components.TroopFormattedTextField;
-
 import database.Cores;
 import database.Unidade;
 
@@ -69,7 +69,7 @@ public class PanelUnidade {
 		gbl.rowWeights = new double[] { 0.0, 0.0, 1.0 };
 		panelDados.setLayout(gbl);
 
-		nome = new JLabel("Unidade");
+		nome = new JLabel(Lang.Unidade.toString());
 		GridBagConstraints gbc_nome = new GridBagConstraints();
 		gbc_nome.anchor = GridBagConstraints.CENTER;
 		gbc_nome.insets = new Insets(5, 5, 5, 5);
@@ -77,7 +77,7 @@ public class PanelUnidade {
 		gbc_nome.gridy = 0;
 		panelDados.add(nome, gbc_nome);
 
-		JLabel quantidade = new JLabel("Quantidade");
+		JLabel quantidade = new JLabel(Lang.Quantidade.toString());
 		GridBagConstraints gbc_quantidade = new GridBagConstraints();
 		gbc_quantidade.insets = new Insets(5, 0, 5, 5);
 		gbc_quantidade.gridx = 1;
@@ -96,10 +96,10 @@ public class PanelUnidade {
 		gbl_OD.rowWeights = new double[] { 0.0, 0.0, 1.0 };
 		panelOD.setLayout(gbl_OD);
 
-		lblOD = new JLabel("OD");
+		lblOD = new JLabel(Lang.OD.toString());
 
 		if (total)
-			lblOD.setText("OD Total");
+			lblOD.setText(Lang.ODTotal.toString());
 
 		GridBagConstraints gbc_lblOD = new GridBagConstraints();
 		gbc_lblOD.insets = new Insets(5, 0, 5, 5);

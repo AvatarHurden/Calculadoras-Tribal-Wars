@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
 import database.Cores;
@@ -36,7 +37,7 @@ public class GUI extends Ferramenta {
 	 */
 	public GUI() {
 
-		super("Cálculo de Pontos");
+		super(Lang.FerramentaPontos.toString());
 
 		setBackground(Cores.FUNDO_CLARO);
 		setEdifícios();

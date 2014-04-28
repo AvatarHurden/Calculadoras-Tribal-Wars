@@ -13,8 +13,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
-
 import database.Cores;
 import database.Unidade;
 
@@ -74,13 +74,13 @@ public class PanelTempoUnidade extends JPanel {
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 
-		JLabel nome = new JLabel("Unidade");
+		JLabel nome = new JLabel(Lang.Unidade.toString());
 		nome.setHorizontalAlignment(SwingConstants.CENTER);
 		add(nome, constraints);
 
 		addSeparator(constraints, this);
 
-		tempo = new JLabel("Tempo");
+		tempo = new JLabel(Lang.Tempo.toString());
 		tempo.setHorizontalAlignment(SwingConstants.CENTER);
 
 		constraints.insets = new Insets(5, 5, 5, 5);

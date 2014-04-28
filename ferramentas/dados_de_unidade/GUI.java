@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
 import custom_components.TroopFormattedTextField;
@@ -47,7 +48,7 @@ public class GUI extends Ferramenta {
 	 */
 	public GUI() {
 
-		super("Informações de Exército");
+		super(Lang.FerramentaUnidade.toString());
 
 		setBackground(Cores.FUNDO_CLARO);
 		setUnidades();

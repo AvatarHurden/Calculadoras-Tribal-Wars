@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.LineBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
 import custom_components.TroopFormattedTextField;
@@ -42,7 +43,7 @@ public class GUI extends Ferramenta {
 	
 	public GUI() {
 
-		super("Cálculo de OD");
+		super(Lang.FerramentaOD.toString());
 
 		setBackground(Cores.FUNDO_CLARO);
 
@@ -109,12 +110,12 @@ public class GUI extends Ferramenta {
 	// ou defesa
 	private void createPanelButtons() {
 
-		buttonAtaque = new JRadioButton("OD Ataque");
+		buttonAtaque = new JRadioButton(Lang.ODAtaque.toString());
 		buttonAtaque.setOpaque(false);
 
 		buttonAtaque.addItemListener(new buttonChangeListener());
 
-		buttonDefesa = new JRadioButton("OD Defesa");
+		buttonDefesa = new JRadioButton(Lang.ODDefesa.toString());
 		buttonDefesa.setOpaque(false);
 
 		buttonDefesa.addItemListener(new buttonChangeListener());

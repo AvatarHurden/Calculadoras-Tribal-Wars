@@ -29,6 +29,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import config.Lang;
 import property_classes.OnChange;
 import property_classes.Property;
 import property_classes.Property_Nome;
@@ -257,7 +258,7 @@ public class EditDialog extends JDialog {
 		c.gridy = 0;
 		c.gridx = 0;
 
-		JButton newButton = new JButton("Novo");
+		JButton newButton = new JButton(Lang.BtnNovo.toString());
 		
 		newButton.addActionListener(new ActionListener() {
 			
@@ -303,7 +304,7 @@ public class EditDialog extends JDialog {
 		JPanel rightPanel = new JPanel();
 		rightPanel.setOpaque(false);
 		
-		saveButton = new JButton("Salvar");
+		saveButton = new JButton(Lang.BtnSalvar.toString());
 		
 		saveButton.addActionListener(new ActionListener() {
 			
@@ -388,17 +389,16 @@ public class EditDialog extends JDialog {
 		c.gridx++;
 		rightPanel.add(downButton, c);
 		
-		JButton deleteButton = new JButton("Deletar");
+		JButton deleteButton = new JButton(Lang.BtnDeletar.toString());
 		
 		deleteButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				
-				String[] options = {"Sim", "Não" };
+				String[] options = {Lang.Sim.toString(), Lang.Nao.toString() };
 				
 				int delete = JOptionPane.showOptionDialog(null, 
-						new JLabel("<html>Tem certeza que deseja deletar?<br>Essa ação não " +
-								"pode ser desfeita.</html>"),
+						new JLabel(Lang.DeleteOptionDialog.toString()),
 						null, JOptionPane.YES_NO_OPTION, 
 						JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 				
@@ -654,8 +654,8 @@ public class EditDialog extends JDialog {
 				do {					
 					
 					s = (String)(JOptionPane.showInputDialog(null, 
-						new JLabel("<html>Esse nome já está sendo utilizado.<br>Favor escolher outro.</html>"),
-						"Nome já utilizado", JOptionPane.ERROR_MESSAGE, null, null, s));
+						new JLabel(Lang.NomeUsadoAviso.toString()),
+						Lang.NomeUsado.toString(), JOptionPane.ERROR_MESSAGE, null, null, s));
 				
 				} while (!isUniqueName(s));
 				

@@ -7,24 +7,35 @@ public enum Lang {
 	
 	// GERAL
 	
+	/** Título da ferramenta (Tribal Wars Engine) */
 	Titulo(				"Tribal Wars Engine"),
 	
 	// Frame de seleção de mundo
-		
+	
+	/** Texto de crédito ao criador */
 	Criador(			"<html><div align=right width=100px>"
 							+ "Criado por Arthur Vedana<br>"
 							+ "agieselvedana@gmail.com</div></html>"),
-	Padrao(				"Padrão"),
-	Editar(				"Editar"),
-	Iniciar(			"Iniciar"),
+	/** Botão de tornar um mundo padrão*/
+	BtnPadrao(				"Padrão"),
+	/** Botão de editar os mundos*/
+	BtnEditar(				"Editar"),
+	/** Botão de iniciar a ferramenta*/
+	BtnIniciar(			"Iniciar"),
 	
 	// FERRAMENTAS
 	
-	FerramentaUnidade(	"Cálculo de Unidades"),
+	/** Nome da ferramenta de dados da Unidade*/
+	FerramentaUnidade(	"Informações de Exército"),
+	/** Nome da ferramenta de Distância*/
 	FerramentaDistancia("Cálculo de Distância"),
+	/** Nome da ferramenta de OD*/
 	FerramentaOD(		"Cálculo de OD"),
+	/** Nome da ferramenta de pontos*/
 	FerramentaPontos(	"Cálculo de Pontos"),
+	/** Nome da ferramenta de tempo de recrutamento*/
 	FerramentaRecruta(	"Tempo de Recruta"),
+	/** Nome da ferramenta de simulador*/
 	FerramentaSimulador("Simulador"),
 	
 	// PALAVRAS-CHAVE
@@ -49,10 +60,17 @@ public enum Lang {
 	TempoTotal(			"Tempo Total"),	
 	
 	Edificio(			"Edifício"),
+	Pontos(				"Pontos"),
+	
+	/** Usado no recrutamento, no caso do edifício ser feminino*/
+	NivelDaEdificio(	"Nível da "),
+	/** Usado no recrutamento, no caso do edifício ser masculino*/
+	NivelDoEdificio(	"Nível do "),
 	
 	Modelos(			"Modelos"),
 	// TODO figure out how to do the building level on recrutamento
 	
+	OD(					"OD"),
 	ODAtaque(			"OD Ataque"),
 	ODDefesa(			"OD Defesa"),
 	ODTotal(			"OD Total"),
@@ -61,6 +79,8 @@ public enum Lang {
 	
 	Atacante(			"Atacante"),
 	Defensor(			"Defensor"),
+	
+	UnidadesPerdidas(	"Unidades Perdidas"),
 	
 	Religioso(			"Religioso"),
 	BonusNoturno(		"Bônus Noturno"),
@@ -91,8 +111,10 @@ public enum Lang {
 							"pode ser desfeita.</html>"),
 	Sim(				"Sim"),
 	Nao(				"Não"),
-	AvisoNomeUsado(		"<html>Esse nome já está sendo utilizado."
+	/** Mensagem de dentro do panel avisando que o nome já é utilizado*/ 
+	NomeUsadoAviso(		"<html>Esse nome já está sendo utilizado."
 							+ "<br>Favor escolher outro.</html>"),
+	/** Título do panel que avisa o negócio do nome*/
 	NomeUsado(			"Nome já utilizado"),
 	
 	// BANDEIRAS
@@ -159,10 +181,6 @@ public enum Lang {
 	PropPesquisaName(	"Sistema de Pesquisa"),
 	PropPesquisaSimples("Pesquisa Simples"),
 	PropPesquisaNiveis(	"Pesquisa de 3 Níveis"),
-	
-	PropAcademiaName(	"Preços crescentes para nobres"),
-	PropAcademiaMoeda(	"Cunhagem de Moedas"),
-	PropAcademiaNiveis(	"Academia de Níveis"),
 	
 	// PROPERTIES
 	

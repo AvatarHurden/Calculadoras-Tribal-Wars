@@ -30,6 +30,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import simulador.GUI.InputInfo;
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.ToolPanel;
 import custom_components.TroopFormattedTextField;
@@ -224,10 +225,10 @@ public class StatInsertion extends JPanel {
 			c.insets = new Insets(5, 5, 5, 5);
 			c.gridwidth = 1;
 			c.gridy++;
-			panel.add(new JLabel("Quantidade"), c);
+			panel.add(new JLabel(Lang.Quantidade.toString()), c);
 
 			c.gridx = 1;
-			panel.add(new JLabel("Nível"), c);
+			panel.add(new JLabel(Lang.Nivel.toString()), c);
 
 		}
 
@@ -344,7 +345,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Religioso"), c);
+		panel.add(new JLabel(Lang.Religioso.toString()), c);
 
 		// Creating the checkbox to select option
 		religião = new JCheckBox();
@@ -382,7 +383,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Bônus Noturno"), c);
+		panel.add(new JLabel(Lang.BonusNoturno.toString()), c);
 
 		// Creating the checkbox to select option
 		noite = new JCheckBox();
@@ -418,7 +419,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Sorte"), c);
+		panel.add(new JLabel(Lang.Sorte.toString()), c);
 
 		// Creating the checkbox to select option
 		sorte = new JTextField(3);
@@ -485,7 +486,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Moral"), c);
+		panel.add(new JLabel(Lang.Moral.toString()), c);
 
 		// Creating the checkbox to select option
 		moral = new JTextField(3);
@@ -538,7 +539,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Muralha"), c);
+		panel.add(new JLabel(Lang.Muralha.toString()), c);
 
 		// Creating the checkbox to select option
 		muralha = new JTextField(3);
@@ -594,7 +595,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Edifício"), c);
+		panel.add(new JLabel(Lang.Edificio.toString()), c);
 
 		// Creating the checkbox to select option
 		edifício = new JTextField(3);
@@ -644,7 +645,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Item Paladino"), c);
+		panel.add(new JLabel(Lang.ItemPaladino.toString()), c);
 
 		// Coloca a cor padrão para os comboBox
 		UIManager.put("ComboBox.selectionBackground", new Color(163, 184, 204));
@@ -697,7 +698,7 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Bandeira"), c);
+		panel.add(new JLabel(Lang.Bandeira.toString()), c);
 
 		// Creating the checkbox to select option
 		bandeira = new JComboBox<Bandeira>();

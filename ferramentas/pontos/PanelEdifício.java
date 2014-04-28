@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import config.Lang;
 import custom_components.EdifícioFormattedComboBox;
-
 import database.Cores;
 import database.Edifício;
 
@@ -86,13 +86,13 @@ public class PanelEdifício {
 		GridBagConstraints gbc_inserção = new GridBagConstraints();
 		gbc_inserção.insets = new Insets(5, 5, 5, 5);
 
-		nome = new JLabel("Edifício");
+		nome = new JLabel(Lang.Edificio.toString());
 		gbc_inserção.gridx = 0;
 		identificadores.add(nome, gbc_inserção);
 
 		addSeparator(gbc_inserção, identificadores);
 
-		JLabel quantidade = new JLabel("Nível");
+		JLabel quantidade = new JLabel(Lang.Nivel.toString());
 		gbc_inserção.gridx++;
 		identificadores.add(quantidade, gbc_inserção);
 
@@ -111,14 +111,14 @@ public class PanelEdifício {
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridy = 0;
 
-		pontos = new JLabel("Pontos");
+		pontos = new JLabel(Lang.Pontos.toString());
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.gridx = 0;
 		dadosPanel.add(pontos, constraints);
 
 		addSeparator(constraints, dadosPanel);
 
-		população = new JLabel("População");
+		população = new JLabel(Lang.Populacao.toString());
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.gridx++;
 		dadosPanel.add(população, constraints);
@@ -138,7 +138,7 @@ public class PanelEdifício {
 			GridBagConstraints constraints_população = new GridBagConstraints();
 			constraints_população.gridy = 0;
 
-			populaçãoRestante = new JLabel("População Disponível");
+			populaçãoRestante = new JLabel(Lang.PopDisponivel.toString());
 			constraints_população.insets = new Insets(5, 5, 5, 5);
 			populaçãoRestantePanel
 					.add(populaçãoRestante, constraints_população);

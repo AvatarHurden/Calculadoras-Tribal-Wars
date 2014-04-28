@@ -23,6 +23,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
 import selecionar_mundo.GUI;
+import config.Lang;
 import config.ModeloTropas_Reader;
 import database.Cores;
 import database.ModeloTropas;
@@ -55,7 +56,7 @@ public class ToolPanel {
 		JPanel resetPanel = new JPanel();
 		resetPanel.setOpaque(false);
 		
-		JButton resetButton = new JButton("Resetar");
+		JButton resetButton = new JButton(Lang.BtnResetar.toString());
 		resetButton.addActionListener(listener);
 		
 		resetPanel.add(resetButton);
@@ -151,7 +152,7 @@ public class ToolPanel {
 		
 		private JLabel makeNameLabel() {
 
-			JLabel label = new JLabel("Modelos:");
+			JLabel label = new JLabel(Lang.Modelos.toString()+":");
 
 			label.setPreferredSize(new Dimension(54, getPreferredSize().height));
 

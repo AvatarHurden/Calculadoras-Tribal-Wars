@@ -31,7 +31,7 @@ public class File_Manager {
 
 		try {
 
-			File config = new File("configurações_CalculadoraTribalWars.txt");
+			File config = new File("configurações.txt");
 
 			Files.setAttribute(config.toPath(), "dos:hidden", false);
 
@@ -129,7 +129,7 @@ public class File_Manager {
 		try {
 
 			File configurações = new File(
-					"configurações_CalculadoraTribalWars.txt");
+					"configurações.txt");
 
 			// In case the file does not exist, create it
 			if (!configurações.exists())

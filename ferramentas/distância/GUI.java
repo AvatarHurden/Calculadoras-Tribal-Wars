@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
 import database.BigOperation;
@@ -33,7 +34,7 @@ public class GUI extends Ferramenta {
 	 */
 	public GUI() {
 
-		super("Cálculo de Distância");
+		super(Lang.FerramentaDistancia.toString());
 
 		setBackground(Cores.FUNDO_CLARO);
 		setUnidades();
@@ -62,14 +63,14 @@ public class GUI extends Ferramenta {
 		constraints.anchor = GridBagConstraints.WEST;
 		add(tools.addResetPanel(action), constraints);
 		
-		aldeiaOrigem = new PanelAldeia("Aldeia de Origem", this);
+		aldeiaOrigem = new PanelAldeia(Lang.AldeiaOrigem.toString(), this);
 
 		constraints.gridy++;
 		constraints.insets = new Insets(5, 5, 5, 5);
 		constraints.anchor = GridBagConstraints.CENTER;
 		add(aldeiaOrigem, constraints);
 
-		aldeiaDestino = new PanelAldeia("Aldeia de Destino", this);
+		aldeiaDestino = new PanelAldeia(Lang.AldeiaDestino.toString(), this);
 
 		constraints.gridx = 1;
 		add(aldeiaDestino, constraints);

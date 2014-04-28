@@ -1,8 +1,12 @@
 package config;
 
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -15,21 +19,22 @@ import java.util.Scanner;
  */
 public class InfoFinder {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws HeadlessException, UnsupportedFlavorException, IOException {
 
-		while (true) {
+//		while (true) {
 
 			Scanner input = new Scanner(System.in);
-
+//
 			Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+//
+//			String text = "";
+//
+//			do {
+//				text += input.nextLine() + "\n";
+//			} while (!text.contains(""));
 
-			String text = "";
-
-			do {
-				text += input.nextLine() + "\n";
-			} while (!text.contains(""));
-
-			Scanner string = new Scanner(text);
+			Scanner string = new Scanner(
+					(String) clip.getData(DataFlavor.stringFlavor));
 
 			String nome = "";
 
@@ -39,7 +44,7 @@ public class InfoFinder {
 
 			boolean moral = false;
 
-			boolean pesquisaDeNíveis = false;
+			String pesquisaDeNíveis = "Pesquisa_Simples";
 
 			boolean igreja = false;
 
@@ -55,9 +60,7 @@ public class InfoFinder {
 
 			boolean milícia = false;
 
-			boolean academiaDeNíveis = false;
-
-			System.out.println(text);
+			boolean cunhagemDeMoedas = false;
 
 			while (string.hasNextLine()) {
 
@@ -82,9 +85,9 @@ public class InfoFinder {
 
 				if (next.toLowerCase().contains("sistema de pesquisa"))
 					if (next.toLowerCase().contains("pesquisa simplificada"))
-						pesquisaDeNíveis = false;
+						pesquisaDeNíveis = "Pesquisa_Simples";
 					else
-						pesquisaDeNíveis = true;
+						pesquisaDeNíveis = "Pesquisa_de_3_Níveis";
 
 				if (next.toLowerCase().contains("igreja"))
 					if (next.toLowerCase().contains("inativo"))
@@ -133,9 +136,9 @@ public class InfoFinder {
 				if (next.toLowerCase()
 						.contains("preços crescentes para nobres"))
 					if (next.toLowerCase().contains("moedas de ouro"))
-						academiaDeNíveis = false;
+						cunhagemDeMoedas = true;
 					else
-						academiaDeNíveis = true;
+						cunhagemDeMoedas = false;
 			}
 
 			input.close();
@@ -146,20 +149,19 @@ public class InfoFinder {
 
 			String output = "";
 
-			output += ("#" + "\n");
-			output += ("nome=" + nome + "\n");
-			output += ("velocidade=" + velocidade + "\n");
-			output += ("modificador=" + velocidadeUnidade + "\n");
-			output += ("moral=" + moral + "\n");
-			output += ("pesquisaDeNiveis=" + pesquisaDeNíveis + "\n");
-			output += ("igreja=" + igreja + "\n");
-			output += ("bonusNoturno=" + bonusNoturno + "\n");
-			output += ("bandeira=" + bandeira + "\n");
-			output += ("arqueiro=" + arqueiro + "\n");
-			output += ("paladino=" + paladino + "\n");
-			output += ("itensAprimorados=" + itensAprimorados + "\n");
-			output += ("milicia=" + milícia + "\n");
-			output += ("academiaDeNiveis=" + academiaDeNíveis + "\n");
+			output += ("\tnome=" + nome + "\n");
+			output += ("\tvelocidade=" + velocidade + "\n");
+			output += ("\tmodificador=" + velocidadeUnidade + "\n");
+			output += ("\tmoral=" + moral + "\n");
+			output += ("\tsistemaDePesquisa=" + pesquisaDeNíveis + "\n");
+			output += ("\tigreja=" + igreja + "\n");
+			output += ("\tbonusNoturno=" + bonusNoturno + "\n");
+			output += ("\tbandeira=" + bandeira + "\n");
+			output += ("\tarqueiro=" + arqueiro + "\n");
+			output += ("\tpaladino=" + paladino + "\n");
+			output += ("\titensAprimorados=" + itensAprimorados + "\n");
+			output += ("\tmilicia=" + milícia + "\n");
+			output += ("\tcunhagemDeMoedas=" + cunhagemDeMoedas + "\n");
 
 			clip.setContents(new StringSelection(output), null);
 
@@ -167,6 +169,6 @@ public class InfoFinder {
 
 		}
 
-	}
+//	}
 
 }

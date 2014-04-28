@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Lang;
 import selecionar_mundo.GUI;
 import custom_components.Ferramenta;
 import database.Cores;
@@ -30,7 +31,7 @@ public class MainWindow extends JFrame {
 	public MainWindow() {
 		
 		// Setting the visuals for the frame
-		setTitle("Calculadoras Tribal Wars");
+		setTitle(Lang.Titulo.toString());
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				GUI.class.getResource("/images/Icon.png")));
 

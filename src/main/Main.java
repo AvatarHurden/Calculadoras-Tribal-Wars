@@ -54,8 +54,6 @@ public class Main {
 		
 		File_Manager.defineModelos();
 
-//		File_Manager.save();
-
 		mainFrame = new MainWindow();
 		
 		// Adicionando todas as ferramentas criadas
@@ -86,7 +84,7 @@ public class Main {
 			public void windowDeactivated(WindowEvent arg0) {}
 			
 			public void windowClosing(WindowEvent arg0) {
-//				File_Manager.save();
+				File_Manager.save();
 			}
 			
 			public void windowClosed(WindowEvent arg0) {}

@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
 import custom_components.TroopFormattedTextField;
@@ -39,7 +40,7 @@ public class GUI extends Ferramenta {
 	 */
 	public GUI() {
 
-		super("Tempo de Recruta");
+		super(Lang.FerramentaRecruta.toString());
 
 		setBackground(Cores.FUNDO_CLARO);
 		setOpaque(true);
@@ -216,21 +217,21 @@ public class GUI extends Ferramenta {
 		c.gridx = 0;
 		c.gridy = 0;
 		
-		JLabel lblUnidades = new JLabel("Unidade");
+		JLabel lblUnidades = new JLabel(Lang.Unidade.toString());
 		header.add(lblUnidades, c);
 
-		JLabel lblQuantidade = new JLabel("Quantidade");
+		JLabel lblQuantidade = new JLabel(Lang.Quantidade.toString());
 	
 		c.insets = new Insets(5, 0, 5, 5);
 		c.gridx++;
 		header.add(lblQuantidade, c);
 
-		JLabel lblTempoPorUnidade = new JLabel("Tempo por unidade");
+		JLabel lblTempoPorUnidade = new JLabel(Lang.TempoUnidade.toString());
 	
 		c.gridx++;	
 		header.add(lblTempoPorUnidade, c);
 
-		JLabel lblTempoTotal = new JLabel("Tempo total");
+		JLabel lblTempoTotal = new JLabel(Lang.TempoTotal.toString());
 		
 		c.insets = new Insets(5, 0, 5, 0);
 		c.gridx++;

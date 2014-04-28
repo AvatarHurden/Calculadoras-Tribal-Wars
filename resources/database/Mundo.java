@@ -136,10 +136,12 @@ public class Mundo {
 		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas",
 				Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
 
+		
 		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
-				prop.getProperty("sistemaDePesquisa"), "Pesquisa Simples", 
-				"Pesquisa de 3 Níveis");
-
+				(prop.getProperty("sistemaDePesquisa").equals("simples") 
+						? "Pesquisa Simples" : "Pesquisa de 3 Níveis")
+				,"Pesquisa Simples", "Pesquisa de 3 Níveis");
+		
 		String speed = prop.getProperty("velocidade");
 		speed = speed.replaceAll(",", ".");
 		velocidade = new Property_Number("Velocidade", new BigDecimal(speed));
@@ -176,7 +178,11 @@ public class Mundo {
 		s += ("\tmodificador=" + modificarUnidades.getValue().toString() + "\n");
 
 		s += ("\tmoral=" + hasMoral.getValue() + "\n");
-		s += ("\tsistemaDePesquisa=" + sistemaDePesquisa.getSelected() + "\n");
+		
+		s += ("\tsistemaDePesquisa=" + 
+		(sistemaDePesquisa.getSelected().equals("Pesquisa_Simples") ? "simples" : "niveis")
+		+ "\n");
+		
 		s += ("\tigreja=" + hasIgreja.getValue() + "\n");
 		s += ("\tbonusNoturno=" + hasBonusNoturno.getValue() + "\n");
 		s += ("\tbandeira=" + hasBandeira.getValue() + "\n");

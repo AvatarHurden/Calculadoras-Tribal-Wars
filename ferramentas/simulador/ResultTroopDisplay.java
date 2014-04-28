@@ -17,6 +17,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import simulador.GUI.OutputInfo;
+import config.Lang;
 import config.Mundo_Reader;
 import database.Cores;
 import database.Unidade;
@@ -54,7 +55,7 @@ public class ResultTroopDisplay extends JPanel {
 		identificationPanel.setBackground(Cores.FUNDO_ESCURO);
 		identificationPanel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		
-		identificationPanel.add(new JLabel("Unidades Perdidas"));
+		identificationPanel.add(new JLabel(Lang.UnidadesPerdidas.toString()));
 		
 		identificationPanel.setPreferredSize(new Dimension(
 				identificationPanel.getPreferredSize().width-2, identificationPanel.getPreferredSize().height-3));
@@ -123,7 +124,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		// Adding the headers
 
-		JLabel lblNome = new JLabel("Unidade");
+		JLabel lblNome = new JLabel(Lang.Unidade.toString());
 		lblNome.setPreferredSize(new Dimension(
 				lblNome.getPreferredSize().width + 12, 26));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
@@ -189,7 +190,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		// Adding the headers
 
-		JLabel lblNome = new JLabel("Atacante");
+		JLabel lblNome = new JLabel(Lang.Atacante.toString());
 		lblNome.setPreferredSize(new Dimension(
 				lblNome.getPreferredSize().width + 10, 26));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
@@ -256,7 +257,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		// Adding the headers
 
-		JLabel lblNome = new JLabel("Defensor");
+		JLabel lblNome = new JLabel(Lang.Defensor.toString());
 		lblNome.setPreferredSize(new Dimension(
 				lblNome.getPreferredSize().width + 10, 26));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
@@ -329,7 +330,7 @@ public class ResultTroopDisplay extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Muralha"), c);
+		panel.add(new JLabel(Lang.Muralha.toString()), c);
 
 		muralha = new JLabel(" ");
 
@@ -361,7 +362,7 @@ public class ResultTroopDisplay extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		panel.add(new JLabel("Edifício"), c);
+		panel.add(new JLabel(Lang.Edificio.toString()), c);
 
 		edifício = new JLabel(" ");
 

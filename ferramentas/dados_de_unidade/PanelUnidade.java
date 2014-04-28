@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.TroopFormattedTextField;
 import database.Cores;
@@ -101,21 +102,21 @@ public class PanelUnidade {
 		GridBagConstraints gbc_inserção = new GridBagConstraints();
 		gbc_inserção.insets = new Insets(5, 5, 5, 5);
 
-		JLabel nome = new JLabel("Unidade");
+		JLabel nome = new JLabel(Lang.Unidade.toString());
 		gbc_inserção.gridx = 0;
 		identificadores.add(nome, gbc_inserção);
 
 		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			addSeparator(gbc_inserção, identificadores);
 
-			JLabel nível = new JLabel("Nível");
+			JLabel nível = new JLabel(Lang.Nivel.toString());
 			gbc_inserção.gridx++;
 			identificadores.add(nível, gbc_inserção);
 
 			addSeparator(gbc_inserção, identificadores);
 		}
 
-		JLabel quantidade = new JLabel("Quantidade");
+		JLabel quantidade = new JLabel(Lang.Quantidade.toString());
 		gbc_inserção.gridx++;
 		identificadores.add(quantidade, gbc_inserção);
 
@@ -140,28 +141,28 @@ public class PanelUnidade {
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridy = 0;
 
-		dano = new JLabel("Ataque");
+		dano = new JLabel(Lang.Ataque.toString());
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.gridx = 0;
 		dadosPrincipais.add(dano, constraints);
 
 		addSeparator(constraints, dadosPrincipais);
 
-		defGeral = new JLabel("Def. Geral");
+		defGeral = new JLabel(Lang.DefGeral.toString());
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.gridx++;
 		dadosPrincipais.add(defGeral, constraints);
 
 		addSeparator(constraints, dadosPrincipais);
 
-		defCavalo = new JLabel("Def. Cav.");
+		defCavalo = new JLabel(Lang.DefCavalo.toString());
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.gridx++;
 		dadosPrincipais.add(defCavalo, constraints);
 
 		addSeparator(constraints, dadosPrincipais);
 
-		defArqueiro = new JLabel("Def. Arq.");
+		defArqueiro = new JLabel(Lang.DefArqueiro.toString());
 
 		if (Mundo_Reader.MundoSelecionado.hasArqueiro()) {
 
@@ -173,7 +174,7 @@ public class PanelUnidade {
 
 		}
 
-		saque = new JLabel("Saque");
+		saque = new JLabel(Lang.Saque.toString());
 		constraints.insets = new Insets(5, 0, 5, 5);
 		constraints.gridx++;
 		dadosPrincipais.add(saque, constraints);
@@ -193,28 +194,28 @@ public class PanelUnidade {
 		GridBagConstraints constraints_custo = new GridBagConstraints();
 		constraints_custo.gridy = 0;
 
-		madeira = new JLabel("Madeira");
+		madeira = new JLabel(Lang.Madeira.toString());
 		constraints_custo.insets = new Insets(5, 0, 5, 5);
 		constraints_custo.gridx = 0;
 		dadosCusto.add(madeira, constraints_custo);
 
 		addSeparator(constraints_custo, dadosCusto);
 
-		argila = new JLabel("Argila");
+		argila = new JLabel(Lang.Argila.toString());
 		constraints_custo.insets = new Insets(5, 0, 5, 5);
 		constraints_custo.gridx++;
 		dadosCusto.add(argila, constraints_custo);
 
 		addSeparator(constraints_custo, dadosCusto);
 
-		ferro = new JLabel("Ferro");
+		ferro = new JLabel(Lang.Ferro.toString());
 		constraints_custo.insets = new Insets(5, 0, 5, 5);
 		constraints_custo.gridx++;
 		dadosCusto.add(ferro, constraints_custo);
 
 		addSeparator(constraints_custo, dadosCusto);
 
-		população = new JLabel("População");
+		população = new JLabel(Lang.Populacao.toString());
 		constraints_custo.insets = new Insets(5, 0, 5, 5);
 		constraints_custo.gridx++;
 		dadosCusto.add(população, constraints_custo);

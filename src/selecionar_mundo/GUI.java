@@ -15,6 +15,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
 import database.Cores;
 
@@ -37,7 +38,7 @@ public class GUI extends JFrame {
 
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		
-		setTitle("Calculadoras Tribal Wars");
+		setTitle(Lang.Titulo.toString());
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				GUI.class.getResource("/images/Icon.png")));
@@ -66,9 +67,7 @@ public class GUI extends JFrame {
 
 		JTextPane lblAuthor = new JTextPane();
 		lblAuthor.setContentType("text/html");
-		lblAuthor
-				.setText("<html><div align=right width=100px>"
-						+ "Criado por Arthur Vedana<br>agieselvedana@gmail.com</div></html>");
+		lblAuthor.setText(Lang.Criador.toString());
 		lblAuthor.setEditable(false);
 		lblAuthor.setOpaque(false);
 		constraints.gridy = 2;

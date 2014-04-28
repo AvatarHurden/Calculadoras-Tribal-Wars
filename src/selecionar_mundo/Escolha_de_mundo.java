@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import main.Main;
 import config.File_Manager;
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.EditDialog;
 import database.Mundo;
@@ -64,7 +65,7 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.anchor = GridBagConstraints.CENTER;
 		add(selectionBox, constraints);
 		
-		padrãoButton = new JButton("Padrão");
+		padrãoButton = new JButton(Lang.BtnPadrao.toString());
 		
 		padrãoButton.addActionListener(new ActionListener() {
 			
@@ -81,7 +82,7 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.anchor = GridBagConstraints.SOUTHEAST;
 		add(padrãoButton, constraints);
 		
-		editButton = new JButton("Editar");
+		editButton = new JButton(Lang.BtnEditar.toString());
 		
 		editButton.addActionListener(new ActionListener() {
 			
@@ -111,7 +112,7 @@ public class Escolha_de_mundo extends JPanel{
 		constraints.anchor = GridBagConstraints.NORTHEAST;
 		add(editButton, constraints);
 		
-		startButton = new JButton("Iniciar");
+		startButton = new JButton(Lang.BtnIniciar.toString());
 		
 		startButton.addActionListener(new ActionListener() {
 			

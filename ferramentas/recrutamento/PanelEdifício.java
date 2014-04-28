@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import config.Lang;
 import custom_components.EdifícioFormattedComboBox;
 import database.Cores;
 import database.Edifício;
@@ -91,9 +92,9 @@ public class PanelEdifício extends JPanel {
 		// aplicável nesse caso)
 		JLabel lblNível;
 		if (edifício.nome().endsWith("a"))
-			lblNível = new JLabel("Nível da " + edifício.nome());
+			lblNível = new JLabel(Lang.NivelDaEdificio.toString() + edifício.nome());
 		else
-			lblNível = new JLabel("Nível do " + edifício.nome());
+			lblNível = new JLabel(Lang.NivelDoEdificio.toString() + edifício.nome());
 
 		gbc_finish.fill = GridBagConstraints.NONE;
 		gbc_finish.anchor = GridBagConstraints.CENTER;
@@ -131,7 +132,7 @@ public class PanelEdifício extends JPanel {
 		gbc_finish.gridx = 1;
 		add(txtNível, gbc_finish);
 
-		JLabel lblTempoTotal = new JLabel("Tempo Total:");
+		JLabel lblTempoTotal = new JLabel(Lang.TempoTotal.toString()+":");
 		gbc_finish.anchor = GridBagConstraints.CENTER;
 		gbc_finish.gridx = 2;
 		add(lblTempoTotal, gbc_finish);

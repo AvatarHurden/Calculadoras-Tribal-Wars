@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
 import database.Bandeira;
@@ -39,7 +40,7 @@ public class GUI extends Ferramenta {
 
 	public GUI() {
 
-		super("Simulador");
+		super(Lang.FerramentaSimulador.toString());
 
 		setBackground(Cores.FUNDO_CLARO);
 
@@ -126,7 +127,7 @@ public class GUI extends Ferramenta {
 		
 		add(display, c);
 
-		JButton button = new JButton("Calcular");
+		JButton button = new JButton(Lang.BtnCalcular.toString());
 		button.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -163,7 +164,7 @@ public class GUI extends Ferramenta {
 
 		// Adding the headers
 
-		JLabel lblNome = new JLabel("Unidade");
+		JLabel lblNome = new JLabel(Lang.Unidade.toString());
 		lblNome.setPreferredSize(new Dimension(
 				lblNome.getPreferredSize().width + 10, 26));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
