@@ -91,7 +91,7 @@ public class StatInsertion extends JPanel {
 		
 		c.insets = new Insets(6, 0, 6, 0);
 		c.fill = GridBagConstraints.NONE;
-		add(tool.addModelosPanel((tipo == Tipo.Atacante), mapQuantidades), c);
+		add(tool.addModelosPanel(true, mapQuantidades), c);
 
 		
 		// Adding the space to allow for militia on defensive side

@@ -47,7 +47,7 @@ public class GUI extends Ferramenta {
 	 */
 	public GUI() {
 
-		super("Cálculo de Unidades");
+		super("Informações de Exército");
 
 		setBackground(Cores.FUNDO_CLARO);
 		setUnidades();

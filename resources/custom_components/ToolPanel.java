@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -245,8 +246,17 @@ public class ToolPanel {
 
 					try {
 						
+						ModeloTropas modelo = new ModeloTropas();
+						
+						Map<Unidade,BigDecimal> map = new HashMap<Unidade,BigDecimal>();
+						for (Entry<Unidade, TroopFormattedTextField> i : mapTextFields.entrySet())
+							map.put(i.getKey(), i.getValue().getValue());
+						
+						modelo.setMap(map);
+						
 						new EditDialog(ModeloTropas.class,
-								ModeloTropas_Reader.getListModelos(), "variableList", 0);
+								ModeloTropas_Reader.getListModelos(), 
+								"variableList", 0, modelo);
 						
 						makePopupMenu();
 						

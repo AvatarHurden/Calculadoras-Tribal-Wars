@@ -1,6 +1,5 @@
 package config;
 
-import database.Unidade;
 
 public enum Lang {
 	
@@ -121,8 +120,21 @@ public enum Lang {
 	ItemEstrela(		"Estrela de Manhã de Carol"),
 	ItemFogueira(		"Fogueira de Aletheia"),
 	ItemCetro(			"Cetro de Vasco"),
-	ItemNull(			"Nenhum Item"),		
+	ItemNull(			"Nenhum Item"),
 	
+	DescripAlabarda(	"Aumenta ataque de lanceiros em %.0f%% e defesa em %.0f%%"),
+	DescripEspada(		"Aumenta ataque de espadachins em %.0f%% e defesa em %.0f%%"),
+	DescripMachado(		"Aumenta ataque de bárbaros em %.0f%% e defesa em %.0f%%"),
+	DescripArco(		"Aumenta ataque de arqueiros em %.0f%% e defesa em %.0f%%"),
+	DescripTelescopio(	"Exploradores sempre veem as tropas de uma aldeia"),
+	DescripLanca(		"Aumenta ataque de cavalaria leve em %.0f%% e defesa em %.0f%%"),
+	DescripEstandarte(	"Aumenta ataque de cavalaria pesada em %.0f%% e defesa em %.0f%%"),
+	DescripArcoComposto("Aumenta ataque de arqueiro a cavalo em %.0f%% e defesa em %.0f%%"),
+	DescripEstrela(		"Aumenta ataque de aríetes em %.0f%%"),
+	DescripFogueira(	"Aumenta ataque de catapultas em %.0f%% e defesa em %.0f%%"),
+	DescripCetro(		"Nobres reduzem a lealdade por, no mínimo, 30"),
+	DescripItemNull(	""),
+
 	// MODELOS
 	
 	NovoModelo(			"Novo Modelo"),
@@ -130,6 +142,32 @@ public enum Lang {
 	// MUNDOS
 	
 	NovoMundo(			"Novo Mundo"),
+	
+	PropNomeName(		"Nome"),
+	PropArqueiroName(	"Arqueiro"),
+	PropMiliciaName(	"Milícia"),
+	PropPaladinoName(	"Paladino"),
+	PropItensName(		"Itens Aprimorados"),
+	PropIgrejaName(		"Igreja"),
+	PropMoralName(		"Moral"),
+	PropBandeiraName(	"Bandeiras"),
+	PropNoiteName(		"Bônus Noturno"),
+	PropMoedasName(		"Cunhagem de Moedas"),
+	PropVelocidadeName(	"Velocidade"),
+	PropModificadorName("Modificar de Unidade"),
+	
+	PropPesquisaName(	"Sistema de Pesquisa"),
+	PropPesquisaSimples("Pesquisa Simples"),
+	PropPesquisaNiveis(	"Pesquisa de 3 Níveis"),
+	
+	PropAcademiaName(	"Preços crescentes para nobres"),
+	PropAcademiaMoeda(	"Cunhagem de Moedas"),
+	PropAcademiaNiveis(	"Academia de Níveis"),
+	
+	// PROPERTIES
+	
+	PropAtivado(		"Ativado"),
+	PropDesativado(		"Desativado"),
 	
 	// UNIDADES
 					// Português			Inglês

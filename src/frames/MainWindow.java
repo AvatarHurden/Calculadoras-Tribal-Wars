@@ -57,7 +57,7 @@ public class MainWindow extends JFrame {
 		body.setBackground(Cores.FUNDO_CLARO);
 		body.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		add(body, c);
-
+		
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class MainWindow extends JFrame {
 	public void addPanel(Ferramenta tool) {
 
 		tool.setFrame(this);
-
+		
 		ferramentas.add(tool);
 
 		tabs.add(tool.getTab());

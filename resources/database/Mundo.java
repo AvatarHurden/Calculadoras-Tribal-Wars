@@ -288,57 +288,9 @@ public class Mundo {
 		this.nome = new Property_Nome(nome);
 	}
 
-	// public void setHasMilícia(boolean hasMilícia) {
-	// this.hasMilícia = new property_classes.Boolean("Milícia", hasMilícia);
-	// }
-	//
-	// public void setHasPaladino(boolean hasPaladino) {
-	// this.hasPaladino = hasPaladino;
-	// }
-	//
-	// public void setHasItemnsprimorados(boolean hasItemAprimorado) {
-	// this.hasItensAprimorados = hasItemAprimorado;
-	// }
-	//
-	// public void setHasIgreja(boolean hasIgreja) {
-	// this.hasIgreja = hasIgreja;
-	// }
-	//
-	// public void setAcademiaDeNíveis(boolean academiaDeNíveis) {
-	// this.academiaDeNíveis = academiaDeNíveis;
-	// }
-	//
-	// public void setPesquisaDeNíveis(boolean pesquisaDeNíveis) {
-	// this.pesquisaDeNíveis = pesquisaDeNíveis;
-	// }
-	//
-	// public void setHasMoral(boolean hasMoral) {
-	// this.hasMoral = hasMoral;
-	// }
-	//
-	// public void setHasBandeira(boolean hasBandeira) {
-	// this.hasBandeira = hasBandeira;
-	// }
-	//
-	// public void setHasBonusNoturno(boolean hasBonusNoturno) {
-	// this.hasBonusNoturno = hasBonusNoturno;
-	// }
-	//
-	// public void setVelocidade(BigDecimal velocidade) {
-	// this.velocidade = velocidade;
-	// }
-	//
-	// public void setModificarUnidaes(BigDecimal modificarUnidaes) {
-	// this.modificarUnidades = modificarUnidaes;
-	// }
-
 	public String toString() {
 		return nome.getValueName();
 	}
-
-//	public String getNome() {
-//		return nome;
-//	}
 
 	public boolean hasArqueiro() {
 		return hasArqueiro.getValue();
@@ -411,46 +363,6 @@ public class Mundo {
 			return true;
 		else
 			return false;
-	}
-
-	/**
-	 * @param declared
-	 *            variable name
-	 * @return User-friendly variable name
-	 */
-	public static String getVariableName(String s) {
-
-		switch (s) {
-		case "nome":
-			return "Nome";
-		case "hasArqueiro":
-			return "Arqueiros";
-		case "hasMilícia":
-			return "Milícia";
-		case "hasPaladino":
-			return "Paladino";
-		case "hasItensAprimorados":
-			return "Itens Aprimorados";
-		case "hasIgreja":
-			return "Igreja";
-		case "academiaDeNíveis":
-			return "Cunhagem de Moedas";
-		case "pesquisaDeNíveis":
-			return "Pesquisa de 3 níveis";
-		case "hasMoral":
-			return "Moral";
-		case "hasBandeira":
-			return "Bandeiras";
-		case "hasBonusNoturno":
-			return "Bônus Noturno";
-		case "velocidade":
-			return "Velocidade";
-		case "modificarUnidades":
-			return "Modificador de Unidade";
-		default:
-			return null;
-		}
-
 	}
 
 	/**

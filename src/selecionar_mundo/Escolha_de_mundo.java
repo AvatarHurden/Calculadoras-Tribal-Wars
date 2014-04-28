@@ -90,7 +90,7 @@ public class Escolha_de_mundo extends JPanel{
 				try {
 					
 					new EditDialog(Mundo.class, Mundo_Reader.getMundoList(),
-							"variableList", getSelectedIndex());
+							"variableList", getSelectedIndex(), null);
 					
 					selectionBox.removeItemListener(selectionBox.getItemListeners()[0]);
 					selectionBox.removeAllItems();

@@ -150,11 +150,17 @@ public class Cálculo {
 		religiãoAtacante = input.getReligiãoAtacante();
 
 		religiãoDefensor = input.getReligiãoDefensor();
+		
+		// Aceita o item do paladino apenas se houver paladino
+		if (tropasAtacantes.get(Unidade.PALADINO).compareTo(BigDecimal.ZERO) == 1)
+			itemAtacante = input.getItemAtacante();
+		else
+			itemAtacante = ItemPaladino.NULL;
 
-		itemAtacante = input.getItemAtacante();
-
-		itemDefensor = input.getItemDefensor();
-
+		if (tropasDefensoras.get(Unidade.PALADINO).compareTo(BigDecimal.ZERO) == 1)
+			itemDefensor = input.getItemDefensor();
+		else
+			itemDefensor = ItemPaladino.NULL;
 		bandeiraAtacante = input.getBandeiraAtacante();
 
 		bandeiraDefensor = input.getBandeiraDefensor();

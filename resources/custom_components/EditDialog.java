@@ -49,6 +49,7 @@ import database.Cores;
 public class EditDialog extends JDialog {
 	
 	Class objectClass;
+	Object newObject;
 	
 	List<Object> objects;
 
@@ -89,6 +90,8 @@ public class EditDialog extends JDialog {
 	 * 			<br>The name of the <code>Field</code> that contains the object's properties.
 	 * @param selected
 	 * 			<br>The object that will be selected on start.
+	 * @param newObject
+	 * 			<br>The object that will be used when a new object is added
 	 * @throws NoSuchFieldException
 	 * 			<br>If the provided <code>String</code> does not correspond to a <code>Field</code> of the
 	 * 				objects
@@ -99,7 +102,8 @@ public class EditDialog extends JDialog {
 	 * @throws IllegalArgumentException 
 	 * @throws InstantiationException 
 	 */
-	public EditDialog(Class objectClass ,List objects, String variableName, int selected) 
+	public EditDialog(Class objectClass ,List objects, String variableName, 
+			int selected, Object newObject) 
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InstantiationException {
 		
 		this.objectClass = objectClass;
@@ -107,6 +111,11 @@ public class EditDialog extends JDialog {
 		this.objects = objects;
 		
 		variableField = objectClass.getDeclaredField(variableName);
+		
+		if (newObject != null)
+			this.newObject = newObject;
+		else
+			this.newObject = objectClass.newInstance();
 		
 		variableMap = new HashMap<Object, ArrayList<Property>>();
 		
@@ -169,12 +178,13 @@ public class EditDialog extends JDialog {
 		pack();
 		setResizable(false);
 		
+		setLocationRelativeTo(null);
+		
 		//Sets the scroll in correct position
 		scroll.getVerticalScrollBar().setValue(selected*32);
 		
 		setVisible(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			
 	}
 	
 	private void createInterface(Object o) {
@@ -255,7 +265,7 @@ public class EditDialog extends JDialog {
 				
 				try {
 					
-					Object obj = objectClass.newInstance();
+					Object obj = newObject;
 						
 					variableMap.put(obj, (ArrayList<Property>)variableField.get(obj));
 					
@@ -280,7 +290,7 @@ public class EditDialog extends JDialog {
 					
 					selectedInterface.saveObejct();
 					
-				} catch (InstantiationException | IllegalAccessException
+				} catch ( IllegalAccessException
 						| IllegalArgumentException e) {
 					e.printStackTrace();
 				}
@@ -378,7 +388,7 @@ public class EditDialog extends JDialog {
 		c.gridx++;
 		rightPanel.add(downButton, c);
 		
-		JButton deleteButton = new JButton("Delete");
+		JButton deleteButton = new JButton("Deletar");
 		
 		deleteButton.addActionListener(new ActionListener() {
 			
