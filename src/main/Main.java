@@ -9,7 +9,7 @@ import config.File_Manager;
 import frames.MainWindow;
 
 /**
- * Calculadora Tribal Wars, uma ferramenta completa para o jogo Tribal Wars
+ * Tribal Wars Engine, uma ferramenta completa para o jogo Tribal Wars
  * 
  * @author Arthur
  * @date 25/07/2013
@@ -43,6 +43,21 @@ public class Main {
 		
 		selecionar.setLocationRelativeTo(null);
 
+		selecionar.addWindowListener(new WindowListener() {
+			
+			public void windowOpened(WindowEvent arg0) {}
+			public void windowIconified(WindowEvent arg0) {}
+			public void windowDeiconified(WindowEvent arg0) {}
+			public void windowDeactivated(WindowEvent arg0) {}
+			
+			public void windowClosing(WindowEvent arg0) {
+				File_Manager.save();
+			}
+			
+			public void windowClosed(WindowEvent arg0) {}
+			public void windowActivated(WindowEvent arg0) {}
+		});
+		
 	}
 
 	/**
@@ -63,6 +78,7 @@ public class Main {
 		mainFrame.addPanel(new distância.GUI());
 		mainFrame.addPanel(new oponentes_derrotados.GUI());
 		mainFrame.addPanel(new simulador.GUI());
+		mainFrame.addPanel(new assistente_saque.GUI());
 
 		mainFrame.selectFirst();
 

@@ -7,9 +7,14 @@
 
 - Separar a lista de mundos como sendo configuração de um servidor, com as outras coiass como sendo gerais
 	(modelos, língua padrão) 
+
+- Modelos de Aldeias
+	Opção de definir escopo individualmente
+	
+- Para todos os modelos, definir escopo geral (mundo, servidor, global)
+	
  ==== MELHORIAS NAS FERRAMENTAS ====
  
-
 - Put flag selection on tools
 
 - Adicionar mais informações no simulador

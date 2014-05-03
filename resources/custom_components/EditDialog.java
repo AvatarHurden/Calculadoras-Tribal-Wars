@@ -265,8 +265,10 @@ public class EditDialog extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {
-					
+										
 					Object obj = newObject;
+					
+					newObject = newObject.getClass().newInstance();
 						
 					variableMap.put(obj, (ArrayList<Property>)variableField.get(obj));
 					
@@ -292,7 +294,7 @@ public class EditDialog extends JDialog {
 					selectedInterface.saveObejct();
 					
 				} catch ( IllegalAccessException
-						| IllegalArgumentException e) {
+						| IllegalArgumentException | InstantiationException e) {
 					e.printStackTrace();
 				}
 				
@@ -675,7 +677,7 @@ public class EditDialog extends JDialog {
 			for (Object o : objects)
 				if (o.toString().equals(s) && o != object)
 					return false;
-			
+		
 			return true;
 			
 		}

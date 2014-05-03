@@ -1,6 +1,7 @@
 package simulador;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -70,8 +71,6 @@ public class ResultTroopDisplay extends JPanel {
 		c.insets = new Insets(0, 5, 5, 6);
 		add(addUnitNames(), c);
 		
-		// TODO specify that these are lost units
-		
 		// Panel to store both attack and defense unit panels
 		JPanel unitPanels = new JPanel(new GridBagLayout());
 		// unitPanels.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
@@ -137,14 +136,14 @@ public class ResultTroopDisplay extends JPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 
-		int loop = 0;
+		int loop = 1;
 
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 
 			if (i != null) {
 
 				JPanel tropaPanel = new JPanel();
-				tropaPanel.setLayout(new GridBagLayout());
+				tropaPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 				tropaPanel.setBackground(Cores.getAlternar(loop));
 
 				// Separação entre a parte de nomenclatura e as unidades
@@ -152,15 +151,10 @@ public class ResultTroopDisplay extends JPanel {
 					tropaPanel.setBorder(new
 							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
-				GridBagConstraints tropaC = new GridBagConstraints();
-				tropaC.insets = new Insets(5, 5, 5, 5);
-				tropaC.gridx = 0;
-				tropaC.gridy = 0;
-
 				// Creating the TextField for the quantity of troops
 				JLabel lbl = new JLabel(i.nome());
 
-				tropaPanel.add(lbl, tropaC);
+				tropaPanel.add(lbl);
 
 				loop++;
 				c.gridy++;
@@ -203,7 +197,7 @@ public class ResultTroopDisplay extends JPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 
-		int loop = 0;
+		int loop = 1;
 
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 
@@ -271,7 +265,7 @@ public class ResultTroopDisplay extends JPanel {
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridx = 0;
 
-		int loop = 0;
+		int loop = 1;
 
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 
@@ -315,7 +309,7 @@ public class ResultTroopDisplay extends JPanel {
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
 		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado
-				.getNúmeroDeTropas()));
+				.getNúmeroDeTropas()+1));
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
 
 		GridBagLayout layout = new GridBagLayout();
@@ -347,7 +341,7 @@ public class ResultTroopDisplay extends JPanel {
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
 		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado
-				.getNúmeroDeTropas()));
+				.getNúmeroDeTropas()+1));
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
 
 		GridBagLayout layout = new GridBagLayout();

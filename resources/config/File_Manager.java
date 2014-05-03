@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 
 /**
  * Reads from the config file and stores separate parts for use
@@ -33,30 +32,29 @@ public class File_Manager {
 
 			File config = new File("configurações.txt");
 
-			Files.setAttribute(config.toPath(), "dos:hidden", false);
-
 			// read the user-alterable config file
 			BufferedReader in = new BufferedReader(new FileReader(config));
 
 			process(in);
-
-			Files.setAttribute(config.toPath(), "dos:hidden", true);
-
+			
 			// in case the file is corrupt, for any reason (thus we generalize
 			// the exception), we use
 			// the default file
-		} catch (IOException | NullPointerException e) {
+		} catch (Exception e) {
 
 			mundoPadrão = "";
 			mundos = "";
 			modeloTropas = "";
 
 			// TODO criar diálogo para avisar corrupção
+			// TODO mostrar onde no arquivo está o erro
+			// TODO carregar tudo que for possível na letura, identificando erros
 
 			System.out.println("O arquivo salvo está corrompido");
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(
-					File_Manager.class.getResourceAsStream("default_config")));
+					File_Manager.class.getResourceAsStream("default_c" +
+							"onfig")));
 
 			try {
 				process(in);
@@ -135,10 +133,16 @@ public class File_Manager {
 			if (!configurações.exists())
 				configurações.createNewFile();
 
-			Files.setAttribute(configurações.toPath(), "dos:hidden", false);
-			
 			FileWriter out = new FileWriter(configurações);
-
+			
+			// avisos ao usuário
+			
+			out.write("=========== AVISO ===========\n\n");
+			out.write("Apenas edite esse arquivo se souber o que está fazendo.\n");
+			out.write("Alterações podem corromper o arquivo e não permitir a abertura do programa.\n");
+			out.write("Caso isso ocorra, delete esse arquivo.\n\n");
+			out.write("=============================\n\n");
+			
 			// save mundoPadrão
 
 			out.write("\n");
@@ -170,8 +174,6 @@ public class File_Manager {
 			out.write("\n");
 
 			out.close();
-
-			Files.setAttribute(configurações.toPath(), "dos:hidden", true);
 
 		} catch (IOException e) {
 

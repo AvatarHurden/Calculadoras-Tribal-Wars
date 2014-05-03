@@ -97,6 +97,10 @@ public enum Unidade {
 		else
 			this.defCav = new BigDecimal(String.valueOf(defCav));
 	}
+	
+	public String toString() {
+		return nome;
+	}
 
 	/**
 	 * @return tipo da unidade, na classe "Type"

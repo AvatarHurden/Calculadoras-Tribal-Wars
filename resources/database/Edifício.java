@@ -109,6 +109,10 @@ NULL				(null, 					1,	 "0",      0,	  0);
 		return população[nível];
 	}
 
+	public String toString() {
+		return nome;
+	}
+	
 	public String nome() {
 		return nome;
 	}

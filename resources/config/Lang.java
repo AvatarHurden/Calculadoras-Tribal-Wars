@@ -2,9 +2,7 @@ package config;
 
 
 public enum Lang {
-	
-	// TODO change config file and "Property_Escolha" to better suit this (maybe make noble prices a "Escolha")
-	
+
 	// GERAL
 	
 	/** Título da ferramenta (Tribal Wars Engine) */
@@ -68,7 +66,6 @@ public enum Lang {
 	NivelDoEdificio(	"Nível do "),
 	
 	Modelos(			"Modelos"),
-	// TODO figure out how to do the building level on recrutamento
 	
 	OD(					"OD"),
 	ODAtaque(			"OD Ataque"),
@@ -101,7 +98,7 @@ public enum Lang {
 	BtnNovo(			"Novo"),
 	BtnSalvar(			"Salvar"),
 	BtnDeletar(			"Deletar"),
-	BtnResetar(			"Resetar"),
+	BtnResetar(			"Limpar"),
 	
 	
 	// EditDialog

@@ -1,6 +1,7 @@
 package simulador;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -178,14 +179,15 @@ public class GUI extends Ferramenta {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 
-		int loop = 0;
+		int loop = 1;
 
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 
 			if (i != null) {
 
 				JPanel tropaPanel = new JPanel();
-				tropaPanel.setLayout(new GridBagLayout());
+				tropaPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+				
 				tropaPanel.setBackground(Cores.getAlternar(loop));
 
 				// Separação entre a parte de nomenclatura e as unidades
@@ -193,15 +195,10 @@ public class GUI extends Ferramenta {
 					tropaPanel.setBorder(new
 							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
-				GridBagConstraints tropaC = new GridBagConstraints();
-				tropaC.insets = new Insets(5, 5, 5, 5);
-				tropaC.gridx = 0;
-				tropaC.gridy = 0;
-
-				// Creating the TextField for the quantity of troops
-				JLabel lbl = new JLabel(i.nome());
-
-				tropaPanel.add(lbl, tropaC);
+				// Creating label for the unit name
+				JLabel lbl = new JLabel(i.toString());
+				
+				tropaPanel.add(lbl);
 
 				loop++;
 				c.gridy++;

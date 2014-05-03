@@ -43,9 +43,6 @@ public class ToolPanel {
 	// decide where each one will be placed
 	private JPanel bandeiraPanel;
 
-	//TODO check if this is necessary
-	private List<JPanel> resetPanelList = new ArrayList<JPanel>();
-	
 	private List<ModeloTropasPanel> modelosPanelList = new ArrayList<ModeloTropasPanel>();
 	
 	
@@ -60,7 +57,6 @@ public class ToolPanel {
 		resetButton.addActionListener(listener);
 		
 		resetPanel.add(resetButton);
-		resetPanelList.add(resetPanel);
 		
 		return resetPanel;
 		

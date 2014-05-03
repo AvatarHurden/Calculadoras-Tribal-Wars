@@ -65,7 +65,7 @@ public class StatInsertion extends JPanel {
 	private JComboBox<Bandeira> bandeira;
 
 	// variável para a cor dos panels
-	int loop = 0;
+	int loop = 1;
 
 	/**
 	 * @param tipo
@@ -108,7 +108,7 @@ public class StatInsertion extends JPanel {
 		c.insets = new Insets(5, 0, 0, 0);
 		
 		// If militia is active, ensures that the right colors are given to all
-		loop = Mundo_Reader.MundoSelecionado.getNúmeroDeTropas();
+		loop = Mundo_Reader.MundoSelecionado.getNúmeroDeTropas()+1;
 
 		// Diferenciando os diferentes tipos de inserção
 
@@ -438,7 +438,6 @@ public class StatInsertion extends JPanel {
 						&& (Character.isDigit(str.charAt(0)) || str.charAt(0) == '-')) {
 						super.insertString(offset, str, attr);
 						
-				// TODO study if this is good
 				if (!super.getText(0, getLength()).equals("-") &&
 						Math.abs(Integer.parseInt(getText(0, getLength()))) > 25) {
 					
@@ -557,7 +556,6 @@ public class StatInsertion extends JPanel {
 						&& (Character.isDigit(str.charAt(0))))
 					super.insertString(offset, str, attr);
 				
-				// TODO study if this is good
 				if (Math.abs(Integer.parseInt(getText(0, getLength()))) > 20) {
 					super.remove(0, getLength());
 					super.insertString(0, "20", attr);

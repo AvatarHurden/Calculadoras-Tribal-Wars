@@ -37,7 +37,7 @@ import javax.swing.text.PlainDocument;
 public abstract class TroopFormattedTextField extends JTextField {
 
 	// Location on format
-	// TODO make location changeable;
+	// TODO make location changeable, depending on language;
 	public NumberFormat numberFormat = NumberFormat
 			.getNumberInstance(Locale.GERMANY);
 
