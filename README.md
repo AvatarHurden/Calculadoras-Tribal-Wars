@@ -1,25 +1,29 @@
-Calculadoras-Tribal-Wars
-========================
+# Tribal Wars Engine
 
-Ferramentas para auxiliar cálculos e previsões no Tribal Wars
+Ferramentas para auxiliar cálculos e previsões no Tribal Wars.
 
-Possui seleção de mundo, sendo que todas as ferramentas se alteram para a configuração do mundo selecionado, com as
-tropas disponíveis e velocidade do mundo sendo levadas em conta.
+www.avatarhurden.github.io/Tribal-Wars-Engine
 
-Atualmente possui 5 ferramentas prontas. São elas:
+Ainda em desenvolvimento, possui 6 ferramentas prontas. São elas:
 
-- <b>Tempo de recrutamento</b>:
-    Calcula o tempo necessário para recrutar tropas em cada edifício.
+-   Tempo de recrutamento: Calcula o tempo necessário para recrutar
+    tropas em cada edifício.
 
-- <b>Cálculo de unidades</b>:
-    Informa o ataque, defesa, saque e custos de uma certa quantidade de tropas, individualmente e em conjunto.
-    
-- <b>Cálculo de pontos</b>:
-    Calcula a quantidade de pontos de um aldeia conforme os edifícios, além de informar quanto de população resta para
-    a produção de tropas.
-    
-- <b>Cálculo de distância</b>:
-    Informa o tempo necessário para o deslocamento entre duas aldeias para cada tropa.
-    
-- <b>Cálculo de OD</b>:
-    Calcula o ODA ou ODD para um certo número de tropas derrotadas.
+-   Cálculo de unidades: Informa o ataque, defesa, saque e custos de uma
+    certa quantidade de tropas, individualmente e em conjunto.
+
+-   Cálculo de pontos: Calcula a quantidade de pontos de um aldeia
+    conforme os edifícios, além de informar quanto de população resta
+    para a produção de tropas.
+
+-   Cálculo de distância: Informa o tempo necessário para o deslocamento
+    entre duas aldeias para cada tropa.
+
+-   Cálculo de OD: Calcula o ODA ou ODD para um certo número de tropas
+    derrotadas.
+
+-   Simulador: Simula uma batalha entre dois exércitos.
+
+Para mais informações e tutoriais completos, visite
+
+www.github.com/AvatarHurden/Tribal-Wars-Engine/wiki

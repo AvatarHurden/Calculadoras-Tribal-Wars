@@ -2,9 +2,9 @@ package assistente_saque;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -13,7 +13,10 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
@@ -34,6 +37,8 @@ public class GUI extends Ferramenta{
 	private JPanel respostaHorário;
 	
 	private Map<Unidade, JLabel> mapRecomendado = new HashMap<Unidade, JLabel>();
+	private JTextField textFieldIntervalo;
+	
 	
 	public GUI () {
 		
@@ -59,6 +64,7 @@ public class GUI extends Ferramenta{
 		panelHorário = new PanelHorário();
 		
 		makePanelRecomendado();
+		makeRespostaIntervalo();
 		
 		// Add reset button
 		c.anchor = GridBagConstraints.WEST;
@@ -85,30 +91,39 @@ public class GUI extends Ferramenta{
 		c.gridy = 0;
 		c.gridx++;
 		c.gridheight = 1;
-		c.gridwidth = 2;
 		add(tools.addModelosPanel(true, null), c);
 		
 		// Add the panel that receives input for interval calculations 
 		c.gridy++;
-//		c.gridx--;
-		c.gridwidth = 2;
-		c.gridheight = 1;
 		add(panelIntervalo, c);
 		
 		// Adds the panel that displays the interval in which to attack
 		c.gridy++;
-//		add(respostaIntervalo, c);
+		add(respostaIntervalo, c);
+		
+		// Separar as duas funções
+		
+		JSeparator separator = new JSeparator(JSeparator.VERTICAL);
+		separator.setForeground(Cores.SEPARAR_ESCURO);
+		
+		c.gridx++;
+		c.gridy = 1;
+		c.gridheight = 2;
+		c.fill = GridBagConstraints.VERTICAL;
+		c.insets = new Insets(0, 30, 0, 30);
+		add(separator, c);
 		
 		// Where the "AldeiaModelos" panel will be added
 		c.gridy = 0;
-		c.gridx += 2;
-		c.gridwidth = 3;
+		c.gridx++;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(5, 5, 5, 5);
 		add(tools.addModelosPanel(true, null), c);
 		
 		// Add the panel that receives input for exact time calculations 
 		c.gridy = 1;
-//		c.gridx--;
-		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.NORTH;
 		add(panelHorário, c);
 		
@@ -146,7 +161,7 @@ public class GUI extends Ferramenta{
 		
 		// Adding button panel
 		
-		// GridBagLayout to allow for the whol button to be displayed
+		// GridBagLayout to allow for the whole button to be displayed
 		JPanel buttonPanel = new JPanel(new GridBagLayout());
 		buttonPanel.setOpaque(false);
 		buttonPanel.add(new JButton("Usar"));
@@ -185,6 +200,34 @@ public class GUI extends Ferramenta{
 			}
 			
 		} // ends for loop		
+	}
+	
+	private void makeRespostaIntervalo() {
+		
+		respostaIntervalo = new JPanel(new GridLayout(0,1));
+		respostaIntervalo.setOpaque(false);
+		
+		// Add panel de último ataque
+		JPanel ataquePanel = new JPanel();
+		ataquePanel.add(new JLabel("Enviar ataques a cada"));
+			
+		ataquePanel.setBackground(Cores.FUNDO_ESCURO);
+		ataquePanel.setBorder(new MatteBorder(1, 1, 1, 1,Cores.SEPARAR_ESCURO));
+				
+		respostaIntervalo.add(ataquePanel);
+				
+		// Add panel de horário
+				
+		textFieldIntervalo = new JTextField(12);
+				
+		JPanel horaPanel = new JPanel();
+		horaPanel.add(textFieldIntervalo);
+						
+		horaPanel.setBackground(Cores.ALTERNAR_ESCURO);
+		horaPanel.setBorder(new MatteBorder(0, 1, 1, 1,Cores.SEPARAR_ESCURO));
+				
+		respostaIntervalo.add(horaPanel);
+		
 	}
 	
 }

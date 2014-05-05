@@ -20,7 +20,7 @@ public class Main {
 	static MainWindow mainFrame;
 
 	public static void main(String[] args) {
-
+		
 		File_Manager.read();
 
 		File_Manager.defineMundos();

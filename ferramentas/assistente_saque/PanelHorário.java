@@ -11,7 +11,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import custom_components.CoordenadaPanel;
-import custom_components.EdifícioFormattedComboBox;
 import custom_components.TroopFormattedTextField;
 import database.Cores;
 import database.Edifício;
@@ -159,10 +158,10 @@ public class PanelHorário extends JPanel{
 			recursoQuantidade.add(recursosRestantes[1]);
 			break;
 		case MINA_DE_FERRO:
-			recursosRestantes[1] = new TroopFormattedTextField(7) {
+			recursosRestantes[2] = new TroopFormattedTextField(7) {
 				public void go() {}
 			};
-			recursoQuantidade.add(recursosRestantes[1]);
+			recursoQuantidade.add(recursosRestantes[2]);
 			// Since iron is the last one, a full border is required
 			recursoQuantidade.setBorder(new MatteBorder(
 					0, 1, 1, 1, Cores.SEPARAR_ESCURO));

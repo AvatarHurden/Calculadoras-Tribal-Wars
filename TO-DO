@@ -21,10 +21,16 @@
 	- Tropas mínimas para derrotar certa defesa/ataque (preciso/posso usar derivadas pra isso?)
 	- add best attack composition on simulador (percentages)
 
+- Ver Tribal Wars Office - Cadastro de aldeias/farm
+
  ==== IDEIAS DE FERRAMENTAS ====
 
 - Ferramenta pra calcular saques com base no restante e níveis dos edifícios
-
+	- Adicionar opção de "enviar agora", que informa quantas tropas enviar
+	no momento
+	- "Recomendações" utilizará todas as unidades de maior saque disponíveis, preenchendo com as outas
+	(Utiliza todas as cavalrias leves, depois pesada/arqueiro, assim por diante)
+	
 - Ferramenta de planejamento de ataque
 
 - Editor com códigos BB

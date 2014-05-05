@@ -72,9 +72,7 @@ public class PanelUnidade extends JPanel{
 		
 		unidadePanel.setBackground(Cores.FUNDO_ESCURO);
 		unidadePanel.setBorder(new MatteBorder(1, 1, 1, 0,Cores.SEPARAR_ESCURO));
-		
-		System.out.println(unidadePanel.getPreferredSize().height);
-		
+			
 		c.gridwidth = 1;
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridy++;

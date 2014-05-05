@@ -367,8 +367,7 @@ public class StatInsertion extends JPanel {
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.getAlternar(loop));
 		// Como o painel de edifício fecha embaixo, este não possui em cima para
-		// não
-		// criar uma borda dupla
+		// não criar uma borda dupla
 		panel.setBorder(new MatteBorder(0, 1, 1, 1, Cores.SEPARAR_ESCURO));
 
 		GridBagLayout layout = new GridBagLayout();
@@ -580,6 +579,7 @@ public class StatInsertion extends JPanel {
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.getAlternar(loop));
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setToolTipText("Edifício alvo das catapultas");
 
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] { 80, 30 };

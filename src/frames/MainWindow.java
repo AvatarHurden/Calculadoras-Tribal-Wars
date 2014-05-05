@@ -12,8 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import config.Lang;
 import selecionar_mundo.GUI;
+import config.Lang;
 import custom_components.Ferramenta;
 import database.Cores;
 
