@@ -1,9 +1,12 @@
 package main;
 
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
 import config.File_Manager;
 import frames.MainWindow;
@@ -78,7 +81,7 @@ public class Main {
 		mainFrame.addPanel(new distância.GUI());
 		mainFrame.addPanel(new oponentes_derrotados.GUI());
 		mainFrame.addPanel(new simulador.GUI());
-		mainFrame.addPanel(new assistente_saque.GUI());
+//		mainFrame.addPanel(new assistente_saque.GUI());
 
 		mainFrame.selectFirst();
 

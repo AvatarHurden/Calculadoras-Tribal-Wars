@@ -7,10 +7,12 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -37,7 +39,7 @@ public class GUI extends Ferramenta{
 	private JPanel respostaHorário;
 	
 	private Map<Unidade, JLabel> mapRecomendado = new HashMap<Unidade, JLabel>();
-	private JTextField textFieldIntervalo;
+	private JFormattedTextField textFieldIntervalo;
 	
 	
 	public GUI () {
@@ -218,7 +220,11 @@ public class GUI extends Ferramenta{
 				
 		// Add panel de horário
 				
-		textFieldIntervalo = new JTextField(12);
+		SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss.ssss");
+		
+		textFieldIntervalo = new JFormattedTextField(format);
+		textFieldIntervalo.setColumns(12);
+		textFieldIntervalo.setText(format.format(System.currentTimeMillis()));
 				
 		JPanel horaPanel = new JPanel();
 		horaPanel.add(textFieldIntervalo);

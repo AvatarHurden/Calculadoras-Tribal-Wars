@@ -4,7 +4,12 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyEventPostProcessor;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +29,8 @@ public class MainWindow extends JFrame {
 	JPanel body;
 
 	public List<Ferramenta> ferramentas = new ArrayList<Ferramenta>();
-
+	public Ferramenta ferramentaSelecionada;
+	
 	/**
 	 * Frame que contém todas as ferramentas
 	 */
@@ -59,6 +65,28 @@ public class MainWindow extends JFrame {
 		body.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		add(body, c);
 		
+		// Adds listener for ctrl+tab funcionality
+		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		
+		manager.addKeyEventDispatcher(new KeyEventDispatcher() {
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				
+				// Only do this once per key press
+				if (e.getID() == KeyEvent.KEY_PRESSED)
+					if (e.getKeyCode() == KeyEvent.VK_TAB && e.isControlDown()) {
+						
+						// If it is not the last tool, go to the next one. Otherwise, go to first
+						if (ferramentas.indexOf(ferramentaSelecionada) < ferramentas.size()-1)
+							ferramentas.get(ferramentas.indexOf(ferramentaSelecionada)+1).changeSelection();
+						else
+							ferramentas.get(0).changeSelection();
+		
+					}
+				
+				return true;	
+			}
+		});
+		
 	}
 
 	/**
@@ -89,6 +117,7 @@ public class MainWindow extends JFrame {
 			i.setSelected(false);
 
 		ferramentas.get(0).setSelected(true);
+		ferramentaSelecionada = ferramentas.get(0);
 
 	}
 

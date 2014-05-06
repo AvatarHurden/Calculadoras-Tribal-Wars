@@ -51,14 +51,7 @@ public class Ferramenta extends JPanel{
 			
 			public void mouseClicked(MouseEvent arg0) {
 				
-				tools.refresh();
-				
-				for (Ferramenta i : frame.ferramentas)
-					i.setSelected(false);
-				
-				setSelected(true);
-				
-				frame.pack();
+				changeSelection();
 				
 			}
 		});
@@ -66,6 +59,19 @@ public class Ferramenta extends JPanel{
 	}
 	
 	// Methods to be used by the tool section
+	
+	public void changeSelection() {
+		
+		tools.refresh();
+		
+		frame.ferramentaSelecionada.setSelected(false);
+		
+		setSelected(true);
+		frame.ferramentaSelecionada = Ferramenta.this;
+		
+		frame.pack();
+		
+	}
 	
 	public void setSelected(boolean isSelected) {
 		

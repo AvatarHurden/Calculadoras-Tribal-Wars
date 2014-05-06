@@ -2,6 +2,9 @@ package assistente_saque;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import custom_components.CoordenadaPanel;
@@ -15,51 +18,170 @@ public class Cálculo {
 	
 	// Dados recebidos
 	
-	// Não é necessário saber qual recurso é produzido, apenas a soma deles
-	private BigDecimal produção;
+	// Produção dos recursos (recurso/milissegundos)
+	private BigDecimal[] produção = new BigDecimal[3];
 	// Leva em conta o nível do armazém e do esconderijo
 	private BigDecimal armazenamento;
 	// Soma de todo o saque
 	private BigDecimal saqueTotal;
-	// Velocidade mais lenta
+	// Velocidade mais lenta (milissegundos/campo)
 	private BigDecimal velocidade;
 	
-	// Momento do último ataque
+	// Momento do último ataque (em milisegundos)
 	private BigDecimal ultimoAtaque;
 	// Distância entre as aldeias
 	private BigDecimal distância;
 	// Recursos restantes
-	private BigDecimal restantes;
+	private BigDecimal[] restantes = new BigDecimal[3];
 	
-	// Dados calculados
+	// Unidades disponíveis para enviar
+	private Map<Unidade, BigDecimal> tropasDisponíveis = new HashMap<Unidade, BigDecimal>();
 	
-	// Tempo entre ataques (em segundos)
-	private BigDecimal intervalo;
-	// Horário para enviar próximo ataque
-	private BigDecimal enviarAtaque;
+	// Dados intermediários para cálculo
+
 	// Se o saque total for maior do que o armazém
-	private boolean armazémPequeno;
+	private boolean armazémPequeno = false;
 	
+	// Dados finais
 	
+	// Tempo entre ataques (em milissegundos)
+	private BigDecimal intervalo;
+	// Horário para enviar próximo ataque (em milisegundos)
+	private BigDecimal enviarAtaque;
+	// Unidades recomendadas
+	private Map<Unidade, BigDecimal> tropasRecomendadas = new HashMap<Unidade, BigDecimal>();
+
 	protected Cálculo() {}
 	
-	/**
-	 * Calcula o intervalo entre ataques e define se o armazém for pequeno
-	 */
-	private void setIntervalo() {
+	protected void setIntervalo() {
 		
-		if (saqueTotal.compareTo(armazenamento) == 1) {
-			armazémPequeno = true;
-			saqueTotal = armazenamento;
-		}
-		
-		intervalo = saqueTotal.divide(produção, 30, RoundingMode.HALF_EVEN);
+		intervalo = getTimeToSend(null);
 		
 	}
 	
-	private void setEnviarAtaque() {
+	protected void setEnviarAtaque() {
 		
+		// de minutos/campo para milissegundos/campo
+		velocidade = velocidade.multiply(new BigDecimal("60000"));
 		
+		for (int i = 0; i < 3; i++)
+			restantes[i] = restantes[i].add(
+					distância.multiply(velocidade).multiply(produção[i]));
+						
+		// Recebe o tempo que deveria esperar até enviar outro ataque
+		enviarAtaque = getTimeToSend(restantes);
+		// Coloca o horário a enviar o ataque
+		enviarAtaque = enviarAtaque.add(ultimoAtaque);
+	}
+	
+	protected void setUnidadesRecomendadas() {
+		
+		// Cria a lista de ordem das unidades para preencher 
+		List<Unidade> preferência = new ArrayList<Unidade>();
+		preferência.add(Unidade.PALADINO);
+		preferência.add(Unidade.CAVALOLEVE);
+		preferência.add(Unidade.ARCOCAVALO);
+		preferência.add(Unidade.CAVALOPESADO);
+		preferência.add(Unidade.LANCEIRO);
+		preferência.add(Unidade.ARQUEIRO);
+		preferência.add(Unidade.BÁRBARO);
+		preferência.add(Unidade.ESPADACHIM);
+		
+		BigDecimal saqueRecomendado = armazenamento;
+		
+		for (Unidade i : preferência) {
+			
+			if (tropasDisponíveis.get(i).multiply(i.saque()).compareTo(saqueRecomendado) > -1) {
+				// Puts the maximum number of troops the warehouse holds
+				tropasRecomendadas.put(i, saqueRecomendado.
+						divide(i.saque(), 0, RoundingMode.CEILING));
+				break;
+			} else {
+				tropasRecomendadas.put(i, tropasDisponíveis.get(i));
+				// Prepares the remaining available loot for other troops
+				saqueRecomendado = saqueRecomendado.
+						subtract(tropasDisponíveis.get(i).multiply(i.saque()));
+			}
+				
+		}
+		
+		// Keeps the units with no loot power
+		// TODO decide if they should be kept or completely removed
+		for (Unidade i : Unidade.values())
+			if (!preferência.contains(i))
+				tropasRecomendadas.put(i, tropasDisponíveis.get(i));
+		
+	}
+	
+	/**
+	 * Given initial resources, calculates the time to wait unitl sending another attack.
+	 * Uses the values of "saqueTotal", "armazenamento", "armazémPequeno"
+	 * @param An array with 3 elements, representing leftover wood, clay and iron.
+	 */
+	private BigDecimal getTimeToSend(BigDecimal[] initial) {
+		
+		if (saqueTotal.compareTo(
+				armazenamento.multiply(new BigDecimal("3"))) == 1) {
+			armazémPequeno = true;
+			saqueTotal = armazenamento.multiply(new BigDecimal("3"));
+		}
+		
+		// Handles null parameter
+		for (int i = 0; i < initial.length; i++)
+			if (initial[i] == null)
+				initial[i] = BigDecimal.ZERO;
+		
+		// Array that will contain time to fill resources (wood, clay, iron)
+		BigDecimal[] tempoEncher = new BigDecimal[3];
+		
+		// Setting the time it would take to fill every resource
+		for (int i = 0; i < 3; i++) {
+			tempoEncher[i] = armazenamento.subtract(initial[i]).
+				divide(produção[i], 30, RoundingMode.HALF_EVEN);
+			// Doesn't allow negative times
+			if (tempoEncher[i].signum() == -1)
+				tempoEncher[i] = BigDecimal.ZERO;
+		}
+		// Setting the initial calculated time at 0
+		BigDecimal time = BigDecimal.ZERO;
+		// A soma das produções dos recursos (recurso/milissegundo)
+		BigDecimal somaProdução;
+		
+		// Variable that controls whether the calculated time is larger than any tempoEncher
+		// Starts at true to ensure one run
+		boolean overflow = true;
+		
+		while (overflow) {
+			
+			overflow = false;
+			
+			// Recursos que são constantes para o cálculo
+			// Armazena os que tiveram overflow, pois é certo de que cada passada aumenta o tempo necessário
+			BigDecimal resources = BigDecimal.ZERO;
+			
+			// A produção de recursos por milissegundo, não contando aqueles que sofreram overflow
+			somaProdução = BigDecimal.ZERO;
+			
+			for (int i = 0; i < 3; i++)
+				if (tempoEncher[i].compareTo(time) == 1) {
+					somaProdução = somaProdução.add(produção[i]);
+				} else if (tempoEncher[i].compareTo(time) == 0) {
+					// if the time is exact, the limit has been reached without overflow
+					resources = resources.add(armazenamento);
+				} else {
+					// Only has overflow if the time passed the limit
+					resources = resources.add(armazenamento);
+					overflow = true;
+				}
+					
+			
+			// Saque total = recursos + time*produção
+			time = saqueTotal.subtract(resources);
+			time = time.divide(somaProdução, 30, RoundingMode.HALF_EVEN);
+		
+		}
+		
+		return time;
 		
 	}
 	
@@ -70,8 +192,6 @@ public class Cálculo {
 	 */
 	protected void setProduçãoEArmazenamento(
 				Map<Edifício, EdifícioFormattedComboBox> edifícios) {
-		
-		produção = BigDecimal.ZERO;
 		
 		for (Edifício ed : edifícios.keySet()) {
 			
@@ -89,19 +209,27 @@ public class Cálculo {
 				break;
 			// Caso não seja nem armazém nem esconderijo, é um dos
 			// produtores
+			case BOSQUE:
+				produção[0] = null;
+				break;
+			case POÇO_DE_ARGILA:
+				produção[1] = null;
+				break;
+			case MINA_DE_FERRO:
+				produção[2] = null;
+				break;
 			default:
-				produção = produção.add(null);
 			}
 		}
 		
-		// Changes production from per hour to per second
-		produção = produção.divide(new BigDecimal("3600"), 
-				30, RoundingMode.HALF_DOWN);
+		// Changes production from per hour to per millissecond
+		for (BigDecimal i : produção)
+			i = i.divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_DOWN);
 		
 	}
 	
 	/**
-	 * Determina o saque total das tropas fornecidas
+	 * Determina o saque total das tropas fornecidas e a velocidade do ataque
 	 * @param Mapa relacionando as unidades com os textFields
 	 */
 	protected void setSaqueTotal(
@@ -117,9 +245,12 @@ public class Cálculo {
 					multiply(i.saque()));
 			
 			// Verifica se a unidade atual é mais lenta do que a registrada
-			if (i.velocidade().compareTo(velocidade) == -1)
+			if (i.velocidade().compareTo(velocidade) == 1)
 				velocidade = i.velocidade();
 			
+			// Coloca as tropas no map de disponibilidade
+			tropasDisponíveis.put(i, quantidades.get(i).getValue());
+	
 		}
 			
 		
@@ -151,10 +282,8 @@ public class Cálculo {
 	 */
 	protected void setRestantes(TroopFormattedTextField[] array) {
 		
-		restantes = BigDecimal.ZERO;
-		
-		for (TroopFormattedTextField i : array)
-			restantes = restantes.add(i.getValue());
+		for (int i = 0; i < array.length; i++)
+			restantes[i] = array[i].getValue();
 		
 	}
 	
