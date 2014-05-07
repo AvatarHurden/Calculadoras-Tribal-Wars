@@ -12,7 +12,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import config.Mundo_Reader;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
@@ -22,7 +22,7 @@ public class PanelUnidade extends JPanel {
 	private PanelEdifício edifício;
 	private Unidade unidade;
 	private JLabel nome;
-	private TroopFormattedTextField quantidade;
+	private IntegerFormattedTextField quantidade;
 	private JLabel tempoUnitário;
 	private JLabel tempoTotal;
 
@@ -59,7 +59,7 @@ public class PanelUnidade extends JPanel {
 		nome = new JLabel(unidade.nome());
 		add(nome, c);
 
-		quantidade = new TroopFormattedTextField(9) {
+		quantidade = new IntegerFormattedTextField(9) {
 
 			@Override
 			public void go() {
@@ -187,7 +187,7 @@ public class PanelUnidade extends JPanel {
 		edifício = d;
 	}
 	
-	public TroopFormattedTextField getTextField() {
+	public IntegerFormattedTextField getTextField() {
 		return quantidade;
 	}
 	

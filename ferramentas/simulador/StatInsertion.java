@@ -33,7 +33,7 @@ import simulador.GUI.InputInfo;
 import config.Lang;
 import config.Mundo_Reader;
 import custom_components.ToolPanel;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Bandeira;
 import database.Bandeira.CategoriaBandeira;
 import database.Cores;
@@ -54,7 +54,7 @@ public class StatInsertion extends JPanel {
 
 	private InputInfo info;
 
-	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
+	private Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
 	private Map<Unidade, JComboBox<Integer>> mapNiveis = new HashMap<Unidade, JComboBox<Integer>>();
 
 	private JCheckBox religião, noite;
@@ -262,7 +262,7 @@ public class StatInsertion extends JPanel {
 					tropaC.gridwidth = 2;
 
 				// Creating the TextField for the quantity of troops
-				TroopFormattedTextField txt = new TroopFormattedTextField(9) {
+				IntegerFormattedTextField txt = new IntegerFormattedTextField(9) {
 					public void go() {}
 				};
 				// Adding the text to a map with the units
@@ -859,7 +859,7 @@ public class StatInsertion extends JPanel {
 
 	public void resetValues() {
 		
-		for (TroopFormattedTextField i : mapQuantidades.values())
+		for (IntegerFormattedTextField i : mapQuantidades.values())
 			i.setText("");
 		
 		for (JComboBox<Integer> i : mapNiveis.values())

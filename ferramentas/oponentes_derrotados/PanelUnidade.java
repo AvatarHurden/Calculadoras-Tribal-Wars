@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import config.Lang;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
@@ -26,7 +26,7 @@ public class PanelUnidade {
 
 	private Unidade unidade;
 	private JLabel nome;
-	private TroopFormattedTextField quantidade;
+	private IntegerFormattedTextField quantidade;
 	private JLabel lblOD;
 
 	private Color cor;
@@ -129,7 +129,7 @@ public class PanelUnidade {
 		gbc_nome.gridy = 0;
 		panelDados.add(nome, gbc_nome);
 
-		quantidade = new TroopFormattedTextField(9) {
+		quantidade = new IntegerFormattedTextField(9) {
 
 			@Override
 			public void go() {
@@ -199,7 +199,7 @@ public class PanelUnidade {
 		return unidade;
 	}
 
-	protected TroopFormattedTextField getTextField() {
+	protected IntegerFormattedTextField getTextField() {
 		return quantidade;
 	}
 	

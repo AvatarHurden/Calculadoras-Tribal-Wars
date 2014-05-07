@@ -12,14 +12,14 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Unidade;
 
 @SuppressWarnings({ "serial" })
 public class Property_UnidadeList 
 	extends HashMap<Unidade, BigDecimal> implements Property {
 	
-	private Map<Unidade, TroopFormattedTextField> textFieldMap;
+	private Map<Unidade, IntegerFormattedTextField> textFieldMap;
 	
 	public String getName() {
 		
@@ -70,7 +70,7 @@ public class Property_UnidadeList
 		c.gridx = 0;
 		c.gridwidth = 1;
 
-		textFieldMap = new HashMap<Unidade, TroopFormattedTextField>();
+		textFieldMap = new HashMap<Unidade, IntegerFormattedTextField>();
 		
 		for (Unidade i : Unidade.values()) {
 
@@ -78,7 +78,7 @@ public class Property_UnidadeList
 			c.gridy++;
 			panel.add(new JLabel(i.nome()), c);
 
-			TroopFormattedTextField txt = new TroopFormattedTextField(9) {
+			IntegerFormattedTextField txt = new IntegerFormattedTextField(9) {
 				public void go() {}
 			};
 			
@@ -112,7 +112,7 @@ public class Property_UnidadeList
 	@Override
 	public void setValue() {
 		
-		for (Entry<Unidade, TroopFormattedTextField> x 	: textFieldMap.entrySet()) {
+		for (Entry<Unidade, IntegerFormattedTextField> x 	: textFieldMap.entrySet()) {
 			
 			// Puts every unit with corresponding value
 			put(x.getKey(), x.getValue().getValue());

@@ -14,7 +14,7 @@ import javax.swing.border.MatteBorder;
 
 import config.Lang;
 import config.Mundo_Reader;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
@@ -30,7 +30,7 @@ import database.Unidade;
 public class PanelUnidade extends JPanel{
 	
 	// Map with the textFields associated with units
-	private Map<Unidade,TroopFormattedTextField> textFields = new HashMap<Unidade,TroopFormattedTextField>();
+	private Map<Unidade,IntegerFormattedTextField> textFields = new HashMap<Unidade,IntegerFormattedTextField>();
 	
 	// Header panels
 	private JPanel headerPanel, unidadePanel, quantidadePanel;
@@ -107,10 +107,10 @@ public class PanelUnidade extends JPanel{
 				c.gridx = 0;
 				add(unitName, c);
 				
-				// Adds the TroopFormattedTextField
+				// Adds the IntegerFormattedTextField
 				JPanel unitQuantity = new JPanel();
 				
-				textFields.put(i, new TroopFormattedTextField(9) {
+				textFields.put(i, new IntegerFormattedTextField(9) {
 					public void go() {}
 				});
 				unitQuantity.add(textFields.get(i));
@@ -129,7 +129,7 @@ public class PanelUnidade extends JPanel{
 		
 	}
 	
-	protected Map<Unidade, TroopFormattedTextField> getTextFields() {
+	protected Map<Unidade, IntegerFormattedTextField> getTextFields() {
 		return textFields;
 	}
 }

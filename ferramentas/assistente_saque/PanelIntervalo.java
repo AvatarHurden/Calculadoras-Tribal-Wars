@@ -114,7 +114,7 @@ public class PanelIntervalo extends JPanel{
 		c.gridx = 0;
 		add(buildingName, c);
 				
-		// Adds the TroopFormattedTextField
+		// Adds the IntegerFormattedTextField
 		JPanel buildingLevel = new JPanel();
 				
 		edificios.put(ed, new EdifícioFormattedComboBox(ed, 0) {

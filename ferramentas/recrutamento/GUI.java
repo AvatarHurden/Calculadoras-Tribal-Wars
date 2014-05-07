@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Edifício;
 import database.Unidade;
@@ -29,7 +29,7 @@ public class GUI extends Ferramenta {
 	
 	private Map<Unidade, PanelUnidade> panelUnidadeMap = new HashMap<Unidade, PanelUnidade>();
 	
-	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
+	private Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
 	
 	/**
 	 * Ferramenta para calcular o tempo necessário de produção de unidades. 
@@ -172,7 +172,7 @@ public class GUI extends Ferramenta {
 		ActionListener reset = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				for (TroopFormattedTextField i : mapQuantidades.values())
+				for (IntegerFormattedTextField i : mapQuantidades.values())
 					i.setText("");
 				
 				for (PanelEdifício i : edifícioList)

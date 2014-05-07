@@ -78,10 +78,10 @@ public class ToolPanel {
 	 * Cria um panel que fornece a habilidade de utilizar os ModelosTropas, além de editá-los
 	 * 
 	 * @param edit Se o painel possui o botão de edição
-	 * @param textFields  Map com TroopFormattedTextField ligados a unidades, para utilizar os Modelos
+	 * @param textFields  Map com IntegerFormattedTextField ligados a unidades, para utilizar os Modelos
 	 * @return Um JPanel com as coisas faladas
 	 */
-	public JPanel addModelosPanel(boolean edit, Map<Unidade, TroopFormattedTextField> textFields) {
+	public JPanel addModelosPanel(boolean edit, Map<Unidade, IntegerFormattedTextField> textFields) {
 		
 		ModeloTropasPanel panel = new ModeloTropasPanel(edit, textFields);
 		
@@ -104,11 +104,11 @@ public class ToolPanel {
 	@SuppressWarnings("serial")
 	private class ModeloTropasPanel extends JPanel {
 
-		private Map<Unidade, TroopFormattedTextField> mapTextFields;
+		private Map<Unidade, IntegerFormattedTextField> mapTextFields;
 
 		private JPopupMenu popup;
 
-		public ModeloTropasPanel(boolean edit, Map<Unidade, TroopFormattedTextField> textFields) {
+		public ModeloTropasPanel(boolean edit, Map<Unidade, IntegerFormattedTextField> textFields) {
 
 			mapTextFields = textFields;
 
@@ -209,7 +209,7 @@ public class ToolPanel {
 				public void actionPerformed(ActionEvent a) {
 
 					// Edits all the textfields according to the model
-					for (Entry<Unidade, TroopFormattedTextField> e : mapTextFields
+					for (Entry<Unidade, IntegerFormattedTextField> e : mapTextFields
 							.entrySet())
 						if (i.getQuantidade(e.getKey()).equals(BigDecimal.ZERO))
 							e.getValue().setText("");
@@ -246,7 +246,7 @@ public class ToolPanel {
 						ModeloTropas modelo = new ModeloTropas();
 						
 						Map<Unidade,BigDecimal> map = new HashMap<Unidade,BigDecimal>();
-						for (Entry<Unidade, TroopFormattedTextField> i : mapTextFields.entrySet())
+						for (Entry<Unidade, IntegerFormattedTextField> i : mapTextFields.entrySet())
 							map.put(i.getKey(), i.getValue().getValue());
 						
 						modelo.setMap(map);

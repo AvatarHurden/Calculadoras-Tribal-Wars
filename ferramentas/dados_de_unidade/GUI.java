@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
@@ -27,7 +27,7 @@ public class GUI extends Ferramenta {
 	// List<Unidade> unidadesUtilizadas = new ArrayList<Unidade>();
 	// List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
 
-	Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
+	Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
 
 	List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
 
@@ -71,7 +71,7 @@ public class GUI extends Ferramenta {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				
-				for (TroopFormattedTextField i : mapQuantidades.values())
+				for (IntegerFormattedTextField i : mapQuantidades.values())
 					i.setText("");
 				
 				for (PanelUnidade p : panelUnidadeList)

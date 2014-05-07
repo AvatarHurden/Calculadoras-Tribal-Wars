@@ -21,7 +21,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 
 import config.Lang;
 import config.Mundo_Reader;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
@@ -37,7 +37,7 @@ public class PanelUnidade {
 	private JPanel dadosCusto;
 
 	private JLabel nome;
-	private TroopFormattedTextField quantidade;
+	private IntegerFormattedTextField quantidade;
 	private JComboBox<Integer> nível;
 	private JLabel dano, defGeral, defCavalo, defArqueiro, saque;
 	private JLabel madeira, argila, ferro, população;
@@ -261,7 +261,7 @@ public class PanelUnidade {
 		} else
 			createComboBox(true, constraints, false);
 
-		quantidade = new TroopFormattedTextField(9) {
+		quantidade = new IntegerFormattedTextField(9) {
 
 			@Override
 			public void go() {
@@ -531,7 +531,7 @@ public class PanelUnidade {
 		return identificadores;
 	}
 
-	protected TroopFormattedTextField getQuantidade() {
+	protected IntegerFormattedTextField getQuantidade() {
 		return quantidade;
 	}
 	

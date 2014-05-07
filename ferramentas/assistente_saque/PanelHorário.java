@@ -11,7 +11,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import custom_components.CoordenadaPanel;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Edifício;
 
@@ -31,8 +31,8 @@ public class PanelHorário extends JPanel{
 	private JTextField hora; 
 	
 	// TODO change the name of the textField to reflect what is does
-	private TroopFormattedTextField[] recursosRestantes = 
-			new TroopFormattedTextField[3];
+	private IntegerFormattedTextField[] recursosRestantes = 
+			new IntegerFormattedTextField[3];
 	
 	protected PanelHorário() {
 		
@@ -146,19 +146,19 @@ public class PanelHorário extends JPanel{
 		
 		switch(produtor) {
 		case POÇO_DE_ARGILA:
-			recursosRestantes[0] = new TroopFormattedTextField(7) {
+			recursosRestantes[0] = new IntegerFormattedTextField(7) {
 				public void go() {}
 			};
 			recursoQuantidade.add(recursosRestantes[0]);
 			break;
 		case BOSQUE:
-			recursosRestantes[1] = new TroopFormattedTextField(7) {
+			recursosRestantes[1] = new IntegerFormattedTextField(7) {
 				public void go() {}
 			};
 			recursoQuantidade.add(recursosRestantes[1]);
 			break;
 		case MINA_DE_FERRO:
-			recursosRestantes[2] = new TroopFormattedTextField(7) {
+			recursosRestantes[2] = new IntegerFormattedTextField(7) {
 				public void go() {}
 			};
 			recursoQuantidade.add(recursosRestantes[2]);

@@ -20,21 +20,23 @@ import javax.swing.text.PlainDocument;
 
 /**
  * JTextField that formats the number to add thousands separator
+ * Unlike JFormattedTextField, the display is updated dynamically as the
+ * user types, not allowing the insertion of invalid characters (letter or symbols)
  * 
  * <br>Abstract method is called on every change of text
  * 
  * <br>By default, contains: 
  * <br>- Left horizontal text alignment
  * <br>- PlainDocument to only allow <code>length</code> digits
- * <br>- DocumentListener with abstract clas that activates on every change
- * <br>- FocusListener to update when focus is lost (to not add another, since
+ * <br>- DocumentListener with abstract class that activates on every change
+ * <br>- FocusListener to update when focus is lost (do not add another, since
  * focus is lost on every edit of the textField)
  * 
  * @author Arthur
  * 
  */
 @SuppressWarnings("serial")
-public abstract class TroopFormattedTextField extends JTextField {
+public abstract class IntegerFormattedTextField extends JTextField {
 
 	// Location on format
 	// TODO make location changeable, depending on language;
@@ -45,7 +47,7 @@ public abstract class TroopFormattedTextField extends JTextField {
 	 * @param length
 	 *            Maximum number of digits allowed
 	 */
-	public TroopFormattedTextField(final int length) {
+	public IntegerFormattedTextField(final int length) {
 
 		setHorizontalAlignment(SwingConstants.LEFT);
 

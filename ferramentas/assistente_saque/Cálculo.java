@@ -9,7 +9,7 @@ import java.util.Map;
 
 import custom_components.CoordenadaPanel;
 import custom_components.EdifícioFormattedComboBox;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.BigOperation;
 import database.Edifício;
 import database.Unidade;
@@ -233,7 +233,7 @@ public class Cálculo {
 	 * @param Mapa relacionando as unidades com os textFields
 	 */
 	protected void setSaqueTotal(
-				Map<Unidade, TroopFormattedTextField> quantidades) {
+				Map<Unidade, IntegerFormattedTextField> quantidades) {
 		
 		saqueTotal = BigDecimal.ZERO;
 		velocidade = BigDecimal.ZERO;
@@ -280,7 +280,7 @@ public class Cálculo {
 	 * Sets the remaining resources in the looted village
 	 * @param An array with the 3 resources
 	 */
-	protected void setRestantes(TroopFormattedTextField[] array) {
+	protected void setRestantes(IntegerFormattedTextField[] array) {
 		
 		for (int i = 0; i < array.length; i++)
 			restantes[i] = array[i].getValue();

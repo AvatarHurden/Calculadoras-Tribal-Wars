@@ -21,7 +21,7 @@ import javax.swing.border.LineBorder;
 import config.Lang;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
-import custom_components.TroopFormattedTextField;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
@@ -30,7 +30,7 @@ public class GUI extends Ferramenta {
 
 	private List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
 
-	private Map<Unidade, TroopFormattedTextField> mapQuantidades = new HashMap<Unidade, TroopFormattedTextField>();
+	private Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
 	
 	private final Map<Unidade, Integer> pontos_ODA = new HashMap<Unidade, Integer>();
 	private final Map<Unidade, Integer> pontos_ODD = new HashMap<Unidade, Integer>();
@@ -66,7 +66,7 @@ public class GUI extends Ferramenta {
 
 		ActionListener reset = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				for (TroopFormattedTextField t : mapQuantidades.values())
+				for (IntegerFormattedTextField t : mapQuantidades.values())
 					t.setText("");
 			}
 		};
