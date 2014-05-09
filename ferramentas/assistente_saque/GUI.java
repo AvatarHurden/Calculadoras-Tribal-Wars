@@ -6,10 +6,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -28,6 +30,9 @@ import database.Unidade;
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta{
 
+	// Objeto de cálculo
+	private Cálculo cálculo;
+	
 	// Panels de inserção de dados
 	private PanelUnidade panelUnidades;
 	private PanelIntervalo panelIntervalo;
@@ -39,7 +44,7 @@ public class GUI extends Ferramenta{
 	private JPanel respostaHorário;
 	
 	private Map<Unidade, JLabel> mapRecomendado = new HashMap<Unidade, JLabel>();
-	private JFormattedTextField textFieldIntervalo;
+	private JLabel labelDisplayIntervalo;
 	
 	
 	public GUI () {
@@ -61,12 +66,15 @@ public class GUI extends Ferramenta{
 		c.gridy = 0;
 		c.gridx = 0;
 		
+		cálculo = new Cálculo();
+		
 		panelUnidades = new PanelUnidade();
 		panelIntervalo = new PanelIntervalo();
 		panelHorário = new PanelHorário();
 		
 		makePanelRecomendado();
 		makeRespostaIntervalo();
+		panelRecomendado.setVisible(false);
 		
 		// Add reset button
 		c.anchor = GridBagConstraints.WEST;
@@ -85,9 +93,14 @@ public class GUI extends Ferramenta{
 		add(panelUnidades,c);
 		
 		// Add recomended units panel
+		JPanel container = new JPanel();
+		container.setPreferredSize(panelRecomendado.getPreferredSize());
+		container.setOpaque(false);
+		container.add(panelRecomendado);
+		
 		c.gridx += 2;
 		c.gridwidth = 1;
-		add(panelRecomendado, c);
+		add(container, c);
 		
 		// Where the "AldeiaModelos" panel will be added
 		c.gridy = 0;
@@ -131,7 +144,21 @@ public class GUI extends Ferramenta{
 		
 		// Adds the panel that displays the time to send the attack 
 		c.gridy++;
-//		add(respostaHorário, c);
+		
+		JButton button = new JButton("Go");
+		button.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				cálculo.setProduçãoEArmazenamento(panelIntervalo.getEdifícios());
+				cálculo.setSaqueTotal(panelUnidades.getTextFields());
+				
+				cálculo.setIntervalo();
+				setDisplayIntervalo(cálculo.getIntervalo());
+			}
+		});
+		
+		add(button, c);
 	}
 	
 	private ActionListener getResetButtonAction() {
@@ -219,15 +246,11 @@ public class GUI extends Ferramenta{
 		respostaIntervalo.add(ataquePanel);
 				
 		// Add panel de horário
-				
-		SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss.ssss");
 		
-		textFieldIntervalo = new JFormattedTextField(format);
-		textFieldIntervalo.setColumns(12);
-		textFieldIntervalo.setText(format.format(System.currentTimeMillis()));
-				
+		labelDisplayIntervalo = new JLabel();
+		
 		JPanel horaPanel = new JPanel();
-		horaPanel.add(textFieldIntervalo);
+		horaPanel.add(labelDisplayIntervalo);
 						
 		horaPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		horaPanel.setBorder(new MatteBorder(0, 1, 1, 1,Cores.SEPARAR_ESCURO));
@@ -235,5 +258,19 @@ public class GUI extends Ferramenta{
 		respostaIntervalo.add(horaPanel);
 		
 	}
+	
+	protected void setDisplayIntervalo(long millis){
+		
+		long d = TimeUnit.MILLISECONDS.toDays(millis);
+		long h = TimeUnit.MILLISECONDS.toHours(millis-TimeUnit.DAYS.toMillis(d));
+		long m = TimeUnit.MILLISECONDS.toMinutes(millis-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h));
+		long s = TimeUnit.MILLISECONDS.toSeconds(millis-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m));
+			
+		if (d > 0)
+			labelDisplayIntervalo.setText(String.format("%dd %02d:%02d:%02d", d, h, m, s));
+		else
+			labelDisplayIntervalo.setText(String.format("%02d:%02d:%02d", h, m, s));
+
+	};
 	
 }

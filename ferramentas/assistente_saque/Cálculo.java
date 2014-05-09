@@ -127,20 +127,30 @@ public class Cálculo {
 		}
 		
 		// Handles null parameter
-		for (int i = 0; i < initial.length; i++)
-			if (initial[i] == null)
-				initial[i] = BigDecimal.ZERO;
+		if (initial != null) {
+			for (int i = 0; i < initial.length; i++)
+				if (initial[i] == null)
+					initial[i] = BigDecimal.ZERO;
+		} else
+			initial = new BigDecimal[] { BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO };
 		
 		// Array that will contain time to fill resources (wood, clay, iron)
 		BigDecimal[] tempoEncher = new BigDecimal[3];
 		
 		// Setting the time it would take to fill every resource
 		for (int i = 0; i < 3; i++) {
-			tempoEncher[i] = armazenamento.subtract(initial[i]).
-				divide(produção[i], 30, RoundingMode.HALF_EVEN);
+			
+			if (produção[i].compareTo(BigDecimal.ZERO) == 1)
+				tempoEncher[i] = armazenamento.subtract(initial[i]).
+					divide(produção[i], 30, RoundingMode.HALF_EVEN);
+			else
+				// If there is no resource production, the time is infinite
+				tempoEncher[i] = new BigDecimal(Integer.MAX_VALUE);
+			
 			// Doesn't allow negative times
 			if (tempoEncher[i].signum() == -1)
 				tempoEncher[i] = BigDecimal.ZERO;
+			
 		}
 		// Setting the initial calculated time at 0
 		BigDecimal time = BigDecimal.ZERO;
@@ -177,7 +187,8 @@ public class Cálculo {
 			
 			// Saque total = recursos + time*produção
 			time = saqueTotal.subtract(resources);
-			time = time.divide(somaProdução, 30, RoundingMode.HALF_EVEN);
+			if (somaProdução.compareTo(BigDecimal.ZERO) == 1)
+				time = time.divide(somaProdução, 30, RoundingMode.HALF_EVEN);
 		
 		}
 		
@@ -193,38 +204,62 @@ public class Cálculo {
 	protected void setProduçãoEArmazenamento(
 				Map<Edifício, EdifícioFormattedComboBox> edifícios) {
 		
+		armazenamento = BigDecimal.ZERO;
+		
 		for (Edifício ed : edifícios.keySet()) {
+			
 			
 			switch (ed) {
 			case ARMAZÉM:
-				armazenamento = new BigDecimal("1.22949").pow(
-						edifícios.get(ed).getSelectedIndex()-1)
-						.multiply(new BigDecimal("1000")).setScale(0);
+				if (edifícios.get(ed).getSelectedIndex() > 0)
+					armazenamento = armazenamento.add(
+						new BigDecimal("1.22949").pow(
+								edifícios.get(ed).getSelectedIndex()-1)
+								.multiply(new BigDecimal("1000"))).setScale(0, RoundingMode.HALF_EVEN);
 				break;
 			case ESCONDERIJO:
-				armazenamento = armazenamento.subtract(
+				if (edifícios.get(ed).getSelectedIndex() > 0)
+					armazenamento = armazenamento.subtract(
 						new BigDecimal("1.3335").pow(
 							edifícios.get(ed).getSelectedIndex()-1).
-							multiply(new BigDecimal("100"))).setScale(0);
+							multiply(new BigDecimal("100"))).setScale(0, RoundingMode.HALF_EVEN);
 				break;
 			// Caso não seja nem armazém nem esconderijo, é um dos
 			// produtores
 			case BOSQUE:
-				produção[0] = null;
+				if (edifícios.get(ed).getSelectedIndex() == 0)
+					produção[0] = BigDecimal.ZERO;
+				else
+					produção[0] = new BigDecimal("1.16311").pow(
+						edifícios.get(ed).getSelectedIndex()-1)
+						.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
 				break;
 			case POÇO_DE_ARGILA:
-				produção[1] = null;
+				if (edifícios.get(ed).getSelectedIndex() == 0)
+					produção[1] = BigDecimal.ZERO;
+				else
+					produção[1] = new BigDecimal("1.16311").pow(
+						edifícios.get(ed).getSelectedIndex()-1)
+						.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
 				break;
 			case MINA_DE_FERRO:
-				produção[2] = null;
+				if (edifícios.get(ed).getSelectedIndex() == 0)
+					produção[2] = BigDecimal.ZERO;
+				else
+					produção[2] = new BigDecimal("1.16311").pow(
+						edifícios.get(ed).getSelectedIndex()-1)
+						.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
 				break;
 			default:
 			}
 		}
 		
+		System.out.println(armazenamento);
+		
 		// Changes production from per hour to per millissecond
-		for (BigDecimal i : produção)
-			i = i.divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_DOWN);
+		for (int i = 0; i < 3; i++)
+			produção[i] = produção[i].divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_DOWN);
+			
 		
 	}
 	
@@ -285,6 +320,10 @@ public class Cálculo {
 		for (int i = 0; i < array.length; i++)
 			restantes[i] = array[i].getValue();
 		
+	}
+	
+	protected long getIntervalo() {
+		return intervalo.longValue();
 	}
 	
 }

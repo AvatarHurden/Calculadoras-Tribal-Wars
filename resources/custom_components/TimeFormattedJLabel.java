@@ -1,7 +1,5 @@
 package custom_components;
 
-import java.sql.Time;
-
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
@@ -23,7 +21,7 @@ public class TimeFormattedJLabel {
 	
 	public void setTime(long value) {
 		
-		Time time = new Time(value);
+		
 		
 		// This code for the Spinner
 		SpinnerDateModel model = new SpinnerDateModel();

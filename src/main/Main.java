@@ -51,7 +51,7 @@ public class Main {
 			public void windowDeactivated(WindowEvent arg0) {}
 			
 			public void windowClosing(WindowEvent arg0) {
-				File_Manager.save();
+//				File_Manager.save();
 			}
 			
 			public void windowClosed(WindowEvent arg0) {}
