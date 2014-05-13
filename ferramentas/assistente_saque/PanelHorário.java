@@ -1,17 +1,24 @@
 package assistente_saque;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import custom_components.CoordenadaPanel;
 import custom_components.IntegerFormattedTextField;
+import custom_components.TimeFormattedJLabel;
 import database.Cores;
 import database.Edifício;
 
@@ -27,12 +34,13 @@ public class PanelHorário extends JPanel{
 
 	private CoordenadaPanel coordenadas;
 	
-	// TODO make a custom component for times, or find a good existing one
-	private JTextField hora; 
+	private JSpinner date, hour;
 	
-	// TODO change the name of the textField to reflect what is does
-	private IntegerFormattedTextField[] recursosRestantes = 
-			new IntegerFormattedTextField[3];
+	private IntegerFormattedTextField[] recursosRestantes = new IntegerFormattedTextField[3];
+	
+	
+	private TimeFormattedJLabel respostaLabel;
+	private JLabel errorMessage;
 	
 	protected PanelHorário() {
 		
@@ -56,7 +64,7 @@ public class PanelHorário extends JPanel{
 		c.insets = new Insets(0, 0, 3, 0);
 		add(coordenadas, c);
 		
-		// Add panel de último ataque
+		// Add label de último ataque
 		JPanel ataquePanel = new JPanel();
 		ataquePanel.add(new JLabel("<html>Horário de chegada do último ataque</html>"));
 	
@@ -64,21 +72,27 @@ public class PanelHorário extends JPanel{
 		ataquePanel.setBorder(new MatteBorder(1, 1, 1, 1,Cores.SEPARAR_ESCURO));
 		
 		c.fill = GridBagConstraints.BOTH;
-		c.insets = new Insets(0, 0, 0, 0);
+		c.insets = new Insets(10, 0, 0, 0);
 		c.gridy++;
 		add(ataquePanel, c);
 		
 		// Add panel de horário
 		
-		hora = new JTextField(12);
+		date = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH));
+		date.setEditor(new JSpinner.DateEditor(date, "dd/MM/yyyy"));
+		
+		hour = new JSpinner(new SpinnerDateModel());
+		hour.setEditor(new JSpinner.DateEditor(hour, "HH:mm:ss"));
 		
 		JPanel horaPanel = new JPanel();
-		horaPanel.add(hora);
+		horaPanel.add(date);
+		horaPanel.add(hour);
 				
 		horaPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		horaPanel.setBorder(new MatteBorder(0, 1, 1, 1,Cores.SEPARAR_ESCURO));
 		
 		c.gridy++;
+		c.insets = new Insets(0, 0, 0, 0);
 		add(horaPanel, c);
 		
 		// Add label "Recursos Restantes"
@@ -104,6 +118,23 @@ public class PanelHorário extends JPanel{
 		
 		c.gridx++;
 		addRecursoPanel(Edifício.MINA_DE_FERRO, c);
+		
+		// Adding respostaPanel
+		c.gridy += 2;
+		c.gridx = 0;
+		c.gridwidth = 3;
+		c.insets = new Insets(10, 0, 0, 0);
+		add(makeRespostaPanel(), c);
+	
+		// Adding error message
+		
+		errorMessage = new JLabel();
+		errorMessage.setForeground(Color.RED);
+		
+		c.gridy++;
+		c.anchor = GridBagConstraints.CENTER;
+		add(errorMessage, c);
+		
 	}
 	
 	/**
@@ -179,5 +210,82 @@ public class PanelHorário extends JPanel{
 		c.gridy--;
 		
 	}
+	
+	private JPanel makeRespostaPanel() {
+		
+		JPanel panel = new JPanel(new GridLayout(0,1));
+		panel.setOpaque(false);
+		
+		// Add panel de último ataque
+		JPanel ataquePanel = new JPanel();
+		ataquePanel.add(new JLabel("Enviar próximo ataque em"));
+			
+		ataquePanel.setBackground(Cores.FUNDO_ESCURO);
+		ataquePanel.setBorder(new MatteBorder(1, 1, 1, 1,Cores.SEPARAR_ESCURO));
+				
+		panel.add(ataquePanel);
+				
+		// Add panel de horário
+		
+		respostaLabel = new TimeFormattedJLabel(false);
+		
+		JPanel horaPanel = new JPanel();
+		horaPanel.add(respostaLabel);
+						
+		horaPanel.setBackground(Cores.ALTERNAR_ESCURO);
+		horaPanel.setBorder(new MatteBorder(0, 1, 1, 1,Cores.SEPARAR_ESCURO));
+				
+		panel.add(horaPanel);
+		
+		return panel;
+		
+	}
+
+	
+	protected void setDisplayHorario(long tempo) {
+		respostaLabel.setDate(new Date(tempo));
+		
+		errorMessage.setText("");
+	}
+	
+	protected void setErrorMessage(String error) {
+		respostaLabel.setText("");
+		
+		errorMessage.setText(error);
+	}
+	
+	/**
+	 * Returns the date on which the last attack arrived
+	 * @return Date
+	 */
+	protected long getDataEnviada() {
+		
+		long time;
+		
+		// Gets the date part of the time
+		time = TimeUnit.MILLISECONDS.toDays(((Date) date.getModel().getValue()).getTime());
+		time = TimeUnit.DAYS.toMillis(time);
+		
+		// Gets the hours part of the time                  days*minutes*millis
+		time += ((Date) date.getModel().getValue()).getTime()%(24*3600*1000);
+		
+		return time;
+	}
+	
+	/**
+	 * @return IntegerFormattedTextField[3] with the remaining resources
+	 */
+	protected IntegerFormattedTextField[] getRecursosRestantes() {
+		return recursosRestantes;
+	}
+	
+	/**
+	 * Retorna o panel com as coordenadas da aldeia de origem
+	 * @return CoordenadaPanel
+	 */
+	protected CoordenadaPanel getCoordenadaOrigem() {
+		return coordenadas;
+	}
+	
 	
 }

@@ -1,33 +1,67 @@
 package custom_components;
 
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.JLabel;
 
 /**
  * A JLabel that receives a long in milliseconds, displaying the formatted time
  * @author Arthur
  *
  */
-public class TimeFormattedJLabel {
-
-	private int days;
-	private boolean showDays;
+@SuppressWarnings("serial")
+public class TimeFormattedJLabel extends JLabel {
 	
-	public TimeFormattedJLabel(boolean showDays) {
+	private boolean showMillis;
+	
+//	// This code for the Spinner
+//	SpinnerDateModel model = new SpinnerDateModel();
+//			
+//	JSpinner date = new JSpinner(model);
+//	date.setEditor(new JSpinner.DateEditor(date, "dd/MM/yyyy"));
+	
+	public TimeFormattedJLabel(boolean showMillis) {
 		
-		this.showDays = showDays;
+		this.showMillis = showMillis;
 		
 	}
 	
+	/**
+	 * Formats the time and shows it as days, hours, minutes, seconds. If <code>showMillis</code> is true
+	 * , also shows millisseconds.
+	 * @param value The time in milliseconds
+	 */
 	public void setTime(long value) {
 		
+		long d = TimeUnit.MILLISECONDS.toDays(value);
+		long h = TimeUnit.MILLISECONDS.toHours(value-TimeUnit.DAYS.toMillis(d));
+		long m = TimeUnit.MILLISECONDS.toMinutes(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h));
+		long s = TimeUnit.MILLISECONDS.toSeconds(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m));
+		long ms = TimeUnit.MILLISECONDS.toSeconds(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m)-TimeUnit.SECONDS.toMillis(s));
 		
+		if (d > 0)
+			setText(String.format("%dd %02d:%02d:%02d", d, h, m, s));
+		else
+			setText(String.format("%02d:%02d:%02d", h, m, s));
 		
-		// This code for the Spinner
-		SpinnerDateModel model = new SpinnerDateModel();
+		if (showMillis)
+			setText(getText()+String.format("%03d", ms));
+			
+	}
+	
+	/**
+	 * Formats the given date and shows it as dd//MM/yyyy HH:mm:ss.
+	 * If <code>showMillis</code> is true, also shows milliseconds.
+	 * @param date the Date object
+	 */
+	public void setDate(Date date) {
 		
-		JSpinner date = new JSpinner(model);
-		date.setEditor(new JSpinner.DateEditor(date, "dd/MM/yyyy"));
+		if (showMillis)
+			setText(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS").format(date));
+		else
+			setText(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date));
 		
 	}
 	

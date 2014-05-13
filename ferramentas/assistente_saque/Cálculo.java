@@ -57,6 +57,12 @@ public class Cálculo {
 		
 		intervalo = getTimeToSend(null);
 		
+		if (armazémPequeno)
+			setUnidadesRecomendadas();
+		else
+			tropasRecomendadas = null;
+		
+	
 	}
 	
 	protected void setEnviarAtaque() {
@@ -72,9 +78,12 @@ public class Cálculo {
 		enviarAtaque = getTimeToSend(restantes);
 		// Coloca o horário a enviar o ataque
 		enviarAtaque = enviarAtaque.add(ultimoAtaque);
+	
 	}
 	
 	protected void setUnidadesRecomendadas() {
+		
+		tropasRecomendadas = new HashMap<Unidade, BigDecimal>();
 		
 		// Cria a lista de ordem das unidades para preencher 
 		List<Unidade> preferência = new ArrayList<Unidade>();
@@ -87,29 +96,36 @@ public class Cálculo {
 		preferência.add(Unidade.BÁRBARO);
 		preferência.add(Unidade.ESPADACHIM);
 		
-		BigDecimal saqueRecomendado = armazenamento;
+		BigDecimal saqueRecomendado = armazenamento.multiply(new BigDecimal("3"));
 		
 		for (Unidade i : preferência) {
 			
-			if (tropasDisponíveis.get(i).multiply(i.saque()).compareTo(saqueRecomendado) > -1) {
-				// Puts the maximum number of troops the warehouse holds
-				tropasRecomendadas.put(i, saqueRecomendado.
-						divide(i.saque(), 0, RoundingMode.CEILING));
-				break;
-			} else {
-				tropasRecomendadas.put(i, tropasDisponíveis.get(i));
-				// Prepares the remaining available loot for other troops
-				saqueRecomendado = saqueRecomendado.
-						subtract(tropasDisponíveis.get(i).multiply(i.saque()));
-			}
+			if (tropasDisponíveis.containsKey(i))
+				if (tropasDisponíveis.get(i).multiply(i.saque()).compareTo(saqueRecomendado) > -1) {
+					
+					// Puts the maximum number of troops the warehouse holds
+					tropasRecomendadas.put(i, saqueRecomendado.
+							divide(i.saque(), 0, RoundingMode.CEILING));
+					break;
+					
+				} else {
+					tropasRecomendadas.put(i, tropasDisponíveis.get(i));
+					// Prepares the remaining available loot for other troops
+					saqueRecomendado = saqueRecomendado.
+							subtract(tropasDisponíveis.get(i).multiply(i.saque()));
+				}
 				
 		}
 		
 		// Keeps the units with no loot power
 		// TODO decide if they should be kept or completely removed
-		for (Unidade i : Unidade.values())
+		for (Unidade i : tropasDisponíveis.keySet()) {
 			if (!preferência.contains(i))
 				tropasRecomendadas.put(i, tropasDisponíveis.get(i));
+			// If the 'preferência' broke, puts the remaining things with zero
+			if (!tropasRecomendadas.containsKey(i))
+				tropasRecomendadas.put(i, BigDecimal.ZERO);
+		}
 		
 	}
 	
@@ -124,7 +140,8 @@ public class Cálculo {
 				armazenamento.multiply(new BigDecimal("3"))) == 1) {
 			armazémPequeno = true;
 			saqueTotal = armazenamento.multiply(new BigDecimal("3"));
-		}
+		} else
+			armazémPequeno = false;
 		
 		// Handles null parameter
 		if (initial != null) {
@@ -254,8 +271,6 @@ public class Cálculo {
 			}
 		}
 		
-		System.out.println(armazenamento);
-		
 		// Changes production from per hour to per millissecond
 		for (int i = 0; i < 3; i++)
 			produção[i] = produção[i].divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_DOWN);
@@ -287,7 +302,6 @@ public class Cálculo {
 			tropasDisponíveis.put(i, quantidades.get(i).getValue());
 	
 		}
-			
 		
 	}
 	
@@ -322,8 +336,43 @@ public class Cálculo {
 		
 	}
 	
+	protected void setUltimoAtaque(long tempo) {
+		ultimoAtaque = new BigDecimal(tempo);
+	}
+	
 	protected long getIntervalo() {
 		return intervalo.longValue();
 	}
 	
+	protected long getHorario() throws SameDateException{
+		
+		if (distância.compareTo(BigDecimal.ZERO) == 0)
+			throw new SameDateException("Aldeias com coordenadas iguais");
+		else
+			return enviarAtaque.longValue();
+	}
+	
+	/**
+	 * Gives the recommended units to send with the specified buildings. If the sent units are less than the
+	 * recommended, returns null
+	 * @return Map<Unidade, BigDecimal> of the troops
+	 * 			If sent troops are less than recommended, returns null
+	 */
+	protected Map<Unidade, BigDecimal> getUnidadesRecomendadas() {
+		
+		return tropasRecomendadas;
+		
+	}
+	
+	protected class NoIntervalException extends Exception {
+		public NoIntervalException() {}
+	}
+	
+	protected class SameDateException extends Exception {
+		protected String error;
+		public SameDateException(String error) {
+			this.error = error;
+		}
+	}
+		
 }

@@ -8,19 +8,17 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
+
+import assistente_saque.Cálculo.SameDateException;
 
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
@@ -40,11 +38,9 @@ public class GUI extends Ferramenta{
 	
 	// Panels para mostrar as respostas
 	private JPanel panelRecomendado;
-	private JPanel respostaIntervalo;
 	private JPanel respostaHorário;
 	
 	private Map<Unidade, JLabel> mapRecomendado = new HashMap<Unidade, JLabel>();
-	private JLabel labelDisplayIntervalo;
 	
 	
 	public GUI () {
@@ -73,8 +69,7 @@ public class GUI extends Ferramenta{
 		panelHorário = new PanelHorário();
 		
 		makePanelRecomendado();
-		makeRespostaIntervalo();
-		panelRecomendado.setVisible(false);
+//		panelRecomendado.setVisible(false);
 		
 		// Add reset button
 		c.anchor = GridBagConstraints.WEST;
@@ -90,10 +85,11 @@ public class GUI extends Ferramenta{
 		c.gridy++;
 		c.gridwidth = 2;
 		c.gridheight = 2;
+		c.anchor = GridBagConstraints.NORTH;
 		add(panelUnidades,c);
 		
 		// Add recomended units panel
-		JPanel container = new JPanel();
+		JPanel container = new JPanel(new GridLayout(1,0));
 		container.setPreferredSize(panelRecomendado.getPreferredSize());
 		container.setOpaque(false);
 		container.add(panelRecomendado);
@@ -112,9 +108,9 @@ public class GUI extends Ferramenta{
 		c.gridy++;
 		add(panelIntervalo, c);
 		
-		// Adds the panel that displays the interval in which to attack
-		c.gridy++;
-		add(respostaIntervalo, c);
+//		// Adds the panel that displays the interval in which to attack
+//		c.gridy++;
+//		add(respostaIntervalo, c);
 		
 		// Separar as duas funções
 		
@@ -152,9 +148,19 @@ public class GUI extends Ferramenta{
 				
 				cálculo.setProduçãoEArmazenamento(panelIntervalo.getEdifícios());
 				cálculo.setSaqueTotal(panelUnidades.getTextFields());
+				cálculo.setDistância(panelHorário.getCoordenadaOrigem(), panelIntervalo.getCoordenadaDestino());
+				cálculo.setRestantes(panelHorário.getRecursosRestantes());
+				cálculo.setUltimoAtaque(panelHorário.getDataEnviada());
 				
 				cálculo.setIntervalo();
-				setDisplayIntervalo(cálculo.getIntervalo());
+				cálculo.setEnviarAtaque();
+				panelIntervalo.setDisplayIntervalo(cálculo.getIntervalo());
+				try {
+					panelHorário.setDisplayHorario(cálculo.getHorario());
+				} catch (SameDateException exc) {
+					panelHorário.setErrorMessage(exc.error);
+				}
+				setRecomendadoPanel(cálculo.getUnidadesRecomendadas());
 			}
 		});
 		
@@ -214,7 +220,7 @@ public class GUI extends Ferramenta{
 				JPanel unitQuantity = new JPanel();
 				unitQuantity.setOpaque(false);
 				
-				unitQuantity.setPreferredSize(new Dimension(0, 30));
+				unitQuantity.setPreferredSize(new Dimension(panelRecomendado.getPreferredSize().width, 30));
 				
 				mapRecomendado.put(i, new JLabel(" "));
 				unitQuantity.add(mapRecomendado.get(i));
@@ -231,46 +237,18 @@ public class GUI extends Ferramenta{
 		} // ends for loop		
 	}
 	
-	private void makeRespostaIntervalo() {
+	protected void setRecomendadoPanel(Map<Unidade, BigDecimal> map) {
 		
-		respostaIntervalo = new JPanel(new GridLayout(0,1));
-		respostaIntervalo.setOpaque(false);
-		
-		// Add panel de último ataque
-		JPanel ataquePanel = new JPanel();
-		ataquePanel.add(new JLabel("Enviar ataques a cada"));
-			
-		ataquePanel.setBackground(Cores.FUNDO_ESCURO);
-		ataquePanel.setBorder(new MatteBorder(1, 1, 1, 1,Cores.SEPARAR_ESCURO));
-				
-		respostaIntervalo.add(ataquePanel);
-				
-		// Add panel de horário
-		
-		labelDisplayIntervalo = new JLabel();
-		
-		JPanel horaPanel = new JPanel();
-		horaPanel.add(labelDisplayIntervalo);
-						
-		horaPanel.setBackground(Cores.ALTERNAR_ESCURO);
-		horaPanel.setBorder(new MatteBorder(0, 1, 1, 1,Cores.SEPARAR_ESCURO));
-				
-		respostaIntervalo.add(horaPanel);
+		if (map != null) {
+			panelRecomendado.setVisible(true);
+			for (Unidade i : map.keySet())
+				mapRecomendado.get(i).setText(map.get(i).toString());			
+	
+		} else {
+			panelRecomendado.setVisible(false);
+			for (Unidade i : mapRecomendado.keySet())
+				mapRecomendado.get(i).setText(" ");
+		}
 		
 	}
-	
-	protected void setDisplayIntervalo(long millis){
-		
-		long d = TimeUnit.MILLISECONDS.toDays(millis);
-		long h = TimeUnit.MILLISECONDS.toHours(millis-TimeUnit.DAYS.toMillis(d));
-		long m = TimeUnit.MILLISECONDS.toMinutes(millis-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h));
-		long s = TimeUnit.MILLISECONDS.toSeconds(millis-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m));
-			
-		if (d > 0)
-			labelDisplayIntervalo.setText(String.format("%dd %02d:%02d:%02d", d, h, m, s));
-		else
-			labelDisplayIntervalo.setText(String.format("%02d:%02d:%02d", h, m, s));
-
-	};
-	
 }
