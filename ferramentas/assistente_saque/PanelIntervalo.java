@@ -56,7 +56,7 @@ public class PanelIntervalo extends JPanel{
 		coordenadas = new CoordenadaPanel("Aldeia de Destino");
 		
 		c.gridwidth = 2;
-		c.insets = new Insets(0, 0, 3, 0);
+		c.insets = new Insets(0, 0, 10, 0);
 		add(coordenadas, c);
 		
 		// Adding "Unidades" panel

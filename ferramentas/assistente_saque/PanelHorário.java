@@ -123,16 +123,17 @@ public class PanelHorário extends JPanel{
 		c.gridy += 2;
 		c.gridx = 0;
 		c.gridwidth = 3;
-		c.insets = new Insets(10, 0, 0, 0);
+		c.insets = new Insets(25, 0, 0, 0);
 		add(makeRespostaPanel(), c);
 	
 		// Adding error message
 		
-		errorMessage = new JLabel();
+		errorMessage = new JLabel(" ");
 		errorMessage.setForeground(Color.RED);
 		
 		c.gridy++;
 		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(10, 0, 0, 0);
 		add(errorMessage, c);
 		
 	}
@@ -245,7 +246,7 @@ public class PanelHorário extends JPanel{
 	protected void setDisplayHorario(long tempo) {
 		respostaLabel.setDate(new Date(tempo));
 		
-		errorMessage.setText("");
+		errorMessage.setText(" ");
 	}
 	
 	protected void setErrorMessage(String error) {

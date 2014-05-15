@@ -360,7 +360,12 @@ public class Cálculo {
 	 */
 	protected Map<Unidade, BigDecimal> getUnidadesRecomendadas() {
 		
-		return tropasRecomendadas;
+		for (Unidade i : tropasDisponíveis.keySet())
+			if (!tropasRecomendadas.get(i).equals(tropasDisponíveis.get(i)))
+				return tropasRecomendadas;
+		
+		// Apenas chega aqui se todas as tropas recomendadas forem iguais às enviadas
+		return null;
 		
 	}
 	
