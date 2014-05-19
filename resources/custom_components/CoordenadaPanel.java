@@ -145,4 +145,11 @@ public class CoordenadaPanel extends JPanel{
 		else
 			return Integer.parseInt(y.getText());
 	}
+	
+	public void reset() {
+		
+		y.setText("");
+		x.setText("");
+		
+	}
 }

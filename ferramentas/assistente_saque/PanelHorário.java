@@ -34,7 +34,7 @@ public class PanelHorário extends JPanel{
 
 	private CoordenadaPanel coordenadas;
 	
-	private JSpinner date, hour;
+	private JSpinner dateSpinner, hourSpinner;
 	
 	private IntegerFormattedTextField[] recursosRestantes = new IntegerFormattedTextField[3];
 	
@@ -78,15 +78,15 @@ public class PanelHorário extends JPanel{
 		
 		// Add panel de horário
 		
-		date = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH));
-		date.setEditor(new JSpinner.DateEditor(date, "dd/MM/yyyy"));
+		dateSpinner = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH));
+		dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy"));
 		
-		hour = new JSpinner(new SpinnerDateModel());
-		hour.setEditor(new JSpinner.DateEditor(hour, "HH:mm:ss"));
+		hourSpinner = new JSpinner(new SpinnerDateModel());
+		hourSpinner.setEditor(new JSpinner.DateEditor(hourSpinner, "HH:mm:ss"));
 		
 		JPanel horaPanel = new JPanel();
-		horaPanel.add(date);
-		horaPanel.add(hour);
+		horaPanel.add(dateSpinner);
+		horaPanel.add(hourSpinner);
 				
 		horaPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		horaPanel.setBorder(new MatteBorder(0, 1, 1, 1,Cores.SEPARAR_ESCURO));
@@ -132,7 +132,7 @@ public class PanelHorário extends JPanel{
 		errorMessage.setForeground(Color.RED);
 		
 		c.gridy++;
-		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(10, 0, 0, 0);
 		add(errorMessage, c);
 		
@@ -256,19 +256,19 @@ public class PanelHorário extends JPanel{
 	}
 	
 	/**
-	 * Returns the date on which the last attack arrived
+	 * Returns the dateSpinner on which the last attack arrived
 	 * @return Date
 	 */
 	protected long getDataEnviada() {
 		
 		long time;
 		
-		// Gets the date part of the time
-		time = TimeUnit.MILLISECONDS.toDays(((Date) date.getModel().getValue()).getTime());
+		// Gets the dateSpinner part of the time
+		time = TimeUnit.MILLISECONDS.toDays(((Date) dateSpinner.getModel().getValue()).getTime());
 		time = TimeUnit.DAYS.toMillis(time);
 		
 		// Gets the hours part of the time                  days*minutes*millis
-		time += ((Date) date.getModel().getValue()).getTime()%(24*3600*1000);
+		time += ((Date) hourSpinner.getModel().getValue()).getTime()%(24*3600*1000);
 		
 		return time;
 	}
@@ -288,5 +288,15 @@ public class PanelHorário extends JPanel{
 		return coordenadas;
 	}
 	
+	protected void resetAll() {
+		
+		coordenadas.reset();
+		
+		for (IntegerFormattedTextField t : recursosRestantes)
+			t.setText(" ");
+		
+		respostaLabel.setText(" ");
+		errorMessage.setText(" ");
+	}
 	
 }

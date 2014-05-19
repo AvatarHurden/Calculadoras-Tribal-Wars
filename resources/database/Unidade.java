@@ -8,7 +8,7 @@ import config.Mundo_Reader;
 public enum Unidade {
 
 	//  			Nome				   tipo            mad	  arg    fer   pop   atk   dg    dc    da    mov   saq  tempo
-
+	// TODO colocar o retorno das coisas pelos modificadores do mundo
 	LANCEIRO	  ("Lanceiro", 			Type.Geral,        50,    30,	  10,	 1,	  10,   15,   45,   20,	  18,   25,  680),
 	ESPADACHIM	  ("Espadachim",		Type.Geral,        30,    30,	  70,	 1,	  25,   50,   15,   40,	  22,   15,  1000),
 	BÁRBARO		  ("Bárbaro", 			Type.Geral,        60,    30,	  40,	 1,	  40,   10,   5,    10,	  18,   10,  880),

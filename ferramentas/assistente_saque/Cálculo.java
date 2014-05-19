@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import config.Mundo_Reader;
 import custom_components.CoordenadaPanel;
 import custom_components.EdifícioFormattedComboBox;
 import custom_components.IntegerFormattedTextField;
@@ -69,6 +70,8 @@ public class Cálculo {
 		
 		// de minutos/campo para milissegundos/campo
 		velocidade = velocidade.multiply(new BigDecimal("60000"));
+		
+		// recursos = campos*(millisegundos/campo)*recursos/millisegundos
 		
 		for (int i = 0; i < 3; i++)
 			restantes[i] = restantes[i].add(
@@ -169,6 +172,7 @@ public class Cálculo {
 				tempoEncher[i] = BigDecimal.ZERO;
 			
 		}
+		
 		// Setting the initial calculated time at 0
 		BigDecimal time = BigDecimal.ZERO;
 		// A soma das produções dos recursos (recurso/milissegundo)
@@ -183,7 +187,7 @@ public class Cálculo {
 			overflow = false;
 			
 			// Recursos que são constantes para o cálculo
-			// Armazena os que tiveram overflow, pois é certo de que cada passada aumenta o tempo necessário
+			// Armazena os que tiveram overflow, pois é certo que cada passada aumenta o tempo necessário
 			BigDecimal resources = BigDecimal.ZERO;
 			
 			// A produção de recursos por milissegundo, não contando aqueles que sofreram overflow
@@ -200,15 +204,20 @@ public class Cálculo {
 					resources = resources.add(armazenamento);
 					overflow = true;
 				}
-					
 			
+			BigDecimal stored = BigDecimal.ZERO;
+			
+			// Adds all of the stored resources
+			for (BigDecimal i : initial)
+				stored = stored.add(i);
+				
 			// Saque total = recursos + time*produção
-			time = saqueTotal.subtract(resources);
+			time = saqueTotal.subtract(resources).subtract(stored);
 			if (somaProdução.compareTo(BigDecimal.ZERO) == 1)
 				time = time.divide(somaProdução, 30, RoundingMode.HALF_EVEN);
 		
 		}
-		
+
 		return time;
 		
 	}
@@ -272,8 +281,11 @@ public class Cálculo {
 		}
 		
 		// Changes production from per hour to per millissecond
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++) {
 			produção[i] = produção[i].divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_DOWN);
+			// Arruma para a velocidade do mundo
+			produção[i] = produção[i].multiply(Mundo_Reader.MundoSelecionado.getVelocidade());
+		}
 			
 		
 	}
@@ -295,13 +307,18 @@ public class Cálculo {
 					multiply(i.saque()));
 			
 			// Verifica se a unidade atual é mais lenta do que a registrada
-			if (i.velocidade().compareTo(velocidade) == 1)
+			if (quantidades.get(i).getValue().compareTo(BigDecimal.ZERO) == 1
+					&& i.velocidade().compareTo(velocidade) == 1)
 				velocidade = i.velocidade();
 			
 			// Coloca as tropas no map de disponibilidade
 			tropasDisponíveis.put(i, quantidades.get(i).getValue());
 	
 		}
+		
+		// Arruma a velocidade pelo mundo
+		velocidade = velocidade.multiply(Mundo_Reader.MundoSelecionado.getModificarUnidaes());
+		velocidade = velocidade.multiply(Mundo_Reader.MundoSelecionado.getVelocidade());
 		
 	}
 	
@@ -331,7 +348,7 @@ public class Cálculo {
 	 */
 	protected void setRestantes(IntegerFormattedTextField[] array) {
 		
-		for (int i = 0; i < array.length; i++)
+		for (int i = 0; i < array.length; i++) 
 			restantes[i] = array[i].getValue();
 		
 	}
@@ -359,6 +376,10 @@ public class Cálculo {
 	 * 			If sent troops are less than recommended, returns null
 	 */
 	protected Map<Unidade, BigDecimal> getUnidadesRecomendadas() {
+		
+		// Caso padrão
+		if (tropasRecomendadas == null)
+			return null;
 		
 		for (Unidade i : tropasDisponíveis.keySet())
 			if (!tropasRecomendadas.get(i).equals(tropasDisponíveis.get(i)))

@@ -198,4 +198,15 @@ public class PanelIntervalo extends JPanel{
 		
 	}
 	
+	protected void resetAll() {
+		
+		coordenadas.reset();
+		
+		for (EdifícioFormattedComboBox c : edificios.values())
+			c.setSelectedIndex(0);
+		
+		respostaLabel.setText("");
+		
+	}
+	
 }

@@ -132,4 +132,11 @@ public class PanelUnidade extends JPanel{
 	protected Map<Unidade, IntegerFormattedTextField> getTextFields() {
 		return textFields;
 	}
+	
+	protected void resetTextFields() {
+		
+		for (IntegerFormattedTextField t : textFields.values())
+			t.setText("");
+		
+	}
 }

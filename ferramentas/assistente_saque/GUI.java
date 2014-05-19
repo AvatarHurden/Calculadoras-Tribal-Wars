@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,9 +20,9 @@ import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
 
 import assistente_saque.Cálculo.SameDateException;
-
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
+import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
@@ -69,7 +70,7 @@ public class GUI extends Ferramenta{
 		panelHorário = new PanelHorário();
 		
 		makePanelRecomendado();
-//		panelRecomendado.setVisible(false);
+		panelRecomendado.setVisible(false);
 		
 		// Add reset button
 		c.anchor = GridBagConstraints.WEST;
@@ -169,7 +170,15 @@ public class GUI extends Ferramenta{
 	
 	private ActionListener getResetButtonAction() {
 		
-		return null;
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				panelUnidades.resetTextFields();
+				panelIntervalo.resetAll();
+				panelHorário.resetAll();
+				
+			}
+		};
 		
 	}
 	
@@ -199,7 +208,7 @@ public class GUI extends Ferramenta{
 		// GridBagLayout to allow for the whole button to be displayed
 		JPanel buttonPanel = new JPanel(new GridBagLayout());
 		buttonPanel.setOpaque(false);
-		buttonPanel.add(new JButton("Usar"));
+		buttonPanel.add(makeUseRecomenadoButton());
 		
 		// To make this the right size
 		buttonPanel.setPreferredSize(new Dimension(
@@ -208,9 +217,6 @@ public class GUI extends Ferramenta{
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridy++;
 		panelRecomendado.add(buttonPanel, c);
-		
-		/** Variável para controlar a cor do unitPanel*/
-//		int cor = -1;
 		
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 			
@@ -231,10 +237,34 @@ public class GUI extends Ferramenta{
 				c.gridy++;
 				panelRecomendado.add(unitQuantity, c);
 				
-//				cor++;
 			}
 			
 		} // ends for loop		
+	}
+	
+	private JButton makeUseRecomenadoButton() {
+		
+		JButton button = new JButton("Usar");
+		
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Map<Unidade, BigDecimal> recommended = cálculo.getUnidadesRecomendadas();
+				
+				for (Entry<Unidade, IntegerFormattedTextField> entry : 
+							panelUnidades.getTextFields().entrySet()) {
+					
+					if (!recommended.get(entry.getKey()).equals(BigDecimal.ZERO))
+						entry.getValue().setText(recommended.get(entry.getKey()).toString());
+					
+				}
+				
+				panelRecomendado.setVisible(false);
+				
+			}
+		});
+		
+		return button;
 	}
 	
 	protected void setRecomendadoPanel(Map<Unidade, BigDecimal> map) {
