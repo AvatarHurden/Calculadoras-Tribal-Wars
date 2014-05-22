@@ -46,8 +46,10 @@ public abstract class IntegerFormattedTextField extends JTextField {
 	/**
 	 * @param length
 	 *            Maximum number of digits allowed
+	 * @param upperLimit
+	 * 			  Maximum value of the textField. If no bound is placed, insert 0
 	 */
-	public IntegerFormattedTextField(final int length) {
+	public IntegerFormattedTextField(final int length, final int upperLimit) {
 
 		setHorizontalAlignment(SwingConstants.LEFT);
 
@@ -65,6 +67,12 @@ public abstract class IntegerFormattedTextField extends JTextField {
 						&& Character.isDigit(str.charAt(0))) {
 					super.insertString(offset, str, attr);
 				}
+				
+				if (upperLimit != 0)
+					if (Math.abs(Integer.parseInt(getText(0, getLength()))) > upperLimit) {
+						super.remove(0, getLength());
+						super.insertString(0, String.valueOf(upperLimit), attr);
+					}
 
 				if (getLength() > 3 && !str.contains("."))
 					setText(getFormattedNumber(getUnformattedNumber(getText(0,
@@ -88,7 +96,6 @@ public abstract class IntegerFormattedTextField extends JTextField {
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				go();
-
 			}
 
 			@Override
@@ -98,7 +105,7 @@ public abstract class IntegerFormattedTextField extends JTextField {
 
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
-
+				
 			}
 
 		});

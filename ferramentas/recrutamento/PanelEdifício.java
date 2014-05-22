@@ -112,7 +112,7 @@ public class PanelEdifício extends JPanel {
 				// individual
 				for (PanelUnidade panel : unidades) {
 	
-					panel.setTempoUnitário(txtNível.getSelectedIndex());
+					panel.setTempoUnitário(txtNível.getValueInt());
 					panel.changeTimes();
 
 				}

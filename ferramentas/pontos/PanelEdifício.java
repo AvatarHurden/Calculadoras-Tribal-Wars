@@ -173,8 +173,8 @@ public class PanelEdifício {
 			@Override
 			public void go() {
 
-				if (txtNível.getSelectedIndex() != 0)
-					changeValues(txtNível.getSelectedIndex());
+				if (txtNível.getValueInt() != 0)
+					changeValues(txtNível.getValueInt());
 				else
 					resetValues();
 
@@ -266,7 +266,7 @@ public class PanelEdifício {
 	}
 
 	protected int getNível() {
-		return txtNível.getSelectedIndex();
+		return txtNível.getValueInt();
 	}
 	
 	protected EdifícioFormattedComboBox getComboBox() {

@@ -78,7 +78,7 @@ public class Property_UnidadeList
 			c.gridy++;
 			panel.add(new JLabel(i.nome()), c);
 
-			IntegerFormattedTextField txt = new IntegerFormattedTextField(9) {
+			IntegerFormattedTextField txt = new IntegerFormattedTextField(9, 0) {
 				public void go() {}
 			};
 			

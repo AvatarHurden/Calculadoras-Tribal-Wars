@@ -203,7 +203,7 @@ public class PanelIntervalo extends JPanel{
 		coordenadas.reset();
 		
 		for (EdifícioFormattedComboBox c : edificios.values())
-			c.setSelectedIndex(0);
+			c.setText(" ");
 		
 		respostaLabel.setText("");
 		

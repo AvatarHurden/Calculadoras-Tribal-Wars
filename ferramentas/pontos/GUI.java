@@ -60,7 +60,7 @@ public class GUI extends Ferramenta {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				for (PanelEdifício i : panelEdifícioList)
-					i.getComboBox().setSelectedIndex(0);
+					i.getComboBox().setText(" ");
 				
 			}
 		};

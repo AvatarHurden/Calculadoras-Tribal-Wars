@@ -261,7 +261,7 @@ public class PanelUnidade {
 		} else
 			createComboBox(true, constraints, false);
 
-		quantidade = new IntegerFormattedTextField(9) {
+		quantidade = new IntegerFormattedTextField(9, 0) {
 
 			@Override
 			public void go() {

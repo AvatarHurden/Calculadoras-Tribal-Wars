@@ -176,7 +176,7 @@ public class GUI extends Ferramenta {
 					i.setText("");
 				
 				for (PanelEdifício i : edifícioList)
-					i.getComboBox().setSelectedIndex(1);
+					i.getComboBox().setText("1");
 				
 				mapQuantidades.get(Unidade.LANCEIRO).requestFocus();
 				

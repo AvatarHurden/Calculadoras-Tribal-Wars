@@ -262,7 +262,7 @@ public class StatInsertion extends JPanel {
 					tropaC.gridwidth = 2;
 
 				// Creating the TextField for the quantity of troops
-				IntegerFormattedTextField txt = new IntegerFormattedTextField(9) {
+				IntegerFormattedTextField txt = new IntegerFormattedTextField(9, 0) {
 					public void go() {}
 				};
 				// Adding the text to a map with the units

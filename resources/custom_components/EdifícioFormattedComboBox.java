@@ -1,84 +1,102 @@
 package custom_components;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.ListCellRenderer;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 
-import database.Cores;
 import database.Edifício;
 
-/**
- * {@link JComboBox} that only allows the maximum level of the edifício<br>
- * 
- * Abstract method is called on every change of text<br>
- * 
- * By default, contains: <br>
- * - Center horizontal text alignment <br>
- * - PlainDocument to only allow <code>2</code> digits<br>
- * - DocumentListener with abstract class that activates on every change<br>
- * - FocusListener to update when focus is lost
- * 
- * @author Arthur
- * 
- */
-@SuppressWarnings("serial")
-public abstract class EdifícioFormattedComboBox extends JComboBox<Integer> {
-
-	/**
-	 * @param Edifício ao qual a textField se refere
-	 */
+public abstract class EdifícioFormattedComboBox extends JTextField {
+	
+	int max;
+	
 	public EdifícioFormattedComboBox(final Edifício ed, int initial) {
+		
+		super(3);
+		
+		max = ed.nívelMáximo();
+		
+		setHorizontalAlignment(SwingConstants.CENTER);
+		
+		setDocument(new PlainDocument() {
 
-		for (int i = 0; i < ed.nívelMáximo() + 1; i++)
-			addItem(i);
-
-		setSelectedItem(initial);
-
-		setOpaque(false);
-
-		setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-
-		// Make it centered
-		ListCellRenderer<Object> renderer = new DefaultListCellRenderer();
-
-		((JLabel) renderer).setHorizontalAlignment(SwingConstants.CENTER);
-		((JLabel) renderer).setOpaque(true);
-
-		setRenderer(renderer);
-
-		// remove button
-		setUI(new BasicComboBoxUI() {
 			@Override
-			protected JButton createArrowButton() {
-				return new JButton() {
-					@Override
-					public int getWidth() {
-						return 0;
-					}
-				};
+			public void insertString(int offset, String str, AttributeSet attr)
+					throws BadLocationException {
+				if (str == null)
+					return;
+
+				// Permite a entrada somente de números e no máximo 3 dígitos
+				if ((getLength() + str.length()) <= 2
+						&& (Character.isDigit(str.charAt(0))))
+					super.insertString(offset, str, attr);
+	
 			}
+			
 		});
 		
-		addActionListener(new ActionListener() {
+		((AbstractDocument) getDocument()).setDocumentFilter(new DocumentFilter() {
+			
+			@Override
+		    public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String inputTextValue,
+		            AttributeSet attrs) throws BadLocationException {
+		        Document oldDoc = fb.getDocument();
+		        String textValue = oldDoc.getText(0, oldDoc.getLength()) + inputTextValue;
+		        Integer basePrice = 0;
+		        if (length <= 2){
+		        	try {
+		        		basePrice = Integer.parseInt(textValue);
+		        	} catch (NumberFormatException e) { 
+		        		basePrice = 0;
+		        	}
+		        	if (basePrice > max) 
+		        		basePrice = max;
+		        	fb.replace(0, oldDoc.getLength(), basePrice.toString(), attrs);
+		        }
+		    }
+		});
+		
+		getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
+			public void removeUpdate(DocumentEvent arg0) {
 				go();
-
 			}
-		});
 
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				go();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				go();
+			}
+
+		}); 
+		
+	}
+	
+	private void setMaximum() {
+		
 	}
 
-	public abstract void go();
-
+	abstract public void go();
+		
+	public int getValueInt() {
+		
+		if (!getText().equals(""))
+			return Integer.parseInt(getText());
+		else
+			return 0;
+		
+	}
+	
 }

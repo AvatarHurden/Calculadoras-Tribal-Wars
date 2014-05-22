@@ -59,7 +59,7 @@ public class PanelUnidade extends JPanel {
 		nome = new JLabel(unidade.nome());
 		add(nome, c);
 
-		quantidade = new IntegerFormattedTextField(9) {
+		quantidade = new IntegerFormattedTextField(9, 0) {
 
 			@Override
 			public void go() {

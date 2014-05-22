@@ -237,43 +237,43 @@ public class Cálculo {
 			
 			switch (ed) {
 			case ARMAZÉM:
-				if (edifícios.get(ed).getSelectedIndex() > 0)
+				if (edifícios.get(ed).getValueInt() > 0)
 					armazenamento = armazenamento.add(
 						new BigDecimal("1.22949").pow(
-								edifícios.get(ed).getSelectedIndex()-1)
+								edifícios.get(ed).getValueInt()-1)
 								.multiply(new BigDecimal("1000"))).setScale(0, RoundingMode.HALF_EVEN);
 				break;
 			case ESCONDERIJO:
-				if (edifícios.get(ed).getSelectedIndex() > 0)
+				if (edifícios.get(ed).getValueInt() > 0)
 					armazenamento = armazenamento.subtract(
 						new BigDecimal("1.3335").pow(
-							edifícios.get(ed).getSelectedIndex()-1).
+							edifícios.get(ed).getValueInt()-1).
 							multiply(new BigDecimal("100"))).setScale(0, RoundingMode.HALF_EVEN);
 				break;
 			// Caso não seja nem armazém nem esconderijo, é um dos
 			// produtores
 			case BOSQUE:
-				if (edifícios.get(ed).getSelectedIndex() == 0)
+				if (edifícios.get(ed).getValueInt() == 0)
 					produção[0] = BigDecimal.ZERO;
 				else
 					produção[0] = new BigDecimal("1.16311").pow(
-						edifícios.get(ed).getSelectedIndex()-1)
+						edifícios.get(ed).getValueInt()-1)
 						.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
 				break;
 			case POÇO_DE_ARGILA:
-				if (edifícios.get(ed).getSelectedIndex() == 0)
+				if (edifícios.get(ed).getValueInt() == 0)
 					produção[1] = BigDecimal.ZERO;
 				else
 					produção[1] = new BigDecimal("1.16311").pow(
-						edifícios.get(ed).getSelectedIndex()-1)
+						edifícios.get(ed).getValueInt()-1)
 						.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
 				break;
 			case MINA_DE_FERRO:
-				if (edifícios.get(ed).getSelectedIndex() == 0)
+				if (edifícios.get(ed).getValueInt() == 0)
 					produção[2] = BigDecimal.ZERO;
 				else
 					produção[2] = new BigDecimal("1.16311").pow(
-						edifícios.get(ed).getSelectedIndex()-1)
+						edifícios.get(ed).getValueInt()-1)
 						.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
 				break;
 			default:
