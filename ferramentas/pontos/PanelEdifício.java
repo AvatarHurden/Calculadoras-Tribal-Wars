@@ -11,7 +11,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import config.Lang;
-import custom_components.EdifícioFormattedComboBox;
+import custom_components.EdifícioFormattedTextField;
 import database.Cores;
 import database.Edifício;
 
@@ -27,7 +27,7 @@ public class PanelEdifício {
 	private JPanel populaçãoRestantePanel;
 
 	private JLabel nome;
-	private EdifícioFormattedComboBox txtNível;
+	private EdifícioFormattedTextField txtNível;
 	private JLabel população, pontos, populaçãoRestante;
 
 	private Edifício edifício;
@@ -168,7 +168,7 @@ public class PanelEdifício {
 
 		addSeparator(constraints, identificadores);
 
-		txtNível = new EdifícioFormattedComboBox(edifício, 0) {
+		txtNível = new EdifícioFormattedTextField(edifício, 0) {
 
 			@Override
 			public void go() {
@@ -269,7 +269,7 @@ public class PanelEdifício {
 		return txtNível.getValueInt();
 	}
 	
-	protected EdifícioFormattedComboBox getComboBox() {
+	protected EdifícioFormattedTextField getComboBox() {
 		return txtNível;
 	}
 

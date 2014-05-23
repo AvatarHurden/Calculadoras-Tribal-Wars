@@ -12,7 +12,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import custom_components.EdifícioFormattedComboBox;
+import custom_components.EdifícioFormattedTextField;
 import database.Cores;
 import database.Edifício;
 
@@ -23,7 +23,7 @@ public class PanelEdifício extends JPanel {
 	private Edifício edifício;
 	private ArrayList<PanelUnidade> unidades;
 
-	private EdifícioFormattedComboBox txtNível;
+	private EdifícioFormattedTextField txtNível;
 	private JLabel tempoTotal;
 
 	/**
@@ -103,7 +103,7 @@ public class PanelEdifício extends JPanel {
 		gbc_finish.gridy++;
 		add(lblNível, gbc_finish);
 
-		txtNível = new EdifícioFormattedComboBox(edifício, 1) {
+		txtNível = new EdifícioFormattedTextField(edifício, 1) {
 
 			@Override
 			public void go() {
@@ -165,7 +165,7 @@ public class PanelEdifício extends JPanel {
 
 	}
 	
-	public EdifícioFormattedComboBox getComboBox(){
+	public EdifícioFormattedTextField getComboBox(){
 		return txtNível;
 	}
 }

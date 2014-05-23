@@ -1,12 +1,8 @@
 package custom_components;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JTextField;
@@ -16,7 +12,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
 
 /**
  * JTextField that formats the number to add thousands separator
@@ -27,10 +24,8 @@ import javax.swing.text.PlainDocument;
  * 
  * <br>By default, contains: 
  * <br>- Left horizontal text alignment
- * <br>- PlainDocument to only allow <code>length</code> digits
  * <br>- DocumentListener with abstract class that activates on every change
- * <br>- FocusListener to update when focus is lost (do not add another, since
- * focus is lost on every edit of the textField)
+ * <br>- DocumentFilter to only allow <code>maxLength</code> digits and up to <code>upperLimit</code>
  * 
  * @author Arthur
  * 
@@ -47,49 +42,64 @@ public abstract class IntegerFormattedTextField extends JTextField {
 	 * @param length
 	 *            Maximum number of digits allowed
 	 * @param upperLimit
-	 * 			  Maximum value of the textField. If no bound is placed, insert 0
+	 * 			  Maximum value of the textField
 	 */
-	public IntegerFormattedTextField(final int length, final int upperLimit) {
-
+	public IntegerFormattedTextField(final int maxLength,final int upperLimit) {
+		
+		setColumns(3+(maxLength-2)/2);
+		
 		setHorizontalAlignment(SwingConstants.LEFT);
-
-		setDocument(new PlainDocument() {
-
-			@Override
-			public void insertString(int offset, String str, AttributeSet attr)
-					throws BadLocationException {
-				if (str == null)
-					return;
-
-				// Permite a entrada somente de números e no máximo "length"
-				// dígitos
-				if ((getLength() + str.length()) <= length
-						&& Character.isDigit(str.charAt(0))) {
-					super.insertString(offset, str, attr);
-				}
+		
+		((AbstractDocument) getDocument()).setDocumentFilter(new DocumentFilter() {
+			
+		    public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String inputTextValue,
+		            AttributeSet attrs) throws BadLocationException {
 				
-				if (upperLimit != 0)
-					if (Math.abs(Integer.parseInt(getText(0, getLength()))) > upperLimit) {
-						super.remove(0, getLength());
-						super.insertString(0, String.valueOf(upperLimit), attr);
-					}
-
-				if (getLength() > 3 && !str.contains("."))
-					setText(getFormattedNumber(getUnformattedNumber(getText(0,
-							getLength()))));
-
-			}
-
-			@Override
-			public void removeUpdate(AbstractDocument.DefaultDocumentEvent chng) {
-
-				setFocusable(false);
-				setFocusable(true);
-				requestFocus();
-
-			}
-
+		        Document oldDoc = fb.getDocument();
+		        // Gets the whole string that would be in the textField
+		        String textValue = oldDoc.getText(0, oldDoc.getLength()) + inputTextValue;
+		        int level;
+	
+		        
+		        if (textValue.length() < maxLength){
+		        	try {
+		        		level = Integer.parseInt(getUnformattedNumber(textValue));
+		        	} catch (NumberFormatException e) {
+		        		try {
+		        			level = Integer.parseInt(textValue.replace(inputTextValue, ""));
+		        		} catch (NumberFormatException ex) {
+		        			// A non digit character was inserted, so no number will be placed
+		        			level = -1;
+		        		}
+		        		
+		        	}
+		        	
+		        	if (level > upperLimit) 
+		        		level = upperLimit;
+		        	
+		        	// Replaces everything that was in the textField
+		        	if (level == -1)
+		        		// In case of the error
+		        		fb.replace(0, oldDoc.getLength(), "", attrs);
+		        	else
+		        		fb.replace(0, oldDoc.getLength(), getFormattedNumber(String.valueOf(level)), attrs);
+		        }
+		    }
+		    
+		    public void remove(DocumentFilter.FilterBypass fb, int offset, int length) {
+		    	
+		    	try {
+		    		
+		    		String oldString = fb.getDocument().getText(0, fb.getDocument().getLength());
+		    		
+		    		String s = oldString.substring(0, offset);
+		    				    		
+		    		fb.replace(0, oldString.length(), getFormattedNumber(getUnformattedNumber(s)), null);
+				} catch (BadLocationException e) {}
+		    	
+		    }
 		});
+		
 
 		getDocument().addDocumentListener(new DocumentListener() {
 
@@ -109,24 +119,7 @@ public abstract class IntegerFormattedTextField extends JTextField {
 			}
 
 		});
-
-		addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent arg0) {
-
-				if (!isFormatted(getText()))
-					setText(getFormattedNumber(getUnformattedNumber(getText())));
-
-			}
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-			}
-		});
-
-		setColumns(6);
-
+		
 	}
 
 	// Returns the unformatted value of a formatted string
@@ -135,35 +128,22 @@ public abstract class IntegerFormattedTextField extends JTextField {
 		String unformated = "";
 		try {
 			unformated = numberFormat.parse(input).toString();
-		} catch (ParseException e) {
-		}
-
+		} catch (ParseException e) {}
+		
 		return unformated;
 
 	}
 
 	// Returns the formatted value of an unformatted string
 	private String getFormattedNumber(String input) {
-
-		String formated = numberFormat.format(Integer.parseInt(input));
-
-		return formated;
-
-	}
-
-	private boolean isFormatted(String input) {
-
-		List<String> pieces = Arrays.asList(input.split("\\."));
-
-		for (String s : pieces) {
-
-			if (pieces.indexOf(s) != 0 && s.length() != 3)
-				return false;
-
+		
+		try {
+			String formated = numberFormat.format(Integer.parseInt(input));
+		
+			return formated;
+		} catch (NumberFormatException e) {
+			return "";
 		}
-
-		return true;
-
 	}
 
 	public abstract void go();

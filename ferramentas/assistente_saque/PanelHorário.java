@@ -178,19 +178,19 @@ public class PanelHorário extends JPanel{
 		
 		switch(produtor) {
 		case POÇO_DE_ARGILA:
-			recursosRestantes[0] = new IntegerFormattedTextField(7, 0) {
+			recursosRestantes[0] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
 				public void go() {}
 			};
 			recursoQuantidade.add(recursosRestantes[0]);
 			break;
 		case BOSQUE:
-			recursosRestantes[1] = new IntegerFormattedTextField(7, 0) {
+			recursosRestantes[1] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
 				public void go() {}
 			};
 			recursoQuantidade.add(recursosRestantes[1]);
 			break;
 		case MINA_DE_FERRO:
-			recursosRestantes[2] = new IntegerFormattedTextField(7, 0) {
+			recursosRestantes[2] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
 				public void go() {}
 			};
 			recursoQuantidade.add(recursosRestantes[2]);

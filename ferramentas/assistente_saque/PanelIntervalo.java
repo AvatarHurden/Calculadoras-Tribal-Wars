@@ -14,7 +14,7 @@ import javax.swing.border.MatteBorder;
 
 import config.Lang;
 import custom_components.CoordenadaPanel;
-import custom_components.EdifícioFormattedComboBox;
+import custom_components.EdifícioFormattedTextField;
 import custom_components.TimeFormattedJLabel;
 import database.Cores;
 import database.Edifício;
@@ -33,8 +33,8 @@ public class PanelIntervalo extends JPanel{
 	private JPanel edifífcioPanel, nívelPanel;
 	private TimeFormattedJLabel respostaLabel;
 	
-	private Map<Edifício, EdifícioFormattedComboBox> edificios = 
-			new HashMap<Edifício, EdifícioFormattedComboBox>();
+	private Map<Edifício, EdifícioFormattedTextField> edificios = 
+			new HashMap<Edifício, EdifícioFormattedTextField>();
 	
 	protected PanelIntervalo() {
 		
@@ -128,7 +128,7 @@ public class PanelIntervalo extends JPanel{
 		// Adds the IntegerFormattedTextField
 		JPanel buildingLevel = new JPanel();
 				
-		edificios.put(ed, new EdifícioFormattedComboBox(ed, 0) {
+		edificios.put(ed, new EdifícioFormattedTextField(ed, 0) {
 			public void go() {}
 		});
 		buildingLevel.add(edificios.get(ed));
@@ -176,7 +176,7 @@ public class PanelIntervalo extends JPanel{
 		return panel;
 	}
 	
-	protected Map<Edifício, EdifícioFormattedComboBox> getEdifícios() {
+	protected Map<Edifício, EdifícioFormattedTextField> getEdifícios() {
 		return edificios;
 	}
 	
@@ -202,7 +202,7 @@ public class PanelIntervalo extends JPanel{
 		
 		coordenadas.reset();
 		
-		for (EdifícioFormattedComboBox c : edificios.values())
+		for (EdifícioFormattedTextField c : edificios.values())
 			c.setText(" ");
 		
 		respostaLabel.setText("");

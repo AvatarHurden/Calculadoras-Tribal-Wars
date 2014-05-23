@@ -9,7 +9,7 @@ import java.util.Map;
 
 import config.Mundo_Reader;
 import custom_components.CoordenadaPanel;
-import custom_components.EdifícioFormattedComboBox;
+import custom_components.EdifícioFormattedTextField;
 import custom_components.IntegerFormattedTextField;
 import database.BigOperation;
 import database.Edifício;
@@ -228,7 +228,7 @@ public class Cálculo {
 	 * @param Mapa relacionando edifícios aos seus níveis
 	 */
 	protected void setProduçãoEArmazenamento(
-				Map<Edifício, EdifícioFormattedComboBox> edifícios) {
+				Map<Edifício, EdifícioFormattedTextField> edifícios) {
 		
 		armazenamento = BigDecimal.ZERO;
 		

@@ -129,7 +129,7 @@ public class PanelUnidade {
 		gbc_nome.gridy = 0;
 		panelDados.add(nome, gbc_nome);
 
-		quantidade = new IntegerFormattedTextField(9, 0) {
+		quantidade = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
 
 			@Override
 			public void go() {
