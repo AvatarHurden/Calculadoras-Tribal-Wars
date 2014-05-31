@@ -21,7 +21,7 @@ public enum Unidade {
 	CATAPULTA	  ("Catapulta", 		Type.Geral,        320,   400,	  100,	 8,	  100,  100,  50,   100,  30,   0,   4800),
 	PALADINO	  ("Paladino", 			Type.Cavalo,       20,    20,	  40,	 10,  150,  250,  400,  150,  10,   100, 21600),
 	NOBRE         ("Nobre", 		    Type.Geral,        40000, 50000,  50000, 100, 30,   100,  50,   100,  35,   0,   12000),
-	MILÍCIA		  ("Milícia", 			Type.unspecified,  0,     0,	  0,	 0,	  0,	15,   45,   25,   0.02, 0,   0);
+	MILÍCIA		  ("Milícia", 			Type.unspecified,  0,     0,	  0,	 0,	  0,	15,   45,   25,   0, 0,   0);
 
 
 	private final static BigDecimal lvl2 = new BigDecimal("1.25");
@@ -226,7 +226,7 @@ public enum Unidade {
 	}
 
 	/**
-	 * @return velocidade base da unidade
+	 * @return velocidade base da unidade, em minutos/campo
 	 */
 	public BigDecimal velocidade() {
 		return velocidade;

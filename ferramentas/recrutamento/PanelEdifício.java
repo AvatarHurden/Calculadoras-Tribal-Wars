@@ -13,6 +13,7 @@ import javax.swing.border.MatteBorder;
 
 import config.Lang;
 import custom_components.EdifícioFormattedTextField;
+import custom_components.TimeFormattedJLabel;
 import database.Cores;
 import database.Edifício;
 
@@ -24,7 +25,7 @@ public class PanelEdifício extends JPanel {
 	private ArrayList<PanelUnidade> unidades;
 
 	private EdifícioFormattedTextField txtNível;
-	private JLabel tempoTotal;
+	private TimeFormattedJLabel tempoTotal;
 
 	/**
 	 * @param possuir
@@ -137,7 +138,7 @@ public class PanelEdifício extends JPanel {
 		gbc_finish.gridx = 2;
 		add(lblTempoTotal, gbc_finish);
 
-		tempoTotal = new JLabel();
+		tempoTotal = new TimeFormattedJLabel(false);
 		gbc_finish.insets = new Insets(7, 0, 5, 5);
 		gbc_finish.fill = GridBagConstraints.NONE;
 		gbc_finish.gridx = 3;
@@ -159,7 +160,7 @@ public class PanelEdifício extends JPanel {
 
 		}
 		if (!tempoTotal.equals(BigDecimal.ZERO))
-			this.tempoTotal.setText(Cálculos.format(tempoTotal));
+			this.tempoTotal.setTime(tempoTotal.longValue());
 		else
 			this.tempoTotal.setText("");
 

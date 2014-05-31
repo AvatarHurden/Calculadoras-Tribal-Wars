@@ -53,7 +53,9 @@ public class PanelIntervalo extends JPanel{
 		c.gridx = 0;
 		
 		// Adds the village coordinates
-		coordenadas = new CoordenadaPanel("Aldeia de Destino");
+		coordenadas = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
+			public void go() {}
+		};
 		
 		c.gridwidth = 2;
 		c.insets = new Insets(0, 0, 10, 0);

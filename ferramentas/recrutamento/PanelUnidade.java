@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 
 import config.Mundo_Reader;
 import custom_components.IntegerFormattedTextField;
+import custom_components.TimeFormattedJLabel;
 import database.Cores;
 import database.Unidade;
 
@@ -23,8 +24,8 @@ public class PanelUnidade extends JPanel {
 	private Unidade unidade;
 	private JLabel nome;
 	private IntegerFormattedTextField quantidade;
-	private JLabel tempoUnitário;
-	private JLabel tempoTotal;
+	private TimeFormattedJLabel tempoUnitário;
+	private TimeFormattedJLabel tempoTotal;
 
 	private Color cor;
 
@@ -77,12 +78,12 @@ public class PanelUnidade extends JPanel {
 		c.gridx = 1;
 		add(quantidade, c);
 
-		tempoUnitário = new JLabel();
+		tempoUnitário = new TimeFormattedJLabel(false);
 		c.insets = new Insets(5, 0, 5, 5);
 		c.gridx = 3;
 		add(getTempoUnitário(), c);
 
-		tempoTotal = new JLabel();
+		tempoTotal = new TimeFormattedJLabel(false);
 		c.insets = new Insets(0, 0, 5, 0);
 		c.gridx = 4;
 		add(tempoTotal, c);
@@ -101,7 +102,7 @@ public class PanelUnidade extends JPanel {
 	 */
 	public void changeTimes() {
 
-		BigDecimal tempo = Cálculos.getSeconds(getTempoUnitário().getText());
+		BigDecimal tempo = new BigDecimal(tempoUnitário.getTime());
 
 		// Remove os pontos de milhar para cálculo
 
@@ -112,7 +113,7 @@ public class PanelUnidade extends JPanel {
 			quantia = BigDecimal.ZERO;
 
 		tempo = tempo.multiply(quantia);
-		tempoTotal.setText(Cálculos.format(tempo));
+		tempoTotal.setTime(tempo.longValue());
 
 		if (edifício != null)
 			edifício.setTempoTotal();
@@ -142,9 +143,9 @@ public class PanelUnidade extends JPanel {
 				nível = 1;
 		
 		BigDecimal tempo = unidade.tempoDeProdução().multiply(Mundo_Reader.MundoSelecionado
-								.getPorcentagemDeProdução(nível));
+								.getPorcentagemDeProdução(nível)).multiply(new BigDecimal("1000"));
 		
-		tempoUnitário.setText(Cálculos.format(tempo));
+		tempoUnitário.setTime(tempo.longValue());
 
 	}
 
@@ -155,13 +156,8 @@ public class PanelUnidade extends JPanel {
 	 */
 	public BigDecimal getTempoTotal() {
 
-		StringBuilder builder = new StringBuilder(tempoTotal.getText());
-
-		while (builder.indexOf(".") != -1)
-			builder.deleteCharAt(builder.indexOf("."));
-
 		try {
-			return Cálculos.getSeconds(builder.toString());
+			return new BigDecimal(tempoTotal.getTime());
 		} catch (Exception e) {
 			return BigDecimal.ZERO;
 		}

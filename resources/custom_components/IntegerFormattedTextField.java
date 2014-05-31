@@ -103,20 +103,15 @@ public abstract class IntegerFormattedTextField extends JTextField {
 
 		getDocument().addDocumentListener(new DocumentListener() {
 
-			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				go();
 			}
 
-			@Override
 			public void insertUpdate(DocumentEvent arg0) {
 				go();
 			}
 
-			@Override
-			public void changedUpdate(DocumentEvent arg0) {
-				
-			}
+			public void changedUpdate(DocumentEvent arg0) {}
 
 		});
 		

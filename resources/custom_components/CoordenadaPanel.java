@@ -12,6 +12,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -27,7 +29,7 @@ import database.Cores;
  *
  */
 @SuppressWarnings("serial")
-public class CoordenadaPanel extends JPanel{
+public abstract class CoordenadaPanel extends JPanel{
 
 	// X and Y coordinates
 	JTextField x, y;
@@ -128,6 +130,19 @@ public class CoordenadaPanel extends JPanel{
 			}
 		});
 		
+		coordinate.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				go();
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				go();
+			}
+			
+			public void changedUpdate(DocumentEvent arg0) {}
+		});
+		
 		return coordinate;
 		
 	}
@@ -152,4 +167,6 @@ public class CoordenadaPanel extends JPanel{
 		x.setText("");
 		
 	}
+	
+	public abstract void go();
 }

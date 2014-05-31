@@ -16,6 +16,9 @@ public class TimeFormattedJLabel extends JLabel {
 	
 	private boolean showMillis;
 	
+	private long time;
+	private Date date;
+	
 //	// This code for the Spinner
 //	SpinnerDateModel model = new SpinnerDateModel();
 //			
@@ -35,11 +38,18 @@ public class TimeFormattedJLabel extends JLabel {
 	 */
 	public void setTime(long value) {
 		
+		if (value == 0) {
+			setText("");
+			return;
+		}
+		
+		time = value;
+		
 		long d = TimeUnit.MILLISECONDS.toDays(value);
 		long h = TimeUnit.MILLISECONDS.toHours(value-TimeUnit.DAYS.toMillis(d));
 		long m = TimeUnit.MILLISECONDS.toMinutes(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h));
 		long s = TimeUnit.MILLISECONDS.toSeconds(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m));
-		long ms = TimeUnit.MILLISECONDS.toSeconds(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m)-TimeUnit.SECONDS.toMillis(s));
+		long ms = TimeUnit.MILLISECONDS.toMillis(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m)-TimeUnit.SECONDS.toMillis(s));
 		
 		if (d > 0)
 			setText(String.format("%dd %02d:%02d:%02d", d, h, m, s));
@@ -47,7 +57,7 @@ public class TimeFormattedJLabel extends JLabel {
 			setText(String.format("%02d:%02d:%02d", h, m, s));
 		
 		if (showMillis)
-			setText(getText()+String.format("%03d", ms));
+			setText("<html>"+getText()+String.format("<font size=2 color=#585858>.%03d</font></html>", ms));
 			
 	}
 	
@@ -58,11 +68,29 @@ public class TimeFormattedJLabel extends JLabel {
 	 */
 	public void setDate(Date date) {
 		
+		this.date = date;
+		
 		if (showMillis)
 			setText(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS").format(date));
 		else
 			setText(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date));
 		
+	}
+	
+	/**
+	 * Gets the time that is displayed in milliseconds
+	 * @return
+	 */
+	public long getTime() {
+		return time;
+	}
+	
+	/**
+	 * Gets the date that is displayed in milliseconds
+	 * @return
+	 */
+	public Date getDate() {
+		return date;
 	}
 	
 }

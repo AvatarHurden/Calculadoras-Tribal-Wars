@@ -60,6 +60,8 @@ public enum Lang {
 	Edificio(			"Edifício"),
 	Pontos(				"Pontos"),
 	
+	Enviada(			"Enviada"),	
+	
 	/** Usado no recrutamento, no caso do edifício ser feminino*/
 	NivelDaEdificio(	"Nível da "),
 	/** Usado no recrutamento, no caso do edifício ser masculino*/

@@ -16,6 +16,7 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import config.Lang;
 import custom_components.CoordenadaPanel;
 import custom_components.IntegerFormattedTextField;
 import custom_components.TimeFormattedJLabel;
@@ -59,7 +60,9 @@ public class PanelHorário extends JPanel{
 		c.gridx = 0;
 		
 		// Add panel de aldeia
-		coordenadas = new CoordenadaPanel("Aldeia de Origem");
+		coordenadas = new CoordenadaPanel(Lang.AldeiaOrigem.toString()) {
+			public void go() {}
+		};
 		c.gridwidth = 3;
 		c.insets = new Insets(0, 0, 3, 0);
 		add(coordenadas, c);
@@ -242,7 +245,6 @@ public class PanelHorário extends JPanel{
 		
 	}
 
-	
 	protected void setDisplayHorario(long tempo) {
 		respostaLabel.setDate(new Date(tempo));
 		
@@ -256,8 +258,8 @@ public class PanelHorário extends JPanel{
 	}
 	
 	/**
-	 * Returns the dateSpinner on which the last attack arrived
-	 * @return Date
+	 * Returns the time of the last attack, in milliseconds
+	 * @return long
 	 */
 	protected long getDataEnviada() {
 		
