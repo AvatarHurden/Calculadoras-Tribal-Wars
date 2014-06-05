@@ -1,5 +1,6 @@
 package assistente_saque;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
@@ -27,11 +29,13 @@ import database.Edifício;
  *
  */
 @SuppressWarnings("serial")
-public class PanelIntervalo extends JPanel{
+public abstract class PanelIntervalo extends JPanel{
 
 	private CoordenadaPanel coordenadas;
 	private JPanel edifífcioPanel, nívelPanel;
+	
 	private TimeFormattedJLabel respostaLabel;
+	private JLabel errorMessage;
 	
 	private Map<Edifício, EdifícioFormattedTextField> edificios = 
 			new HashMap<Edifício, EdifícioFormattedTextField>();
@@ -54,7 +58,9 @@ public class PanelIntervalo extends JPanel{
 		
 		// Adds the village coordinates
 		coordenadas = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
-			public void go() {}
+			public void go() {
+				doAction();
+			}
 		};
 		
 		c.gridwidth = 2;
@@ -108,6 +114,17 @@ public class PanelIntervalo extends JPanel{
 		c.gridwidth = 2;
 		c.insets = new Insets(25, 5, 5, 5);
 		add(makePanelResposta(), c);
+	
+		// Adding error message
+		
+		errorMessage = new JLabel(" ", SwingConstants.CENTER);
+		errorMessage.setForeground(Color.RED);
+		errorMessage.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		c.gridy++;
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(10, 0, 0, 0);
+		add(errorMessage, c);
 	}
 	
 	// Cria um painel para o edifício dado
@@ -131,7 +148,9 @@ public class PanelIntervalo extends JPanel{
 		JPanel buildingLevel = new JPanel();
 				
 		edificios.put(ed, new EdifícioFormattedTextField(ed, 0) {
-			public void go() {}
+			public void go() {
+				doAction();
+			}
 		});
 		buildingLevel.add(edificios.get(ed));
 				
@@ -195,9 +214,16 @@ public class PanelIntervalo extends JPanel{
 	 * @param millis
 	 */
 	protected void setDisplayIntervalo(long millis){
+		errorMessage.setText(" ");
 		
 		respostaLabel.setTime(millis);
 		
+	}
+	
+	protected void setErrorMessage(String error) {
+		respostaLabel.setText("");
+		
+		errorMessage.setText(error);
 	}
 	
 	protected void resetAll() {
@@ -210,5 +236,10 @@ public class PanelIntervalo extends JPanel{
 		respostaLabel.setText("");
 		
 	}
+	
+	/**
+	 * Method that is called whenever any component is edited
+	 */
+	protected abstract void doAction();
 	
 }

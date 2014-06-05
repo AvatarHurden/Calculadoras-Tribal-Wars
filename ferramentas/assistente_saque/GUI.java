@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
 
+import assistente_saque.Cálculo.NoIntervalException;
 import assistente_saque.Cálculo.SameDateException;
 import config.Mundo_Reader;
 import custom_components.Ferramenta;
@@ -39,7 +40,6 @@ public class GUI extends Ferramenta{
 	
 	// Panels para mostrar as respostas
 	private JPanel panelRecomendado;
-	private JPanel respostaHorário;
 	
 	private Map<Unidade, JLabel> mapRecomendado = new HashMap<Unidade, JLabel>();
 	
@@ -65,9 +65,23 @@ public class GUI extends Ferramenta{
 		
 		cálculo = new Cálculo();
 		
-		panelUnidades = new PanelUnidade();
-		panelIntervalo = new PanelIntervalo();
-		panelHorário = new PanelHorário();
+		panelUnidades = new PanelUnidade() {
+			protected void doAction() {
+				editIntervalObject();
+				editHorárioObject();
+			}
+		};
+		panelIntervalo = new PanelIntervalo() {
+			protected void doAction() {
+				editIntervalObject();
+				editHorárioObject();
+			}
+		};
+		panelHorário = new PanelHorário() {
+			protected void doAction() {
+				editHorárioObject();
+			}
+		};
 		
 		makePanelRecomendado();
 		panelRecomendado.setVisible(false);
@@ -155,17 +169,21 @@ public class GUI extends Ferramenta{
 				
 				cálculo.setIntervalo();
 				cálculo.setEnviarAtaque();
-				panelIntervalo.setDisplayIntervalo(cálculo.getIntervalo());
+				try {
+					panelIntervalo.setDisplayIntervalo(cálculo.getIntervalo());
+				} catch (NoIntervalException exc) {
+					panelIntervalo.setErrorMessage(exc.getMessage());
+				}
 				try {
 					panelHorário.setDisplayHorario(cálculo.getHorario());
 				} catch (SameDateException exc) {
-					panelHorário.setErrorMessage(exc.error);
+					panelHorário.setErrorMessage(exc.getMessage());
 				}
 				setRecomendadoPanel(cálculo.getUnidadesRecomendadas());
 			}
 		});
 		
-		add(button, c);
+	//	add(button, c);
 	}
 	
 	private ActionListener getResetButtonAction() {
@@ -261,6 +279,7 @@ public class GUI extends Ferramenta{
 				
 				panelRecomendado.setVisible(false);
 				
+				repaint();
 			}
 		});
 		
@@ -278,6 +297,37 @@ public class GUI extends Ferramenta{
 			panelRecomendado.setVisible(false);
 			for (Unidade i : mapRecomendado.keySet())
 				mapRecomendado.get(i).setText(" ");
+		}
+		
+	}
+
+	private void editIntervalObject() {
+		
+		cálculo.setProduçãoEArmazenamento(panelIntervalo.getEdifícios());
+		cálculo.setSaqueTotal(panelUnidades.getTextFields());
+		
+		cálculo.setIntervalo();
+		try {
+			panelIntervalo.setDisplayIntervalo(cálculo.getIntervalo());
+		} catch (NoIntervalException exc) {
+			panelIntervalo.setErrorMessage(exc.getMessage());
+		}
+		
+		setRecomendadoPanel(cálculo.getUnidadesRecomendadas());
+		
+	}
+	
+	private void editHorárioObject() {
+		
+		cálculo.setDistância(panelHorário.getCoordenadaOrigem(), panelIntervalo.getCoordenadaDestino());
+		cálculo.setRestantes(panelHorário.getRecursosRestantes());
+		cálculo.setUltimoAtaque(panelHorário.getDataEnviada());
+		
+		cálculo.setEnviarAtaque();
+		try {
+			panelHorário.setDisplayHorario(cálculo.getHorario());
+		} catch (SameDateException exc) {
+			panelHorário.setErrorMessage(exc.getMessage());
 		}
 		
 	}

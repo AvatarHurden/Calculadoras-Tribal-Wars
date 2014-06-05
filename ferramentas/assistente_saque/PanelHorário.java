@@ -31,7 +31,7 @@ import database.Edifício;
  *
  */
 @SuppressWarnings("serial")
-public class PanelHorário extends JPanel{
+public abstract class PanelHorário extends JPanel{
 
 	private CoordenadaPanel coordenadas;
 	
@@ -61,7 +61,9 @@ public class PanelHorário extends JPanel{
 		
 		// Add panel de aldeia
 		coordenadas = new CoordenadaPanel(Lang.AldeiaOrigem.toString()) {
-			public void go() {}
+			public void go() {
+				doAction();
+			}
 		};
 		c.gridwidth = 3;
 		c.insets = new Insets(0, 0, 3, 0);
@@ -133,6 +135,7 @@ public class PanelHorário extends JPanel{
 		
 		errorMessage = new JLabel(" ");
 		errorMessage.setForeground(Color.RED);
+		errorMessage.setAlignmentX(CENTER_ALIGNMENT);
 		
 		c.gridy++;
 		c.fill = GridBagConstraints.NONE;
@@ -182,19 +185,25 @@ public class PanelHorário extends JPanel{
 		switch(produtor) {
 		case POÇO_DE_ARGILA:
 			recursosRestantes[0] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
-				public void go() {}
+				public void go() {
+					doAction();
+				}
 			};
 			recursoQuantidade.add(recursosRestantes[0]);
 			break;
 		case BOSQUE:
 			recursosRestantes[1] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
-				public void go() {}
+				public void go() {
+					doAction();
+				}
 			};
 			recursoQuantidade.add(recursosRestantes[1]);
 			break;
 		case MINA_DE_FERRO:
 			recursosRestantes[2] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
-				public void go() {}
+				public void go() {
+					doAction();
+				}
 			};
 			recursoQuantidade.add(recursosRestantes[2]);
 			// Since iron is the last one, a full border is required
@@ -300,5 +309,10 @@ public class PanelHorário extends JPanel{
 		respostaLabel.setText(" ");
 		errorMessage.setText(" ");
 	}
+	
+	/**
+	 * Method that is called whenever any component is edited
+	 */
+	protected abstract void doAction();
 	
 }

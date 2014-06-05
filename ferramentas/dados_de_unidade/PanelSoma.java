@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 
 import config.Mundo_Reader;
 import database.Cores;
+import database.Unidade;
 
 public class PanelSoma {
 
@@ -177,14 +178,34 @@ public class PanelSoma {
 
 		// Somando danos
 		BigInteger dano = new BigInteger("0");
-		for (PanelUnidade i : panelUnidadeList)
-			if (!i.getQuantidade().getText().equals(""))
+		BigInteger danoGeral = BigInteger.ZERO, danoCavalo = BigInteger.ZERO, danoArqueiro = BigInteger.ZERO; 
+		
+		for (PanelUnidade i : panelUnidadeList) 
+			if (!i.getQuantidade().getText().equals("")) {
 				dano = dano.add(new BigInteger(NumberFormat
 						.getNumberInstance(Locale.GERMANY)
 						.parse(i.getDano().getText()).toString()));
-
+				
+				if (i.getUnidade().type().equals(Unidade.Type.Geral))
+					danoGeral = danoGeral.add(new BigInteger(NumberFormat
+							.getNumberInstance(Locale.GERMANY)
+							.parse(i.getDano().getText()).toString()));
+				else if (i.getUnidade().type().equals(Unidade.Type.Cavalo))
+					danoCavalo = danoCavalo.add(new BigInteger(NumberFormat
+							.getNumberInstance(Locale.GERMANY)
+							.parse(i.getDano().getText()).toString()));
+				else if (i.getUnidade().type().equals(Unidade.Type.Arqueiro))
+					danoArqueiro = danoArqueiro.add(new BigInteger(NumberFormat
+							.getNumberInstance(Locale.GERMANY)
+							.parse(i.getDano().getText()).toString()));
+				
+			}
+			
 		somaTotal.put("dano", dano);
-
+		somaTotal.put("danoGeral", danoGeral);
+		somaTotal.put("danoCavalo", danoCavalo);
+		somaTotal.put("danoArqueiro", danoArqueiro);
+		
 		// Somando defesa geral
 		BigInteger defGeral = new BigInteger("0");
 		for (PanelUnidade i : panelUnidadeList)
@@ -290,6 +311,12 @@ public class PanelSoma {
 			argila.setText(String.format("%,d", somaTotal.get("argila")));
 			ferro.setText(String.format("%,d", somaTotal.get("ferro")));
 			população.setText(String.format("%,d", somaTotal.get("população")));
+			
+			// Adding tooltip for dano
+			dano.setToolTipText("<html>"+String.format(
+				   "Ataque Geral: %,d<br>"
+				+ "Ataque Cavalo: %,d<br>"
+				+ "Ataque Arqueiro: %,d</html>", somaTotal.get("danoGeral"), somaTotal.get("danoCavalo"), somaTotal.get("danoArqueiro")));
 
 		} else {
 

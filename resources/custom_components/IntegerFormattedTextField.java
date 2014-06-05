@@ -55,44 +55,87 @@ public abstract class IntegerFormattedTextField extends JTextField {
 		    public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String inputTextValue,
 		            AttributeSet attrs) throws BadLocationException {
 				
+		    
 		        Document oldDoc = fb.getDocument();
-		        // Gets the whole string that would be in the textField
-		        String textValue = oldDoc.getText(0, oldDoc.getLength()) + inputTextValue;
-		        int level;
-	
 		        
-		        if (textValue.length() < maxLength){
+		        String oldString = fb.getDocument().getText(0, fb.getDocument().getLength());
+		        
+		        String string = oldString.substring(0, offset) + inputTextValue + 
+	    				oldString.substring(offset+length, fb.getDocument().getLength());
+		        
+		        string = getUnformattedNumber(string);
+		        
+		        int amount;
+		        
+		        if (string.length() < maxLength){
 		        	try {
-		        		level = Integer.parseInt(getUnformattedNumber(textValue));
+		        		amount = Integer.parseInt(getUnformattedNumber(string));
 		        	} catch (NumberFormatException e) {
 		        		try {
-		        			level = Integer.parseInt(textValue.replace(inputTextValue, ""));
+		        			amount = Integer.parseInt(string.replace(inputTextValue, ""));
 		        		} catch (NumberFormatException ex) {
 		        			// A non digit character was inserted, so no number will be placed
-		        			level = -1;
+		        			amount = -1;
 		        		}
 		        		
 		        	}
 		        	
-		        	if (level > upperLimit) 
-		        		level = upperLimit;
+		        	if (amount > upperLimit) 
+		        		amount = upperLimit;
 		        	
 		        	// Replaces everything that was in the textField
-		        	if (level == -1)
+		        	if (amount == -1)
 		        		// In case of the error
 		        		fb.replace(0, oldDoc.getLength(), "", attrs);
 		        	else
-		        		fb.replace(0, oldDoc.getLength(), getFormattedNumber(String.valueOf(level)), attrs);
+		        		fb.replace(0, oldDoc.getLength(), getFormattedNumber(String.valueOf(amount)), attrs);
 		        }
+		    }
+		    
+		    public void insertString (DocumentFilter.FilterBypass fb, int offset, String string, 
+		    		AttributeSet attr) throws BadLocationException {
+		    	
+		    	 Document oldDoc = fb.getDocument();
+			        // Gets the whole string that would be in the textField
+			        String textValue = oldDoc.getText(0, oldDoc.getLength()) + string;
+			        int level;
+		
+			        
+			        if (textValue.length() < maxLength){
+			        	try {
+			        		level = Integer.parseInt(getUnformattedNumber(textValue));
+			        	} catch (NumberFormatException e) {
+			        		try {
+			        			level = Integer.parseInt(textValue.replace(string, ""));
+			        		} catch (NumberFormatException ex) {
+			        			// A non digit character was inserted, so no number will be placed
+			        			level = -1;
+			        		}
+			        		
+			        	}
+			        	
+			        	if (level > upperLimit) 
+			        		level = upperLimit;
+			        	
+			        	// Replaces everything that was in the textField
+			        	if (level == -1)
+			        		// In case of the error
+			        		fb.replace(0, oldDoc.getLength(), "", attr);
+			        	else
+			        		fb.replace(0, oldDoc.getLength(), getFormattedNumber(String.valueOf(level)), attr);
+			        }
+		    	
 		    }
 		    
 		    public void remove(DocumentFilter.FilterBypass fb, int offset, int length) {
 		    	
 		    	try {
 		    		
+		    		// Full string
 		    		String oldString = fb.getDocument().getText(0, fb.getDocument().getLength());
 		    		
-		    		String s = oldString.substring(0, offset);
+		    		String s = oldString.substring(0, offset) + 
+		    				oldString.substring(offset+length, fb.getDocument().getLength());
 		    				    		
 		    		fb.replace(0, oldString.length(), getFormattedNumber(getUnformattedNumber(s)), null);
 				} catch (BadLocationException e) {}

@@ -27,7 +27,7 @@ import database.Unidade;
  *
  */
 @SuppressWarnings("serial")
-public class PanelUnidade extends JPanel{
+public abstract class PanelUnidade extends JPanel{
 	
 	// Map with the textFields associated with units
 	private Map<Unidade,IntegerFormattedTextField> textFields = new HashMap<Unidade,IntegerFormattedTextField>();
@@ -111,7 +111,9 @@ public class PanelUnidade extends JPanel{
 				JPanel unitQuantity = new JPanel();
 				
 				textFields.put(i, new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
-					public void go() {}
+					public void go() {
+						doAction();
+					}
 				});
 				unitQuantity.add(textFields.get(i));
 				
@@ -139,4 +141,10 @@ public class PanelUnidade extends JPanel{
 			t.setText("");
 		
 	}
+	
+	/**
+	 * Method that is called whenever any component is edited
+	 */
+	protected abstract void doAction();
+	
 }

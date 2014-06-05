@@ -139,10 +139,12 @@ public class Cálculo {
 	 */
 	private BigDecimal getTimeToSend(BigDecimal[] initial) {
 		
-		if (saqueTotal.compareTo(
+		BigDecimal saqueDisponivel = saqueTotal;
+		
+		if (saqueDisponivel.compareTo(
 				armazenamento.multiply(new BigDecimal("3"))) == 1) {
 			armazémPequeno = true;
-			saqueTotal = armazenamento.multiply(new BigDecimal("3"));
+			saqueDisponivel = armazenamento.multiply(new BigDecimal("3"));
 		} else
 			armazémPequeno = false;
 		
@@ -165,7 +167,7 @@ public class Cálculo {
 					divide(produção[i], 30, RoundingMode.HALF_EVEN);
 			else
 				// If there is no resource production, the time is infinite
-				tempoEncher[i] = new BigDecimal(Integer.MAX_VALUE);
+				tempoEncher[i] = new BigDecimal(Long.MAX_VALUE);
 			
 			// Doesn't allow negative times
 			if (tempoEncher[i].signum() == -1)
@@ -212,9 +214,12 @@ public class Cálculo {
 				stored = stored.add(i);
 				
 			// Saque total = recursos + time*produção
-			time = saqueTotal.subtract(resources).subtract(stored);
-			if (somaProdução.compareTo(BigDecimal.ZERO) == 1)
+			if (somaProdução.compareTo(BigDecimal.ZERO) == 1) {
+				time = saqueDisponivel.subtract(resources).subtract(stored);
 				time = time.divide(somaProdução, 30, RoundingMode.HALF_EVEN);
+			} else
+				// Caso não haja produção, o tempo é zero
+				time = BigDecimal.ZERO;
 		
 		}
 
@@ -357,8 +362,26 @@ public class Cálculo {
 		ultimoAtaque = new BigDecimal(tempo);
 	}
 	
-	protected long getIntervalo() {
+	protected long getIntervalo() throws NoIntervalException{
+	
+		if (saqueTotal.compareTo(BigDecimal.ZERO) == 0)
+			throw new NoIntervalException("<html><div style=\"text-align: center;\">"
+					+ "Sem Unidades<br>com Saque</html>");
+			
+		if (armazenamento.compareTo(BigDecimal.ZERO) == 0)
+			throw new NoIntervalException("Sem Armazenamento");
+		
+		errorChecking: {
+			for (BigDecimal i : produção)
+				if (i.compareTo(BigDecimal.ZERO) > 0)
+					break errorChecking;
+			
+			throw new NoIntervalException("<html><div style=\"text-align: center;\">"
+					+ "Sem Produção<br>de Recursos</html>");
+		}
+		
 		return intervalo.longValue();
+		
 	}
 	
 	protected long getHorario() throws SameDateException{
@@ -390,14 +413,27 @@ public class Cálculo {
 		
 	}
 	
+	@SuppressWarnings("serial")
 	protected class NoIntervalException extends Exception {
-		public NoIntervalException() {}
+		protected String error;
+		public NoIntervalException(String error) {
+			this.error = error;
+		}
+		
+		public String getMessage() {
+			return error;
+		}
 	}
 	
+	@SuppressWarnings("serial")
 	protected class SameDateException extends Exception {
 		protected String error;
 		public SameDateException(String error) {
 			this.error = error;
+		}
+		
+		public String getMessage() {
+			return error;
 		}
 	}
 		

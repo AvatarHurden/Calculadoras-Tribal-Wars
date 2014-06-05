@@ -2,7 +2,7 @@
 
 Ferramentas para auxiliar cálculos e previsões no Tribal Wars.
 
-www.avatarhurden.github.io/Tribal-Wars-Engine
+avatarhurden.github.io/Tribal-Wars-Engine
 
 Ainda em desenvolvimento, possui 6 ferramentas prontas. São elas:
 

@@ -524,6 +524,10 @@ public class PanelUnidade {
 
 	}
 
+	protected Unidade getUnidade() {
+		return unidade;
+	}
+	
 	/**
 	 * @return JPanel com nome e textField para inserção da quantidade
 	 */
