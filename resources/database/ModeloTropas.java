@@ -8,8 +8,10 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import property_classes.Property;
+import property_classes.Property_Escopo;
 import property_classes.Property_Nome;
 import property_classes.Property_UnidadeList;
+import config.Mundo_Reader;
 
 /**
  * Class that stores a specific number of every unit to be used in different
@@ -22,11 +24,10 @@ public class ModeloTropas {
 
 	private Property_Nome nome;
 
-	// private Map<Unidade, BigDecimal> quantidades = new HashMap<Unidade,
-	// BigDecimal>();
-
 	private Property_UnidadeList quantidades = new Property_UnidadeList();
-
+	
+	private Property_Escopo escopo;
+	
 	// This list will declare the order in which the map will be displayed
 	public List<Property> variableList = new ArrayList<Property>();
 
@@ -45,27 +46,39 @@ public class ModeloTropas {
 
 		nome = new Property_Nome(p.getProperty("nome"));
 
-		// for (Unidade i : Unidade.values()){
-		// String nome = i.nome().toLowerCase().replace(' ', '_');
-		// quantidades.put(i, new BigDecimal(p.getProperty(nome)));
-		// }
-
 		for (Unidade i : Unidade.values()) {
 			String nome = i.nome().toLowerCase().replace(' ', '_');
 			quantidades.put(i, new BigDecimal(p.getProperty(nome)));
 		}
+		
+		
+		String[] worlds = p.getProperty("escopo").split(" \",\"");
+		
+		for (String s : worlds)
+			System.out.println(s+"\nt");
+		
+		List<Mundo> mundos = new ArrayList<Mundo>();
+		for (String s : worlds)
+			mundos.add(Mundo_Reader.getMundo(s));
+		
+		System.out.println(mundos);
+		
+		escopo = new Property_Escopo(mundos);
 
+		
 		setVariableList();
 
 	}
 
-	public ModeloTropas(String nome, Map<Unidade, BigDecimal> map) {
+	public ModeloTropas(String nome, Map<Unidade, BigDecimal> map, List<Mundo> mundos) {
 
 		this.nome = new Property_Nome(nome);
 
 		for (Entry<Unidade, BigDecimal> i : map.entrySet())
 			quantidades.put(i.getKey(), i.getValue());
-
+		
+		escopo = new Property_Escopo(mundos);
+		
 		setVariableList();
 
 	}
@@ -74,7 +87,8 @@ public class ModeloTropas {
 
 		variableList.add(nome);
 		variableList.add(quantidades);
-
+		//variableList.add(escopo);
+		
 	}
 
 	public String toString() {
@@ -94,6 +108,10 @@ public class ModeloTropas {
 			quantidades.put(i.getKey(), i.getValue());
 
 	}
+	
+	public void setEscopo(List<Mundo> mundos){
+		escopo = new Property_Escopo(mundos);
+	}
 
 	public String getNome() {
 		return nome.getValueName();
@@ -106,9 +124,19 @@ public class ModeloTropas {
 	}
 
 	public Map<Unidade, BigDecimal> getList() {
-
 		return quantidades;
-
+	}
+	
+	/**
+	 * Retorna uma lista com todos os mundos nos quais o modelo está disponível.
+	 */
+	public List<Mundo> getEscopo() {
+		
+		if (escopo.getListMundos().isEmpty())
+			return Mundo_Reader.getMundoList();
+		else
+			return escopo.getListMundos();
+		
 	}
 
 	public String getConfigText() {
@@ -117,6 +145,11 @@ public class ModeloTropas {
 		
 		s += ("\tnome=" + nome.getValueName() + "\n");
 
+		s += ("\tescopo=");
+		for (Mundo m : escopo.getListMundos())
+			s += m.toString() + " \",\"";
+		s += "\n";
+		
 		s += ("\tlanceiro=" + quantidades.get(Unidade.LANCEIRO) + "\n");
 		s += ("\tespadachim=" + quantidades.get(Unidade.ESPADACHIM) + "\n");
 		s += ("\tbárbaro=" + quantidades.get(Unidade.BÁRBARO) + "\n");

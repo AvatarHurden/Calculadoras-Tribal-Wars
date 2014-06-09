@@ -25,8 +25,10 @@ import javax.swing.border.LineBorder;
 import selecionar_mundo.GUI;
 import config.Lang;
 import config.ModeloTropas_Reader;
+import config.Mundo_Reader;
 import database.Cores;
 import database.ModeloTropas;
+import database.Mundo;
 import database.Unidade;
 
 /**
@@ -250,6 +252,11 @@ public class ToolPanel {
 							map.put(i.getKey(), i.getValue().getValue());
 						
 						modelo.setMap(map);
+						
+						
+						List<Mundo> escopo = new ArrayList<Mundo>();
+						escopo.add(Mundo_Reader.MundoSelecionado);
+						modelo.setEscopo(escopo);
 						
 						new EditDialog(ModeloTropas.class,
 								ModeloTropas_Reader.getListModelos(), 

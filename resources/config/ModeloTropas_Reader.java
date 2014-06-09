@@ -18,11 +18,13 @@ import database.ModeloTropas;
  * 
  */
 public class ModeloTropas_Reader {
+	
+	// Lista de modelos ativos no mundo
+	static List<ModeloTropas> listModelosAtivos = new ArrayList<ModeloTropas>();
 
-	static Map<String, ModeloTropas> mapModelos = new HashMap<String, ModeloTropas>();
-
+	// Lista de todos os modelos disponíveis
 	static List<ModeloTropas> listModelos = new ArrayList<ModeloTropas>();
-
+	
 	public static void read(String section) {
 
 		try {
@@ -70,40 +72,43 @@ public class ModeloTropas_Reader {
 			
 			if (!i.isEmpty()) {
 				ModeloTropas modelo = new ModeloTropas(i);
-				listModelos.add(modelo);
+				addModelo(modelo);
 			}
 		}
 
 		in.close();
 
-		setMap();
-
 	}
 
-	public static void setMap() {
-
-		for (ModeloTropas i : listModelos)
-			mapModelos.put(i.getNome(), i);
-
-	}
-
+	
+	/**
+	 * Caso o ModeloTropas fornecido estiver no escopo atual (Global ou no mundo selecionado),
+	 * adiciona-o à lista. Caso contrário, não faz nada.
+	 * 
+	 * @param modelo a ser adicionado
+	 */
 	public static void addModelo(ModeloTropas modelo) {
-
+		
 		listModelos.add(modelo);
-
-		mapModelos.put(modelo.getNome(), modelo);
+		
+		if (modelo.getEscopo().contains(Mundo_Reader.MundoSelecionado))
+			listModelosAtivos.add(modelo);
 
 	}
 
-	public static Map<String, ModeloTropas> getMapModelos() {
-		return mapModelos;
-	}
-
+	/**
+	 * Retorna uma lista dos modelos ativos no mundo
+	 */
 	public static List<ModeloTropas> getListModelos() {
-		return listModelos;
+		return listModelosAtivos;
 	}
 	
 	public static String getModelosConfig() {
+		
+		// Provavelmente temporário, preciso porque passo os ativos para EditDialog
+		for (ModeloTropas i : listModelosAtivos)
+			if (!listModelos.contains(i))
+				listModelos.add(i);
 		
 		String section = "";
 

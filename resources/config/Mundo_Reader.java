@@ -104,6 +104,21 @@ public class Mundo_Reader {
 	public static Mundo getMundo(int index) {
 		return mundoList.get(index);
 	}
+	
+	/**
+	 * Dado o nome de um Mundo, retorna o Mundo. Caso não exista um mundo com esse nome, retorna null
+	 * 
+	 * @param nome do Mundo desejado
+	 * @return Mundo desejado
+	 */
+	public static Mundo getMundo(String nome) {
+		
+		for (Mundo m : mundoList)
+			if (m.toString().equals(nome))
+				return m;
+		
+		return null;
+	}
 
 	public static List<Mundo> getMundoList() {
 		return mundoList;

@@ -16,6 +16,7 @@ local.properties
 .settings/
 .loadpath
 TO-DO
+configurações.txt
 
 # External tool builders
 .externalToolBuilders/

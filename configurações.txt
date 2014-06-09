@@ -856,15 +856,32 @@ Mundos {
 Modelos_de_Tropas {
 
 	nome=Novo Modelo
+	escopo=Mundo 2 ","
 	lanceiro=0
 	espadachim=0
-	bárbaro=345
+	bárbaro=0
 	arqueiro=0
 	explorador=0
 	cavalaria_leve=0
 	arqueiro_a_cavalo=0
 	cavalaria_pesada=0
-	aríete=0
+	aríete=123
+	catapulta=0
+	paladino=0
+	nobre=0
+	milícia=0
+
+	nome=Novo Modelo1
+	escopo=
+	lanceiro=0
+	espadachim=0
+	bárbaro=0
+	arqueiro=0
+	explorador=0
+	cavalaria_leve=0
+	arqueiro_a_cavalo=53
+	cavalaria_pesada=0
+	aríete=123
 	catapulta=0
 	paladino=0
 	nobre=0
