@@ -38,6 +38,8 @@ public class ModeloTropas {
 		for (Unidade i : Unidade.values())
 			quantidades.put(i, BigDecimal.ZERO);
 		
+		escopo = new Property_Escopo(Mundo_Reader.MundoSelecionado);
+		
 		setVariableList();
 
 	}
@@ -54,14 +56,10 @@ public class ModeloTropas {
 		
 		String[] worlds = p.getProperty("escopo").split(" \",\"");
 		
-		for (String s : worlds)
-			System.out.println(s+"\nt");
-		
 		List<Mundo> mundos = new ArrayList<Mundo>();
 		for (String s : worlds)
 			mundos.add(Mundo_Reader.getMundo(s));
 		
-		System.out.println(mundos);
 		
 		escopo = new Property_Escopo(mundos);
 
@@ -70,9 +68,12 @@ public class ModeloTropas {
 
 	}
 
-	public ModeloTropas(String nome, Map<Unidade, BigDecimal> map, List<Mundo> mundos) {
+	public ModeloTropas(String nome, Map<Unidade, BigDecimal> map, Mundo... mundos) {
 
-		this.nome = new Property_Nome(nome);
+		if (nome == null)
+			this.nome = new Property_Nome("Novo Modelo");
+		else
+			this.nome = new Property_Nome(nome);
 
 		for (Entry<Unidade, BigDecimal> i : map.entrySet())
 			quantidades.put(i.getKey(), i.getValue());
@@ -87,7 +88,7 @@ public class ModeloTropas {
 
 		variableList.add(nome);
 		variableList.add(quantidades);
-		//variableList.add(escopo);
+		variableList.add(escopo);
 		
 	}
 

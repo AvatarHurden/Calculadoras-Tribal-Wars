@@ -28,7 +28,6 @@ import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.Cores;
 import database.ModeloTropas;
-import database.Mundo;
 import database.Unidade;
 
 /**
@@ -46,7 +45,6 @@ public class ToolPanel {
 	private JPanel bandeiraPanel;
 
 	private List<ModeloTropasPanel> modelosPanelList = new ArrayList<ModeloTropasPanel>();
-	
 	
 	public ToolPanel() {}
 	
@@ -245,19 +243,15 @@ public class ToolPanel {
 
 					try {
 						
-						ModeloTropas modelo = new ModeloTropas();
-						
 						Map<Unidade,BigDecimal> map = new HashMap<Unidade,BigDecimal>();
-						for (Entry<Unidade, IntegerFormattedTextField> i : mapTextFields.entrySet())
-							map.put(i.getKey(), i.getValue().getValue());
+						for (Unidade i : Unidade.values())
+							if (mapTextFields.containsKey(i))
+								map.put(i, mapTextFields.get(i).getValue());
+							else
+								map.put(i, BigDecimal.ZERO);
 						
-						modelo.setMap(map);
-						
-						
-						List<Mundo> escopo = new ArrayList<Mundo>();
-						escopo.add(Mundo_Reader.MundoSelecionado);
-						modelo.setEscopo(escopo);
-						
+						ModeloTropas modelo = new ModeloTropas(null, map, Mundo_Reader.MundoSelecionado);
+												
 						new EditDialog(ModeloTropas.class,
 								ModeloTropas_Reader.getListModelos(), 
 								"variableList", 0, modelo);

@@ -147,15 +147,18 @@ public class EditDialog extends JDialog {
 		nullInterface = new ObjectInterface(objectClass.newInstance(), 
 				(ArrayList<Property>)variableField.get(objectClass.newInstance()));
 		
-		informationPanel.setPreferredSize(new Dimension(
-				nullInterface.objectInformation.getPreferredSize().width,
-				(int)Math.ceil(nullInterface.
-						objectInformation.getPreferredSize().height/32+1)*32));
-		
 		informationPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		
+		// ScrollPane to add the informationPanel. Has scroll to allow for future additions of
+		// options and stuff
+		JScrollPane scroll = new JScrollPane(informationPanel);
+		scroll.getHorizontalScrollBar().setEnabled(false);
+		scroll.setPreferredSize(new Dimension(
+				nullInterface.objectInformation.getPreferredSize().width+15,
+				19*32));
+		
 		c.gridy++;
-		getContentPane().add(informationPanel,c);
+		getContentPane().add(scroll ,c);
 
 		// Makes and adds the bottom panel, with the buttons
 		c.gridy++;
