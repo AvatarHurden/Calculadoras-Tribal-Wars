@@ -2,6 +2,15 @@ package property_classes;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +20,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
 
 import config.Mundo_Reader;
 import database.Cores;
@@ -23,11 +33,11 @@ import database.Mundo;
  * @author Arthur
  *
  */
+@SuppressWarnings("serial")
 public class Property_Escopo implements Property {
 	
 	private List<Mundo> mundos = new ArrayList<Mundo>();
-	private JTextField txtField;
-	private JPanel worldListPanel;
+	private CheckBoxList selectionList;
 	
 	public Property_Escopo(List<Mundo> mundos) {
 		
@@ -48,26 +58,108 @@ public class Property_Escopo implements Property {
 	
 	public JPanel makeEditDialogPanel(JPanel panel, OnChange change) {
 		
-		worldListPanel = new JPanel();
-		worldListPanel.setOpaque(false);
+		final JPanel global = new JPanel(), escolha = new JPanel();
+		selectionList = new CheckBoxList(mundos);
 		
-		JList<Object> selectionList = new JList<Object>();
-		selectionList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		selectionList.setListData(Mundo_Reader.getMundoList().toArray());
+		int width = selectionList.getPreferredSize().width;
+		((GridBagLayout)panel.getLayout()).columnWidths = new int[] {width/2+5, width/2+5};
 		
-		for (Mundo m : Mundo_Reader.getMundoList().toArray(new Mundo[0]))
-			System.out.println(m.toString());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridy = 0;
+		c.gridx = 0;
 		
-		selectionList.setCellRenderer(new CellRenderer());
-		selectionList.setOpaque(false);
+		// Add "escopo" label
+		c.anchor = GridBagConstraints.WEST;
+		c.insets = new Insets(5, 5, 5, 0);
+		panel.add(new JLabel("Escopo"), c);
 		
-		worldListPanel.add(selectionList);
+		// Add "Global" button
+		global.add(new JLabel("Global"));
 		
-		txtField = new JTextField(mundos.toString());
+		global.setBackground(Cores.FUNDO_CLARO);
+		global.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
 		
-		panel.add(txtField);
-		panel.add(worldListPanel);
+		global.addMouseListener(new MouseListener() {
+			
+			public void mouseReleased(MouseEvent arg0) {}
+			
+			public void mousePressed(MouseEvent arg0) {}
+			
+			public void mouseExited(MouseEvent arg0) {}
+			
+			public void mouseEntered(MouseEvent arg0) {}
+			
+			public void mouseClicked(MouseEvent e) {
+				
+				((JPanel) e.getSource()).setBackground(Cores.FUNDO_ESCURO);
+				((JPanel) e.getSource()).setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+				
+				escolha.setBackground(Cores.FUNDO_CLARO);
+				escolha.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
+				
+				selectionList.setVisible(false);
+				
+			}
+		});
 		
+		c.insets = new Insets(0, 0, 0, 0);
+		c.gridy++;
+		c.anchor = GridBagConstraints.CENTER;
+		panel.add(global, c);
+		
+		
+		// Add "Escolha Mundo" Button
+		escolha.add(new JLabel("Escolher Mundos"));
+		
+		escolha.setBackground(Cores.FUNDO_CLARO);
+		escolha.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
+		
+		escolha.addMouseListener(new MouseListener() {
+			
+			public void mouseReleased(MouseEvent arg0) {}
+			
+			public void mousePressed(MouseEvent arg0) {}
+			
+			public void mouseExited(MouseEvent arg0) {}
+			
+			public void mouseEntered(MouseEvent arg0) {}
+			
+			public void mouseClicked(MouseEvent e) {
+				
+				((JPanel) e.getSource()).setBackground(Cores.FUNDO_ESCURO);
+				((JPanel) e.getSource()).setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+				
+				global.setBackground(Cores.FUNDO_CLARO);
+				global.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
+				
+				selectionList.setVisible(true);
+				
+			}
+		});
+		
+		c.gridx++;
+		panel.add(escolha, c);
+		
+		
+		// Add selectionList
+	
+		c.gridwidth = 2;
+		c.gridx = 0;
+		c.gridy++;
+		panel.add(selectionList, c);
+		
+		// Initial formatting
+		
+		if (mundos.isEmpty()) {
+			selectionList.setVisible(false);
+			global.setBackground(Cores.FUNDO_ESCURO);
+			global.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+		} else {
+			escolha.setBackground(Cores.FUNDO_ESCURO);
+			escolha.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+		}
+			
 		return panel;
 	}
 
@@ -83,17 +175,10 @@ public class Property_Escopo implements Property {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
+	
 	public void setValue() {
 		
-		String[] worlds = txtField.getText().split(" \",\"");
-		
-		mundos = new ArrayList<Mundo>();
-		
-		for (String s : worlds)
-			if (Mundo_Reader.getMundo(s) != null)			
-				mundos.add(Mundo_Reader.getMundo(s));
+		mundos = selectionList.getSelecionados();
 		
 	}
 	
@@ -107,46 +192,103 @@ public class Property_Escopo implements Property {
 		
 	}
 	
-	private class CellRenderer extends JLabel implements ListCellRenderer<Object> {
+	/**
+	 * Possui todos os mundos disponíveis, salvando quais estão selecionados ou não
+	 * 
+	 * @author Arthur
+	 *
+	 */
+	private class CheckBoxList extends JPanel {
 		
-		private boolean selected = false;
+		private List<Mundo> mundosSelecionados = new ArrayList<Mundo>();
 		
-		private CellRenderer() {
+		private CheckBoxList(List<Mundo> selected) {
 			
-			setOpaque(true);
-			setPreferredSize(new Dimension(100, 30));
-			setHorizontalAlignment(CENTER);
-			setVerticalAlignment(CENTER);
+			mundosSelecionados = selected;
+			
+			setOpaque(false);
+			setLayout(new GridBagLayout());
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(0, 0, 5, 5);
+			c.anchor = GridBagConstraints.WEST;
+			c.gridy = 0;
+			c.gridx = 0;
+			
+			int maxY = Mundo_Reader.getMundoList().size()/2;
+			
+			for (Mundo m : Mundo_Reader.getMundoList()) {
 				
+				if (c.gridy >= maxY) {
+					c.gridy = 0;
+					c.gridx++;
+					c.insets = new Insets(0, 0, 5, 0);
+				}
+			
+				add(makeMundoPanel(m, selected.contains(m)), c);
+				c.gridy++;
+			}
+			
 		}
 		
-		@Override
-		public Component getListCellRendererComponent(
-				JList<? extends Object> list, Object value, int index,
-				boolean isSelected, boolean cellHasFocus) {
+		private JPanel makeMundoPanel(final Mundo m, boolean selected) {
 			
-			setText(value.toString());
-			add(new JCheckBox());
+			final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			
-			if (isSelected)
-				selected = !selected;
+			panel.setBackground(Cores.FUNDO_CLARO);
+			panel.setBorder(new LineBorder(selected ? Cores.SEPARAR_CLARO : Cores.FUNDO_CLARO));
 			
-			if (selected)
-				setBackground(Cores.FUNDO_ESCURO);
-			else
-				setBackground(Cores.FUNDO_CLARO);
+			final JCheckBox checkBox = new JCheckBox();
+			checkBox.setOpaque(false);
+			checkBox.setSelected(selected);
 			
+			checkBox.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent e) {
+					
+					if (((JCheckBox) e.getSource()).isSelected()) {
+						panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
+						mundosSelecionados.add(m);
+					} else {
+						panel.setBorder(new LineBorder(Cores.FUNDO_CLARO));
+						mundosSelecionados.remove(m);
+					}
+					
+				}
+			});
 			
-			return this;
-		}	
-	}
-	
-	private class CheckBoxList extends JList<Mundo> {
+			panel.addMouseListener(new MouseListener() {
+				
+				public void mouseReleased(MouseEvent arg0) {}
+				
+				public void mousePressed(MouseEvent arg0) {}
+				
+				public void mouseExited(MouseEvent arg0) {}
+				
+				public void mouseEntered(MouseEvent arg0) {}
+				
+				public void mouseClicked(MouseEvent arg0) {
+					
+					checkBox.doClick();
+				
+				}
+			});
+			
+			panel.add(checkBox);
+			panel.add(new JLabel(m.toString()));
+
+			panel.setPreferredSize(new Dimension(100, panel.getPreferredSize().height));
+			
+			return panel;
+			
+		}
 		
-		private List<Mundo> selected = new ArrayList<Mundo>(); 
+		private List<Mundo> getSelecionados() {
+			return mundosSelecionados;
+		}
+		
 		
 	}
-	
 	
 
 }

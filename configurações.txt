@@ -856,7 +856,7 @@ Mundos {
 Modelos_de_Tropas {
 
 	nome=Novo Modelo
-	escopo=Mundo 2 ","
+	escopo=Mundo 33 ","Mundo 36 ","Mundo 7 ","Mundo 37 ","Mundo 3 ","Mundo 4 ","
 	lanceiro=0
 	espadachim=0
 	bárbaro=0
@@ -872,7 +872,7 @@ Modelos_de_Tropas {
 	milícia=0
 
 	nome=Novo Modelo1
-	escopo=
+	escopo=Mundo 33 ","Mundo 4 ","
 	lanceiro=0
 	espadachim=0
 	bárbaro=0
@@ -888,7 +888,7 @@ Modelos_de_Tropas {
 	milícia=0
 
 	nome=Novo Modelo2
-	escopo=Mundo 2 ","Mundo 2 ","Mundo 4 ","
+	escopo=
 	lanceiro=0
 	espadachim=0
 	bárbaro=0

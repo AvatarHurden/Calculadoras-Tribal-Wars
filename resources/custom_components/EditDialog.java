@@ -152,10 +152,16 @@ public class EditDialog extends JDialog {
 		// ScrollPane to add the informationPanel. Has scroll to allow for future additions of
 		// options and stuff
 		JScrollPane scroll = new JScrollPane(informationPanel);
-		scroll.getHorizontalScrollBar().setEnabled(false);
 		scroll.setPreferredSize(new Dimension(
 				nullInterface.objectInformation.getPreferredSize().width+15,
 				19*32));
+		
+		scroll.setVerticalScrollBarPolicy(
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setHorizontalScrollBarPolicy(
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		scroll.getVerticalScrollBar().setUnitIncrement(11);
 		
 		c.gridy++;
 		getContentPane().add(scroll ,c);
@@ -584,7 +590,7 @@ public class EditDialog extends JDialog {
 		}
 
 		/**
-		 * Creates the default panel, with adequate colors, borders and layout
+		 * Creates the default panel, with adequate colors, borders and GridBagLayout
 		 */
 		private JPanel makeDefaultPanel() {
 
