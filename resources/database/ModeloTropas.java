@@ -60,10 +60,8 @@ public class ModeloTropas {
 		for (String s : worlds)
 			mundos.add(Mundo_Reader.getMundo(s));
 		
-		
 		escopo = new Property_Escopo(mundos);
 
-		
 		setVariableList();
 
 	}
