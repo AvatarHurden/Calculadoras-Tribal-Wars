@@ -4,9 +4,13 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
@@ -172,7 +176,6 @@ public class EditDialog extends JDialog {
 		getContentPane().add(makeEditPanel(), c);
 		
 		
-		
 		// Selects the desired object and puts the scroll in the necessary position
 		// If there are no interfaces, select the "null" one.
 		if (interfaceList.size() > 0)
@@ -180,6 +183,7 @@ public class EditDialog extends JDialog {
 		else
 			nullInterface.setSelected(true);
 		
+		addKeyListeners();
 		
 		// Puts it always on top of the program
 		setModal(true);
@@ -195,6 +199,41 @@ public class EditDialog extends JDialog {
 		
 		setVisible(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	}
+	
+	private void addKeyListeners() {
+		
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				
+				if (e.getID() == KeyEvent.KEY_PRESSED) {
+						
+					if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+						if (interfaceList.indexOf(selectedInterface) < interfaceList.size()-1) {
+							selectedInterface.setSelected(false);
+							selectedInterface = interfaceList.get(interfaceList.indexOf(selectedInterface)+1);
+							selectedInterface.setSelected(true);
+							setScrollPosition(scroll.getVerticalScrollBar(), false);
+							revalidate();
+						}	
+					} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+						if (interfaceList.indexOf(selectedInterface) > 0) {
+							selectedInterface.setSelected(false);
+							selectedInterface = interfaceList.get(interfaceList.indexOf(selectedInterface)-1);
+							selectedInterface.setSelected(true);
+							setScrollPosition(scroll.getVerticalScrollBar(), true);
+							revalidate();
+						}
+					}
+					
+					changeButtons();
+					
+				}
+							
+				return false;	
+			}
+		});
+		
 	}
 	
 	private void createInterface(Object o) {

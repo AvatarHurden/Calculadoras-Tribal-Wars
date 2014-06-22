@@ -94,24 +94,6 @@ public class ModeloTropas {
 		return nome.getValueName();
 	}
 
-	public void setNome(String s) {
-		nome = new Property_Nome(s);
-	}
-
-	/**
-	 * @param map A map<Unidade, BigDecimal>
-	 */
-	public void setMap(Map<Unidade, BigDecimal> map) {
-
-		for (Entry<Unidade, BigDecimal> i : map.entrySet())
-			quantidades.put(i.getKey(), i.getValue());
-
-	}
-	
-	public void setEscopo(List<Mundo> mundos){
-		escopo = new Property_Escopo(mundos);
-	}
-
 	public String getNome() {
 		return nome.getValueName();
 	}
@@ -120,10 +102,6 @@ public class ModeloTropas {
 
 		return quantidades.get(i);
 
-	}
-
-	public Map<Unidade, BigDecimal> getList() {
-		return quantidades;
 	}
 	
 	/**
@@ -149,19 +127,8 @@ public class ModeloTropas {
 			s += m.toString() + " \",\"";
 		s += "\n";
 		
-		s += ("\tlanceiro=" + quantidades.get(Unidade.LANCEIRO) + "\n");
-		s += ("\tespadachim=" + quantidades.get(Unidade.ESPADACHIM) + "\n");
-		s += ("\tbárbaro=" + quantidades.get(Unidade.BÁRBARO) + "\n");
-		s += ("\tarqueiro=" + quantidades.get(Unidade.ARQUEIRO) + "\n");
-		s += ("\texplorador=" + quantidades.get(Unidade.EXPLORADOR) + "\n");
-		s += ("\tcavalaria_leve=" + quantidades.get(Unidade.CAVALOLEVE) + "\n");
-		s += ("\tarqueiro_a_cavalo=" + quantidades.get(Unidade.ARCOCAVALO) + "\n");
-		s += ("\tcavalaria_pesada=" + quantidades.get(Unidade.CAVALOPESADO) + "\n");
-		s += ("\taríete=" + quantidades.get(Unidade.ARÍETE) + "\n");
-		s += ("\tcatapulta=" + quantidades.get(Unidade.CATAPULTA) + "\n");
-		s += ("\tpaladino=" + quantidades.get(Unidade.PALADINO) + "\n");
-		s += ("\tnobre=" + quantidades.get(Unidade.NOBRE) + "\n");
-		s += ("\tmilícia=" + quantidades.get(Unidade.MILÍCIA) + "\n");
+		for (Unidade i : Unidade.values())
+			s += "\t" + i.nome().toLowerCase().replace(' ', '_') + "=" + quantidades.get(i) + "\n";
 
 		return s;
 	}

@@ -199,7 +199,6 @@ public class Property_Escopo implements Property {
 
 	
 	public String getValueName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -230,10 +229,17 @@ public class Property_Escopo implements Property {
 	 */
 	private class CheckBoxList extends JPanel {
 		
+		private OnChange change;
+		
 		private List<Mundo> mundosSelecionados = new ArrayList<Mundo>();
 		private List<JCheckBox> chkboxList = new ArrayList<JCheckBox>();
+		private List<JPanel> panelList = new ArrayList<JPanel>();
+		private List<Mundo> mundoList = new ArrayList<Mundo>();
+
 		
 		private CheckBoxList(List<Mundo> selected, OnChange onChange) {
+			
+			change = onChange;
 			
 			mundosSelecionados = selected;
 			
@@ -241,16 +247,17 @@ public class Property_Escopo implements Property {
 			setLayout(new GridBagLayout());
 			
 			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(0, 0, 5, 5);
-			c.anchor = GridBagConstraints.WEST;
 			c.gridy = 0;
 			c.gridx = 0;
 			
 			c.gridwidth = 2;
+			c.anchor = GridBagConstraints.CENTER;
+			c.insets = new Insets(5, 5, 5, 5);
 			add(makeToggleButton(), c);
 			
 			int maxY = Mundo_Reader.getMundoList().size()/2+1;
 			
+			c.insets = new Insets(0, 0, 5, 5);
 			c.gridy++;
 			c.gridwidth = 1;
 			for (Mundo m : Mundo_Reader.getMundoList()) {
@@ -261,13 +268,13 @@ public class Property_Escopo implements Property {
 					c.insets = new Insets(0, 0, 5, 0);
 				}
 			
-				add(makeMundoPanel(m, selected.contains(m), onChange), c);
+				add(makeMundoPanel(m, selected.contains(m)), c);
 				c.gridy++;
 			}
 			
 		}
 		
-		private JPanel makeMundoPanel(final Mundo m, boolean selected, final OnChange onChange) {
+		private JPanel makeMundoPanel(final Mundo m, boolean selected) {
 			
 			final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			
@@ -282,15 +289,8 @@ public class Property_Escopo implements Property {
 				
 				public void actionPerformed(ActionEvent e) {
 					
-					if (((JCheckBox) e.getSource()).isSelected()) {
-						panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
-						mundosSelecionados.add(m);
-					} else {
-						panel.setBorder(new LineBorder(Cores.FUNDO_CLARO));
-						mundosSelecionados.remove(m);
-					}
-					
-					onChange.run();
+					changeSelected(m, panel, ((JCheckBox) e.getSource()).isSelected());
+					change.run();
 					
 				}
 			});
@@ -308,11 +308,13 @@ public class Property_Escopo implements Property {
 				public void mouseClicked(MouseEvent arg0) {
 					
 					checkBox.doClick();
-				
+					
 				}
 			});
 			
 			chkboxList.add(checkBox);
+			panelList.add(panel);
+			mundoList.add(m);
 			
 			panel.add(checkBox);
 			panel.add(new JLabel(m.toString()));
@@ -323,23 +325,40 @@ public class Property_Escopo implements Property {
 			
 		}
 		
+		private void changeSelected(Mundo m, JPanel panel, boolean active) {
+			
+			if (active) {
+				panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
+				mundosSelecionados.add(m);
+			} else {
+				panel.setBorder(new LineBorder(Cores.FUNDO_CLARO));
+				mundosSelecionados.remove(m);
+			}
+			
+		}
+		
 		private JButton	makeToggleButton() {
 			
-			JButton button = new JButton("Selecionar todos");
+			JButton button = new JButton("Inverter seleções");
 			
 			button.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {
 					
-					for (JCheckBox c : chkboxList)
-						c.doClick();
+					for (JCheckBox c : chkboxList) {
+						c.setSelected(!c.isSelected());
+						changeSelected(mundoList.get(chkboxList.indexOf(c)),panelList.get(chkboxList.indexOf(c)), c.isSelected());
+					}
 					
+					change.run();
 				}
 			});
 			
 			return button;
 			
 		}
+		
+		
 		
 		private List<Mundo> getSelecionados() {
 			return mundosSelecionados;

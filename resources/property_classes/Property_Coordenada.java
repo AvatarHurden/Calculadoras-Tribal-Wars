@@ -5,16 +5,13 @@ import javax.swing.JPanel;
 import custom_components.CoordenadaPanel;
 
 public class Property_Coordenada implements Property {
-
-	private String name;
 	
 	private CoordenadaPanel coordenadaPanel;
 	
 	private int x, y;
 	
-	public Property_Coordenada(String nome, int x, int y) {
-		
-		name = nome;
+	public Property_Coordenada(int x, int y) {
+	
 		this.x = x;
 		this.y = y;
 		
@@ -23,7 +20,7 @@ public class Property_Coordenada implements Property {
 	@SuppressWarnings("serial")
 	public JPanel makeEditDialogPanel(JPanel panel, final OnChange change) {
 		
-		coordenadaPanel = new CoordenadaPanel(name) {
+		coordenadaPanel = new CoordenadaPanel("") {
 			public void go() {
 				change.run();
 			}
@@ -34,7 +31,7 @@ public class Property_Coordenada implements Property {
 	}
 
 	public String getName() {
-		return name;
+		return null;
 	}
 	
 	

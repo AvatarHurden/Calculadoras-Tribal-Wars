@@ -24,9 +24,11 @@ import javax.swing.border.LineBorder;
 
 import selecionar_mundo.GUI;
 import config.Lang;
+import config.ModeloAldeias_Reader;
 import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.Cores;
+import database.ModeloAldeias;
 import database.ModeloTropas;
 import database.Unidade;
 
@@ -252,9 +254,9 @@ public class ToolPanel {
 						
 						ModeloTropas modelo = new ModeloTropas(null, map, Mundo_Reader.MundoSelecionado);
 												
-						new EditDialog(ModeloTropas.class,
-								ModeloTropas_Reader.getListModelos(), 
-								"variableList", 0, modelo);
+						new EditDialog(ModeloAldeias.class,
+								ModeloAldeias_Reader.getListModelos(), 
+								"variableList", 0, null);
 						
 						makePopupMenu();
 						

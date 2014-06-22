@@ -11,9 +11,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import custom_components.EdifícioFormattedTextField;
-import custom_components.IntegerFormattedTextField;
 import database.Edifício;
-import database.Unidade;
 
 public class Property_Edifícios extends HashMap<Edifício, Integer> implements Property {
 	
@@ -30,34 +28,37 @@ public class Property_Edifícios extends HashMap<Edifício, Integer> implements Pr
 		textFieldMap = new HashMap<Edifício, EdifícioFormattedTextField>();
 		
 		for (Edifício i : Edifício.values()) {
-
-			c.gridx = 0;
-			c.gridy++;
-			panel.add(new JLabel(i.nome()), c);
-
-			EdifícioFormattedTextField txt = new EdifícioFormattedTextField(i, get(i)) {
-				public void go() {}
-			};
 			
-			txt.setText(get(i).toString());
+			if (!i.equals(Edifício.NULL)) {
 
-			txt.getDocument().addDocumentListener(new DocumentListener() {
+				c.gridx = 0;
+				c.gridy++;
+				panel.add(new JLabel(i.nome()), c);
+	
+				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(i, get(i)) {
+					public void go() {}
+				};
 				
-				public void removeUpdate(DocumentEvent arg0) {
-					change.run();
-				}
+				txt.setText(get(i).toString());
+	
+				txt.getDocument().addDocumentListener(new DocumentListener() {
+					
+					public void removeUpdate(DocumentEvent arg0) {
+						change.run();
+					}
+					
+					public void insertUpdate(DocumentEvent arg0) {
+						change.run();
+					}
+					
+					public void changedUpdate(DocumentEvent arg0) {}
+				});
+	
+				c.gridx = 1;
+				panel.add(txt, c);
 				
-				public void insertUpdate(DocumentEvent arg0) {
-					change.run();
-				}
-				
-				public void changedUpdate(DocumentEvent arg0) {}
-			});
-
-			c.gridx = 1;
-			panel.add(txt, c);
-			
-			textFieldMap.put(i, txt);
+				textFieldMap.put(i, txt);
+			}
 
 		}
 		

@@ -20,6 +20,7 @@ public class File_Manager {
 	private static String mundoPadrão = "";
 	private static String mundos = "";
 	private static String modeloTropas = "";
+	private static String modeloAldeias = "";
 
 	/**
 	 * Reads the configuration file for the world informations If the file is
@@ -45,6 +46,7 @@ public class File_Manager {
 			mundoPadrão = "";
 			mundos = "";
 			modeloTropas = "";
+			modeloAldeias = "";
 
 			// TODO criar diálogo para avisar corrupção
 			// TODO mostrar onde no arquivo está o erro
@@ -89,26 +91,24 @@ public class File_Manager {
 
 					while ((s = in.readLine()) == null || !s.contains("}"))
 						modeloTropas += s + "\n";
-					
 
+				}
+				
+				if (s.contains("Modelos_de_Aldeias {")) {
+					
+					while ((s = in.readLine()) == null || !s.contains("}"))
+						modeloAldeias += s + "\n";
+					
 				}
 
 			}
 
-		} while (!retrievalComplete());
+		} while (s != null);
 
 		in.close();
 
 	}
 
-	private static boolean retrievalComplete() {
-
-		if (mundoPadrão == "" || mundos == "" || modeloTropas == "")
-			return false;
-		else
-			return true;
-
-	}
 
 	public static void defineMundos() {
 
@@ -119,6 +119,7 @@ public class File_Manager {
 	public static void defineModelos() {
 
 		ModeloTropas_Reader.read(modeloTropas);
+		ModeloAldeias_Reader.read(modeloAldeias);
 
 	}
 
@@ -172,6 +173,19 @@ public class File_Manager {
 			out.write("\n");
 			out.write("}");
 			out.write("\n");
+			
+			// save ModeloAldeias
+			
+			out.write("\n");
+			out.write("Modelos_de_Aldeias {");
+			out.write("\n");
+
+			out.write(ModeloAldeias_Reader.getModelosConfig());
+
+			out.write("\n");
+			out.write("}");
+			out.write("\n");
+			
 
 			out.close();
 
@@ -199,6 +213,10 @@ public class File_Manager {
 
 	public static String getModeloTropas() {
 		return modeloTropas;
+	}
+	
+	public static String getModeloAldeias() {
+		return modeloAldeias;
 	}
 
 }
