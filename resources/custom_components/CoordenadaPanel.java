@@ -41,9 +41,21 @@ public abstract class CoordenadaPanel extends JPanel{
 	 */
 	public CoordenadaPanel(String nome) {
 		
+		this(nome, 0, 0);
+		
+	}
+	
+	/**
+	 * Creates a panel with 2 spaces for coordinates (x and y).
+	 * <br>Above these spaces there is a header with the name of choice
+	 * @param String Name of choice
+	 * @param x, y Valores iniciais
+	 */
+	public CoordenadaPanel(String nome, int x, int y) {
+		
 		// Creates the textFields
-		x = makeCoordinateTextField();
-		y = makeCoordinateTextField();
+		this.x = makeCoordinateTextField(x);
+		this.y = makeCoordinateTextField(y);
 		
 		setBackground(Cores.ALTERNAR_ESCURO);
 		setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
@@ -57,26 +69,31 @@ public abstract class CoordenadaPanel extends JPanel{
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
-		c.gridy = 0;
-		c.gridx = 0;
-		
-		// Adds the name coordinate
-		
-		JPanel namePanel = new JPanel();
-		namePanel.add(new JLabel(nome));
-		
-		namePanel.setBackground(Cores.FUNDO_ESCURO);
-		namePanel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
-		
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(0, 0, 0, 0);
-		add(namePanel, c);
-		
+		c.gridy = 0;
+		c.gridx = 0;
+
+		// Adds the name coordinate
+
+		if (nome != null) {
+
+			JPanel namePanel = new JPanel();
+			namePanel.add(new JLabel(nome));
+
+			namePanel.setBackground(Cores.FUNDO_ESCURO);
+			namePanel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
+
+			add(namePanel, c);
+
+		}
 		// Adds the coordinates
 		JPanel coordinatePanel = makeCoordinatesPanel();	
 		c.gridy++;
 		add(coordinatePanel, c);
+	
 	}
+	
 	
 	private JPanel makeCoordinatesPanel() {
 		
@@ -110,9 +127,11 @@ public abstract class CoordenadaPanel extends JPanel{
 	 * are basically the same
 	 * @return JTextField with proper formatting
 	 */
-	private JTextField makeCoordinateTextField() {
+	private JTextField makeCoordinateTextField(int value) {
 		
 		JTextField coordinate = new JTextField(3);
+		coordinate.setText(String.valueOf(value));
+		
 		coordinate.setHorizontalAlignment(SwingConstants.CENTER);
 		coordinate.setDocument(new PlainDocument() {
 

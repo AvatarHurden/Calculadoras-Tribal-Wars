@@ -38,6 +38,8 @@ public class ModeloAldeias {
 
 		nome = new Property_Nome("Nova Aldeia");
 		
+		System.out.println("novo");
+		
 		coordenadas = new Property_Coordenada(0, 0);
 		
 		for (Edifício i : Edifício.values())
@@ -53,9 +55,9 @@ public class ModeloAldeias {
 
 		nome = new Property_Nome(p.getProperty("nome"));
 		
-		String[] coord = p.getProperty("coordenadas").split("|");
+		String coord = p.getProperty("coordenadas");
 		
-		coordenadas = new Property_Coordenada(Integer.parseInt(coord[0]), Integer.parseInt(coord[0]));
+		coordenadas = new Property_Coordenada(Integer.parseInt(coord.substring(0,3)), Integer.parseInt(coord.substring(4, 7)));
 		
 		for (Edifício e : Edifício.values()) {
 			

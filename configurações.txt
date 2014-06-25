@@ -924,8 +924,8 @@ Modelos_de_Tropas {
 Modelos_de_Aldeias {
 
 	nome=Roma
-	escopo=
-	coordenadas=3|3
+	escopo=Mundo 2 ","
+	coordenadas=023|343
 	edifício_principal=0
 	quartel=0
 	estábulo=0

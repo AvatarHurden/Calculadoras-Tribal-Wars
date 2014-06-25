@@ -1,5 +1,8 @@
 package property_classes;
 
+import java.awt.GridBagConstraints;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import custom_components.CoordenadaPanel;
@@ -8,7 +11,7 @@ public class Property_Coordenada implements Property {
 	
 	private CoordenadaPanel coordenadaPanel;
 	
-	private int x, y;
+	private int x = 0, y = 0;
 	
 	public Property_Coordenada(int x, int y) {
 	
@@ -20,13 +23,24 @@ public class Property_Coordenada implements Property {
 	@SuppressWarnings("serial")
 	public JPanel makeEditDialogPanel(JPanel panel, final OnChange change) {
 		
-		coordenadaPanel = new CoordenadaPanel("") {
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.CENTER;
+		
+		panel.add(new JLabel("Coordenadas"), c);
+		
+		coordenadaPanel = new CoordenadaPanel(null, x, y) {
 			public void go() {
 				change.run();
 			}
 		};
 		
-		return coordenadaPanel;
+		coordenadaPanel.setBorder(null);
+		coordenadaPanel.setBackground(panel.getBackground());
+		
+		c.gridy++;
+		panel.add(coordenadaPanel, c);
+		
+		return panel;
 		
 	}
 
@@ -37,7 +51,7 @@ public class Property_Coordenada implements Property {
 	
 	public String getValueName() {
 		
-		return x+"|"+y;
+		return String.format("%03d|%03d",x,y);
 		
 	}
 
