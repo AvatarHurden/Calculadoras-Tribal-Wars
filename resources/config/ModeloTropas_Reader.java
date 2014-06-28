@@ -93,11 +93,27 @@ public class ModeloTropas_Reader {
 			listModelosAtivos.add(modelo);
 
 	}
+	
+	/**
+	 * Passa por todos os modelos existentes, colocando os que tiverem escopo
+	 * na lista de ativos
+	 */
+	public static void checkAtivos() {
+		
+		for (ModeloTropas modelo : listModelos)
+			if (modelo.getEscopo().contains(Mundo_Reader.MundoSelecionado) && !listModelosAtivos.contains(modelo))
+				listModelosAtivos.add(modelo);
+		
+	}
 
 	/**
 	 * Retorna uma lista dos modelos ativos no mundo
 	 */
 	public static List<ModeloTropas> getListModelos() {
+		return listModelos;
+	}
+	
+	public static List<ModeloTropas> getListModelosAtivos() {
 		return listModelosAtivos;
 	}
 	

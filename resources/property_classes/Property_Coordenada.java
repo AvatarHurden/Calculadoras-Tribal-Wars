@@ -62,5 +62,13 @@ public class Property_Coordenada implements Property {
 		y = coordenadaPanel.getCoordenadaY();
 		
 	}
+	
+	public int getCoordenadaX() {
+		return x;
+	}
+	
+	public int getCoordenadaY() {
+		return y;
+	}
 
 }

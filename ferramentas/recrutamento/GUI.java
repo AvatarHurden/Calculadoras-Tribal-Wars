@@ -188,7 +188,7 @@ public class GUI extends Ferramenta {
 		
 		c.gridx++;
 		c.anchor = GridBagConstraints.CENTER;
-		toolPanel.add(tools.addModelosPanel(true, mapQuantidades), c);
+		toolPanel.add(tools.addModelosTropasPanel(true, mapQuantidades), c);
 
 		return toolPanel;
 		

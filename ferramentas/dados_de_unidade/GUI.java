@@ -84,7 +84,7 @@ public class GUI extends Ferramenta {
 		add(tools.addResetPanel(action), gbc);
 		
 		gbc.anchor = GridBagConstraints.EAST;
-		add(tools.addModelosPanel(true, mapQuantidades), gbc);
+		add(tools.addModelosTropasPanel(true, mapQuantidades), gbc);
 		
 		gbc.gridy++;
 		gbc.gridx = 0;

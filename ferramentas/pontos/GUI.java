@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
 
 import config.Lang;
 import config.Mundo_Reader;
+import custom_components.EdifícioFormattedTextField;
 import custom_components.Ferramenta;
 import database.Cores;
 import database.Edifício;
@@ -68,15 +69,27 @@ public class GUI extends Ferramenta {
 		gbc.anchor = GridBagConstraints.WEST;
 		add(tools.addResetPanel(action), gbc);
 		
+		Map<Edifício, EdifícioFormattedTextField> map = new HashMap<Edifício, EdifícioFormattedTextField>();
+		for (PanelEdifício i : panelEdifícioList)
+			map.put(i.getEdifício(), i.getComboBox());
+		
+		gbc.gridx++;
+		//gbc.insets = new Insets(5, 0, 5, 0);
+		add(tools.addModelosAldeiasPanel(true, map, null), gbc);
+		
 		gbc.gridy++;
-		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.gridx = 0;
+		gbc.anchor = GridBagConstraints.EAST;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		addHeader(true, gbc);
 
 		gbc.gridy++;
+		gbc.gridwidth = 2;
 		gbc.gridx = 0;
 		add(unitePanels("identificadores"), gbc);
 
-		gbc.gridx++;
+		gbc.gridwidth = 1;
+		gbc.gridx += 2;
 		add(unitePanels("dadosPanel"), gbc);
 
 		gbc.gridy++;
@@ -84,7 +97,7 @@ public class GUI extends Ferramenta {
 		addHeader(false, gbc);
 
 		gbc.gridy++;
-		gbc.gridx = 0;
+		gbc.gridx = 1;
 		addPanelTotal(gbc);
 
 	}
@@ -99,12 +112,15 @@ public class GUI extends Ferramenta {
 		PanelEdifício header = new PanelEdifício(!topHeader);
 
 		if (topHeader) {
+			gbc.gridwidth = 2;
 			header.getIdentificadores().setBorder(
 					new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
 			add(header.getIdentificadores(), gbc);
+			
 		}
-
-		gbc.gridx++;
+		
+		gbc.gridwidth = 1;
+		gbc.gridx += 2;
 		header.getDadosPanel().setBorder(
 				new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
 		add(header.getDadosPanel(), gbc);

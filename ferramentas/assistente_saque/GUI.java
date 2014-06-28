@@ -93,7 +93,17 @@ public class GUI extends Ferramenta{
 		// Add troop model button
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridx++;
-		add(tools.addModelosPanel(true, panelUnidades.getTextFields()));
+		add(tools.addModelosTropasPanel(true, panelUnidades.getTextFields()));
+		
+		// Add modeloAldeia for interval
+		c.gridx += 2; // empty space for recommendations
+		add(tools.addModelosAldeiasPanel(true, panelIntervalo.getEdifícios(), 
+				panelIntervalo.getCoordenadaDestino()), c);
+		
+		// Add modeloAldeia for time
+		c.gridx += 2;
+		add(tools.addModelosAldeiasPanel(false, null, 
+				panelHorário.getCoordenadaOrigem()), c);
 		
 		// Add units panel
 		c.gridx = 0;
@@ -113,14 +123,9 @@ public class GUI extends Ferramenta{
 		c.gridwidth = 1;
 		add(container, c);
 		
-		// Where the "AldeiaModelos" panel will be added
-		c.gridy = 0;
-		c.gridx++;
-		c.gridheight = 1;
-		add(tools.addModelosPanel(true, null), c);
-		
 		// Add the panel that receives input for interval calculations 
 		c.gridy++;
+		c.gridx++;
 		add(panelIntervalo, c);
 		
 //		// Adds the panel that displays the interval in which to attack
@@ -139,18 +144,12 @@ public class GUI extends Ferramenta{
 		c.insets = new Insets(0, 30, 0, 30);
 		add(separator, c);
 		
-		// Where the "AldeiaModelos" panel will be added
-		c.gridy = 0;
-		c.gridx++;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(5, 5, 5, 5);
-		add(tools.addModelosPanel(true, null), c);
-		
+			
 		// Add the panel that receives input for exact time calculations 
 		c.gridy = 1;
+		c.gridx++;
 		c.anchor = GridBagConstraints.NORTH;
+		c.fill = GridBagConstraints.NONE;
 		add(panelHorário, c);
 		
 		// Adds the panel that displays the time to send the attack 

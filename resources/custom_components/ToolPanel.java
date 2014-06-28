@@ -28,6 +28,7 @@ import config.ModeloAldeias_Reader;
 import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.Cores;
+import database.Edifício;
 import database.ModeloAldeias;
 import database.ModeloTropas;
 import database.Unidade;
@@ -46,7 +47,8 @@ public class ToolPanel {
 	// decide where each one will be placed
 	private JPanel bandeiraPanel;
 
-	private List<ModeloTropasPanel> modelosPanelList = new ArrayList<ModeloTropasPanel>();
+	private List<ModeloTropasPanel> tropasPanelList = new ArrayList<ModeloTropasPanel>();
+	private List<ModeloAldeiasPanel> aldeiasPanelList = new ArrayList<ModeloAldeiasPanel>();
 	
 	public ToolPanel() {}
 	
@@ -83,11 +85,29 @@ public class ToolPanel {
 	 * @param textFields  Map com IntegerFormattedTextField ligados a unidades, para utilizar os Modelos
 	 * @return Um JPanel com as coisas faladas
 	 */
-	public JPanel addModelosPanel(boolean edit, Map<Unidade, IntegerFormattedTextField> textFields) {
+	public JPanel addModelosTropasPanel(boolean edit, Map<Unidade, IntegerFormattedTextField> textFields) {
 		
 		ModeloTropasPanel panel = new ModeloTropasPanel(edit, textFields);
 		
-		modelosPanelList.add(panel);
+		tropasPanelList.add(panel);
+		
+		return panel;
+		
+	}
+	
+	/**
+	 * Cria um panel que fornece a habilidade de utilizar os ModelosTropas, além de editá-los
+	 * 
+	 * @param edit Se o painel possui o botão de edição
+	 * @param textFields  Map com IntegerFormattedTextField ligados a unidades, para utilizar os Modelos
+	 * @return Um JPanel com as coisas faladas
+	 */
+	public JPanel addModelosAldeiasPanel(boolean edit, 
+			Map<Edifício, EdifícioFormattedTextField> textFields, CoordenadaPanel coord) {
+		
+		ModeloAldeiasPanel panel = new ModeloAldeiasPanel(edit, textFields, coord);
+		
+		aldeiasPanelList.add(panel);
 		
 		return panel;
 		
@@ -98,7 +118,10 @@ public class ToolPanel {
 	 */
 	public void refresh() {
 		
-		for (ModeloTropasPanel i : modelosPanelList)
+		for (ModeloTropasPanel i : tropasPanelList)
+			i.makePopupMenu();
+		
+		for (ModeloAldeiasPanel i : aldeiasPanelList)
 			i.makePopupMenu();
 		
 	}
@@ -150,7 +173,7 @@ public class ToolPanel {
 		
 		private JLabel makeNameLabel() {
 
-			JLabel label = new JLabel(Lang.Modelos.toString()+":");
+			JLabel label = new JLabel("Tropas:");
 
 			label.setPreferredSize(new Dimension(54, getPreferredSize().height));
 
@@ -192,7 +215,7 @@ public class ToolPanel {
 			popup = new JPopupMenu();
 
 			// Adds all the models to the dropdown menu
-			for (final ModeloTropas i : ModeloTropas_Reader.getListModelos()) {
+			for (final ModeloTropas i : ModeloTropas_Reader.getListModelosAtivos()) {
 				
 				popup.add(makeMenuItem(i));
 
@@ -254,9 +277,11 @@ public class ToolPanel {
 						
 						ModeloTropas modelo = new ModeloTropas(null, map, Mundo_Reader.MundoSelecionado);
 												
-						new EditDialog(ModeloAldeias.class,
-								ModeloAldeias_Reader.getListModelos(), 
-								"variableList", 0, null);
+						new EditDialog(ModeloTropas.class,
+								ModeloTropas_Reader.getListModelos(), 
+								"variableList", 0, modelo);
+						
+						ModeloTropas_Reader.checkAtivos();
 						
 						makePopupMenu();
 						
@@ -274,5 +299,196 @@ public class ToolPanel {
 		}
 		
 	}
+
 	
+	@SuppressWarnings("serial")
+	private class ModeloAldeiasPanel extends JPanel {
+		
+		private Map<Edifício, EdifícioFormattedTextField> mapTextFields;
+		private CoordenadaPanel coord;
+
+		private JPopupMenu popup;
+
+		public ModeloAldeiasPanel(boolean edit, 
+				Map<Edifício, EdifícioFormattedTextField> textFields, CoordenadaPanel coord) {
+
+			mapTextFields = textFields;
+			this.coord = coord;
+
+			makePopupMenu();
+
+			GridBagLayout layout = new GridBagLayout();
+			layout.columnWidths = new int[] { 54, 20, 20 };
+			layout.rowHeights = new int[] { 20 };
+			layout.columnWeights = new double[] { 0, Double.MIN_VALUE };
+			layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+			setLayout(layout);
+
+			setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+
+			setBackground(Cores.FUNDO_ESCURO);
+
+			GridBagConstraints c = new GridBagConstraints();
+			c.anchor = GridBagConstraints.CENTER;
+			c.gridx = 0;
+			c.gridy = 0;
+
+			c.insets = new Insets(0, 2, 0, 0);
+			add(makeNameLabel(), c);
+			
+			if (!edit)
+				c.gridwidth = 2;
+			c.insets = new Insets(0, 0, 0, 0);
+			c.gridx = 1;
+			add(makeSelectionButton(), c);
+
+			if (edit) {
+				c.insets = new Insets(0, 0, 0, 2);
+				c.gridx = 2;
+				add(makeEditButton(), c);
+			}
+		}
+		
+		private JLabel makeNameLabel() {
+
+			JLabel label = new JLabel("Aldeias:");
+
+			label.setPreferredSize(new Dimension(54, getPreferredSize().height));
+
+			return label;
+
+		}
+
+		private JButton makeSelectionButton() {
+
+			final JButton button = new JButton();
+
+			button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+					GUI.class.getResource("/images/down_arrow.png"))));
+
+			button.setPreferredSize(new Dimension(20, 20));
+
+			button.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent arg0) {
+
+					int x = button.getLocation().x
+							+ button.getPreferredSize().width / 2
+							- popup.getPreferredSize().width / 2;
+
+					int y = button.getLocation().y
+							+ button.getPreferredSize().height;
+
+					popup.show(button.getParent(), x, y);
+
+				}
+			});
+
+			return button;
+
+		}
+
+		private void makePopupMenu() {
+
+			popup = new JPopupMenu();
+
+			// Adds all the models to the dropdown menu
+			for (final ModeloAldeias i : ModeloAldeias_Reader.getListModelosAtivos()) {
+				
+				popup.add(makeMenuItem(i));
+
+			}
+
+		}
+		
+		private JMenuItem makeMenuItem(final ModeloAldeias i) {
+			
+			JMenuItem item = new JMenuItem(i.getNome());
+
+			item.setName(i.getNome());
+
+			item.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent a) {
+					
+					if (mapTextFields != null) {
+					
+						// Edits all the textfields according to the model
+						for (Entry<Edifício, EdifícioFormattedTextField> e : mapTextFields.entrySet())
+							e.getValue().setText(
+									String.valueOf(i.getNível(e.getKey())));
+					
+					}
+					
+					if (coord != null) {
+						coord.x.setText(String.valueOf(i.getCoordenadaX()));
+						coord.y.setText(String.valueOf(i.getCoordenadaY()));
+					}
+					
+					// If there are coordinates, focus them. If not, focus the first building
+					if (coord != null)
+						coord.x.requestFocus();
+					else
+						mapTextFields.get(Edifício.EDIFÍCIO_PRINCIPAL).requestFocus();
+					
+				}
+			});
+			
+			return item;
+			
+		}
+
+		private JButton makeEditButton() {
+
+			final JButton button = new JButton();
+
+			button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+					GUI.class.getResource("/images/edit_icon.png"))));
+
+			button.setPreferredSize(new Dimension(20, 20));
+
+			button.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+
+					try {
+						
+						Map<Edifício,Integer> map = new HashMap<Edifício,Integer>();
+						for (Edifício i : Edifício.values())
+							if (mapTextFields.containsKey(i))
+								map.put(i, mapTextFields.get(i).getValue().intValue());
+							else
+								map.put(i, 0);
+						
+						if (coord != null) {
+							coord.x.setText(String.valueOf(coord.getCoordenadaX()));
+							coord.y.setText(String.valueOf(coord.getCoordenadaY()));
+						}
+						
+						ModeloAldeias modelo = new ModeloAldeias(null, map, 0, 0, Mundo_Reader.MundoSelecionado);
+												
+						new EditDialog(ModeloAldeias.class,
+								ModeloAldeias_Reader.getListModelos(), 
+								"variableList", 0, modelo);
+												
+						ModeloAldeias_Reader.checkAtivos();
+						
+						makePopupMenu();
+						
+						refresh();
+						
+					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | InstantiationException e) {
+						e.printStackTrace();
+					}
+
+				}
+			});
+
+			return button;
+
+		}
+		
+		
+	}
 }

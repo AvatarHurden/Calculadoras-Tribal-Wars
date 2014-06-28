@@ -30,8 +30,6 @@ public class ModeloAldeias_Reader {
 			// read the user-alterable config file
 			Scanner in = new Scanner(new StringReader(section));
 			
-			System.out.println(section);
-			
 			store(in);
 
 			// in case the file is corrupt, for any reason (thus we generalize
@@ -95,11 +93,27 @@ public class ModeloAldeias_Reader {
 			listModelosAtivos.add(modelo);
 
 	}
+	
+	/**
+	 * Passa por todos os modelos existentes, colocando os que tiverem escopo
+	 * na lista de ativos
+	 */
+	public static void checkAtivos() {
+		
+		for (ModeloAldeias modelo : listModelos)
+			if (modelo.getEscopo().contains(Mundo_Reader.MundoSelecionado) && !listModelosAtivos.contains(modelo))
+				listModelosAtivos.add(modelo);
+		
+	}
 
 	/**
 	 * Retorna uma lista dos modelos ativos no mundo
 	 */
 	public static List<ModeloAldeias> getListModelos() {
+		return listModelos;
+	}
+	
+	public static List<ModeloAldeias> getListModelosAtivos() {
 		return listModelosAtivos;
 	}
 	

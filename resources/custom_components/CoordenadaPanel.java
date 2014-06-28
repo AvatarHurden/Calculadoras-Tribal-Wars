@@ -130,7 +130,6 @@ public abstract class CoordenadaPanel extends JPanel{
 	private JTextField makeCoordinateTextField(int value) {
 		
 		JTextField coordinate = new JTextField(3);
-		coordinate.setText(String.valueOf(value));
 		
 		coordinate.setHorizontalAlignment(SwingConstants.CENTER);
 		coordinate.setDocument(new PlainDocument() {
@@ -148,6 +147,9 @@ public abstract class CoordenadaPanel extends JPanel{
 				
 			}
 		});
+		
+		if (value > 0)
+			coordinate.setText(String.valueOf(value));
 		
 		coordinate.getDocument().addDocumentListener(new DocumentListener() {
 			

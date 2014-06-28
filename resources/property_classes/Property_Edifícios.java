@@ -13,6 +13,7 @@ import javax.swing.event.DocumentListener;
 import custom_components.EdifícioFormattedTextField;
 import database.Edifício;
 
+@SuppressWarnings("serial")
 public class Property_Edifícios extends HashMap<Edifício, Integer> implements Property {
 	
 	private Map<Edifício, EdifícioFormattedTextField> textFieldMap;
@@ -80,7 +81,13 @@ public class Property_Edifícios extends HashMap<Edifício, Integer> implements Pr
 
 	@Override
 	public void setValue() {
-		// TODO Auto-generated method stub
+		
+		for (Entry<Edifício, EdifícioFormattedTextField> x : textFieldMap.entrySet()) {
+			
+			// Puts every unit with corresponding value
+			put(x.getKey(), x.getValue().getValue().intValue());
+			
+		}
 		
 	}
 

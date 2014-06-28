@@ -11,7 +11,6 @@ import property_classes.Property_Coordenada;
 import property_classes.Property_Edifícios;
 import property_classes.Property_Escopo;
 import property_classes.Property_Nome;
-import property_classes.Property_UnidadeList;
 import config.Mundo_Reader;
 
 /**
@@ -37,8 +36,6 @@ public class ModeloAldeias {
 	public ModeloAldeias() {
 
 		nome = new Property_Nome("Nova Aldeia");
-		
-		System.out.println("novo");
 		
 		coordenadas = new Property_Coordenada(0, 0);
 		
@@ -83,8 +80,11 @@ public class ModeloAldeias {
 	}
 
 	public ModeloAldeias(String nome, Map<Edifício, Integer> map, int x, int y, Mundo... mundos) {
-
-		this.nome = new Property_Nome(nome);
+		
+		if (nome == null)
+			this.nome = new Property_Nome("Novo Modelo");
+		else
+			this.nome = new Property_Nome(nome);
 
 		coordenadas = new Property_Coordenada(x, y);
 		
@@ -117,6 +117,14 @@ public class ModeloAldeias {
 
 	public int getNível(Edifício e) {
 		return edifícios.get(e);
+	}
+	
+	public int getCoordenadaX() {
+		return coordenadas.getCoordenadaX();
+	}
+	
+	public int getCoordenadaY() {
+		return coordenadas.getCoordenadaY();
 	}
 	
 	/**

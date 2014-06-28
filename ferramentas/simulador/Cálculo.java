@@ -381,12 +381,12 @@ public class Cálculo {
 		for (Entry<Unidade, BigDecimal> i : tropasDefensoras.entrySet())
 			defensoresSobrando.put(i.getKey(), i.getValue());
 
-		do {
+		while (hasUnits(atacantesSobrando) && hasUnits(defensoresSobrando)) {
 
 			// Define o valor do ataque de cada tipo presente no exército, além
 			// do ataque total (soma dos 3 tipos)
 			setAtaques(atacantesSobrando);
-
+			
 			// Define o valor de defesa para cada tipo de tropa
 			setDefesas(defensoresSobrando);
 
@@ -487,7 +487,7 @@ public class Cálculo {
 			religiãoAtacante = true;
 			religiãoDefensor = true;
 
-		} while (hasUnits(atacantesSobrando) && hasUnits(defensoresSobrando));
+		}
 
 	}
 
@@ -714,9 +714,10 @@ public class Cálculo {
 	private boolean hasUnits(Map<Unidade, BigDecimal> map) {
 
 		for (Entry<Unidade, BigDecimal> i : map.entrySet()) {
-
-			if (i.getValue().compareTo(BigDecimal.ZERO) == 1)
-				return true;
+			
+			if (!i.getKey().equals(Unidade.EXPLORADOR))
+				if (i.getValue().compareTo(BigDecimal.ZERO) == 1)
+					return true;
 
 		}
 

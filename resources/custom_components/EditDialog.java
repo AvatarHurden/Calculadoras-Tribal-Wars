@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
@@ -33,11 +32,11 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import config.Lang;
 import property_classes.OnChange;
 import property_classes.Property;
 import property_classes.Property_Nome;
 import selecionar_mundo.GUI;
+import config.Lang;
 import database.Cores;
 
 /**
