@@ -42,9 +42,6 @@ public class GUI extends Ferramenta {
 	public GUI() {
 
 		super(Lang.FerramentaSimulador.toString());
-
-		setBackground(Cores.FUNDO_CLARO);
-
 		
 		input = new InputInfo();
 		

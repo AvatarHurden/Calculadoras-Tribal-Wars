@@ -67,15 +67,11 @@ public class Property_Edifícios extends HashMap<Edifício, Integer> implements Pr
 		
 	}
 
-	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public String getValueName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

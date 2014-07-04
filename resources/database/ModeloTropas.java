@@ -53,8 +53,11 @@ public class ModeloTropas {
 			quantidades.put(i, new BigDecimal(p.getProperty(nome)));
 		}
 		
-		
-		String[] worlds = p.getProperty("escopo").split(" \",\"");
+		String[] worlds = {""};
+		// For compatibility with older versions
+		try {
+			worlds = p.getProperty("escopo").split(" \",\"");
+		} catch (NullPointerException e) {}
 		
 		List<Mundo> mundos = new ArrayList<Mundo>();
 		for (String s : worlds)

@@ -50,7 +50,6 @@ public class GUI extends Ferramenta {
 
 		super(Lang.FerramentaUnidade.toString());
 
-		setBackground(Cores.FUNDO_CLARO);
 		setUnidades();
 
 		total.setPanelListAndColor(panelUnidadeList, getNextColor());

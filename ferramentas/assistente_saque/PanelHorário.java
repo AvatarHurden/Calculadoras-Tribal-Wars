@@ -5,19 +5,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import config.Lang;
 import custom_components.CoordenadaPanel;
@@ -85,12 +83,8 @@ public abstract class PanelHorário extends JPanel{
 		add(ataquePanel, c);
 		
 		// Add panel de horário
-		
-		dateSpinner = new JSpinner(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH));
-		dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy"));
-		
-		hourSpinner = new JSpinner(new SpinnerDateModel());
-		hourSpinner.setEditor(new JSpinner.DateEditor(hourSpinner, "HH:mm:ss"));
+		dateSpinner = makeSpinner("dd/MM/yyyy");
+		hourSpinner = makeSpinner("HH:mm:ss");
 		
 		JPanel horaPanel = new JPanel();
 		horaPanel.add(dateSpinner);
@@ -225,6 +219,27 @@ public abstract class PanelHorário extends JPanel{
 		// Puts it up for next use
 		c.gridy--;
 		
+	}
+	
+	private JSpinner makeSpinner(String format) {
+		
+		JSpinner spinner = new JSpinner(new SpinnerDateModel());
+		spinner.setEditor(new JSpinner.DateEditor(spinner, format));
+		((JSpinner.DateEditor) spinner.getEditor()).getTextField().getDocument().addDocumentListener(new DocumentListener() {
+
+			public void removeUpdate(DocumentEvent arg0) {
+				doAction();
+			}
+
+			public void insertUpdate(DocumentEvent arg0) {
+				doAction();
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {}
+
+		});
+		
+		return spinner;
 	}
 	
 	private JPanel makeRespostaPanel() {

@@ -454,19 +454,22 @@ public class ToolPanel {
 
 					try {
 						
+						int x = 0, y = 0;	
+					
 						Map<Edifício,Integer> map = new HashMap<Edifício,Integer>();
 						for (Edifício i : Edifício.values())
-							if (mapTextFields.containsKey(i))
+							if (mapTextFields != null && mapTextFields.containsKey(i))
 								map.put(i, mapTextFields.get(i).getValue().intValue());
 							else
 								map.put(i, 0);
 						
 						if (coord != null) {
-							coord.x.setText(String.valueOf(coord.getCoordenadaX()));
-							coord.y.setText(String.valueOf(coord.getCoordenadaY()));
+							x = coord.getCoordenadaX();
+							y = coord.getCoordenadaY();
 						}
 						
-						ModeloAldeias modelo = new ModeloAldeias(null, map, 0, 0, Mundo_Reader.MundoSelecionado);
+						ModeloAldeias modelo = new ModeloAldeias(null, map, x, y,
+								Mundo_Reader.MundoSelecionado);
 												
 						new EditDialog(ModeloAldeias.class,
 								ModeloAldeias_Reader.getListModelos(), 

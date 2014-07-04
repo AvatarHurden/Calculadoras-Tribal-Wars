@@ -29,6 +29,8 @@ public class Ferramenta extends JPanel{
 	
 	public Ferramenta(String nome) {
 		
+		setBackground(Cores.FUNDO_CLARO);
+		
 		tools = new ToolPanel();
 		
 //		setBorder(new LineBorder(Cores.SEPARAR_CLARO));

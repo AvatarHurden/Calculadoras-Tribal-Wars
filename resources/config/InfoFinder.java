@@ -44,7 +44,7 @@ public class InfoFinder {
 
 			boolean moral = false;
 
-			String pesquisaDeNíveis = "Pesquisa_Simples";
+			String pesquisaDeNíveis = "simples";
 
 			boolean igreja = false;
 
@@ -85,9 +85,9 @@ public class InfoFinder {
 
 				if (next.toLowerCase().contains("sistema de pesquisa"))
 					if (next.toLowerCase().contains("pesquisa simplificada"))
-						pesquisaDeNíveis = "Pesquisa_Simples";
+						pesquisaDeNíveis = "simples";
 					else
-						pesquisaDeNíveis = "Pesquisa_de_3_Níveis";
+						pesquisaDeNíveis = "níveis";
 
 				if (next.toLowerCase().contains("igreja"))
 					if (next.toLowerCase().contains("inativo"))
@@ -168,7 +168,5 @@ public class InfoFinder {
 			System.out.println(output);
 
 		}
-
-//	}
 
 }

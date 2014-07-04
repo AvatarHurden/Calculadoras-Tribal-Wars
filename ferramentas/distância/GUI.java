@@ -40,8 +40,6 @@ public class GUI extends Ferramenta {
 
 		super(Lang.FerramentaDistancia.toString());
 
-		setBackground(Cores.FUNDO_CLARO);
-
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0 };
@@ -54,22 +52,11 @@ public class GUI extends Ferramenta {
 		constraints.gridy = 0;
 		constraints.gridx = 0;
 		
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {	
-				aldeiaOrigem.reset();
-				aldeiaDestino.reset();
-				
+		aldeiaDestino = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
+			public void go() {
+				calculateDistanceAndTimes();
 			}
 		};
-		
-		constraints.anchor = GridBagConstraints.WEST;
-		add(tools.addResetPanel(action), constraints);
-		
-		constraints.gridy++;
-		constraints.gridx = 0;
-		constraints.gridheight = 3;
-		constraints.insets = new Insets(5, 5, 5, 25);
-		add(panelUnidade = new PanelUnidade(this), constraints);
 		
 		aldeiaOrigem = new CoordenadaPanel(Lang.AldeiaOrigem.toString()) {
 			public void go() {
@@ -77,18 +64,37 @@ public class GUI extends Ferramenta {
 			}
 		};
 		
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {	
+				aldeiaOrigem.reset();
+				aldeiaDestino.reset();
+				
+			}
+		};
+
+		constraints.anchor = GridBagConstraints.WEST;
+		add(tools.addResetPanel(action), constraints);
+		
+		constraints.gridx++;
+		add(tools.addModelosAldeiasPanel(true, null, aldeiaOrigem));
+		
+		constraints.gridx++;
+		add(tools.addModelosAldeiasPanel(false, null, aldeiaDestino));
+		
+		constraints.gridy++;
+		constraints.gridx = 0;
+		constraints.gridheight = 3;
+		constraints.insets = new Insets(5, 5, 5, 25);
+		add(panelUnidade = new PanelUnidade(this), constraints);
+		
+		// Adiciona aldeia de origem
 		constraints.gridheight = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.gridx++;
 		constraints.insets = new Insets(5, 5, 5, 5);
 		add(aldeiaOrigem, constraints);
-
-		aldeiaDestino = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
-			public void go() {
-				calculateDistanceAndTimes();
-			}
-		};
-
+		
+		// Adiciona aldeia de destino
 		constraints.gridx++;
 		add(aldeiaDestino, constraints);
 		

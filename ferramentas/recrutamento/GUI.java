@@ -42,7 +42,6 @@ public class GUI extends Ferramenta {
 
 		super(Lang.FerramentaRecruta.toString());
 
-		setBackground(Cores.FUNDO_CLARO);
 		setOpaque(true);
 
 		GridBagLayout gridBagLayout = new GridBagLayout();

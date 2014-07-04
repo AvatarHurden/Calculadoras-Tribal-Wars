@@ -67,10 +67,7 @@ public class Cálculo {
 	}
 	
 	protected void setEnviarAtaque() {
-		
-		// de minutos/campo para milissegundos/campo
-		velocidade = velocidade.multiply(new BigDecimal("60000"));
-		
+				
 		// recursos = campos*(millisegundos/campo)*recursos/millisegundos
 		
 		for (int i = 0; i < 3; i++)
@@ -120,8 +117,6 @@ public class Cálculo {
 				
 		}
 		
-		// Keeps the units with no loot power
-		// TODO decide if they should be kept or completely removed
 		for (Unidade i : tropasDisponíveis.keySet()) {
 			if (!preferência.contains(i))
 				tropasRecomendadas.put(i, tropasDisponíveis.get(i));
@@ -325,6 +320,9 @@ public class Cálculo {
 		velocidade = velocidade.multiply(Mundo_Reader.MundoSelecionado.getModificarUnidaes());
 		velocidade = velocidade.multiply(Mundo_Reader.MundoSelecionado.getVelocidade());
 		
+		// de minutos/campo para milissegundos/campo
+		velocidade = velocidade.multiply(new BigDecimal("60000"));
+
 	}
 	
 	/**

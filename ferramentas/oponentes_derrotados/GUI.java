@@ -45,8 +45,6 @@ public class GUI extends Ferramenta {
 
 		super(Lang.FerramentaOD.toString());
 
-		setBackground(Cores.FUNDO_CLARO);
-
 		setUnidades();
 		setMaps();
 

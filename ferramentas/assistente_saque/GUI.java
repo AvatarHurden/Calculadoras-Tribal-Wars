@@ -48,9 +48,6 @@ public class GUI extends Ferramenta{
 		
 		super("Assistente de Saque");
 		
-		// TODO make this default to ferramentas
-		setBackground(Cores.FUNDO_CLARO);
-		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0 };
 		gridBagLayout.rowHeights = new int[] { 0 };
@@ -79,6 +76,7 @@ public class GUI extends Ferramenta{
 		};
 		panelHorário = new PanelHorário() {
 			protected void doAction() {
+				editIntervalObject();
 				editHorárioObject();
 			}
 		};
@@ -201,8 +199,6 @@ public class GUI extends Ferramenta{
 	
 	private void makePanelRecomendado() {
 		
-		// TODO add a way for users to get help on what this is
-		
 		panelRecomendado = new JPanel(new GridBagLayout());
 		panelRecomendado.setOpaque(false);
 		panelRecomendado.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
@@ -215,7 +211,9 @@ public class GUI extends Ferramenta{
 		// Adding "Recomendado" panel
 		JPanel headerPanel = new JPanel();
 		headerPanel.setOpaque(false);
-		headerPanel.add(new JLabel("Recomendado"));
+		headerPanel.add(new JLabel("<html>Recomendado<sup>?<sup></html>"));
+		headerPanel.setToolTipText("<html>As unidades enviadas ultrapassam a capacidade de armazenamento da aldeia."
+				+ "<br>A recomendação é baseada nas tropas disponíveis, utilizando as mais eficientes antes.</html>");
 		
 		c.insets = new Insets(0, 0, 3, 0);
 		panelRecomendado.add(headerPanel, c);
@@ -271,8 +269,13 @@ public class GUI extends Ferramenta{
 				for (Entry<Unidade, IntegerFormattedTextField> entry : 
 							panelUnidades.getTextFields().entrySet()) {
 					
+					// Muda caso o novo valor seja diferente de 0
 					if (!recommended.get(entry.getKey()).equals(BigDecimal.ZERO))
 						entry.getValue().setText(recommended.get(entry.getKey()).toString());
+					// Caso o novo seja zero, mas o anterior seja diferente, limpa o textField
+					else if (!recommended.get(entry.getKey()).equals(entry.getValue().getValue()))
+						entry.getValue().setText("");
+						
 					
 				}
 				
@@ -290,7 +293,7 @@ public class GUI extends Ferramenta{
 		if (map != null) {
 			panelRecomendado.setVisible(true);
 			for (Unidade i : map.keySet())
-				mapRecomendado.get(i).setText(map.get(i).toString());			
+				mapRecomendado.get(i).setText(map.get(i).toString());	
 	
 		} else {
 			panelRecomendado.setVisible(false);

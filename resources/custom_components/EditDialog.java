@@ -215,6 +215,7 @@ public class EditDialog extends JDialog {
 							setScrollPosition(scroll.getVerticalScrollBar(), false);
 							revalidate();
 						}	
+						selectedInterface.nameTextField.requestFocus();
 					} else if (e.getKeyCode() == KeyEvent.VK_UP) {
 						if (interfaceList.indexOf(selectedInterface) > 0) {
 							selectedInterface.setSelected(false);
@@ -223,6 +224,7 @@ public class EditDialog extends JDialog {
 							setScrollPosition(scroll.getVerticalScrollBar(), true);
 							revalidate();
 						}
+						selectedInterface.nameTextField.requestFocus();
 					}
 					
 					changeButtons();
