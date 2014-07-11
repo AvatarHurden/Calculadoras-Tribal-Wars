@@ -381,7 +381,7 @@ public class Cálculo {
 		for (Entry<Unidade, BigDecimal> i : tropasDefensoras.entrySet())
 			defensoresSobrando.put(i.getKey(), i.getValue());
 
-		while (hasUnits(atacantesSobrando) && hasUnits(defensoresSobrando)) {
+		do {
 
 			// Define o valor do ataque de cada tipo presente no exército, além
 			// do ataque total (soma dos 3 tipos)
@@ -487,7 +487,7 @@ public class Cálculo {
 			religiãoAtacante = true;
 			religiãoDefensor = true;
 
-		}
+		} while (hasUnits(atacantesSobrando) && hasUnits(defensoresSobrando));
 
 	}
 

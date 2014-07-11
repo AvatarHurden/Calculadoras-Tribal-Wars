@@ -28,7 +28,13 @@ public class File_Manager {
 	 * the worlds lauched until the time of publishing
 	 */
 	public static void read() {
-
+		
+		// Limpa as variáveis para ter certeza que não haverá valores duplicados
+		mundoPadrão = "";
+		mundos = "";
+		modeloTropas = "";
+		modeloAldeias = "";
+		
 		try {
 
 			File config = new File("configurações.txt");

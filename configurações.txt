@@ -851,18 +851,62 @@ Mundos {
 	milicia=true
 	cunhagemDeMoedas=true
 
+	nome=Mundo 62
+	velocidade=1.0
+	modificador=1.0
+	moral=true
+	sistemaDePesquisa=simples
+	igreja=true
+	bonusNoturno=true
+	bandeira=true
+	arqueiro=true
+	paladino=true
+	itensAprimorados=true
+	milicia=true
+	cunhagemDeMoedas=true
+
+	nome=Mundo 63
+	velocidade=1.5
+	modificador=0.5
+	moral=true
+	sistemaDePesquisa=niveis
+	igreja=false
+	bonusNoturno=true
+	bandeira=false
+	arqueiro=true
+	paladino=false
+	itensAprimorados=false
+	milicia=true
+	cunhagemDeMoedas=true
+
 }
 
 Modelos_de_Tropas {
 
 	nome=Novo Modelo
-	escopo=
+	escopo=Mundo 2 ","
+	lanceiro=0
+	espadachim=0
+	bárbaro=0
+	arqueiro=0
+	explorador=234
+	cavalaria_leve=0
+	arqueiro_a_cavalo=0
+	cavalaria_pesada=0
+	aríete=0
+	catapulta=0
+	paladino=0
+	nobre=0
+	milícia=0
+
+	nome=345
+	escopo=Mundo 2 ","
 	lanceiro=0
 	espadachim=0
 	bárbaro=0
 	arqueiro=0
 	explorador=0
-	cavalaria_leve=0
+	cavalaria_leve=3045
 	arqueiro_a_cavalo=0
 	cavalaria_pesada=0
 	aríete=0
@@ -874,5 +918,51 @@ Modelos_de_Tropas {
 }
 
 Modelos_de_Aldeias {
+
+	nome=Novo Modelo1
+	escopo=Mundo 2 ","
+	coordenadas=024|035
+	edifício_principal=0
+	quartel=0
+	estábulo=0
+	oficina=15
+	igreja=0
+	primeira_igreja=0
+	academia_3_níveis=3
+	academia_1_nível=0
+	ferreiro=0
+	pração_de_reunião=1
+	estátua=0
+	mercado=0
+	bosque=5
+	poço_de_argila=0
+	mina_de_ferro=0
+	fazenda=0
+	armazém=0
+	esconderijo=0
+	muralha=0
+
+	nome=Novo Modelo1
+	escopo=Mundo 2 ","
+	coordenadas=024|035
+	edifício_principal=0
+	quartel=0
+	estábulo=0
+	oficina=15
+	igreja=0
+	primeira_igreja=0
+	academia_3_níveis=3
+	academia_1_nível=0
+	ferreiro=0
+	pração_de_reunião=1
+	estátua=0
+	mercado=0
+	bosque=5
+	poço_de_argila=0
+	mina_de_ferro=0
+	fazenda=0
+	armazém=0
+	esconderijo=0
+	muralha=0
 
 }

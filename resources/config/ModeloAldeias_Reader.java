@@ -3,9 +3,11 @@ package config;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.Set;
 
 import database.ModeloAldeias;
 
@@ -18,13 +20,17 @@ import database.ModeloAldeias;
 public class ModeloAldeias_Reader {
 	
 	// Lista de modelos ativos no mundo
-	static List<ModeloAldeias> listModelosAtivos = new ArrayList<ModeloAldeias>();
+	static Set<ModeloAldeias> setModelosAtivos = new HashSet<ModeloAldeias>();
 
 	// Lista de todos os modelos disponíveis
 	static List<ModeloAldeias> listModelos = new ArrayList<ModeloAldeias>();
 	
 	public static void read(String section) {
 
+		// Limpa os modelos existentes
+		listModelos.removeAll(listModelos);
+		setModelosAtivos.removeAll(setModelosAtivos);
+		
 		try {
 
 			// read the user-alterable config file
@@ -90,7 +96,7 @@ public class ModeloAldeias_Reader {
 		listModelos.add(modelo);
 		
 		if (modelo.getEscopo().contains(Mundo_Reader.MundoSelecionado))
-			listModelosAtivos.add(modelo);
+			setModelosAtivos.add(modelo);
 
 	}
 	
@@ -100,9 +106,14 @@ public class ModeloAldeias_Reader {
 	 */
 	public static void checkAtivos() {
 		
+		// Zera a lista para checagem
+		setModelosAtivos.removeAll(setModelosAtivos);
+		
 		for (ModeloAldeias modelo : listModelos)
-			if (modelo.getEscopo().contains(Mundo_Reader.MundoSelecionado) && !listModelosAtivos.contains(modelo))
-				listModelosAtivos.add(modelo);
+			if (modelo.getEscopo().contains(Mundo_Reader.MundoSelecionado))
+				setModelosAtivos.add(modelo);
+			else
+				setModelosAtivos.remove(modelo);
 		
 	}
 
@@ -114,13 +125,13 @@ public class ModeloAldeias_Reader {
 	}
 	
 	public static List<ModeloAldeias> getListModelosAtivos() {
-		return listModelosAtivos;
+		return new ArrayList<ModeloAldeias>(setModelosAtivos);
 	}
 	
 	public static String getModelosConfig() {
 		
 		// Provavelmente temporário, preciso porque passo os ativos para EditDialog
-		for (ModeloAldeias i : listModelosAtivos)
+		for (ModeloAldeias i : setModelosAtivos)
 			if (!listModelos.contains(i))
 				listModelos.add(i);
 		

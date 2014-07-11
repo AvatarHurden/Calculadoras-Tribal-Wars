@@ -13,11 +13,6 @@
 
 - Separar a lista de mundos como sendo configuração de um servidor, com as outras coiass como sendo gerais
 	(modelos, língua padrão) 
-
-- Modelos de Aldeias
-	Opção de definir escopo individualmente
-	
-- Para todos os modelos, definir escopo geral (mundo, servidor, global)
 	
  ==== MELHORIAS NAS FERRAMENTAS ====
  
@@ -47,8 +42,13 @@
 
 == IDEIAS FEITAS OU ABANDONADAS ==
 
+- // Para todos os modelos, definir escopo geral (mundo, -servidor-, global)
+
+- // Modelos de Aldeias
+	// Opção de definir escopo individualmente
+
 - // Criar listas de tropas, para adicionar em qualquer seção (nomes para listas)
-	- Listas de edifícios, com níveis pré-definidos
+	// Listas de edifícios, com níveis pré-definidos
 
 - // On WorldSelection, edit informations on same panel
 

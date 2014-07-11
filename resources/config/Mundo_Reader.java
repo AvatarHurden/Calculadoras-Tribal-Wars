@@ -20,7 +20,9 @@ public class Mundo_Reader {
 	public static Mundo MundoSelecionado;
 
 	public static void read(String section) {
-
+		
+		mundoList.removeAll(mundoList);
+		
 		try {
 
 			// read the user-alterable config file
