@@ -136,9 +136,6 @@ public class Cálculo {
 		nívelTropasAtaque = input.getNívelTropasAtaque();
 		nívelTropasDefesa = input.getNívelTropasDefesa();
 
-		for (Unidade i : tropasDefensoras.keySet())
-			nívelTropasDefesa.put(i, 1);
-
 		muralhaInicial = input.getMuralha();
 
 		edifícioInicial = input.getEdifício();
@@ -364,7 +361,7 @@ public class Cálculo {
 	}
 
 	private void BattleArcherWorld() {
-
+		
 		// doing battles until only one survives
 
 		// Maps com as unidades restantes de cada exército. Inicialmente são
@@ -380,7 +377,9 @@ public class Cálculo {
 
 		for (Entry<Unidade, BigDecimal> i : tropasDefensoras.entrySet())
 			defensoresSobrando.put(i.getKey(), i.getValue());
-
+		
+		// Only does the calculation if there are attacking units
+		if (hasUnits(atacantesSobrando))
 		do {
 
 			// Define o valor do ataque de cada tipo presente no exército, além

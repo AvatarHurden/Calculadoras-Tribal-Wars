@@ -259,14 +259,17 @@ public enum Unidade {
 	 */
 	public BigDecimal upgrade(int lvl, BigDecimal value) {
 
-		BigDecimal total = new BigDecimal(value.toString());
-
-		if (lvl == 2)
-			total = total.multiply(lvl2);
-		else if (lvl == 3)
-			total = total.multiply(lvl3);
-		else
-			return value;
+		BigDecimal total = value;
+		
+		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() == 3) {
+			if (lvl == 2)
+				total = total.multiply(lvl2);
+			else if (lvl == 3)
+				total = total.multiply(lvl3);
+			else
+				return value;
+		} else if (Mundo_Reader.MundoSelecionado.getQuanNíveis() == 10)
+			total = total.multiply(new BigDecimal("1.04605").pow(lvl-1));
 
 		return total.setScale(0, RoundingMode.HALF_UP);
 
