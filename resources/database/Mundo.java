@@ -80,7 +80,7 @@ public class Mundo {
 		// mudar para "simples" ou "nivel"
 		
 		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
-			"Pesquisa Simples", "Pesquisa Simples", "Pesquisa de 3 Níveis", "Pesquisa de 10 Níveis");
+			"Pesquisa Simples", "Pesquisa Simples", "Pesquisa de 3 Níveis");
 
 		velocidade = new Property_Number("Velocidade", BigDecimal.ONE);
 
@@ -135,24 +135,12 @@ public class Mundo {
 
 		cunhagemDeMoedas = new Property_Boolean("Cunhagem de Moedas",
 				Boolean.parseBoolean(prop.getProperty("cunhagemDeMoedas")));
-		
-		String selected = null;
-		switch (prop.getProperty("sistemaDePesquisa")) {
-		case "simples" :
-			selected = "Pesquisa Simples";
-			break;
-		case "3niveis" :
-			selected = "Pesquisa de 3 Níveis";
-			break;
-		case "10niveis":
-			selected = "Pesquisa de 10 Níveis";
-			break;
-		default:
-			selected = "Pesquisa de 3 Níveis";
-		}
+
 		
 		sistemaDePesquisa = new Property_Escolha("Sistema de Pesquisa",
-				selected,"Pesquisa Simples", "Pesquisa de 3 Níveis", "Pesquisa de 10 Níveis");
+				(prop.getProperty("sistemaDePesquisa").equals("simples") 
+						? "Pesquisa Simples" : "Pesquisa de 3 Níveis")
+				,"Pesquisa Simples", "Pesquisa de 3 Níveis");
 		
 		String speed = prop.getProperty("velocidade");
 		speed = speed.replaceAll(",", ".");
@@ -191,22 +179,9 @@ public class Mundo {
 
 		s += ("\tmoral=" + hasMoral.getValue() + "\n");
 		
-		String selected = null;
-		switch (sistemaDePesquisa.getSelected()) {
-		case "Pesquisa_Simples" :
-			selected = "simples";
-			break;
-		case "Pesquisa_de_3_Níveis" :
-			selected = "3niveis";
-			break;
-		case "Pesquisa_de_10_Níveis":
-			selected = "10niveis";
-			break;
-		default:
-			selected = "simples";
-		}
-		
-		s += ("\tsistemaDePesquisa=" + selected + "\n");
+		s += ("\tsistemaDePesquisa=" + 
+		(sistemaDePesquisa.getSelected().equals("Pesquisa_Simples") ? "simples" : "niveis")
+		+ "\n");
 		
 		s += ("\tigreja=" + hasIgreja.getValue() + "\n");
 		s += ("\tbonusNoturno=" + hasBonusNoturno.getValue() + "\n");
@@ -346,14 +321,9 @@ public class Mundo {
 	public boolean isAcademiaDeNíveis() {
 		return !cunhagemDeMoedas.getValue();
 	}
-	
-	public int getQuanNíveis() {
-		if (sistemaDePesquisa.isOption("Pesquisa de 3 Níveis"))
-			return 3;
-		else if (sistemaDePesquisa.isOption("Pesquisa de 10 Níveis"))
-			return 10;
-		else
-			return 1;
+
+	public boolean isPesquisaDeNíveis() {
+		return sistemaDePesquisa.isOption("Pesquisa de 3 Níveis");
 	}
 
 	public boolean hasMoral() {

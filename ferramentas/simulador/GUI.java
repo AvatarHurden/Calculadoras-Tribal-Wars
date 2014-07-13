@@ -85,7 +85,7 @@ public class GUI extends Ferramenta {
 		c.gridheight = 1;
 		c.gridy += 2;
 		
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			addEmptySpace(c);
 			
 			c.gridy++;
@@ -107,7 +107,7 @@ public class GUI extends Ferramenta {
 		c.gridy = 0;
 		c.gridx++;	
 		
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() == 1) {
+		if (!Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			
 			c.insets = new Insets(0, 5, 4, 5);
 			c.gridheight = 1;

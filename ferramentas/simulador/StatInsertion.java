@@ -32,8 +32,8 @@ import javax.swing.text.PlainDocument;
 import simulador.GUI.InputInfo;
 import config.Lang;
 import config.Mundo_Reader;
-import custom_components.IntegerFormattedTextField;
 import custom_components.ToolPanel;
+import custom_components.IntegerFormattedTextField;
 import database.Bandeira;
 import database.Bandeira.CategoriaBandeira;
 import database.Cores;
@@ -208,7 +208,7 @@ public class StatInsertion extends JPanel {
 
 		// Caso o mundo possua nível de tropas, coloca uma borda mais grossa para
 		// facilitar a visualização da separação.
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1)
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			lblTipo.setBorder(new MatteBorder(0, 0, 2, 0, Cores.SEPARAR_ESCURO));
 //		else
 //			lblTipo.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
@@ -219,7 +219,7 @@ public class StatInsertion extends JPanel {
 		c.gridy++;
 		panel.add(lblTipo, c);
 		
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 
 			c.fill = GridBagConstraints.NONE;
 			c.insets = new Insets(5, 5, 5, 5);
@@ -256,7 +256,7 @@ public class StatInsertion extends JPanel {
 				tropaC.insets = new Insets(3, 5, 3, 5);
 				tropaC.gridx = 0;
 				tropaC.gridy = 0;
-				if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1)
+				if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 					tropaC.gridwidth = 1;
 				else
 					tropaC.gridwidth = 2;
@@ -270,7 +270,7 @@ public class StatInsertion extends JPanel {
 
 				tropaPanel.add(txt, tropaC);
 
-				if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
+				if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 
 					// Coloca a cor padrão para os comboBox
 					UIManager.put("ComboBox.selectionBackground",
@@ -278,8 +278,8 @@ public class StatInsertion extends JPanel {
 					UIManager.put("ComboBox.background",
 							Cores.getAlternar(loop));
 
-					JComboBox<Integer> nível = new JComboBox<Integer>();
-					for (int x = 1; x <= Mundo_Reader.MundoSelecionado.getQuanNíveis(); x++) nível.addItem(x);
+					JComboBox<Integer> nível = new JComboBox<Integer>(
+							new Integer[] { 1, 2, 3 });
 
 					nível.setOpaque(false);
 
@@ -304,21 +304,12 @@ public class StatInsertion extends JPanel {
 							};
 						}
 					});
-					
-					mapNiveis.put(i, nível);
-					tropaC.gridx = 1;
-					
+
 					// Adding the comboBox to the map with units
-					if (i.equals(Unidade.PALADINO)
-							|| i.equals(Unidade.NOBRE)
-							|| i.equals(Unidade.MILÍCIA)
-							// Explorador só tem 1 nível no mundo com 10 níveis
-							|| (i.equals(Unidade.EXPLORADOR) && Mundo_Reader.MundoSelecionado.getQuanNíveis() == 10)) {
-						JLabel holder = new JLabel();
-						holder.setPreferredSize(nível.getPreferredSize());
-						tropaPanel.add(holder, tropaC);
-					}else
-						tropaPanel.add(nível, tropaC);
+					mapNiveis.put(i, nível);
+
+					tropaC.gridx = 1;
+					tropaPanel.add(nível, tropaC);
 
 				}
 
@@ -758,7 +749,7 @@ public class StatInsertion extends JPanel {
 
 		for (Unidade i : Unidade.values()) {
 			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
-				if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1
+				if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()
 						&& Mundo_Reader.MundoSelecionado.containsUnidade(i))
 					níveis.put(i, ((int) mapNiveis.get(i).getSelectedItem()));
 				else

@@ -90,7 +90,7 @@ public class PanelUnidade {
 		identificadores.setBackground(Cores.FUNDO_ESCURO);
 
 		GridBagLayout gbl_inserção = new GridBagLayout();
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1)
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			gbl_inserção.columnWidths = new int[] { 125, 1, 40, 1, 100 };
 		else
 			gbl_inserção.columnWidths = new int[] { 125, 100 };
@@ -106,7 +106,7 @@ public class PanelUnidade {
 		gbc_inserção.gridx = 0;
 		identificadores.add(nome, gbc_inserção);
 
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			addSeparator(gbc_inserção, identificadores);
 
 			JLabel nível = new JLabel(Lang.Nivel.toString());
@@ -229,7 +229,7 @@ public class PanelUnidade {
 	private void setInserção() {
 
 		GridBagLayout gbl = new GridBagLayout();
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1)
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis())
 			gbl.columnWidths = new int[] { 125, 1, 40, 1, 100 };
 		else
 			gbl.columnWidths = new int[] { 125, 100 };
@@ -247,22 +247,19 @@ public class PanelUnidade {
 		nome = new JLabel(unidade.nome());
 		identificadores.add(nome, constraints);
 
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
+		if (Mundo_Reader.MundoSelecionado.isPesquisaDeNíveis()) {
 			addSeparator(constraints, identificadores);
 
 			if (unidade.equals(Unidade.PALADINO)
 					|| unidade.equals(Unidade.NOBRE)
-					|| unidade.equals(Unidade.MILÍCIA)
-						// Explorador só tem 1 nível no mundo com 10 níveis
-					|| (unidade.equals(Unidade.EXPLORADOR) && Mundo_Reader.MundoSelecionado.getQuanNíveis() == 10))
-				createComboBox(false, Mundo_Reader.MundoSelecionado.getQuanNíveis(), constraints, true);
+					|| unidade.equals(Unidade.MILÍCIA))
+				createComboBox(false, constraints, true);
 			else
-				createComboBox(true, Mundo_Reader.MundoSelecionado.getQuanNíveis(), constraints, true);
+				createComboBox(true, constraints, true);
 
 			addSeparator(constraints, identificadores);
 		} else
-			// In case there are no levels, the last argument is false so as to not add them
-			createComboBox(true, 1, constraints, false);
+			createComboBox(true, constraints, false);
 
 		quantidade = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
 
@@ -415,15 +412,14 @@ public class PanelUnidade {
 	 *            se o comboBox deve ser adicionado ao panel (false se o mundo
 	 *            não possui nível, sendo criado para ficar sempre no nível 1)
 	 */
-	private void createComboBox(boolean hasLevels, int levels, GridBagConstraints c,
+	private void createComboBox(boolean hasLevels, GridBagConstraints c,
 			boolean addtoPanel) {
-		
+
 		// Coloca a cor padrão para os comboBox
 		UIManager.put("ComboBox.selectionBackground", Cores.FUNDO_ESCURO);
 		UIManager.put("ComboBox.background", cor);
 
-		nível = new JComboBox<Integer>();
-		for (int i = 1; i <= levels; i++) nível.addItem(i);
+		nível = new JComboBox<Integer>(new Integer[] { 1, 2, 3 });
 
 		nível.setOpaque(false);
 		nível.addActionListener(new ActionListener() {
