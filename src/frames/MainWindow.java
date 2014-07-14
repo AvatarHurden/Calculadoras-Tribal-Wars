@@ -1,5 +1,6 @@
 package frames;
 
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,14 +9,22 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import selecionar_mundo.GUI;
+import config.Config_Gerais;
+import config.File_Manager;
 import config.Lang;
 import custom_components.Ferramenta;
 import database.Cores;
@@ -41,6 +50,8 @@ public class MainWindow extends JFrame {
 
 		getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 		setBackground(Cores.FUNDO_CLARO);
+		
+		setCloseOperation();
 
 		setLayout(new GridBagLayout());
 
@@ -125,6 +136,68 @@ public class MainWindow extends JFrame {
 				return false;	
 			}
 		});
+		
+	}
+	
+	private void setCloseOperation() {
+		
+		addWindowListener(new WindowListener() {
+			
+			public void windowOpened(WindowEvent arg0) {}
+			public void windowIconified(WindowEvent arg0) {}
+			public void windowDeiconified(WindowEvent arg0) {}
+			public void windowDeactivated(WindowEvent arg0) {}
+			
+			public void windowClosing(WindowEvent e) {
+				
+				File_Manager.save();
+				
+				try {
+					if (Config_Gerais.getOnClose() == true)
+						System.exit(0);
+					else
+						((JFrame) e.getSource()).dispose();
+				} catch (Exception e1) {
+					
+					Object[] options = {"Fechar o programa","Colocar em segundo plano"};
+					
+					JCheckBox check = new JCheckBox("Não me perguntar novamente");
+					String mensagem = "<html>Você deseja fechar o programa ou apenas colocá-lo<br>em segundo "
+							+ "plano?<br><br>(É possível fechá-lo com o ícone da barra de tarefas)<br></html>";
+					
+					int n = JOptionPane.showOptionDialog((Component) e.getSource(), new Object[] {mensagem, check}, 
+							"Encerrar programa?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);  
+					
+					if (check.isSelected()) {
+						Config_Gerais.setOnClose( (n == 0) ? true : false);
+						Config_Gerais.save();
+					}
+					
+					if (n == 0)
+						System.exit(0);
+					else
+						((JFrame) e.getSource()).dispose();
+					
+					Timer timer = new Timer();
+					
+					timer.schedule(new TimerTask() {
+						
+						@Override
+						public void run() {
+							
+							System.out.println("Timer 3 has done");
+							
+						}
+					}, 1000);
+					
+				}
+				
+			}
+			
+			public void windowClosed(WindowEvent arg0) {}
+			public void windowActivated(WindowEvent arg0) {}
+		});
+		
 		
 	}
 

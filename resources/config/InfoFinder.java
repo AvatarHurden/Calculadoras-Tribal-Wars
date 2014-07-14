@@ -86,8 +86,10 @@ public class InfoFinder {
 				if (next.toLowerCase().contains("sistema de pesquisa"))
 					if (next.toLowerCase().contains("pesquisa simplificada"))
 						pesquisaDeNíveis = "simples";
+					else if (next.toLowerCase().contains("3 níveis"))
+						pesquisaDeNíveis = "3niveis";
 					else
-						pesquisaDeNíveis = "níveis";
+						pesquisaDeNíveis = "10niveis";
 
 				if (next.toLowerCase().contains("igreja"))
 					if (next.toLowerCase().contains("inativo"))

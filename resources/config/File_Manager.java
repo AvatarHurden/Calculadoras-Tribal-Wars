@@ -10,7 +10,11 @@ import java.io.InputStreamReader;
 /**
  * Reads from the config file and stores separate parts for use
  * 
- * Includes: - Mundo padrão - Mundos - ModeloTropas
+ * Includes: 
+ * <br>- Mundo padrão 
+ * <br>- Mundos 
+ * <br>- ModeloTropas
+ * <br>- ModeloAldeias
  * 
  * @author Arthur
  * 
@@ -23,9 +27,9 @@ public class File_Manager {
 	private static String modeloAldeias = "";
 
 	/**
-	 * Reads the configuration file for the world informations If the file is
+	 * Reads the configuration file for the world informations. If the file is
 	 * corrupt, for any reason, use the default world configurations, which has
-	 * the worlds lauched until the time of publishing
+	 * the worlds launched until the time of publishing
 	 */
 	public static void read() {
 		
@@ -61,8 +65,7 @@ public class File_Manager {
 			System.out.println("O arquivo salvo está corrompido");
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(
-					File_Manager.class.getResourceAsStream("default_c" +
-							"onfig")));
+					File_Manager.class.getResourceAsStream("default_config")));
 
 			try {
 				process(in);
