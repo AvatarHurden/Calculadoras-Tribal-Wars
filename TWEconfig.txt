@@ -1,0 +1,10 @@
+=========== AVISO ===========
+
+Apenas edite esse arquivo se souber o que está fazendo.
+Alterações podem corromper o arquivo e não permitir a abertura do programa.
+Caso isso ocorra, delete esse arquivo.
+
+=============================
+
+XFechaDefined=true
+XFecha=true

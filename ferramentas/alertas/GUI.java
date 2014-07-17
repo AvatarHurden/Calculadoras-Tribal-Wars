@@ -4,6 +4,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -11,14 +14,16 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
+import alertas.Alert.Aldeia;
+import alertas.Alert.Tipo;
 import custom_components.Ferramenta;
 import database.Cores;
+import database.Unidade;
 
 public class GUI extends Ferramenta {
 	
@@ -33,22 +38,40 @@ public class GUI extends Ferramenta {
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		setLayout(gridBagLayout);
 		
-		String[] nomes = {"Nome", "Tipo", "Origem", "Destino", "Tropas", "Horário" };
+		String[] nomes = {"Nome", "Tipo", "Origem", "Destino", "Tropas", "Horário", "Repete" };
 		
-		String[][] data = new String[10][6];
+		Alert[] data = new Alert[10];
 		
 		for (int i = 0; i < 10; i++) {
 			
-			String[] temp = new String[6];
-			for (int j = 0; j < nomes.length; j++)
-				temp[j] = nomes[j] + (i+1);
+			Alert alerta = new Alert();
+			alerta.setNome("Nome"+i);
+			alerta.setTipo(Tipo.values()[i % 3]);
+			alerta.setOrigem(new Aldeia(nomes[2]+i, i*111, i*55));
+			alerta.setDestino(new Aldeia(nomes[3]+i, i*11, i*555));
 			
-			data[i] = temp;
+			Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
+			for (Unidade u : Unidade.values())
+				map.put(u, (int) (Math.random()*100 + 1));
+			alerta.setTropas(map);
+			
+			Date now = new Date();
+			System.out.println(now);
+			
+			alerta.setHorário(new Date(now.getTime()+i*1000));
+			
+			alerta.setRepete(new Date(now.getTime()));
+			
+			data[i] = alerta;
+			
 		}
 		
-		JTable table = new JTable(data, nomes);
+		JTable table = new JTable(new test(data));
 		
+		table.setAutoCreateRowSorter(true);
 		table.setDefaultRenderer(Object.class, new CustomCellRenderer());
+		
+		//table.getColumn();
 		
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -90,7 +113,13 @@ public class GUI extends Ferramenta {
 	}
 	
 	private class test extends AbstractTableModel implements TableModel  {
-
+		
+		private Alert[] alerts;
+		
+		protected test(Alert[] alerts) {
+			this.alerts = alerts;
+		}
+		
 		@Override
 		public void addTableModelListener(TableModelListener arg0) {
 			// TODO Auto-generated method stub
@@ -98,33 +127,61 @@ public class GUI extends Ferramenta {
 		}
 
 		@Override
-		public Class<?> getColumnClass(int arg0) {
-			// TODO Auto-generated method stub
-			return null;
+		public Class<?> getColumnClass(int column) {
+			
+			switch(column) {
+			case 0: return alerts[0].getNome().getClass();
+			case 1: return alerts[0].getTipo().getClass();
+			case 2: return alerts[0].getOrigem().getClass();
+			case 3: return alerts[0].getDestino().getClass();
+			case 4: return alerts[0].getTropas().getClass();
+			case 5: return alerts[0].getHorário().getClass();
+			case 6: return alerts[0].getRepete().getClass();
+			default: return null;
+		}
+			
 		}
 
 		@Override
 		public int getColumnCount() {
-			// TODO Auto-generated method stub
-			return 0;
+			return 7;
 		}
 
 		@Override
-		public String getColumnName(int arg0) {
-			// TODO Auto-generated method stub
-			return null;
+		public String getColumnName(int column) {
+			
+			switch(column) {
+				case 0: return "Nome";
+				case 1: return "Tipo";
+				case 2: return "Origem";
+				case 3: return "Destino";
+				case 4: return "Tropas";
+				case 5: return "Horário";
+				case 6: return "Repete";
+				default: return null;
+			}
+			
 		}
 
 		@Override
 		public int getRowCount() {
-			// TODO Auto-generated method stub
-			return 0;
+			return alerts.length;
 		}
 
 		@Override
-		public Object getValueAt(int arg0, int arg1) {
-			// TODO Auto-generated method stub
-			return null;
+		public Object getValueAt(int row, int column) {
+			
+			switch(column) {
+				case 0: return alerts[row].getNome();
+				case 1: return alerts[row].getTipo();
+				case 2: return alerts[row].getOrigem();
+				case 3: return alerts[row].getDestino();
+				case 4: return alerts[row].getTropas();
+				case 5: return alerts[row].getHorário();
+				case 6: return alerts[row].getRepete();
+				default: return null;
+			}
+			
 		}
 
 		@Override

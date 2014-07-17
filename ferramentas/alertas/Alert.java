@@ -7,24 +7,28 @@ import database.Unidade;
 
 public class Alert {
 
-	private enum Tipo {
+	protected enum Tipo {
 		Geral, Ataque, Apoio, Saque;
 	}
 	
-	@SuppressWarnings("unused")
-	private class Aldeia {
-		public final int x, y;
-		public final String nome;
-		public Aldeia(String nome, int x, int y) {
+	protected static class Aldeia {
+		protected final int x, y;
+		protected final String nome;
+		protected Aldeia(String nome, int x, int y) {
 			this.nome = nome;
 			this.x = x;
 			this.y = y;
+		}
+		
+		public String toString() {
+			return nome + " - (" + x + "|" + y + ")";
 		}
 	}
 	
 	private Tipo tipo;
 	private String nome;
 	private Date horário;
+	private Date repete;
 	private Map<Unidade, Integer> tropas;
 	private Aldeia origem;
 	private Aldeia destino;
@@ -45,6 +49,10 @@ public class Alert {
 
 	protected void setHorário(Date horário) {
 		this.horário = horário;
+	}
+	
+	protected void setRepete(Date repete) {
+		this.repete = repete;
 	}
 
 	protected void setTropas(Map<Unidade, Integer> tropas) {
@@ -69,6 +77,10 @@ public class Alert {
 
 	protected Date getHorário() {
 		return horário;
+	}
+	
+	protected Date getRepete() {
+		return repete;
 	}
 
 	protected Map<Unidade, Integer> getTropas() {
