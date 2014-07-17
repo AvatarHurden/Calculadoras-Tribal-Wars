@@ -1,6 +1,7 @@
 package simulador;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -16,7 +17,9 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
@@ -660,10 +663,26 @@ public class StatInsertion extends JPanel {
 
 		// Creating the checkbox to select option
 		item = new JComboBox<ItemPaladino>(ItemPaladino.values());
-
+		
+		item.setRenderer(new DefaultListCellRenderer() {
+			
+			 @Override
+			 public Component getListCellRendererComponent(JList<?> list, Object value,
+			        int index, boolean isSelected, boolean cellHasFocus) {
+				 
+				 JComponent comp = (JComponent) super.getListCellRendererComponent(list,
+			                value, index, isSelected, cellHasFocus);
+				 
+				 if (index > -1 && index < ItemPaladino.values().length)
+				 list.setToolTipText(ItemPaladino.values()[index].getDescription());
+				 
+				 return comp;
+				 
+			 }
+			
+		});
+		
 		item.setFont(new Font(getFont().getName(), getFont().getStyle(), 11));
-
-		// TODO Adicionar tooltip para cada item.
 
 		item.addActionListener(new ActionListener() {
 

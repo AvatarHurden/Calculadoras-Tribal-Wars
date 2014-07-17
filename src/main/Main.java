@@ -89,6 +89,7 @@ public class Main {
 		mainFrame.addPanel(new oponentes_derrotados.GUI());
 		mainFrame.addPanel(new simulador.GUI());
 		mainFrame.addPanel(new assistente_saque.GUI());
+		mainFrame.addPanel(new alertas.GUI());
 
 		mainFrame.selectFirst();
 
