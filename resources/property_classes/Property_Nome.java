@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 public class Property_Nome implements Property{
 
@@ -36,6 +39,7 @@ public class Property_Nome implements Property{
 		
 	}
 
+	@SuppressWarnings("serial")
 	public JPanel makeEditDialogPanel(JPanel defaultPanel, final OnChange onChange) {
 		
 		JPanel panel = defaultPanel;
@@ -50,6 +54,20 @@ public class Property_Nome implements Property{
 		panel.add(new JLabel("Nome"), c);
 		
 		txtName = new JTextField(16);
+		
+		txtName.setDocument(new PlainDocument() {
+			
+			  @Override
+		        public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {
+		            if (str == null) return;
+
+		            if ((getLength() + str.length()) <= 25) 
+		                super.insertString(offset, str, attr);
+		            
+		        } 
+			
+		});
+		
 		txtName.setText(name);
 		
 		txtName.getDocument().addDocumentListener(new DocumentListener() {

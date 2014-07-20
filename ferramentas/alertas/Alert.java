@@ -21,14 +21,15 @@ public class Alert {
 		}
 		
 		public String toString() {
-			return nome + " - (" + x + "|" + y + ")";
+			return "<html>" + nome + "<br>" + "(" + x + "|" + y + ")</html>";
 		}
 	}
 	
 	private Tipo tipo;
 	private String nome;
+	private String notas;
 	private Date horário;
-	private Date repete;
+	private Long repete;
 	private Map<Unidade, Integer> tropas;
 	private Aldeia origem;
 	private Aldeia destino;
@@ -46,12 +47,16 @@ public class Alert {
 	protected void setNome(String nome) {
 		this.nome = nome;
 	}
+	
+	protected void setNotas(String notas) {
+		this.notas = notas;
+	}
 
 	protected void setHorário(Date horário) {
 		this.horário = horário;
 	}
 	
-	protected void setRepete(Date repete) {
+	protected void setRepete(long repete) {
 		this.repete = repete;
 	}
 
@@ -74,12 +79,16 @@ public class Alert {
 	protected String getNome() {
 		return nome;
 	}
+	
+	protected String getNotas() {
+		return notas;
+	}
 
 	protected Date getHorário() {
 		return horário;
 	}
 	
-	protected Date getRepete() {
+	protected Long getRepete() {
 		return repete;
 	}
 
