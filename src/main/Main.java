@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import config.Config_Gerais;
 import config.File_Manager;
@@ -25,6 +27,9 @@ public class Main {
 	static MainWindow mainFrame;
 
 	public static void main(String[] args) {
+		
+		Font oldLabelFont = UIManager.getFont("Label.font");
+	    UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
 		
 		Config_Gerais.read();
 		

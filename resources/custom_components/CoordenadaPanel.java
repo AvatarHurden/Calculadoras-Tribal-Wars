@@ -182,6 +182,13 @@ public abstract class CoordenadaPanel extends JPanel{
 			return Integer.parseInt(y.getText());
 	}
 	
+	public void setCoordenadas(int x, int y) {
+		
+		this.x.setText(String.valueOf(x));
+		this.y.setText(String.valueOf(y));
+		
+	}
+	
 	public void reset() {
 		
 		y.setText("");

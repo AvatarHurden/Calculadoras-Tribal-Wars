@@ -1,6 +1,7 @@
 package alertas;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import database.Unidade;
@@ -33,10 +34,9 @@ public class Alert {
 	private Map<Unidade, Integer> tropas;
 	private Aldeia origem;
 	private Aldeia destino;
+	private List<Date> avisos;
 	
 	public Alert() {
-		
-		origem = new Aldeia("oi", 100, 200);
 		
 	}
 
@@ -71,6 +71,10 @@ public class Alert {
 	protected void setDestino(Aldeia destino) {
 		this.destino = destino;
 	}
+	
+	protected void setAvisos(List<Date> avisos) {
+		this.avisos = avisos;
+	}
 
 	protected Tipo getTipo() {
 		return tipo;
@@ -102,6 +106,10 @@ public class Alert {
 
 	protected Aldeia getDestino() {
 		return destino;
+	}
+	
+	protected List<Date> getAvisos() {
+		return avisos;
 	}
 	
 }

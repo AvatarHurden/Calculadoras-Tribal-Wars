@@ -3,13 +3,18 @@ package alertas;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,19 +24,24 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
@@ -42,6 +52,7 @@ import database.Unidade;
 public class GUI extends Ferramenta {
 	
 	List<Alert> alertas = new ArrayList<Alert>();
+	JTable table = new JTable(new test(alertas));
 	
 	public GUI() {
 		
@@ -56,7 +67,7 @@ public class GUI extends Ferramenta {
 		
 		String[] nomes = {"Nome", "Tipo", "Origem", "Destino", "Tropas", "Horário", "Repete", "Notas" };
 		
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 3; i++) {
 			
 			Alert alerta = new Alert();
 			
@@ -91,8 +102,6 @@ public class GUI extends Ferramenta {
 			alertas.add(alerta);
 			
 		}
-		
-		JTable table = new JTable(new test(alertas.toArray(new Alert[100])));
 		
 		table.setLayout(new BorderLayout(10, 10));
 		
@@ -194,6 +203,65 @@ public class GUI extends Ferramenta {
 		
 		add(scrollPane, c);
 		
+		c.gridy++;
+		add(makeButtonPanels(), c);
+		
+	}
+	
+	private JPanel makeButtonPanels() {
+	
+		JPanel panel = new JPanel();
+		
+		JButton addAlerta = new JButton("Criar Novo");
+		addAlerta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Editor editor = new Editor();
+				
+				editor.setModal(true);
+				editor.setVisible(true);
+				
+				Alert alerta = editor.getAlerta();
+				
+				((test) table.getModel()).addAlert(alerta);
+				
+				((test)table.getModel()).fireTableDataChanged();
+				table.repaint();
+				
+			}
+		});
+		
+		JButton editAlerta = new JButton("Editar");
+		editAlerta.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				Alert selected = (Alert) table.getModel().getValueAt(
+						table.convertRowIndexToModel(table.getSelectedRow()), -1);
+				
+				Editor editor = new Editor(selected);
+				
+				editor.setModal(true);
+				editor.setVisible(true);
+				
+				Alert alerta = editor.getAlerta();
+				System.out.println(alerta.getNome());
+				
+				((test) table.getModel()).setValueAt(alerta, 
+						table.convertRowIndexToModel(table.getSelectedRow()), 0);
+				
+				((test)table.getModel()).fireTableDataChanged();
+				table.repaint();
+				
+			}
+		});
+		
+		JButton deleteAlerta = new JButton("Deletar");
+		
+		panel.add(addAlerta);
+		panel.add(editAlerta);
+		
+		return panel;
 	}
 	
 	private class NotaCellRenderer extends CustomCellRenderer {
@@ -241,15 +309,22 @@ public class GUI extends Ferramenta {
 			long value = (long) obj;
 			String time;
 			
-			long d = TimeUnit.MILLISECONDS.toDays(value);
-			long h = TimeUnit.MILLISECONDS.toHours(value-TimeUnit.DAYS.toMillis(d));
-			long m = TimeUnit.MILLISECONDS.toMinutes(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h));
-			long s = TimeUnit.MILLISECONDS.toSeconds(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m));
+			if (value > 0) {
 			
-			if (d > 0)
-				time = (String.format("%dd %02d:%02d:%02d", d, h, m, s));
-			else
-				time = (String.format("%02d:%02d:%02d", h, m, s));
+				long d = TimeUnit.MILLISECONDS.toDays(value);
+				long h = TimeUnit.MILLISECONDS.toHours(value-TimeUnit.DAYS.toMillis(d));
+				long m = TimeUnit.MILLISECONDS.toMinutes(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h));
+				long s = TimeUnit.MILLISECONDS.toSeconds(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m));
+			
+				if (d > 0)
+					time = (String.format("%dd %02d:%02d:%02d", d, h, m, s));
+				else
+					time = (String.format("%02d:%02d:%02d", h, m, s));
+			
+			} else {
+				time = "-----";
+				setHorizontalAlignment(JLabel.CENTER);
+			}
 			
 			Component cell = super.getTableCellRendererComponent(
 					   table, time, isSelected, hasFocus, row, column);
@@ -266,8 +341,10 @@ public class GUI extends Ferramenta {
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
 			HashMap<Unidade, Integer> map = (HashMap<Unidade, Integer>) obj;
-
-			String escrita = "";
+			
+			System.out.println(map);
+			
+			String escrita = "<html>";
 			String tooltip = "<html>";
 			int lines = 0;
 			
@@ -324,15 +401,23 @@ public class GUI extends Ferramenta {
 	
 	private class test extends AbstractTableModel implements TableModel  {
 		
-		private Alert[] alerts;
+		private List<Alert> alerts;
 		
 		protected test(Alert[] alerts) {
+			this.alerts = new ArrayList<Alert>(Arrays.asList(alerts));
+		}
+		
+		protected test(List<Alert> alerts) {
 			this.alerts = alerts;
 		}
 		
+		protected void addAlert(Alert alerta) {
+			alerts.add(alerta);
+		}
+		
+		
 		@Override
 		public void addTableModelListener(TableModelListener arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 
@@ -340,14 +425,14 @@ public class GUI extends Ferramenta {
 		public Class<?> getColumnClass(int column) {
 			
 			switch(column) {
-			case 0: return alerts[0].getNome().getClass();
-			case 1: return alerts[0].getTipo().getClass();
-			case 2: return alerts[0].getOrigem().getClass();
-			case 3: return alerts[0].getDestino().getClass();
-			case 4: return alerts[0].getTropas().getClass();
-			case 5: return alerts[0].getHorário().getClass();
-			case 6: return alerts[0].getRepete().getClass();
-			case 7: return alerts[0].getNotas().getClass();
+			case 0: return alerts.get(0).getNome().getClass();
+			case 1: return alerts.get(0).getTipo().getClass();
+			case 2: return alerts.get(0).getOrigem().getClass();
+			case 3: return alerts.get(0).getDestino().getClass();
+			case 4: return alerts.get(0).getTropas().getClass();
+			case 5: return alerts.get(0).getHorário().getClass();
+			case 6: return alerts.get(0).getRepete().getClass();
+			case 7: return alerts.get(0).getNotas().getClass();
 			default: return null;
 		}
 			
@@ -377,23 +462,27 @@ public class GUI extends Ferramenta {
 
 		@Override
 		public int getRowCount() {
-			return alerts.length;
+			return alerts.size();
 		}
 
-		@Override
+
+		/**
+		 * Para valores entre 0 e 6 de coluna, retorna uma propriedade do alerta da linha correspondente.
+		 * <br>Para qualquer outro valor de coluna, retorna o alerta em si.
+		 */
 		public Object getValueAt(int row, int column) {
 			
 			switch(column) {
-				case 0: return alerts[row].getNome();
-				case 1: return alerts[row].getTipo();
-				case 2: return alerts[row].getOrigem();
-				case 3: return alerts[row].getDestino();
-				case 4: return alerts[row].getTropas();
-				case 5: return alerts[row].getHorário();
-				case 6: return alerts[row].getRepete();
+				case 0: return (alerts.get(row).getNome() != null) ? alerts.get(row).getNome() : "";
+				case 1: return (alerts.get(row).getTipo() != null) ? alerts.get(row).getTipo() : Tipo.Geral;
+				case 2: return alerts.get(row).getOrigem();
+				case 3: return alerts.get(row).getDestino();
+				case 4: return alerts.get(row).getTropas();
+				case 5: return alerts.get(row).getHorário();
+				case 6: return (alerts.get(row).getRepete() != null) ? alerts.get(row).getRepete() : 0;
 				// Não permite ordenar os alertas através das notas
 				case 7: return null;
-				default: return null;
+				default: return alerts.get(row);
 			}
 			
 		}
@@ -410,8 +499,10 @@ public class GUI extends Ferramenta {
 		}
 
 		@Override
-		public void setValueAt(Object arg0, int arg1, int arg2) {
-			// TODO Auto-generated method stub
+		public void setValueAt(Object obj, int row, int column) {
+			
+			alertas.remove(row);
+			alertas.add(row, (Alert) obj);
 			
 		}
 		
