@@ -34,6 +34,8 @@ public abstract class CoordenadaPanel extends JPanel{
 	// X and Y coordinates
 	JTextField x, y;
 	
+	JSeparator separator;
+	
 	/**
 	 * Creates a panel with 2 spaces for coordinates (x and y).
 	 * <br>Above these spaces there is a header with the name of choice
@@ -107,7 +109,7 @@ public abstract class CoordenadaPanel extends JPanel{
 		c.insets = new Insets(5, 5, 5, 5);
 		coordinatePanel.add(x, c);
 		
-		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+		separator = new JSeparator(SwingConstants.VERTICAL);
 		separator.setForeground(Color.BLACK);
 		
 		c.fill = GridBagConstraints.VERTICAL;
@@ -193,6 +195,15 @@ public abstract class CoordenadaPanel extends JPanel{
 		
 		y.setText("");
 		x.setText("");
+		
+	}
+	
+	public void setEnabled(boolean enabled) {
+		
+		y.setEnabled(enabled);
+		x.setEnabled(enabled);
+		
+		separator.setForeground(enabled ? Color.BLACK : Color.gray);
 		
 	}
 	

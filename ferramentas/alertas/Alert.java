@@ -22,7 +22,10 @@ public class Alert {
 		}
 		
 		public String toString() {
-			return "<html>" + nome + "<br>" + "(" + x + "|" + y + ")</html>";
+			if (nome == null || nome.equals(""))
+				return x + "|" + y;
+			else
+				return "<html>" + nome + "<br>" + "(" + x + "|" + y + ")</html>";
 		}
 	}
 	

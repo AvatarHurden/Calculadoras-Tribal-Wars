@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -79,6 +80,9 @@ public class Editor extends JDialog{
 	JButton addAviso;
 	LinkedHashMap<IntegerFormattedTextField, JComboBox<String>> avisos;
 	
+	// Componentes desativados quando o aviso é do tipo geral
+	List<Component> villageComponents = new ArrayList<Component>();
+	
 	protected Editor() {
 		
 		setResizable(false);
@@ -140,6 +144,10 @@ public class Editor extends JDialog{
 		c.gridy++;
 		add(makeButtons(), c);
 
+		// Como o tipo selecionado é geral, desativa as coisas adequadas.
+		for (Component t : villageComponents)
+			t.setEnabled(false);
+		
 		pack();
 	}
 	
@@ -344,11 +352,12 @@ public class Editor extends JDialog{
 				((JPanel) e.getSource()).setBackground(Cores.FUNDO_ESCURO);
 				((JPanel) e.getSource()).setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
 				
-				if (((JPanel) e.getSource()).equals(tipos[0])) {
-					
-					
-					
-				}
+				if (((JPanel) e.getSource()).equals(tipos[0]))
+					for (Component c : villageComponents)
+						c.setEnabled(false);
+				else
+					for (Component c : villageComponents)
+						c.setEnabled(true);
 				
 			}
 		};
@@ -451,6 +460,8 @@ public class Editor extends JDialog{
 		c.gridx++;
 		panel.add(origemNome, c);
 		
+		villageComponents.addAll(Arrays.asList(panel.getComponents()));
+		
 		return panel;
 	}
 	
@@ -490,6 +501,8 @@ public class Editor extends JDialog{
 		c.gridx++;
 		panel.add(destinoNome, c);
 		
+		villageComponents.addAll(Arrays.asList(panel.getComponents()));
+		
 		return panel;
 	}
 	
@@ -518,7 +531,6 @@ public class Editor extends JDialog{
 		c.gridwidth = 1;
 		
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
-			System.out.println(i);
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
 				
 				c.gridx = 0;
@@ -536,6 +548,8 @@ public class Editor extends JDialog{
 
 			}
 		}
+		
+		villageComponents.addAll(Arrays.asList(panel.getComponents()));
 		
 		return panel;
 	}
@@ -688,6 +702,8 @@ public class Editor extends JDialog{
 		alert.setHorário(new Date());
 		
 		alert.setOrigem(new Aldeia(null, 500, 501));
+		
+		alert.setTipo(Tipo.Apoio);
 		
 		List<Date> avisos = new ArrayList<Date>();
 		
