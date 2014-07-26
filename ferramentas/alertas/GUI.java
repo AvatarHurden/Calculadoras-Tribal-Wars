@@ -42,8 +42,7 @@ public class GUI extends Ferramenta {
 			
 			alerta.setNome("Nome"+i);
 			
-			alerta.setNotas(i+" MEU NOME É ESSE QUE ESTOU MOSTRANDO PARA VOC~ES AQUI, AGORA, NESSE DIA PARA A AL ELREAIOD HAUSD ASD ASOD HASOD HASDO AHSDO HSADO YASID AISD");
-			
+			alerta.setNotas(i+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pellentesque rhoncus dignissim. Phasellus pulvinar ut nunc non congue. Quisque lacus eros, porta malesuada tempor quis, luctus in est. Maecenas in congue tellus, eu rhoncus nulla. Maecenas metus neque, varius in vulputate id, sodales a ante. Donec sit amet laoreet ligula. Vestibulum blandit commodo volutpat.");
 			alerta.setTipo(Tipo.values()[i % 4]);
 			alerta.setOrigem(new Aldeia("Origem"+i, i*111, i*55));
 			alerta.setDestino(new Aldeia("Destino"+i, i*11, i*555));
@@ -102,7 +101,10 @@ public class GUI extends Ferramenta {
 				
 				Alert alerta = editor.getAlerta();
 				
-				table.addAlert(alerta);
+				if (alerta != null)
+					table.addAlert(alerta);
+				else
+					System.out.println("era null");
 				
 			}
 		});
@@ -129,9 +131,21 @@ public class GUI extends Ferramenta {
 		});
 		
 		JButton deleteAlerta = new JButton("Deletar");
+		deleteAlerta.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				int row = table.convertRowIndexToModel(table.getSelectedRow());
+				
+				if (row >= 0)
+					table.removeAlert(row);
+				
+			}
+		});
 		
 		panel.add(addAlerta);
 		panel.add(editAlerta);
+		panel.add(deleteAlerta);
 		
 		return panel;
 	}

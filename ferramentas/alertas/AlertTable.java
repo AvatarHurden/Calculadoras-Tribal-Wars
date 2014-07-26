@@ -2,11 +2,17 @@ package alertas;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,17 +22,19 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -61,7 +69,7 @@ public class AlertTable extends JTable{
 		setShowVerticalLines(true);
 		setShowHorizontalLines(false);
 		
-		setGridColor(Cores.SEPARAR_CLARO);
+		setGridColor(Cores.SEPARAR_ESCURO);
 		
 		getColumnModel().setColumnMargin(1);
 		setRowMargin(0);
@@ -83,6 +91,18 @@ public class AlertTable extends JTable{
 		addNoteClickListener();
 		
 		changeHeader();
+		
+		// Change the widths of the columns
+		getColumnModel().getColumn(0).setPreferredWidth(314);
+		getColumnModel().getColumn(1).setPreferredWidth(86);
+		getColumnModel().getColumn(2).setPreferredWidth(205);
+		getColumnModel().getColumn(3).setPreferredWidth(215);
+		getColumnModel().getColumn(4).setPreferredWidth(207);
+		getColumnModel().getColumn(5).setPreferredWidth(219);
+		getColumnModel().getColumn(6).setPreferredWidth(134);
+		getColumnModel().getColumn(7).setPreferredWidth(108);
+		
+		
 	}
 	
 	private void setSorter() {
@@ -135,34 +155,56 @@ public class AlertTable extends JTable{
 			public void mousePressed(MouseEvent e) {
 			    if (e.getClickCount() == 2) {
 			
-			      JTable target = (JTable)e.getSource();
+			      final JTable target = (JTable)e.getSource();
 			      
-			      int clickrow = target.convertRowIndexToModel(target.getSelectedRow());
+			      final int clickrow = target.convertRowIndexToModel(target.getSelectedRow());
 			      int clickcolumn = target.convertColumnIndexToModel(target.getSelectedColumn());
 			      
+			      Rectangle cell = target.getCellRect(clickrow, clickcolumn, false);
+			      
 			      	if (clickcolumn == 7) {
-			      		
-			      		JTextArea area = new JTextArea(
-			      				(String) target.getModel().getValueAt(clickrow, clickcolumn), 5, 20);
-			      		
-			      		area.setLineWrap(true);
-			      		area.setWrapStyleWord(true);
-			      		
+			      	
 			      		final JDialog dialog = new JDialog();
-			      		dialog.getContentPane().setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
+			      		dialog.setUndecorated(true);
+			      		dialog.setFocusable(true);
 			      		
-			      		dialog.add(area);
+			      		GridBagConstraints c = new GridBagConstraints();
+			      		c.insets = new Insets(5, 5, 5, 5);
+			      		c.gridx = 0;
+			      		c.gridy = 0;
 			      		
 			      		JPanel panel = new JPanel();
-			    		panel.setOpaque(false);
+			    		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+			    		panel.setOpaque(true);
+			    		panel.setBackground(Cores.FUNDO_CLARO);
 			    		
+			    		GridBagLayout gridBagLayout = new GridBagLayout();
+			    		gridBagLayout.columnWidths = new int[] { 118, 118 };
+			    		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
+			    		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+			    		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+			    		panel.setLayout(gridBagLayout);
+			    		
+			    		JLabel nameLabel = new JLabel("Notas");
+			    		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
+			    		
+			    		c.anchor = GridBagConstraints.WEST;
+			    		c.gridwidth = 2;
+			    		panel.add(nameLabel, c);
+			    		
+			    		final JTextArea notas = new JTextArea(alerts.get(clickrow).getNotas(), 5, 20);
+			    		notas.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
+			    		notas.setLineWrap(true);
+			    		notas.setWrapStyleWord(true);
+			    		
+			    		c.gridy++;
+			    		panel.add(notas, c);
+			      		
 			    		JButton salvar = new JButton("Salvar");
 			    		salvar.addActionListener(new ActionListener() {
 			    			public void actionPerformed(ActionEvent e) {
-			    		
-			    			
+			    				target.setValueAt(notas.getText(), clickrow, 7);
 			    				dialog.dispose();
-			    				
 			    			}
 			    		});
 			    		
@@ -173,20 +215,38 @@ public class AlertTable extends JTable{
 			    			}
 			    		});
 			    		
-			    		panel.add(salvar);
-			    		panel.add(cancelar);
+			    		c.gridwidth = 1;
+			    		c.gridy++;
+			    		c.anchor = GridBagConstraints.EAST;
+			    		panel.add(salvar, c);
 			    		
-			    		dialog.add(panel);
-			      		
+			    		c.gridx++;
+			    		c.anchor = GridBagConstraints.WEST;
+			    		panel.add(cancelar, c);
+			    
+			    		JScrollPane scroll = new JScrollPane(panel);
+			    		scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width+16, scroll.getPreferredSize().height));
+			    		scroll.setOpaque(false);
+			    		
+			    		dialog.add(scroll);
+			    		
+			    		dialog.addWindowFocusListener(new WindowFocusListener() {
+							
+							public void windowLostFocus(WindowEvent e) {
+								dialog.dispose();
+								}
+							
+							public void windowGainedFocus(WindowEvent e) {}
+						});
+			    		
 			    		dialog.pack();
-			    		dialog.setModal(true);
+			    		
+			    		dialog.setLocation((int)cell.getCenterX() + target.getLocationOnScreen().x - dialog.getPreferredSize().width/2, 
+			    				(int)cell.getCenterY() + target.getLocationOnScreen().y - dialog.getPreferredSize().height/2);
+			    		
 			    		dialog.setVisible(true);
 			    		
-			      		
-			      		
-			      	}
-			      		
-			      	
+			      	}   	
 			    }
 			  }
 		});
@@ -220,9 +280,11 @@ public class AlertTable extends JTable{
 	}
 	
 	protected void addAlert(Alert alerta) {
+		
 		alerts.add(alerta);
 		((AlertTableModel) getModel()).fireTableDataChanged();
 		repaint();
+		
 	}
 	
 	protected void changeAlert(Alert alerta, int row) {
@@ -230,6 +292,14 @@ public class AlertTable extends JTable{
 		alerts.remove(row);
 		alerts.add(row, alerta);
 
+		((AlertTableModel) getModel()).fireTableDataChanged();
+		repaint();
+		
+	}
+	
+	protected void removeAlert(int row) {
+		
+		alerts.remove(row);
 		((AlertTableModel) getModel()).fireTableDataChanged();
 		repaint();
 		
@@ -453,7 +523,13 @@ public class AlertTable extends JTable{
 		public void removeTableModelListener(TableModelListener arg0) {}
 
 		@Override
-		public void setValueAt(Object obj, int row, int column) {}
+		public void setValueAt(Object obj, int row, int column) {
+			
+			// The only one to be changed this way is the notes
+			if (column == 7)
+				alerts.get(row).setNotas((String) obj);
+			
+		}
 		
 	}
 	

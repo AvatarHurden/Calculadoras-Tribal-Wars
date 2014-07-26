@@ -2,7 +2,6 @@ package alertas;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -24,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,7 +30,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
@@ -40,14 +37,13 @@ import javax.swing.border.SoftBevelBorder;
 
 import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
-import config.Config_Gerais;
-import config.File_Manager;
 import config.Mundo_Reader;
 import custom_components.CoordenadaPanel;
 import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
 
+@SuppressWarnings("serial")
 public class Editor extends JDialog{
 	
 	// Necessário para poder cancelar modificações
@@ -675,48 +671,4 @@ public class Editor extends JDialog{
 		return alerta;
 	}
 	
-	public static void main (String args[]) {
-		
-		Font oldLabelFont = UIManager.getFont("Label.font");
-	    UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
-	    UIManager.put("Spinner.font", oldLabelFont.deriveFont(Font.PLAIN));
-	    UIManager.put("ComboBox.font", oldLabelFont.deriveFont(Font.PLAIN));
-	    UIManager.put("Button.font", oldLabelFont.deriveFont(Font.PLAIN));
-		
-		Config_Gerais.read();
-				
-		File_Manager.read();
-
-		File_Manager.defineMundos();
-		
-		Mundo_Reader.setMundoSelecionado(
-				Mundo_Reader.getMundoList().get(32));
-		
-		File_Manager.save();
-		Config_Gerais.save();
-		
-		File_Manager.defineModelos();
-		
-		Alert alert = new Alert();
-		
-		alert.setHorário(new Date());
-		
-		alert.setOrigem(new Aldeia(null, 500, 501));
-		
-		alert.setTipo(Tipo.Apoio);
-		
-		List<Date> avisos = new ArrayList<Date>();
-		
-		avisos.add(new Date(alert.getHorário().getTime()-320*1000));
-		
-		alert.setAvisos(avisos);
-		
-		Editor ed = new Editor(alert);
-		
-		ed.setVisible(true);
-		//ed.pack();
-		ed.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
-	}
-
 }
