@@ -83,7 +83,7 @@ public class Property_Edifícios extends HashMap<Edifício, Integer> implements Pr
 	@Override
 	public void setValue() {
 		
-		for (Entry<Edifício, EdifícioFormattedTextField> x : textFieldMap.entrySet()) {
+		for (Map.Entry<Edifício, EdifícioFormattedTextField> x : textFieldMap.entrySet()) {
 			
 			// Puts every unit with corresponding value
 			put(x.getKey(), x.getValue().getValue().intValue());

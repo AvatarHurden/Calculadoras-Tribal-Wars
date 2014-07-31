@@ -20,11 +20,13 @@ import frames.TrayIconClass;
  * 
  * @author Arthur
  * @date 25/07/2013
+ *
+ * Contribuições de Wesley Nascimento vulgo Sorriso
  */
 public class Main {
 
-	static selecionar_mundo.GUI selecionar;
-	static MainWindow mainFrame;
+	private static selecionar_mundo.GUI selecionar;
+	private static MainWindow mainFrame;
 
 	public static void main(String[] args) {
 		
@@ -40,7 +42,6 @@ public class Main {
 		new TrayIconClass();
 
 		openSelection();
-
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class Main {
 		
 		File_Manager.defineModelos();
 
-		mainFrame = new MainWindow();
+		mainFrame = MainWindow.getInstance();
 		
 		// Adicionando todas as ferramentas criadas
 		mainFrame.addPanel(new recrutamento.GUI());
@@ -125,7 +126,7 @@ public class Main {
 //		});
 		
 		
-		
+		//Não entendi pra que esses timers servem... By sorriso
 		Date time1 = new Date();
 		time1.setTime(time1.getTime()+5000);
 		

@@ -111,7 +111,7 @@ public class Property_UnidadeList
 	@Override
 	public void setValue() {
 		
-		for (Entry<Unidade, IntegerFormattedTextField> x : textFieldMap.entrySet()) {
+		for (Map.Entry<Unidade, IntegerFormattedTextField> x : textFieldMap.entrySet()) {
 			
 			// Puts every unit with corresponding value
 			put(x.getKey(), x.getValue().getValue());
