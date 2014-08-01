@@ -15,6 +15,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,14 +36,20 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import sun.swing.table.DefaultTableCellHeaderRenderer;
 import alertas.Alert.Tipo;
+import config.Config_Gerais;
 import database.Cores;
 import database.Unidade;
 
@@ -92,16 +99,68 @@ public class AlertTable extends JTable{
 		
 		changeHeader();
 		
-		// Change the widths of the columns
-		getColumnModel().getColumn(0).setPreferredWidth(314);
-		getColumnModel().getColumn(1).setPreferredWidth(86);
-		getColumnModel().getColumn(2).setPreferredWidth(205);
-		getColumnModel().getColumn(3).setPreferredWidth(215);
-		getColumnModel().getColumn(4).setPreferredWidth(207);
-		getColumnModel().getColumn(5).setPreferredWidth(219);
-		getColumnModel().getColumn(6).setPreferredWidth(134);
-		getColumnModel().getColumn(7).setPreferredWidth(108);
+		// Change the positions and widths of the columns
+		try {
+			
+			TableColumn column[] = new TableColumn[Config_Gerais.getColumnOrder().length];
+			
+			// Reordering the columns
+			for (int i = 0; i < column.length; i++)
+				 column[i] = columnModel.getColumn(Config_Gerais.getColumnOrder()[i]);
+			 
+			while (columnModel.getColumnCount() > 0) 
+				 columnModel.removeColumn(columnModel.getColumn(0));
+			 
+			for (int i = 0; i < column.length; i++)
+				 columnModel.addColumn(column[i]);
+			
+			// Putting the correct widths
+			for (int i = 0; i < Config_Gerais.getColumnWidths().length; i++)
+				getColumnModel().getColumn(i).setPreferredWidth(Config_Gerais.getColumnWidths()[i]);
+			
+		} catch (Exception e) {
+			getColumnModel().getColumn(0).setPreferredWidth(314);
+			getColumnModel().getColumn(1).setPreferredWidth(86);
+			getColumnModel().getColumn(2).setPreferredWidth(205);
+			getColumnModel().getColumn(3).setPreferredWidth(215);
+			getColumnModel().getColumn(4).setPreferredWidth(207);
+			getColumnModel().getColumn(5).setPreferredWidth(219);
+			getColumnModel().getColumn(6).setPreferredWidth(134);
+			getColumnModel().getColumn(7).setPreferredWidth(108);
+		}
 		
+		getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+			
+			public void columnSelectionChanged(ListSelectionEvent e) {}
+			
+			public void columnRemoved(TableColumnModelEvent e) {}
+			
+			@Override
+			public void columnMoved(TableColumnModelEvent e) {
+				
+				int[] order = new int[getColumnModel().getColumnCount()];
+				
+				for (int i = 0; i < order.length; i++)
+					order[i] = getColumnModel().getColumn(i).getModelIndex();
+				
+				System.out.println(Arrays.toString(order));
+				Config_Gerais.setColumnOrder(order);
+			}
+			
+			public void columnMarginChanged(ChangeEvent e) {
+				
+				int[] width = new int[getColumnModel().getColumnCount()];
+				
+				for (int i = 0; i < width.length; i++)
+					width[i] = getColumnModel().getColumn(i).getPreferredWidth();
+				
+				Config_Gerais.setColumnWidths(width);
+				
+			}
+			
+			@Override
+			public void columnAdded(TableColumnModelEvent e) {}
+		});
 		
 	}
 	
@@ -158,11 +217,12 @@ public class AlertTable extends JTable{
 			      final JTable target = (JTable)e.getSource();
 			      
 			      final int clickrow = target.convertRowIndexToModel(target.getSelectedRow());
-			      int clickcolumn = target.convertColumnIndexToModel(target.getSelectedColumn());
+			      int clickcolumn = target.getSelectedColumn();
 			      
-			      Rectangle cell = target.getCellRect(clickrow, clickcolumn, false);
+			      Rectangle cell = target.getCellRect(clickrow, target.getSelectedColumn(), false);
 			      
-			      	if (clickcolumn == 7) {
+			      // Only does this if the selected column is tne notes column
+			      if (target.convertColumnIndexToModel(clickcolumn) == 7) {
 			      	
 			      		final JDialog dialog = new JDialog();
 			      		dialog.setUndecorated(true);
@@ -320,6 +380,8 @@ public class AlertTable extends JTable{
 			label.setBackground(cell.getBackground());
 			label.setOpaque(true);
 			
+			label.setToolTipText("Clique duas vezes para ver e editar a nota");
+			
 			return label;
 			
 		}
@@ -411,6 +473,8 @@ public class AlertTable extends JTable{
 			
 			if (lines > 3)
 				((JComponent) cell).setToolTipText(tooltip);
+			else
+				((JComponent) cell).setToolTipText(null);
 			
 			return cell;
 			

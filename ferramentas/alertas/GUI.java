@@ -114,18 +114,21 @@ public class GUI extends Ferramenta {
 			
 			public void actionPerformed(ActionEvent e) {
 				
-				Alert selected = (Alert) table.getModel().getValueAt(
-						table.convertRowIndexToModel(table.getSelectedRow()), -1);
+				if (table.getSelectedRow() >= 0) {
 				
-				Editor editor = new Editor(selected);
+					Alert selected = (Alert) table.getModel().getValueAt(
+							table.convertRowIndexToModel(table.getSelectedRow()), -1);
+					
+					Editor editor = new Editor(selected);
+					
+					editor.setModal(true);
+					editor.setVisible(true);
+					
+					Alert alerta = editor.getAlerta();
+					
+					table.changeAlert(alerta, table.convertRowIndexToModel(table.getSelectedRow()));
 				
-				editor.setModal(true);
-				editor.setVisible(true);
-				
-				Alert alerta = editor.getAlerta();
-				
-				table.changeAlert(alerta, table.convertRowIndexToModel(table.getSelectedRow()));
-				
+				}
 				
 			}
 		});
