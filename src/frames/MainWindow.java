@@ -173,6 +173,7 @@ public class MainWindow extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				
 				File_Manager.save();
+				Config_Gerais.save();
 				
 				try {
 					if (Config_Gerais.getOnClose() == true)
@@ -195,9 +196,9 @@ public class MainWindow extends JFrame {
 						Config_Gerais.save();
 					}
 					
-					if (n == 0)
+					if (n == 0) {
 						System.exit(0);
-					else
+					} else
 						((JFrame) e.getSource()).dispose();
 					
 					Timer timer = new Timer();

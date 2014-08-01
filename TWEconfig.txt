@@ -8,3 +8,6 @@ Caso isso ocorra, delete esse arquivo.
 
 XFechaDefined=true
 XFecha=true
+
+OrdemColuna=[0, 7, 1, 2, 3, 4, 5, 6]
+TamanhoColuna=[206, 34, 42, 85, 98, 110, 135, 116]

@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
 import custom_components.Ferramenta;
-import database.Cores;
 import database.Unidade;
-import frames.MainWindow;
 
 public class GUI extends Ferramenta {
 	
@@ -70,11 +70,9 @@ public class GUI extends Ferramenta {
 			alertas.add(alerta);
 			
 		}
-        Dimension d = MainWindow.getInstance().getPreferredSize();
-        d.setSize(d.getWidth(), 570);
-
+		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setPreferredSize(d);
+		scrollPane.setPreferredSize(new Dimension(1000,500));
 		table.setFillsViewportHeight(true);
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -91,7 +89,6 @@ public class GUI extends Ferramenta {
 	private JPanel makeButtonPanels() {
 	
 		JPanel panel = new JPanel();
-        panel.setBackground(Cores.FUNDO_CLARO);
 		
 		JButton addAlerta = new JButton("Criar Novo");
 		addAlerta.addActionListener(new ActionListener() {
@@ -116,21 +113,22 @@ public class GUI extends Ferramenta {
 		editAlerta.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				if( table.getSelectedRow() == -1 ){
-                    return;
-                }
-				Alert selected = (Alert) table.getModel().getValueAt(
-						table.convertRowIndexToModel(table.getSelectedRow()), -1);
 				
-				Editor editor = new Editor(selected);
+				if (table.getSelectedRow() >= 0) {
 				
-				editor.setModal(true);
-				editor.setVisible(true);
+					Alert selected = (Alert) table.getModel().getValueAt(
+							table.convertRowIndexToModel(table.getSelectedRow()), -1);
+					
+					Editor editor = new Editor(selected);
+					
+					editor.setModal(true);
+					editor.setVisible(true);
+					
+					Alert alerta = editor.getAlerta();
+					
+					table.changeAlert(alerta, table.convertRowIndexToModel(table.getSelectedRow()));
 				
-				Alert alerta = editor.getAlerta();
-				
-				table.changeAlert(alerta, table.convertRowIndexToModel(table.getSelectedRow()));
-				
+				}
 				
 			}
 		});
