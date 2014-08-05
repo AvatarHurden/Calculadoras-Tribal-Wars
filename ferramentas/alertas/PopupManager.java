@@ -1,8 +1,9 @@
 package alertas;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -19,15 +20,20 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.border.TitledBorder;
 
 import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
@@ -54,7 +60,7 @@ public class PopupManager {
 		
 		alerta.setNome("Nome"+i);
 		
-		alerta.setNotas(i+"Ataque para limpeza. Enviar relatório para Pedro2");
+		alerta.setNotas(i+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pellentesque rhoncus dignissim. Quisque lacus eros.");
 		alerta.setTipo(Tipo.values()[i % 4]);
 		alerta.setOrigem(new Aldeia("Origem"+i, i*111, i*55));
 		alerta.setDestino(new Aldeia("Destino"+i, i*11, i*555));
@@ -62,7 +68,7 @@ public class PopupManager {
 		if (i > 0) {
 		Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
 		for (Unidade u : Unidade.values())
-			map.put(u, (int) (Math.random()*100 + 1));
+			map.put(u, (int) (Math.round(Math.random()+0.1)));
 		alerta.setTropas(map);
 		} else {
 			Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
@@ -101,8 +107,6 @@ public class PopupManager {
 			setUndecorated(true);
 			//setPreferredSize(new Dimension(300, 100));
 			
-			getContentPane().setBackground(new Color((int) (Math.random()*255), (int) (Math.random()*255), (int) (Math.random()*255)));			
-			
 			((JPanel)getContentPane()).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 			
 			pack();
@@ -114,7 +118,10 @@ public class PopupManager {
 			
 			getContentPane().setBackground(Cores.FUNDO_CLARO);
 			
-			setLayout(new GridBagLayout());
+			GridBagLayout gridBagLayout = new GridBagLayout();
+			gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+			gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, Double.MIN_VALUE };
+			setLayout(gridBagLayout);
 			
 			GridBagConstraints c = new GridBagConstraints();
 			c.insets = new Insets(5, 5, 5, 5);
@@ -143,7 +150,7 @@ public class PopupManager {
 			
 			JLabel datelbl = new JLabel();
 			datelbl.setFont(datelbl.getFont().deriveFont((float) 15));
-			datelbl.setText(new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ").format(alerta.getHorário()));
+			datelbl.setText(new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(alerta.getHorário()));
 			
 			c.gridwidth = 1;
 			c.gridy++;
@@ -229,6 +236,7 @@ public class PopupManager {
 			panel.setLayout(gridBagLayout);
 			
 			final GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(0, 0, 0, 0);
 			c.gridx = 0;
 			c.gridy = 0;
 			c.fill = GridBagConstraints.HORIZONTAL;
@@ -238,7 +246,7 @@ public class PopupManager {
 					GUI.class.getResource("/images/down_arrow.png"));
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(12, 12, Image.SCALE_SMOOTH));
 			
-			JLabel label = new JLabel(icon, SwingConstants.RIGHT);
+			final JLabel label = new JLabel(icon, SwingConstants.RIGHT);
 			label.setPreferredSize(new Dimension(getPreferredSize().width, 18));
 			
 			label.addMouseListener(new MouseAdapter() {
@@ -255,18 +263,18 @@ public class PopupManager {
 				
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					
 					panel.setBackground(Cores.ALTERNAR_CLARO);
 					panel.remove((JComponent) e.getSource());
 					panel.add(spoiler, c);
-					pack();
+					
 					subtractOpenDialogs();
 					showOnScreen();
+					
 				}
 			});
 
 			panel.add(label, c);
-			
-			//panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 20));
 			
 			return panel;
 		}
@@ -277,88 +285,153 @@ public class PopupManager {
 			panel.setOpaque(true);
 			panel.setBackground(Cores.FUNDO_CLARO);
 			
-			panel.setLayout(new GridBagLayout());
+			GridBagLayout gridBagLayout = new GridBagLayout();
+			gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0 };
+			gridBagLayout.rowWeights = new double[] { 0.0, 1.0 };
+			panel.setLayout(gridBagLayout);
 			
 			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.anchor = GridBagConstraints.WEST;
-			//c.insets = new Insets(5, 0, 0, 0);
+			c.fill = GridBagConstraints.NONE;
+			c.anchor = GridBagConstraints.NORTH;
+			c.insets = new Insets(2, 2, 3, 3);
 			c.gridx = 0;
 			c.gridy = 0;
 			
-			// Inserindo as aldeias
-			JLabel origemlbl = new JLabel("Origem");
-			origemlbl.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
+			JPanel origem = makeAldeiaPanel("Origem", alerta.getOrigem().toString());
 			
-			panel.add(origemlbl, c);
+			c.gridwidth = 1;
+			panel.add(origem, c);
 			
-			JLabel destinolbl = new JLabel("Destino");
-			destinolbl.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
+			JPanel destino = makeAldeiaPanel("Destino", alerta.getDestino().toString());
 			
 			c.gridx++;
-			panel.add(destinolbl, c);
+			panel.add(destino, c);
 			
-			c.gridx = 0;
-			c.gridy++;
-			panel.add(new JLabel(alerta.getOrigem().toString()), c);
+			JPanel tropas = makeTropasPanel(alerta.getTropas());
 			
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridheight = 2;
 			c.gridx++;
-			panel.add(new JLabel(alerta.getDestino().toString(), SwingConstants.CENTER), c);
+			panel.add(tropas, c);
 			
+			JPanel notas = makeNotasPanel(alerta.getNotas(), origem.getPreferredSize().width + destino.getPreferredSize().width + 5);
+			
+			c.fill = GridBagConstraints.BOTH;
 			c.gridwidth = 2;
+			c.gridheight = 1;
 			c.gridx = 0;
 			c.gridy++;
-			panel.add(makeTropasPanel(alerta.getTropas()), c);
+			panel.add(notas, c);
 			
-			JTextArea notes = new JTextArea(alerta.getNotas());
-			notes.setWrapStyleWord(true);
-			notes.setLineWrap(true);
-			notes.setEditable(false);
-			notes.setOpaque(false);
-			
-			c.gridy++;
-			panel.add(notes, c);
+			// Arruma a largura para adequar aos componentes
+			gridBagLayout.columnWidths = new int[] { origem.getPreferredSize().width, 
+					destino.getPreferredSize().width, tropas.getPreferredSize().width };
+//			gridBagLayout.rowHeights = new int[] { origem.getPreferredSize().width, notas.getPreferredSize().height };
 			
 			return panel;
+		}
+		
+		private JPanel makeAldeiaPanel(String titulo, String nome) {
+			
+			JPanel panel = new JPanel();
+			panel.setOpaque(false);
+			panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), titulo));
+			
+			panel.add(new JLabel(nome));
+			
+			return panel;
+			
 		}
 		
 		private JPanel makeTropasPanel(Map<Unidade, Integer> map) {
 			
 			JPanel panel = new JPanel();
 			panel.setOpaque(false);
+			panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Tropas Enviadas"));
 			
-			String escrita = "<html>";
-			String tooltip = "<html>";
-			int lines = 0;
+			GridBagLayout gridBagLayout = new GridBagLayout();
+			gridBagLayout.columnWeights = new double[] { 1.0 };
+			panel.setLayout(gridBagLayout);
+			
+			String s = "<html>";
+			String maxLine = "";
 			
 			for (Unidade i : Unidade.values())
-				if (map.containsKey(i) && map.get(i) > 0) {
-					tooltip += i + ": " + map.get(i)+"<br>";
-					lines++;
-					if (lines <= 3)
-						escrita = tooltip;
+				if (map.containsKey(i) && map.get(i) > 0 ) {
+					String temp = i + ": " + map.get(i);
+					s += temp + "<br>";
+					if (temp.length() > maxLine.length())
+						maxLine = temp;
 				}
 			
-			String[] parts = tooltip.split("<br>");
+			s += "</html>";
 			
-			if (lines > 3)
-				escrita = parts[0] + "<br>" + parts[1] + "<br> <center><font size=3>+</font></center>";
 			
-			escrita += "</html>";
-			tooltip += "</html>";
+			JTextPane label = new JTextPane();
+			label.setContentType("text/html");  
+			label.setText(s);
+			label.setEditable(false);
+			label.setOpaque(false);
 			
-			panel.add(new JLabel(escrita));
+			label.putClientProperty(JTextPane.HONOR_DISPLAY_PROPERTIES, true);
 			
-			if (lines > 3)
-				panel.setToolTipText(tooltip);
-			else
-				panel.setToolTipText(null);
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			c.insets = new Insets(0,0,0,0);
+			c.fill = GridBagConstraints.BOTH;
+			c.anchor = GridBagConstraints.NORTH;
+			panel.add(label, c);
+			
+			panel.setPreferredSize(new Dimension(
+					label.getFontMetrics(label.getFont()).stringWidth(maxLine) + 25, panel.getPreferredSize().height));			
+			
+			return panel;
+			
+		}
+		
+		private JPanel makeNotasPanel(String nota, int width) {
+			
+			JPanel panel = new JPanel();
+			panel.setOpaque(false);
+			panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Notas"));
+
+			GridBagLayout gridBagLayout = new GridBagLayout();
+			gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+			panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			c.fill = GridBagConstraints.BOTH;
+			
+			JTextPane notes = new JTextPane();
+			notes.setText(nota);
+			
+			notes.setEditable(false);
+			notes.setOpaque(false);
+			
+			JScrollPane scroll = new JScrollPane(notes);
+			scroll.setViewportView(notes);
+			scroll.setBorder(new EmptyBorder(0, 0, 0, 0));
+			scroll.getViewport().setOpaque(false);
+			scroll.setOpaque(false);
+			scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width, 100));
+			
+			panel.add(scroll, c);
+			
+			panel.setPreferredSize(new Dimension(width, panel.getPreferredSize().height));
 			
 			return panel;
 			
 		}
 		
 		protected void showOnScreen() {
+			
+			pack();
+			setSize(getPreferredSize());
+			validate();
+			pack();
 			
 			// Setting the position
 			int width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -404,6 +477,9 @@ public class PopupManager {
 	}
 	
 	public static void main(String args[]) {
+		
+		Font oldLabelFont = UIManager.getFont("Label.font");
+	    UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
 		
 		Config_Gerais.read();
 		

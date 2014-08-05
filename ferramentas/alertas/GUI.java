@@ -89,6 +89,7 @@ public class GUI extends Ferramenta {
 	private JPanel makeButtonPanels() {
 	
 		JPanel panel = new JPanel();
+		panel.setOpaque(false);
 		
 		JButton addAlerta = new JButton("Criar Novo");
 		addAlerta.addActionListener(new ActionListener() {
@@ -103,8 +104,6 @@ public class GUI extends Ferramenta {
 				
 				if (alerta != null)
 					table.addAlert(alerta);
-				else
-					System.out.println("era null");
 				
 			}
 		});

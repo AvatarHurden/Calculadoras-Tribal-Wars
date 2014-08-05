@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;

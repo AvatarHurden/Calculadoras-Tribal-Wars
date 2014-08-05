@@ -32,8 +32,9 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
 
 import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
@@ -79,6 +80,9 @@ public class Editor extends JDialog{
 	// Componentes desativados quando o aviso é do tipo geral
 	List<Component> villageComponents = new ArrayList<Component>();
 	
+	// Scrollpane
+	JScrollPane scroll;
+	
 	protected Editor() {
 		
 		setResizable(false);
@@ -120,12 +124,12 @@ public class Editor extends JDialog{
 		panel.add(makeTropaPanel(), c);
 		
 		c.gridy++;
-		panel.add(makeNotasPanel(), c);
+		panel.add(makeNotasPanel(null), c);
 		
 		c.gridy++;
 		panel.add(makeAvisosPanel(), c);
 		
-		JScrollPane scroll = new JScrollPane(panel);
+		scroll = new JScrollPane(panel);
 		scroll.setOpaque(false);
 		scroll.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		
@@ -143,7 +147,7 @@ public class Editor extends JDialog{
 		// Como o tipo selecionado é geral, desativa as coisas adequadas.
 		for (Component t : villageComponents)
 			t.setEnabled(false);
-		
+
 		pack();
 	}
 	
@@ -192,7 +196,7 @@ public class Editor extends JDialog{
 				if (alerta.getTropas().containsKey(e.getKey()))
 					e.getValue().setText(String.valueOf(alerta.getTropas().get(e.getKey())));
 		
-		if (alerta.getNotas() != null)
+		if (alerta.getNotas() != null) 
 			notas.setText(alerta.getNotas());
 		
 		if (alerta.getAvisos() != null)
@@ -275,24 +279,10 @@ public class Editor extends JDialog{
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-		panel.setLayout(new GridBagLayout());
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = 0;
-		c.gridx = 0;
-		c.insets = new Insets(5, 5, 5, 5);
-		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		
-		JLabel nameLabel = new JLabel("Nome");
-		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		panel.add(nameLabel, c);
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Nome"));
 		
 		nome = new JTextField(16);
-		c.gridy++;
-		panel.add(nome, c);
+		panel.add(nome);
 		
 		return panel;
 	}
@@ -301,21 +291,15 @@ public class Editor extends JDialog{
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Tipo"));
 		
 		panel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5, 5, 5, 0);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridy = 0;
 		c.gridx = 0;
-		
-		JLabel nameLabel = new JLabel("Tipos");
-		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		c.insets = new Insets(5, 10, 5, 5);
-		c.gridwidth = 4;
-		panel.add(nameLabel, c);
 		
 		JPanel geral = new JPanel();
 		JPanel ataque = new JPanel();
@@ -358,11 +342,6 @@ public class Editor extends JDialog{
 			}
 		};
 		
-		c.gridx--;
-		c.gridy++;
-		c.gridwidth = 1;
-		c.insets = new Insets(5, 5, 5, 0);
-		
 		for (int i = 0; i < tipos.length; i++) {
 			tipos[i].addMouseListener(listener);
 			
@@ -379,7 +358,7 @@ public class Editor extends JDialog{
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Data"));
 		panel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -389,20 +368,12 @@ public class Editor extends JDialog{
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		JLabel nameLabel = new JLabel("Data");
-		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		c.gridwidth = 2;
-		panel.add(nameLabel, c);
-		
 		spinnerDate = new JSpinner(new SpinnerDateModel());
 		spinnerDate.setEditor(new JSpinner.DateEditor(spinnerDate, "dd/MM/yyy"));
 		
 		spinnerHour = new JSpinner(new SpinnerDateModel());
 		spinnerHour.setEditor(new JSpinner.DateEditor(spinnerHour, "HH:mm:ss"));
 		
-		c.gridwidth = 1;
-		c.gridy++;
 		panel.add(spinnerHour, c);
 		
 		c.gridx++;
@@ -425,30 +396,21 @@ public class Editor extends JDialog{
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new GridBagLayout());
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Origem"));
 		
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 0, 5);
+		c.insets = new Insets(5, 0, 0, 5);
 		c.gridx = 0;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		
-		JLabel nameLabel = new JLabel("Origem");
-		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		c.gridwidth = 2;
-		panel.add(nameLabel, c);
-		
+	
 		origemCoord = new CoordenadaPanel(null) {
 			public void go() {}
 		};
 		origemCoord.setBorder(new EmptyBorder(0, 0, 0, 0));
 		origemCoord.setOpaque(false);
 		
-		c.insets = new Insets(5, 0, 0, 5);
-		c.gridy++;
-		c.gridwidth = 1;
 		panel.add(origemCoord, c);
 		
 		origemNome = new JTextField(5);
@@ -466,20 +428,14 @@ public class Editor extends JDialog{
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new GridBagLayout());
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Destino"));
 		
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 0, 5);
+		c.insets = new Insets(5, 0, 0, 5);
 		c.gridx = 0;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		
-		JLabel nameLabel = new JLabel("Destino");
-		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		c.gridwidth = 2;
-		panel.add(nameLabel, c);
 		
 		destinoCoord = new CoordenadaPanel(null) {
 			public void go() {}
@@ -487,9 +443,6 @@ public class Editor extends JDialog{
 		destinoCoord.setBorder(new EmptyBorder(0, 0, 0, 0));
 		destinoCoord.setOpaque(false);
 		
-		c.insets = new Insets(5, 0, 0, 5);
-		c.gridy++;
-		c.gridwidth = 1;
 		panel.add(destinoCoord, c);
 		
 		destinoNome = new JTextField(5);
@@ -507,24 +460,16 @@ public class Editor extends JDialog{
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new GridBagLayout());
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Tropas"));
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = 0;
+		c.gridy = -1;
 		c.gridx = 0;
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		JLabel nome = new JLabel("Tropas");
-		nome.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		c.gridwidth = 2;
-		panel.add(nome, c);
-		
 		tropas = new HashMap<Unidade, IntegerFormattedTextField>();
-		
-		c.gridwidth = 1;
 		
 		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
@@ -550,32 +495,20 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
-	private JPanel makeNotasPanel() {
+	private JPanel makeNotasPanel(String nota) {
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-		panel.setLayout(new GridBagLayout());
 		panel.setOpaque(false);
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Notas"));
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = 0;
-		c.gridx = 0;
-		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		
-		JLabel nameLabel = new JLabel("Notas");
-		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		panel.add(nameLabel, c);
-		
-		notas = new JTextArea(5, 20);
+		notas = new JTextArea(nota, 5, 20);
+		// Não permite que o textArea modifique a posição do scrollpane
+		((DefaultCaret)notas.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		notas.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 		notas.setLineWrap(true);
 		notas.setWrapStyleWord(true);
 		
-		c.gridy++;
-		panel.add(notas, c);
+		panel.add(notas);
 		
 		return panel;
 	}
@@ -585,18 +518,13 @@ public class Editor extends JDialog{
 		final JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		panel.setOpaque(false);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Avisos"));
 		
 		final GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.NONE;
 		c.gridy = 0;
 		c.gridx = 0;
 		c.insets = new Insets(5, 5, 5, 5);
-		
-		JLabel nameLabel = new JLabel("Avisos");
-		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-		
-		panel.add(nameLabel, c);
 		
 		avisos = new LinkedHashMap<IntegerFormattedTextField, JComboBox<String>>();
 		
@@ -632,8 +560,6 @@ public class Editor extends JDialog{
 			}
 		});
 		
-		c.gridy++;
-		c.fill = GridBagConstraints.NONE;
 		panel.add(addAviso, c);
 		
 		return panel;
