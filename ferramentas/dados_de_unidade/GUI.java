@@ -44,6 +44,8 @@ public class GUI extends Ferramenta {
 	 * 
 	 * Em caso de mundo com níveis, é possível escolher o nível das unidades
 	 * (não é limitado a 15 níveis)
+     *
+     * Não consigo entender a gambiarra ( Os recursos tecnicos avançados ) que você usou nesse jPanel... Se puder ajeitar eu agradeceria :)
 	 */
 	public GUI() {
 		super(Lang.FerramentaUnidade.toString());
@@ -157,7 +159,6 @@ public class GUI extends Ferramenta {
 				panel.add(i.getDadosPrincipais(), gbc);
 			else if ( string.toLowerCase().equals("dadoscusto"))
 				panel.add(i.getDadosCusto(), gbc);
-
 		}
 
 		return panel;

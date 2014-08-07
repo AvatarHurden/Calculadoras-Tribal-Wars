@@ -879,34 +879,6 @@ Mundos {
 	milicia=true
 	cunhagemDeMoedas=true
 
-	nome=Novo Mundo
-	velocidade=1
-	modificador=1
-	moral=false
-	sistemaDePesquisa=simples
-	igreja=false
-	bonusNoturno=false
-	bandeira=false
-	arqueiro=false
-	paladino=false
-	itensAprimorados=false
-	milicia=false
-	cunhagemDeMoedas=false
-
-	nome=Novo Mundo
-	velocidade=1
-	modificador=1
-	moral=false
-	sistemaDePesquisa=simples
-	igreja=false
-	bonusNoturno=false
-	bandeira=false
-	arqueiro=false
-	paladino=false
-	itensAprimorados=false
-	milicia=false
-	cunhagemDeMoedas=false
-
 }
 
 Modelos_de_Tropas {
