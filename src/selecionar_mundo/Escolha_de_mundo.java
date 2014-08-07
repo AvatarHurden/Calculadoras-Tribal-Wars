@@ -168,7 +168,7 @@ public class Escolha_de_mundo extends JPanel{
 	
 	private void changePadrãoButton() {
 		
-		if (selectionBox.getSelectedItem().toString()
+		if (selectionBox.getSelectedItem() != null && selectionBox.getSelectedItem().toString()
 				.equals(File_Manager.getMundoPadrão()))
 			padrãoButton.setEnabled(false);
 		else

@@ -1,8 +1,6 @@
 package dados_de_unidade;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
@@ -11,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import config.Lang;
@@ -20,6 +18,7 @@ import custom_components.Ferramenta;
 import custom_components.IntegerFormattedTextField;
 import database.Cores;
 import database.Unidade;
+import frames.MainWindow;
 
 @SuppressWarnings("serial")
 public class GUI extends Ferramenta {
@@ -45,11 +44,11 @@ public class GUI extends Ferramenta {
 	 * 
 	 * Em caso de mundo com níveis, é possível escolher o nível das unidades
 	 * (não é limitado a 15 níveis)
+     *
+     * Não consigo entender a gambiarra ( Os recursos tecnicos avançados ) que você usou nesse jPanel... Se puder ajeitar eu agradeceria :)
 	 */
 	public GUI() {
-
 		super(Lang.FerramentaUnidade.toString());
-
 		setUnidades();
 
 		total.setPanelListAndColor(panelUnidadeList, getNextColor());
@@ -106,13 +105,13 @@ public class GUI extends Ferramenta {
 		gbc.gridy = 3;
 		gbc.gridx = 0;
 		addPanelTotal(gbc);
-		
+
 	}
 
 	/**
 	 * Adiciona um cabeçalho com os nomes das informações de cada coluna
 	 * 
-	 * @param boolean com "nome" e "quantidade", para ser usável embaixo
+	 * @param withIdentifiers com "nome" e "quantidade", para ser usável embaixo
 	 */
 	private void addHeader(boolean withIdentifiers, GridBagConstraints gbc) {
 
@@ -139,10 +138,9 @@ public class GUI extends Ferramenta {
 	/**
 	 * Junta os panels de todas as unidades num único panel
 	 * 
-	 * @param String
-	 *            qual panel pegar
+	 * @param string  qual panel pegar
 	 */
-	private JPanel unitePanels(String s) {
+	private JPanel unitePanels(String string) {
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
@@ -155,13 +153,12 @@ public class GUI extends Ferramenta {
 		for (PanelUnidade i : panelUnidadeList) {
 
 			gbc.gridy++;
-			if (s.toLowerCase().equals("identificadores"))
+			if ( string.toLowerCase().equals("identificadores"))
 				panel.add(i.getIdentificadores(), gbc);
-			else if (s.toLowerCase().equals("dadosprincipais"))
+			else if ( string.toLowerCase().equals("dadosprincipais"))
 				panel.add(i.getDadosPrincipais(), gbc);
-			else if (s.toLowerCase().equals("dadoscusto"))
+			else if ( string.toLowerCase().equals("dadoscusto"))
 				panel.add(i.getDadosCusto(), gbc);
-
 		}
 
 		return panel;

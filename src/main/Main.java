@@ -17,11 +17,13 @@ import frames.TrayIconClass;
  * 
  * @author Arthur
  * @date 25/07/2013
+ *
+ * Contribuições de Wesley Nascimento vulgo Sorriso
  */
 public class Main {
 
-	static selecionar_mundo.GUI selecionar;
-	static MainWindow mainFrame;
+	private static selecionar_mundo.GUI selecionar;
+	private static MainWindow mainFrame;
 
 	public static void main(String[] args) {
 		
@@ -37,7 +39,6 @@ public class Main {
 		new TrayIconClass();
 
 		openSelection();
-
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class Main {
 		
 		File_Manager.defineModelos();
 
-		mainFrame = new MainWindow();
+		mainFrame = MainWindow.getInstance();
 		
 		// Adicionando todas as ferramentas criadas
 		mainFrame.addPanel(new recrutamento.GUI());
@@ -121,6 +122,39 @@ public class Main {
 //			public void windowActivated(WindowEvent arg0) {}
 //		});
 		
+<<<<<<< HEAD
+=======
+		
+		//Não entendi pra que esses timers servem... By sorriso
+		Date time1 = new Date();
+		time1.setTime(time1.getTime()+5000);
+		
+		Date time2 = new Date();
+		time2.setTime(time2.getTime()+10000);
+		
+		Timer timer = new Timer();
+		
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				
+				System.out.println("Timer 1 has done");
+				
+			}
+		}, time1);
+		
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				
+				System.out.println("Timer 2 has done");
+				
+			}
+		}, time2);
+		
+>>>>>>> origin/master
 	}
 	
 	public static MainWindow getMainWindow() {

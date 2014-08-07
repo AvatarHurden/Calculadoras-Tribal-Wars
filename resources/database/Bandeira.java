@@ -66,7 +66,7 @@ public class Bandeira {
 		RECRUTAMENTO (Tipo.Produtivo, "velocidade de recrutamento", 6, 	  2),
 		ATAQUE   	 (Tipo.Militar,   "força de ataque",		    2, 	  1),
 		DEFESA 		 (Tipo.Militar,   "bônus de defesa",			2, 	  1),
-		SORTE	 	 (Tipo.Sorte,     "", 							6, 	  2),
+		SORTE	 	 (Tipo.Sorte,     "equilibrio de sorte",		6, 	  2),
 		POPULAÇÃO 	 (Tipo.Produtivo, "população", 					2,    1),
 		MOEDAS 		 (Tipo.Produtivo, "custo de moedas",			-10, -2),
 		SAQUE 		 (Tipo.Produtivo, "capacidade de saque", 		2,    1),

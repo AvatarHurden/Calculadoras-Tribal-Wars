@@ -19,7 +19,7 @@ public class Ferramenta extends JPanel{
 
 	private JPanel tab;
 	
-	private MainWindow frame;
+	private MainWindow frame = MainWindow.getInstance();
 	
 	protected ToolPanel tools;
 	
@@ -30,7 +30,7 @@ public class Ferramenta extends JPanel{
 	public Ferramenta(String nome) {
 		
 		setBackground(Cores.FUNDO_CLARO);
-		
+
 		tools = new ToolPanel();
 		
 //		setBorder(new LineBorder(Cores.SEPARAR_CLARO));

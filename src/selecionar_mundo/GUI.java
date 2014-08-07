@@ -22,17 +22,17 @@ import database.Cores;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 
-	Informações_de_mundo informationTable;
-	Escolha_de_mundo selectionPanel;
+	public Informações_de_mundo informationTable;
+	private Escolha_de_mundo selectionPanel;
 
-	JPanel panelMundo;
+	private JPanel panelMundo;
 
 	/**
 	 * Frame inicial, no qual ocorre a escolha do mundo. Ele possui:
-	 * <br> - Logo do programa 
-	 * <br>- Tabela com as informações do mundo selecionado 
-	 * <br>- Lista dos mundos disponíveis 
-	 * <br>- Botão para abrir o "MainWindow"
+	 * - Logo do programa
+	 * - Tabela com as informações do mundo selecionado
+	 * - Lista dos mundos disponíveis
+	 * - Botão para abrir o "MainWindow"
 	 */
 	public GUI() {
 
@@ -92,8 +92,9 @@ public class GUI extends JFrame {
 
 		// No ideia how or why this works, but do not remove "resources" folder
 		// from src
+
 		lblTítulo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				GUI.class.getResource("/images/Logo engine centralized.png"))));
+				GUI.class.getResource("/images/logo_engine_centralized.png"))));
 
 		add(lblTítulo, c);
 
@@ -135,8 +136,10 @@ public class GUI extends JFrame {
 		
 		// Makes the table have a size that will be used as the parameter for te=he size
 		// of the selection panel
-		informationTable.changeProperties(Mundo_Reader.getMundoList().get(0));
-		informationTable.revalidate();
+        if( Mundo_Reader.getMundoList().size() > 0) {
+            informationTable.changeProperties(Mundo_Reader.getMundoList().get(0));
+            informationTable.revalidate();
+        }
 
 		panelMundo.add(informationTable, constraints);
 
@@ -168,10 +171,10 @@ public class GUI extends JFrame {
 	 */
 	public void changeInformationPanel() {
 
-		informationTable.changeProperties(Mundo_Reader.getMundoList().get(selectionPanel
-				.getSelectedIndex()));
-		informationTable.revalidate();
-
+        if( selectionPanel.getSelectedIndex() > -1 ) {
+            informationTable.changeProperties(Mundo_Reader.getMundoList().get(selectionPanel.getSelectedIndex()));
+            informationTable.revalidate();
+        }
 	}
 	
 }

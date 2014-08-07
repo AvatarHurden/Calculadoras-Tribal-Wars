@@ -1,13 +1,6 @@
 package frames;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -16,10 +9,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import selecionar_mundo.GUI;
@@ -32,19 +22,34 @@ import database.Cores;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
-	JPanel tabs;
-	JPanel body;
+	private JPanel tabs;
+	private JPanel body;
+
+    //Configura tamanho fixo para todos os frames do APP
+    //as dimensoes abaixo são as mesmas da GUI do selecionar_mundo
+    private int MAX_WIDTH = 920;
+    private int MAX_HEIGHT = 700;
 
 	public List<Ferramenta> ferramentas = new ArrayList<Ferramenta>();
 	public Ferramenta ferramentaSelecionada;
+
+    //instancia da janela, para chamados estaticos
+    private static final MainWindow instance = new MainWindow();;
+
+    public static MainWindow getInstance(){
+        return instance;
+    }
 	
 	/**
 	 * Frame que contém todas as ferramentas
 	 */
 	public MainWindow() {
-		
-		// Setting the visuals for the frame
+
+        Dimension dimension = new Dimension(MAX_WIDTH, MAX_HEIGHT);
+
+        // Setting the visuals for the frame
 		setTitle(Lang.Titulo.toString());
+        setPreferredSize(dimension);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				GUI.class.getResource("/images/Icon.png")));
 
@@ -52,7 +57,7 @@ public class MainWindow extends JFrame {
 		setBackground(Cores.FUNDO_CLARO);
 		
 		setCloseOperation();
-
+        /* BACKUP
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
@@ -68,12 +73,29 @@ public class MainWindow extends JFrame {
 		c.insets = new Insets(0, 5, 5, 5);
 		c.gridy++;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		body = new JPanel();
+
+        body = new JPanel();
 		body.setLayout(new FlowLayout());
 		body.setBackground(Cores.FUNDO_CLARO);
 		body.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		add(body, c);
-		
+        */
+
+        tabs = new JPanel();
+        tabs.setBounds(0, 0, (int) dimension.getWidth(), 35);
+        tabs.setBackground(Cores.FUNDO_CLARO);
+        //tabs.setLayout(new GridBagLayout());
+
+        body = new JPanel();
+        body.setBounds(0, 36, (int) dimension.getWidth(), (int) dimension.getHeight() - 36);
+        //body.setLayout(new FlowLayout());
+        body.setBackground(Cores.FUNDO_CLARO);
+        body.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+
+        Container contentPane = getContentPane();
+        contentPane.add( body );
+        contentPane.add( tabs );
+
 		// Adds listener for ctrl+tab funcionality
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		
@@ -206,8 +228,7 @@ public class MainWindow extends JFrame {
 	 * Adiciona uma ferramenta nova ao frame, colocando a "tab" no local
 	 * adequado
 	 * 
-	 * @param tool
-	 *            Ferramenta a ser adicionada
+	 * @param tool Ferramenta a ser adicionada
 	 */
 	public void addPanel(Ferramenta tool) {
 
@@ -229,9 +250,10 @@ public class MainWindow extends JFrame {
 		for (Ferramenta i : ferramentas)
 			i.setSelected(false);
 
-		ferramentas.get(0).setSelected(true);
-		ferramentaSelecionada = ferramentas.get(0);
-
+        if( ferramentas.size() > 0 ) {
+            ferramentas.get(0).setSelected(true);
+            ferramentaSelecionada = ferramentas.get(0);
+        }
 	}
 
 }
