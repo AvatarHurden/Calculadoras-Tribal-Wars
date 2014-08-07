@@ -3,9 +3,6 @@ package main;
 import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -123,36 +120,6 @@ public class Main {
 //			public void windowClosed(WindowEvent arg0) {}
 //			public void windowActivated(WindowEvent arg0) {}
 //		});
-		
-		
-		
-		Date time1 = new Date();
-		time1.setTime(time1.getTime()+5000);
-		
-		Date time2 = new Date();
-		time2.setTime(time2.getTime()+10000);
-		
-		Timer timer = new Timer();
-		
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				
-				System.out.println("Timer 1 has done");
-				
-			}
-		}, time1);
-		
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				
-				System.out.println("Timer 2 has done");
-				
-			}
-		}, time2);
 		
 	}
 	

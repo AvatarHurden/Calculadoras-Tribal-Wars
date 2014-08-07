@@ -2,7 +2,6 @@ package alertas;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -68,7 +67,7 @@ public class PopupManager {
 		if (i > 0) {
 		Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
 		for (Unidade u : Unidade.values())
-			map.put(u, (int) (Math.round(Math.random()+0.1)));
+			map.put(u, (int) (Math.random()*1000));
 		alerta.setTropas(map);
 		} else {
 			Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
@@ -124,16 +123,23 @@ public class PopupManager {
 			setLayout(gridBagLayout);
 			
 			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(5, 5, 5, 5);
 			c.gridx = 0;
-			c.gridy = 1;
-			c.anchor = GridBagConstraints.WEST;
+			c.gridy = 0;
+			
+			// Adding the header
+			c.insets = new Insets(0, 0, 0, 0);
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.anchor = GridBagConstraints.CENTER;
+			c.gridwidth = 3;
+			add(makeHeader(), c);
 			
 			// Adding name and type label
 			JLabel namelbl = new JLabel(alerta.getNome());
 			namelbl.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
 			
+			c.insets = new Insets(5, 5, 5, 5);
 			c.gridwidth = 2;
+			c.gridy++;
 			add(namelbl, c);
 			
 			JLabel typelbl = new JLabel(alerta.getTipo().toString());
@@ -146,7 +152,7 @@ public class PopupManager {
 			c.gridy++;
 			c.gridwidth = 3;
 			c.fill = GridBagConstraints.HORIZONTAL;
-			add(makeSpoilerPanel(makeInfoPanel(alerta)), c);
+			add(makeSpoilerPanel(makeInfoPanel(alerta, getPreferredSize().width)), c);
 			
 			JLabel datelbl = new JLabel();
 			datelbl.setFont(datelbl.getFont().deriveFont((float) 15));
@@ -156,19 +162,10 @@ public class PopupManager {
 			c.gridy++;
 			add(datelbl, c);
 			
-			// Adding the header
-			c.insets = new Insets(0, 0, 0, 0);
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.anchor = GridBagConstraints.CENTER;
-			c.gridwidth = 3;
-			c.gridx = 0;
-			c.gridy = 0;
-			add(makeHeader(getPreferredSize().width), c);
-			
 			pack();
 		}
 		
-		private JPanel makeHeader(int width) {
+		private JPanel makeHeader() {
 			
 			JPanel panel = new JPanel();
 			panel.setOpaque(true);
@@ -217,8 +214,6 @@ public class PopupManager {
 			c.anchor = GridBagConstraints.EAST;
 			c.gridx++;
 			panel.add(closelbl, c);
-			
-			panel.setPreferredSize(new Dimension(width, panel.getPreferredSize().height));
 			
 			return panel;
 		}
@@ -279,7 +274,7 @@ public class PopupManager {
 			return panel;
 		}
 		
-		private JPanel makeInfoPanel(Alert alerta) {
+		private JPanel makeInfoPanel(Alert alerta, int width) {
 			
 			JPanel panel = new JPanel();
 			panel.setOpaque(true);
@@ -297,24 +292,39 @@ public class PopupManager {
 			c.gridx = 0;
 			c.gridy = 0;
 			
-			JPanel origem = makeAldeiaPanel("Origem", alerta.getOrigem().toString());
+			// Paineis que podem ser adicionados.
+			JPanel origem, destino, tropas, notas;
+			// Width de origem + destino, para definir tamanho das notas
+			int notesWidth;
+			
+			if (!alerta.getTipo().equals(Tipo.Geral)) {
+			
+			origem = makeAldeiaPanel("Origem", alerta.getOrigem().toString());
 			
 			c.gridwidth = 1;
 			panel.add(origem, c);
 			
-			JPanel destino = makeAldeiaPanel("Destino", alerta.getDestino().toString());
+			destino = makeAldeiaPanel("Destino", alerta.getDestino().toString());
 			
 			c.gridx++;
 			panel.add(destino, c);
 			
-			JPanel tropas = makeTropasPanel(alerta.getTropas());
+			tropas = makeTropasPanel(alerta.getTropas());
 			
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridheight = 2;
 			c.gridx++;
 			panel.add(tropas, c);
 			
-			JPanel notas = makeNotasPanel(alerta.getNotas(), origem.getPreferredSize().width + destino.getPreferredSize().width + 5);
+			notesWidth = origem.getPreferredSize().width + destino.getPreferredSize().width + 5;
+			
+			gridBagLayout.columnWidths = new int[] { origem.getPreferredSize().width, 
+					destino.getPreferredSize().width, tropas.getPreferredSize().width };
+			
+			} else
+				notesWidth = width;
+			
+			notas = makeNotasPanel(alerta.getNotas(), notesWidth);
 			
 			c.fill = GridBagConstraints.BOTH;
 			c.gridwidth = 2;
@@ -324,9 +334,6 @@ public class PopupManager {
 			panel.add(notas, c);
 			
 			// Arruma a largura para adequar aos componentes
-			gridBagLayout.columnWidths = new int[] { origem.getPreferredSize().width, 
-					destino.getPreferredSize().width, tropas.getPreferredSize().width };
-//			gridBagLayout.rowHeights = new int[] { origem.getPreferredSize().width, notas.getPreferredSize().height };
 			
 			return panel;
 		}

@@ -101,15 +101,24 @@ public class Alert {
     }
 
     protected Map<Unidade, Integer> getTropas() {
-        return tropas;
+    	if (!tipo.equals(Tipo.Geral))
+    		return tropas;
+    	else
+    		return null;
     }
 
     protected Aldeia getOrigem() {
-        return origem;
+    	if (!tipo.equals(Tipo.Geral))
+    		return origem;
+    	else
+    		return null;
     }
 
     protected Aldeia getDestino() {
-        return destino;
+    	if (!tipo.equals(Tipo.Geral))
+    		return destino;
+    	else
+    		return null;
     }
 
     protected List<Date> getAvisos() {
