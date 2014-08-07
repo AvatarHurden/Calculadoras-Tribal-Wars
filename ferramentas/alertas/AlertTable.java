@@ -15,7 +15,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -143,7 +142,6 @@ public class AlertTable extends JTable{
 				for (int i = 0; i < order.length; i++)
 					order[i] = getColumnModel().getColumn(i).getModelIndex();
 				
-				System.out.println(Arrays.toString(order));
 				Config_Gerais.setColumnOrder(order);
 			}
 			

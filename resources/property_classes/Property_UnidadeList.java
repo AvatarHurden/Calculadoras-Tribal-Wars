@@ -5,6 +5,7 @@ import java.awt.Insets;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
