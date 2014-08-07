@@ -19,6 +19,7 @@ import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
 import custom_components.Ferramenta;
 import database.Unidade;
+import frames.MainWindow;
 
 public class GUI extends Ferramenta {
 	
@@ -71,8 +72,11 @@ public class GUI extends Ferramenta {
 			
 		}
 		
+		Dimension d = MainWindow.getInstance().getPreferredSize();
+        d.setSize(d.getWidth(), 570);
+		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setPreferredSize(new Dimension(1000,500));
+		scrollPane.setPreferredSize(d);
 		table.setFillsViewportHeight(true);
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -113,22 +117,21 @@ public class GUI extends Ferramenta {
 			
 			public void actionPerformed(ActionEvent e) {
 				
-				if (table.getSelectedRow() >= 0) {
+				if (table.getSelectedRow() == -1)
+					return;
 				
-					Alert selected = (Alert) table.getModel().getValueAt(
-							table.convertRowIndexToModel(table.getSelectedRow()), -1);
-					
-					Editor editor = new Editor(selected);
-					
-					editor.setModal(true);
-					editor.setVisible(true);
-					
-					Alert alerta = editor.getAlerta();
-					
-					table.changeAlert(alerta, table.convertRowIndexToModel(table.getSelectedRow()));
+				Alert selected = (Alert) table.getModel().getValueAt(
+						table.convertRowIndexToModel(table.getSelectedRow()), -1);
 				
-				}
+				Editor editor = new Editor(selected);
 				
+				editor.setModal(true);
+				editor.setVisible(true);
+				
+				Alert alerta = editor.getAlerta();
+				
+				table.changeAlert(alerta, table.convertRowIndexToModel(table.getSelectedRow()));
+					
 			}
 		});
 		
