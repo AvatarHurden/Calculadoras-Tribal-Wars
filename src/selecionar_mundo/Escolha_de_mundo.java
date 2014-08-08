@@ -1,23 +1,18 @@
 package selecionar_mundo;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-
-import main.Main;
 import config.File_Manager;
 import config.Lang;
 import config.Mundo_Reader;
 import custom_components.EditDialog;
 import database.Mundo;
+import main.Main;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 @SuppressWarnings("serial")
 public class Escolha_de_mundo extends JPanel{
@@ -126,7 +121,6 @@ public class Escolha_de_mundo extends JPanel{
 						Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
 				
 				Main.openMainFrame();
-				
 			}
 		});
 		

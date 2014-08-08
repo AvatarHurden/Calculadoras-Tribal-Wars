@@ -1,26 +1,20 @@
 package selecionar_mundo;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.SoftBevelBorder;
-
+import config.Config_Gerais;
+import config.File_Manager;
 import config.Lang;
 import config.Mundo_Reader;
 import database.Cores;
 
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
+import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 @SuppressWarnings("serial")
-public class GUI extends JFrame {
+public class GUI extends JFrame implements WindowListener {
 
 	public Informações_de_mundo informationTable;
 	private Escolha_de_mundo selectionPanel;
@@ -78,8 +72,23 @@ public class GUI extends JFrame {
 		changeInformationPanel();
 		
 		getRootPane().setDefaultButton(selectionPanel.getStartButton());
-	
+
+        this.addWindowListener( this );
 	}
+
+    /* IMPLEMENTAÇÔES AO WINDOW LISTENER */
+    public void windowOpened(WindowEvent arg0) {}
+    public void windowIconified(WindowEvent arg0) {}
+    public void windowDeiconified(WindowEvent arg0) {}
+    public void windowDeactivated(WindowEvent arg0) {}
+
+    public void windowClosing(WindowEvent arg0) {
+        File_Manager.save();
+        Config_Gerais.save();
+    }
+
+    public void windowClosed(WindowEvent arg0) {}
+    public void windowActivated(WindowEvent arg0) {}
 
 	/**
 	 * Cria um JLabel com a imagem do logo, e adiciona no frame

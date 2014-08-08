@@ -7,7 +7,7 @@ Caso isso ocorra, delete esse arquivo.
 =============================
 
 
-Mundo_Padrão=Mundo 32
+Mundo_Padrão=Mundo 62
 
 Mundos {
 
