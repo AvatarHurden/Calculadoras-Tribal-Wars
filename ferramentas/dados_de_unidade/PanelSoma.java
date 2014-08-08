@@ -67,9 +67,9 @@ public class PanelSoma {
 
 		// Caso o mundo tenha arqueiros, coloca lugar para a defesa de arqueiro
 		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-			gbl.columnWidths = new int[] { 75, 1, 75, 1, 75, 1, 75, 1, 75 };
+			gbl.columnWidths = new int[] { 70, 1, 70, 1, 70, 1, 70, 1, 70 };
 		else
-			gbl.columnWidths = new int[] { 75, 1, 75, 1, 75, 1, 75 };
+			gbl.columnWidths = new int[] { 70, 1, 70, 1, 70, 1, 70 };
 
 		gbl.rowHeights = new int[] { 30 };
 		gbl.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
@@ -125,7 +125,7 @@ public class PanelSoma {
 		dadosCusto = new JPanel();
 
 		GridBagLayout gbl = new GridBagLayout();
-		gbl.columnWidths = new int[] { 75, 1, 75, 1, 75, 1, 75 };
+		gbl.columnWidths = new int[] { 70, 1, 70, 1, 70, 1, 70 };
 		gbl.rowHeights = new int[] { 30 };
 		gbl.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };

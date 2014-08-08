@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
@@ -47,6 +48,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import sun.swing.table.DefaultTableCellHeaderRenderer;
+import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
 import config.Config_Gerais;
 import database.Cores;
@@ -85,12 +87,17 @@ public class AlertTable extends JTable{
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		/* Setting the renderers */
-		// This is the default, used by String, Aldeia and Tipo
+		// This is the default, used by String and Tipo
 		setDefaultRenderer(Object.class, new CustomCellRenderer());
 		setDefaultRenderer(Date.class, new DateCellRenderer());
 		setDefaultRenderer(HashMap.class, new TropaCellRenderer());
 		setDefaultRenderer(Long.class, new TimeCellRenderer());
 		getColumnModel().getColumn(7).setCellRenderer(new NotaCellRenderer());
+		
+		// Cria um renderer igual ao normal, mas com texto centralizado
+		CustomCellRenderer aldeiaRenderer = new CustomCellRenderer();
+		aldeiaRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		setDefaultRenderer(Aldeia.class, aldeiaRenderer);
 		
 		setSorter();
 		
@@ -450,6 +457,12 @@ public class AlertTable extends JTable{
 			String tooltip = "<html>";
 			int lines = 0;
 			
+			if (map == null) {
+				setHorizontalAlignment(JLabel.CENTER);
+				return super.getTableCellRendererComponent(
+						   table, obj, isSelected, hasFocus, row, column);
+			}
+				
 			for (Unidade i : Unidade.values())
 				if (map.containsKey(i) && map.get(i) > 0) {
 					tooltip += i + ": " + map.get(i)+"<br>";
@@ -485,8 +498,14 @@ public class AlertTable extends JTable{
 		public Component getTableCellRendererComponent (JTable table, 
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
-			Component cell = super.getTableCellRendererComponent(
-					   table, obj, isSelected, hasFocus, row, column);
+			Component cell;
+			
+			if (obj == null)
+				cell = super.getTableCellRendererComponent(
+					   table, "-----", isSelected, hasFocus, row, column);
+			else
+				cell = super.getTableCellRendererComponent(
+						   table, obj, isSelected, hasFocus, row, column);
 			
 			((JComponent) cell).setBorder(new EmptyBorder(0, 5, 0, 5));
 			
@@ -515,10 +534,10 @@ public class AlertTable extends JTable{
 			
 			switch(column) {
 			case 0: return alerts.get(0).getNome().getClass();
-			case 1: return alerts.get(0).getTipo().getClass();
-			case 2: return alerts.get(0).getOrigem().getClass();
-			case 3: return alerts.get(0).getDestino().getClass();
-			case 4: return alerts.get(0).getTropas().getClass();
+			case 1: return Alert.Tipo.class;
+			case 2: return Alert.Aldeia.class;
+			case 3: return Alert.Aldeia.class;
+			case 4: return HashMap.class;
 			case 5: return alerts.get(0).getHorário().getClass();
 			case 6: return alerts.get(0).getRepete().getClass();
 			case 7: return alerts.get(0).getNotas().getClass();
