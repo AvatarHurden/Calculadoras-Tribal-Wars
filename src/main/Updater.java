@@ -6,20 +6,31 @@ import frames.MainWindow;
 
 import javax.swing.*;
 
-/*
- * A classe
- * Created by Wesley Nascimento on 07/08/2014.
+/**
+ * Responsavel por verificar se o usuario deseja atualizar o app
+ * e baixar a versão mais recente
+ *
+ * @author Wesley Nascimento.
  */
 public class Updater implements FileDownloaderDelegate {
 
     private String url;
     private double version;
 
+    /**
+     * Inicia o objeto, com as informações recebidas do servidor.
+     *
+     * @param version - Versão remota do App
+     * @param url     - Url para download
+     */
     public Updater( double version, String url ){
         this.url = url;
         this.version = version;
     }
 
+    /**
+     * Pergunta se o usuario deseja atualizar ou não o app
+     */
     public void start(){
         Object[] options = {"Atualizar agora!", "Atualizar mais tarde!"};
 
@@ -40,6 +51,9 @@ public class Updater implements FileDownloaderDelegate {
     }
 
 
+    /**
+     * Inicia o download usando a url remota e baixando no local no jar sendo executado.
+     */
     private void beginDownload(){
         FileDownloader fileDownloader = new FileDownloader( this );
         fileDownloader.setUrl( url );
