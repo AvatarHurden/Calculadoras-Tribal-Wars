@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
@@ -48,40 +49,40 @@ import database.Unidade;
 public class Editor extends JDialog{
 	
 	// Necessário para poder cancelar modificações
-	Alert alerta;
+	private Alert alerta;
 	
 	// Nome do alerta
-	JTextField nome;
+	private JTextField nome;
 	
 	// Data do alerta
-	JSpinner spinnerDate, spinnerHour;
+	private JSpinner spinnerDate, spinnerHour;
 	
 	// Qual o tipo do alerta
-	JPanel[] tipos;
+	private JPanel[] tipos;
 	
 	// Aldeia de origem
-	CoordenadaPanel origemCoord;
-	JTextField origemNome;
+	private CoordenadaPanel origemCoord;
+	private JTextField origemNome;
 	
 	// Aldeia de destino
-	CoordenadaPanel destinoCoord;
-	JTextField destinoNome;
+	private CoordenadaPanel destinoCoord;
+	private JTextField destinoNome;
 	
 	// Tropas enviadas
-	Map<Unidade, IntegerFormattedTextField> tropas;
+	private Map<Unidade, IntegerFormattedTextField> tropas;
 	
 	// Notas relacionadas ao alerta
-	JTextArea notas;
+	private JTextArea notas;
 	
 	// Períodos de avisos antes do evento
-	JButton addAviso;
-	LinkedHashMap<IntegerFormattedTextField, JComboBox<String>> avisos;
+	private JButton addAviso;
+	private LinkedHashMap<IntegerFormattedTextField, JComboBox<String>> avisos;
 	
 	// Componentes desativados quando o aviso é do tipo geral
-	List<Component> villageComponents = new ArrayList<Component>();
+	private List<Component> villageComponents = new ArrayList<Component>();
 	
 	// Scrollpane
-	JScrollPane scroll;
+	private JScrollPane scroll;
 	
 	protected Editor() {
 		
@@ -158,15 +159,19 @@ public class Editor extends JDialog{
 		
 		this.alerta = alerta;
 		
-		if (alerta.getNome() != null) nome.setText(alerta.getNome());
+		String stringNome = alerta.getNome();
+		if (stringNome != null) 
+			nome.setText(stringNome);
 		
-		if (alerta.getHorário() != null) {
-			spinnerDate.setValue(alerta.getHorário());
-			spinnerHour.setValue(alerta.getHorário());
+		Date hora = alerta.getHorário();
+		if (hora != null) {
+			spinnerDate.setValue(hora);
+			spinnerHour.setValue(hora);
 		}
 		
-		if (alerta.getTipo() != null) 
-			switch (alerta.getTipo()) {
+		Tipo tipo = alerta.getTipo();
+		if (tipo != null) 
+			switch (tipo) {
 			case Geral : tipos[0].getMouseListeners()[0].mouseClicked(
 					new MouseEvent(tipos[0], 0, 0, 0, 0, 0, 0, 0, 0, false, 0));
 				break;
@@ -181,27 +186,32 @@ public class Editor extends JDialog{
 				break;
 			}
 		
-		if (alerta.getOrigem() != null) {
-			origemCoord.setCoordenadas(alerta.getOrigem().x, alerta.getOrigem().y);
-			origemNome.setText(alerta.getOrigem().nome);
+		Aldeia origem = alerta.getOrigem();
+		if (origem != null) {
+			origemCoord.setCoordenadas(origem.x, origem.y);
+			origemNome.setText(origem.nome);
 		}
 		
-		if (alerta.getDestino() != null) {
-			destinoCoord.setCoordenadas(alerta.getDestino().x, alerta.getDestino().y);
-			destinoNome.setText(alerta.getDestino().nome);
+		Aldeia destino = alerta.getDestino();
+		if (destino != null) {
+			destinoCoord.setCoordenadas(destino.x, destino.y);
+			destinoNome.setText(destino.nome);
 		}
 		
-		if (alerta.getTropas() != null)
+		Map<Unidade, Integer> mapTropas = alerta.getTropas();
+		if (mapTropas != null)
 			for (Entry<Unidade, IntegerFormattedTextField> e : tropas.entrySet())
-				if (alerta.getTropas().containsKey(e.getKey()))
-					e.getValue().setText(String.valueOf(alerta.getTropas().get(e.getKey())));
+				if (mapTropas.containsKey(e.getKey()))
+					e.getValue().setText(String.valueOf(mapTropas.get(e.getKey())));
 		
-		if (alerta.getNotas() != null) 
-			notas.setText(alerta.getNotas());
+		String stringNotas = alerta.getNotas();
+		if (stringNotas != null) 
+			notas.setText(stringNotas);
 		
-		if (alerta.getAvisos() != null)
-			for (Date d : alerta.getAvisos()) {
-				long tempo = alerta.getHorário().getTime()-d.getTime();
+		Stack<Date> stackAvisos = alerta.getAvisos();
+		if (stackAvisos != null)
+			for (Date d : stackAvisos) {
+				long tempo = hora.getTime()-d.getTime();
 				
 				addAviso.doClick();
 				
@@ -218,6 +228,8 @@ public class Editor extends JDialog{
 				}
 				
 			}
+		
+		scroll.getVerticalScrollBar().setValue(0);
 		
 	}
 	
@@ -260,7 +272,7 @@ public class Editor extends JDialog{
 			
 			long entry = e.getKey().getValue().longValue();
 			
-			entry *= 1000*(60^Math.abs(2-e.getValue().getSelectedIndex()));
+			entry *= 1000*(Math.pow(60,Math.abs(2-e.getValue().getSelectedIndex())));
 			
 			lista.add(new Date(alerta.getHorário().getTime() - entry));
 		}
@@ -553,9 +565,10 @@ public class Editor extends JDialog{
 				c.gridy++;
 				panel.add((Component) e.getSource(), c);
 				
-				panel.revalidate();
+				revalidate();
 				pack();
 				
+				scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
 				
 			}
 		});

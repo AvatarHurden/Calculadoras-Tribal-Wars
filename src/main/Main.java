@@ -1,23 +1,19 @@
 package main;
 
 import java.awt.Font;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import config.Config_Gerais;
 import config.File_Manager;
 import frames.MainWindow;
 import frames.TrayIconClass;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Tribal Wars Engine, uma ferramenta completa para o jogo Tribal Wars

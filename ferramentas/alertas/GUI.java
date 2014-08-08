@@ -25,6 +25,7 @@ public class GUI extends Ferramenta {
 	
 	List<Alert> alertas = new ArrayList<Alert>();
 	AlertTable table = new AlertTable(alertas);
+	PopupManager popups = new PopupManager();
 	
 	public GUI() {
 		
@@ -64,12 +65,15 @@ public class GUI extends Ferramenta {
 			
 			Date now = new Date();
 
-			alerta.setHorário(new Date(now.getTime()+i*100000000));
+			alerta.setHorário(new Date(now.getTime()+(1+i)*3000));
 			
 			alerta.setRepete((long) (Math.random()*100000000));
 			
+			alerta.setAvisos(new ArrayList<Date>());
+			
 			alertas.add(alerta);
 			
+			popups.addAlerta(alerta);
 		}
 		
 		Dimension d = MainWindow.getInstance().getPreferredSize();
@@ -106,9 +110,10 @@ public class GUI extends Ferramenta {
 				
 				Alert alerta = editor.getAlerta();
 				
-				if (alerta != null)
+				if (alerta != null) {
 					table.addAlert(alerta);
-				
+					popups.addAlerta(alerta);
+				}
 			}
 		});
 		

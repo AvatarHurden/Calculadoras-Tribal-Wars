@@ -1,8 +1,11 @@
 package alertas;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import database.Unidade;
 
@@ -75,9 +78,19 @@ public class Alert {
     protected void setDestino(Aldeia destino) {
         this.destino = destino;
     }
-
+    
     protected void setAvisos(List<Date> avisos) {
         this.avisos = avisos;
+        
+        Collections.sort(this.avisos, new Comparator<Date>() {
+
+			@Override
+			public int compare(Date o1, Date o2) {
+				
+				return - o1.compareTo(o2);
+				
+			}
+		});
     }
 
     protected Tipo getTipo() {
@@ -121,8 +134,16 @@ public class Alert {
     		return null;
     }
 
-    protected List<Date> getAvisos() {
-        return avisos;
+    /**
+     * Retorna um stack dos avisos, com o topo sendo ocupado pelo aviso mais cedo
+     * @return
+     */
+    protected Stack<Date> getAvisos() {
+    	
+  
+    	Stack<Date> retorno = new Stack<Date>();
+    	retorno.addAll(avisos);
+    	
+        return retorno;
     }
-
 }

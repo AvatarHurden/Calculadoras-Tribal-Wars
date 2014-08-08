@@ -2,7 +2,6 @@ package alertas;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -12,12 +11,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -28,17 +31,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
-import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
-import config.Config_Gerais;
-import config.File_Manager;
-import config.Mundo_Reader;
 import database.Cores;
 import database.Unidade;
 
@@ -47,73 +45,136 @@ public class PopupManager {
 	
 	List<Alert> alertas = new ArrayList<Alert>();
 	
-	int openDialogs;
+	private TreeSet<AlertStack> dates;
+	private Map<Alert, TimerTask> tasksRodando = new HashMap<Alert, TimerTask>();
+	private int openDialogs;
 	
-	Timer timer = new Timer();
+	private Date nextPopupDate;
+	
+	private Timer timer = new Timer();
 	
 	protected PopupManager() {
-		
-	for (int i = 0; i < 2; i++) {
-		
-		Alert alerta = new Alert();
-		
-		alerta.setNome("Nome"+i);
-		
-		alerta.setNotas(i+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pellentesque rhoncus dignissim. Quisque lacus eros.");
-		alerta.setTipo(Tipo.values()[i % 4]);
-		alerta.setOrigem(new Aldeia("Origem"+i, i*111, i*55));
-		alerta.setDestino(new Aldeia("Destino"+i, i*11, i*555));
-		
-		if (i > 0) {
-		Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
-		for (Unidade u : Unidade.values())
-			map.put(u, (int) (Math.random()*1000));
-		alerta.setTropas(map);
-		} else {
-			Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
-			map.put(Unidade.LANCEIRO, 34);
-			map.put(Unidade.ESPADACHIM, 342);
-			map.put(Unidade.ARCOCAVALO, 32);
-			alerta.setTropas(map);
 			
-		}
+		dates = new TreeSet<AlertStack>(getComparator());		
 		
-		Date now = new Date();
-		alerta.setHorário(new Date(now.getTime()+i*3000));
+	}
+	
+	private Comparator<AlertStack> getComparator() {
 		
-		alerta.setRepete((long) (Math.random()*100000000));
+		return new Comparator<AlertStack>() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public int compare(AlertStack a1, AlertStack a2) {
+				
+				Stack<Date> avisos1 = (Stack<Date>) a1.dates.clone();
+				Stack<Date> avisos2 = (Stack<Date>) a2.dates.clone();
+				
+				int compare;
+				while (!avisos1.isEmpty() && !avisos2.isEmpty()) {
+					compare = avisos1.pop().compareTo(avisos2.pop());
+					if (compare != 0)
+						return compare;
+				}
+				
+				if (avisos1.isEmpty() && avisos2.isEmpty())
+					return 0;
+				else if (avisos1.isEmpty())
+					return -1;
+				else 
+					return 1;
+			}
+		};
+
+	}
+	
+	protected void addAlerta(final Alert alerta) {
 		
 		alertas.add(alerta);
 		
-	}
+		Stack<Date> avisos = alerta.getAvisos();
+		// Para o popup, os avisos não se diferenciam do alerta real.
+		avisos.add(0, alerta.getHorário());
+
+		AlertStack stack = new AlertStack(alerta, avisos);
+
+		dates.add(stack);
 		
-		for (final Alert d : alertas)
-			timer.schedule(new TimerTask() {
-				public void run() {
-					new PopupGUI(d).showOnScreen();
-				}
-			}, d.getHorário());
-		
+		if (tasksRodando.isEmpty() || nextPopupDate == null || nextPopupDate.compareTo(avisos.peek()) > 0)
+			schedule(stack);
 		
 	}
 	
+	protected void removeAlerta(Alert alerta) {
+		
+		for (AlertStack s : dates)
+			if (s.alert.equals(alerta))
+				dates.remove(s);
+		
+		for (Entry<Alert, TimerTask> e : tasksRodando.entrySet())
+			if (e.getKey().equals(alerta))
+				e.getValue().cancel();
+		
+		timer.purge();
+	}
+	
+	private void schedule(final AlertStack a) {
+		
+		Date date = a.getDate();
+		
+		if (date == null) {
+			dates.remove(a);
+			
+			if (!dates.isEmpty())
+				schedule(dates.first());
+			
+		} else if (a != null) {
+			tasksRodando.put(a.alert, new TimerTask() {
+				
+				public void run() {
+					new PopupGUI(a.alert).showOnScreen();
+					tasksRodando.remove(a.alert);
+					timer.purge();
+					schedule(dates.first());
+				}
+			});
+			
+			timer.schedule(tasksRodando.get(a.alert), date);
+			nextPopupDate = date; 
+		}
+	}
+	
+	private class AlertStack {
+		
+		private Alert alert;
+		private Stack<Date> dates;
+		
+		private AlertStack(Alert alert, Stack<Date> dates){
+			this.alert = alert;
+			this.dates = dates;
+		}
+		
+		/**
+		 * Retorna a próxima data a ser feita. Caso não hajam mais datas, retorna null.
+		 */
+		private Date getDate() {
+			if (dates.isEmpty())
+				return null;
+			else
+				return dates.pop();
+		}
+		
+	}
+	
+	@SuppressWarnings("serial")
 	private class PopupGUI extends JDialog {
 		
 		private int POSITION;
 		
-		private PopupGUI() {
-			
-			setUndecorated(true);
-			//setPreferredSize(new Dimension(300, 100));
-			
-			((JPanel)getContentPane()).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-			
-			pack();
-		}
-		
 		private PopupGUI(Alert alerta) {
 			
-			this();
+			setUndecorated(true);
+			((JPanel)getContentPane()).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 			
 			getContentPane().setBackground(Cores.FUNDO_CLARO);
 			
@@ -465,12 +526,12 @@ public class PopupManager {
 			setVisible(true);
 			setAlwaysOnTop(true);
 			
-			//new Timer().schedule(new TimerTask() {
-			//	public void run() {
-			//		subtractOpenDialogs();
-			//		dispose();
-			//	}
-			//}, 5000);
+			new Timer().schedule(new TimerTask() {
+				public void run() {
+					subtractOpenDialogs();
+					dispose();
+				}
+			}, 5000);
 			
 			openDialogs += Math.pow(2, POSITION);
 			
@@ -479,24 +540,6 @@ public class PopupManager {
 		private void subtractOpenDialogs() {
 			openDialogs -= Math.pow(2, POSITION);
 		}
-		
-		
-	}
-	
-	public static void main(String args[]) {
-		
-		Font oldLabelFont = UIManager.getFont("Label.font");
-	    UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
-		
-		Config_Gerais.read();
-		
-		File_Manager.read();
-
-		File_Manager.defineMundos();
-		
-		Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(4));
-		
-		PopupManager tet = new PopupManager();
 		
 	}
 	

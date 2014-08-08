@@ -59,7 +59,7 @@ public class MainWindow extends JFrame implements WindowListener {
         tabs = new JPanel();
         tabs.setBounds(0, 0, (int) dimension.getWidth(), 35);
         tabs.setBackground(Cores.FUNDO_CLARO);
-        //tabs.setLayout(new GridBagLayout());
+        tabs.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 6));
 
         body = new JPanel();
         body.setBounds(0, 36, (int) dimension.getWidth(), (int) dimension.getHeight() - 36);
