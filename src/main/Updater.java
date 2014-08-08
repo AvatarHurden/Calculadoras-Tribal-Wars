@@ -32,6 +32,11 @@ public class Updater implements FileDownloaderDelegate {
      * Pergunta se o usuario deseja atualizar ou não o app
      */
     public void start(){
+
+        if (!Configuration.get().getConfig("show_news_updates", true)) {
+            return;
+        }
+
         Object[] options = {"Atualizar agora!", "Atualizar mais tarde!"};
 
         JCheckBox check = new JCheckBox("Não me perguntar novamente");
@@ -42,7 +47,7 @@ public class Updater implements FileDownloaderDelegate {
                 "Nova atualização!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (check.isSelected()) {
-            //Aguardando sistema de configurações baseado em json!
+            Configuration.get().setConfig("show_news_updates", false);
         }
 
         if (n == 0) {
