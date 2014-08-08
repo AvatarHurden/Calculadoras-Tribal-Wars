@@ -7,10 +7,21 @@ import java.io.*;
 import java.net.URL;
 
 /**
- * Created by Administrador on 28/06/2014.
+ * Lê e escreve arquivos ou String em json.
+ *
+ * Tratar as exceptions com carinho!
+ *
+ * @author Wesley Nascimento.
  */
 public class JSON {
 
+    /**
+     * Read a string and return a json object or a throws
+     *
+     * @param string String path of JSON
+     * @return JSONObject
+     * @throws IOException
+     */
     public static JSONObject getJSON(String string) throws IOException {
         if (string.startsWith("http")) {
             return getJSON(new URL(string));
