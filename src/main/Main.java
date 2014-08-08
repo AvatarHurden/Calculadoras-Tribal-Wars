@@ -3,6 +3,8 @@ package main;
 import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,6 +16,8 @@ import config.Config_Gerais;
 import config.File_Manager;
 import frames.MainWindow;
 import frames.TrayIconClass;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Tribal Wars Engine, uma ferramenta completa para o jogo Tribal Wars
@@ -28,52 +32,35 @@ public class Main {
 	private static selecionar_mundo.GUI selecionar;
 	private static MainWindow mainFrame;
 
+    public static double VERSION = 1.100; //Versão atual do TWE
+    private static String REMOTE_URL = "https://raw.githubusercontent.com/AvatarHurden/Tribal-Wars-Engine/master/last_update.json";
+
 	public static void main(String[] args) {
-		
-		Font oldLabelFont = UIManager.getFont("Label.font");
-	    UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
-		
-		Config_Gerais.read();
-		
-		File_Manager.read();
-
-		File_Manager.defineMundos();
-		
-		new TrayIconClass();
-
-		openSelection();
+        new Main().init();
 	}
+
+    public void init(){
+        Font oldLabelFont = UIManager.getFont("Label.font");
+        UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
+        Config_Gerais.read();
+        File_Manager.read();
+        File_Manager.defineMundos();
+        new TrayIconClass();
+        openSelection();
+        lookForUpdate();
+    }
 
 	/**
 	 * Cria e mostra o frame de seleção de mundo
 	 */
-	public static void openSelection() {
-
+	public void openSelection() {
 		selecionar = new selecionar_mundo.GUI();
 
 		selecionar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		selecionar.pack();
 		selecionar.setVisible(true);
 		selecionar.setResizable(false);
-		
 		selecionar.setLocationRelativeTo(null);
-
-		selecionar.addWindowListener(new WindowListener() {
-			
-			public void windowOpened(WindowEvent arg0) {}
-			public void windowIconified(WindowEvent arg0) {}
-			public void windowDeiconified(WindowEvent arg0) {}
-			public void windowDeactivated(WindowEvent arg0) {}
-			
-			public void windowClosing(WindowEvent arg0) {
-				File_Manager.save();
-				Config_Gerais.save();
-			}
-			
-			public void windowClosed(WindowEvent arg0) {}
-			public void windowActivated(WindowEvent arg0) {}
-		});
-		
 	}
 
 	/**
@@ -82,7 +69,6 @@ public class Main {
 	 * configurações
 	 */
 	public static void openMainFrame() {
-		
 		File_Manager.defineModelos();
 
 		mainFrame = MainWindow.getInstance();
@@ -99,64 +85,46 @@ public class Main {
 
 		mainFrame.selectFirst();
 
-		//mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.pack();
 		mainFrame.setResizable(false);
-		
-		// Puts the mainFrame where the world-selection frame was
+
 		mainFrame.setLocationRelativeTo(selecionar);
 		selecionar.dispose();
-		
 		mainFrame.setVisible(true);
-		
-//		mainFrame.addWindowListener(new WindowListener() {
-//			
-//			public void windowOpened(WindowEvent arg0) {}
-//			public void windowIconified(WindowEvent arg0) {}
-//			public void windowDeiconified(WindowEvent arg0) {}
-//			public void windowDeactivated(WindowEvent arg0) {}
-//			
-//			public void windowClosing(WindowEvent arg0) {
-//				File_Manager.save();
-//				Config_Gerais.save();
-//			}
-//			
-//			public void windowClosed(WindowEvent arg0) {}
-//			public void windowActivated(WindowEvent arg0) {}
-//		});
-		
-		
-		//Não entendi pra que esses timers servem... By sorriso
-		Date time1 = new Date();
-		time1.setTime(time1.getTime()+5000);
-		
-		Date time2 = new Date();
-		time2.setTime(time2.getTime()+10000);
-		
-		Timer timer = new Timer();
-		
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				
-				System.out.println("Timer 1 has done");
-				
-			}
-		}, time1);
-		
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				
-				System.out.println("Timer 2 has done");
-				
-			}
-		}, time2);
-		
 	}
-	
+
+    /*
+     * Cria uma thread paralela pra verificar se existe uma nova versão disponivel
+     *
+     */
+    public void lookForUpdate() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonUpdate = JSON.getJSON( new URL( REMOTE_URL ) );
+
+                    double version = jsonUpdate.getDouble("version");
+
+                    if ( version > VERSION) {
+                        Updater updater = new Updater( version, jsonUpdate.getString("update_url") );
+                        updater.start();
+                    }
+                }
+                //Se não encontrar o arquivo
+                catch (IOException e) {
+                }
+                //Se estiver algum erro no json
+                catch (JSONException e) {
+                }
+            }
+        }).start();
+    }
+
+    /*
+     * @return mainFrame
+     */
 	public static MainWindow getMainWindow() {
 		return mainFrame;
 	}

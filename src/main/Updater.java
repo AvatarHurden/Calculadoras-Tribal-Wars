@@ -7,8 +7,8 @@ import frames.MainWindow;
 import javax.swing.*;
 
 /*
- *
- * Created by Administrador on 07/08/2014.
+ * A classe
+ * Created by Wesley Nascimento on 07/08/2014.
  */
 public class Updater implements FileDownloaderDelegate {
 
@@ -40,7 +40,7 @@ public class Updater implements FileDownloaderDelegate {
     }
 
 
-    public void beginDownload(){
+    private void beginDownload(){
         FileDownloader fileDownloader = new FileDownloader( this );
         fileDownloader.setUrl( url );
         fileDownloader.setLocalLocation( Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() );
