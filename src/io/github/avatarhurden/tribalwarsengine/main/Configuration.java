@@ -1,6 +1,6 @@
-package main;
+package io.github.avatarhurden.tribalwarsengine.main;
 
-import frames.MainWindow;
+import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,8 +64,7 @@ public class Configuration {
         try {
             //Se não existe, pega o padrão e o cria!
             if (!file.exists()) {
-                JSONObject defaultJson = JSON.getJSON(this.getClass().getResource("/config/default_config.json").getFile());
-                JSON.createJSONFile(defaultJson, file);
+                JSON.createJSONFile(new JSONObject("{}"), file);
             }
             config = JSON.getJSON(file);
         } catch (IOException e) {
