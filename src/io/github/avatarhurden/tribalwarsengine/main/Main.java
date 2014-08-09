@@ -1,11 +1,12 @@
-package main;
+package io.github.avatarhurden.tribalwarsengine.main;
 
 import config.Config_Gerais;
 import config.File_Manager;
-import frames.MainWindow;
-import frames.TrayIconClass;
+import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
+import io.github.avatarhurden.tribalwarsengine.frames.TrayIconClass;
 import org.json.JSONException;
 import org.json.JSONObject;
+import selecionar_mundo.selectWorldFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,22 +15,22 @@ import java.net.URL;
 
 /**
  * Tribal Wars Engine, uma ferramenta completa para o jogo Tribal Wars
- * 
+ *
  * @author Arthur
  * @date 25/07/2013
- *
+ * <p/>
  * Contribuições de Wesley Nascimento vulgo Sorriso
  */
 public class Main {
 
     public static double VERSION = 1.101; //Versão atual do TWE
-    private static selecionar_mundo.GUI selecionar;
-	private static MainWindow mainFrame;
+    private static selectWorldFrame selecionar;
+    private static MainWindow mainFrame;
     private static String REMOTE_URL = "https://raw.githubusercontent.com/AvatarHurden/Tribal-Wars-Engine/master/last_update.json";
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         new Main().init();
-	}
+    }
 
     /**
      * Cria e mostra o frame de ferramentas, fechando o frame de seleção de
@@ -86,7 +87,7 @@ public class Main {
      * Cria e mostra o frame de seleção de mundo
      */
     public void openWorldSelection() {
-        selecionar = new selecionar_mundo.GUI();
+        selecionar = new selectWorldFrame();
         selecionar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         selecionar.pack();
         selecionar.setVisible(true);

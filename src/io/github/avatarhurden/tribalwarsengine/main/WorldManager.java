@@ -1,6 +1,6 @@
-package main;
+package io.github.avatarhurden.tribalwarsengine.main;
 
-import objects.World;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

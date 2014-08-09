@@ -1,4 +1,4 @@
-package objects;
+package io.github.avatarhurden.tribalwarsengine.objects;
 
 import org.json.JSONObject;
 

@@ -35,7 +35,7 @@ import java.io.StringWriter;
  * A JSONStringer instance provides a <code>value</code> method for appending
  * values to the
  * text, and a <code>key</code>
- * method for adding keys before values in objects. There are <code>array</code>
+ * method for adding keys before values in io.github.avatarhurden.tribalwarsengine.objects. There are <code>array</code>
  * and <code>endArray</code> methods that make and bound array values, and
  * <code>object</code> and <code>endObject</code> methods which make and bound
  * object values. All of these methods return the JSONWriter instance,

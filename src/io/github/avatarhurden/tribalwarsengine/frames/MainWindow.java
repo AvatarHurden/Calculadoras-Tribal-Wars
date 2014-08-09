@@ -1,42 +1,32 @@
-package frames;
+package io.github.avatarhurden.tribalwarsengine.frames;
 
-import config.Config_Gerais;
-import config.File_Manager;
 import config.Lang;
 import custom_components.Ferramenta;
 import database.Cores;
-import selecionar_mundo.GUI;
+import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
+import selecionar_mundo.selectWorldFrame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class MainWindow extends JFrame implements WindowListener {
-
-    private JPanel tabs;
-    private JPanel body;
-
-    //Configura tamanho fixo para todos os frames do APP
-    //as dimensoes abaixo são as mesmas da GUI do selecionar_mundo
-    private int MAX_WIDTH = 920;
-    private int MAX_HEIGHT = 700;
-
-    public List<Ferramenta> ferramentas = new ArrayList<Ferramenta>();
-    public Ferramenta ferramentaSelecionada;
+public class MainWindow extends JFrame {
 
     //instancia da janela, para chamados estaticos
     private static final MainWindow instance = new MainWindow();
+    public List<Ferramenta> ferramentas = new ArrayList<Ferramenta>();
+    public Ferramenta ferramentaSelecionada;
+    private JPanel tabs;
+    private JPanel body;
+    //Configura tamanho fixo para todos os io.github.avatarhurden.tribalwarsengine.frames do APP
+    //as dimensoes abaixo são as mesmas da GUI do selecionar_mundo
+    private int MAX_WIDTH = 920;
+    private int MAX_HEIGHT = 700;
     ;
-
-    public static MainWindow getInstance() {
-        return instance;
-    }
 
     /**
      * Frame que contém todas as ferramentas
@@ -49,12 +39,12 @@ public class MainWindow extends JFrame implements WindowListener {
         setTitle(Lang.Titulo.toString());
         setPreferredSize(dimension);
         setIconImage(Toolkit.getDefaultToolkit().getImage(
-                GUI.class.getResource("/images/Icon.png")));
+                selectWorldFrame.class.getResource("/images/Icon.png")));
 
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
         setBackground(Cores.FUNDO_CLARO);
 
-        addWindowListener(this);
+        addWindowListener(new TWEWindowListener());
 
         tabs = new JPanel();
         tabs.setBounds(0, 0, (int) dimension.getWidth(), 35);
@@ -136,57 +126,8 @@ public class MainWindow extends JFrame implements WindowListener {
 
     }
 
-    /* IMPLEMENTAÇÔES AO WINDOW LISTENER */
-    public void windowClosed(WindowEvent e) {
-    }
-
-    public void windowActivated(WindowEvent e) {
-    }
-
-    public void windowOpened(WindowEvent e) {
-    }
-
-    public void windowIconified(WindowEvent e) {
-    }
-
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    public void windowClosing(WindowEvent e) {
-        File_Manager.save();
-        Config_Gerais.save();
-
-        try {
-            if (Config_Gerais.getOnClose() == true)
-                System.exit(0);
-            else
-                ((JFrame) e.getSource()).dispose();
-        } catch (Exception e1) {
-
-            Object[] options = {"Fechar o programa", "Colocar em segundo plano"};
-
-            JCheckBox check = new JCheckBox("Não me perguntar novamente");
-            String mensagem = "<html>Você deseja fechar o programa ou apenas colocá-lo<br>em segundo "
-                    + "plano?<br><br>(É possível fechá-lo com o ícone da barra de tarefas)<br></html>";
-
-            int n = JOptionPane.showOptionDialog((Component) e.getSource(), new Object[]{mensagem, check},
-                    "Encerrar programa?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
-            if (check.isSelected()) {
-                Config_Gerais.setOnClose((n == 0) ? true : false);
-                Config_Gerais.save();
-            }
-
-            if (n == 0) {
-                System.exit(0);
-            } else {
-                ((JFrame) e.getSource()).dispose();
-            }
-        }
-
+    public static MainWindow getInstance() {
+        return instance;
     }
 
     /**

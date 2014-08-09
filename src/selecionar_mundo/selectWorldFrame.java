@@ -5,6 +5,7 @@ import config.File_Manager;
 import config.Lang;
 import config.Mundo_Reader;
 import database.Cores;
+import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -14,7 +15,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 @SuppressWarnings("serial")
-public class GUI extends JFrame implements WindowListener {
+public class selectWorldFrame extends JFrame implements WindowListener {
 
     public Informações_de_mundo informationTable;
     private Escolha_de_mundo selectionPanel;
@@ -28,13 +29,15 @@ public class GUI extends JFrame implements WindowListener {
      * - Lista dos mundos disponíveis
      * - Botão para abrir o "MainWindow"
      */
-    public GUI() {
+    public selectWorldFrame() {
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 
         setTitle(Lang.Titulo.toString());
 
+        addWindowListener(new TWEWindowListener());
+
         setIconImage(Toolkit.getDefaultToolkit().getImage(
-                GUI.class.getResource("/images/Icon.png")));
+                selectWorldFrame.class.getResource("/images/Icon.png")));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{546, 1, 350};
@@ -117,7 +120,7 @@ public class GUI extends JFrame implements WindowListener {
         * Assim, poderemos manter o projeto mais organizado e mover todos os pacotes para dentro da SRC
         */
         lblTítulo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                GUI.class.getResource("/images/logo_engine_centralized.png"))));
+                selectWorldFrame.class.getResource("/images/logo_engine_centralized.png"))));
 
         add(lblTítulo, c);
 

@@ -17,7 +17,7 @@ import java.io.IOException;
 public class Configuration {
 
     private static final String configFile = "config.json";
-    private static final Configuration instance = new Configuration();
+    private static Configuration instance;
     //Armazena as configurações
     private JSONObject config;
     private File file;
@@ -46,6 +46,9 @@ public class Configuration {
      * @return instance - O objeto
      */
     public static Configuration get() {
+        if (instance == null) {
+            instance = new Configuration();
+        }
         return instance;
     }
 
@@ -68,7 +71,6 @@ public class Configuration {
             }
             config = JSON.getJSON(file);
         } catch (IOException e) {
-            e.printStackTrace();
             //JOptionPane.showMessageDialog( frame, "Não foi possivel criar um arquivo de configuração.\nSuas modificações não serão visiveis no proximo uso.", "Erro", JOptionPane.ERROR_MESSAGE);
             config = new JSONObject("{}");
             return;

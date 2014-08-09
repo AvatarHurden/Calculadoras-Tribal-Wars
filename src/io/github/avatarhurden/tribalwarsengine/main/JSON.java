@@ -1,4 +1,4 @@
-package main;
+package io.github.avatarhurden.tribalwarsengine.main;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +8,7 @@ import java.net.URL;
 
 /**
  * Lê e escreve arquivos ou String em json.
- *
+ * <p/>
  * Tratar as exceptions com carinho!
  *
  * @author Wesley Nascimento.
@@ -78,7 +78,7 @@ public class JSON {
         }
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.append(json.toString());
+        writer.append(json.toString(1));
         writer.flush();
         writer.close();
     }

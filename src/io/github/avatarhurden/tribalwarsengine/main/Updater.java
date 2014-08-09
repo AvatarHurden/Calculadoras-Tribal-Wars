@@ -1,8 +1,8 @@
-package main;
+package io.github.avatarhurden.tribalwarsengine.main;
 
 import com.littlebigberry.httpfiledownloader.FileDownloader;
 import com.littlebigberry.httpfiledownloader.FileDownloaderDelegate;
-import frames.MainWindow;
+import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 
 import javax.swing.*;
 
@@ -23,7 +23,7 @@ public class Updater implements FileDownloaderDelegate {
      * @param version - Versão remota do App
      * @param url     - Url para download
      */
-    public Updater( double version, String url ){
+    public Updater(double version, String url) {
         this.url = url;
         this.version = version;
     }
@@ -31,7 +31,7 @@ public class Updater implements FileDownloaderDelegate {
     /**
      * Pergunta se o usuario deseja atualizar ou não o app
      */
-    public void start(){
+    public void start() {
 
         if (!Configuration.get().getConfig("show_news_updates", true)) {
             return;
@@ -43,7 +43,7 @@ public class Updater implements FileDownloaderDelegate {
         String mensagem = "Existe uma versão mais recente do Tribal Wars Engine!\n"
                 + "Deseja atualizar da versão " + Main.VERSION + " para a versão " + this.version + "?";
 
-        int n = JOptionPane.showOptionDialog(MainWindow.getInstance() , new Object[]{mensagem, check},
+        int n = JOptionPane.showOptionDialog(MainWindow.getInstance(), new Object[]{mensagem, check},
                 "Nova atualização!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (check.isSelected()) {
@@ -59,10 +59,10 @@ public class Updater implements FileDownloaderDelegate {
     /**
      * Inicia o download usando a url remota e baixando no local no jar sendo executado.
      */
-    private void beginDownload(){
-        FileDownloader fileDownloader = new FileDownloader( this );
-        fileDownloader.setUrl( url );
-        fileDownloader.setLocalLocation( Main.class.getProtectionDomain().getCodeSource().getLocation().getPath() );
+    private void beginDownload() {
+        FileDownloader fileDownloader = new FileDownloader(this);
+        fileDownloader.setUrl(url);
+        fileDownloader.setLocalLocation(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         fileDownloader.beginDownload();
     }
 
