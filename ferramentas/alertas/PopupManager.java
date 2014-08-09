@@ -41,6 +41,11 @@ import database.Cores;
 import database.Unidade;
 
 
+/**
+ * Classe para lidar com a criação e manutenção dos popups para objetos da classe Alert
+ * 
+ * @author Arthur
+ */
 public class PopupManager {
 	
 	List<Alert> alertas = new ArrayList<Alert>();
@@ -53,12 +58,19 @@ public class PopupManager {
 	
 	private Timer timer = new Timer();
 	
+	/**
+	 * Cria um objeto do PopupManager. Para adicionar ou remover futuros popups, utilize addAlert e removeAlert.
+	 */
 	protected PopupManager() {
 			
 		dates = new TreeSet<AlertStack>(getComparator());		
 		
 	}
 	
+	/**
+	 * Cria um comparador entre aldeias. No comparador, o menor valor é aquele que possui um horário mais
+	 * cedo.
+	 */
 	private Comparator<AlertStack> getComparator() {
 		
 		return new Comparator<AlertStack>() {
@@ -88,6 +100,10 @@ public class PopupManager {
 
 	}
 	
+	/**
+	 * Adiciona um alerta na lista, criando popups para os avisos e o horário
+	 * @param alerta
+	 */
 	protected void addAlerta(final Alert alerta) {
 		
 		alertas.add(alerta);
@@ -105,6 +121,10 @@ public class PopupManager {
 		
 	}
 	
+	/**
+	 * Remove todos os popups relacionados ao alerta dado
+	 * @param alerta
+	 */
 	protected void removeAlerta(Alert alerta) {
 		
 		for (AlertStack s : dates)
@@ -118,6 +138,11 @@ public class PopupManager {
 		timer.purge();
 	}
 	
+	/**
+	 * Cria um TimerTask para mostrar o próximo popup. Esse TimerTask, quando executado, chama novamente
+	 * schedule, marcando o próximo popup. Isso é feito para minimizar o load no JVM.
+	 * @param a AlertStack para ser marcado
+	 */
 	private void schedule(final AlertStack a) {
 		
 		Date date = a.getDate();
@@ -144,6 +169,10 @@ public class PopupManager {
 		}
 	}
 	
+	/**
+	 * Classe que liga um alerta a um stack de dates. Cada vez que um popup para o alerta é marcado,
+	 * remove-se o date do stack.
+	 */
 	private class AlertStack {
 		
 		private Alert alert;
@@ -171,6 +200,10 @@ public class PopupManager {
 		
 		private int POSITION;
 		
+		/**
+		 * Cria o JDialog do popup
+		 * @param alerta
+		 */
 		private PopupGUI(Alert alerta) {
 			
 			setUndecorated(true);
@@ -226,6 +259,9 @@ public class PopupManager {
 			pack();
 		}
 		
+		/**
+		 * Faz o header para o Popup, com o símbolo e nome do programa
+		 */
 		private JPanel makeHeader() {
 			
 			JPanel panel = new JPanel();
@@ -279,7 +315,11 @@ public class PopupManager {
 			return panel;
 		}
 		
-		// Makes a panel with a button that, when clicked, shows the panel passed as parameter
+		/**
+		 * Makes a panel with a button that, when clicked, shows the panel passed as parameter
+		 * 
+		 * @param spoiler Hidden Component
+		 */
 		private JPanel makeSpoilerPanel(final JComponent spoiler) {
 			
 			final JPanel panel = new JPanel();
@@ -335,6 +375,13 @@ public class PopupManager {
 			return panel;
 		}
 		
+		/**
+		 * Cria um JPanel com as informações adicionais (aldeias, tropas e notas) do alerta
+		 * 
+		 * @param alerta
+		 * @param width do JPanel
+		 * @return JPanel
+		 */
 		private JPanel makeInfoPanel(Alert alerta, int width) {
 			
 			JPanel panel = new JPanel();
@@ -399,18 +446,31 @@ public class PopupManager {
 			return panel;
 		}
 		
-		private JPanel makeAldeiaPanel(String titulo, String nome) {
+		/**
+		 * Cria um painel para aldeia
+		 * 
+		 * @param titulo "Origem" ou "Destino"
+		 * @param aldeia nome da aldeia (com coordenadas)
+		 * @return JPanel
+		 */
+		private JPanel makeAldeiaPanel(String titulo, String aldeia) {
 			
 			JPanel panel = new JPanel();
 			panel.setOpaque(false);
 			panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), titulo));
 			
-			panel.add(new JLabel(nome));
+			panel.add(new JLabel(aldeia));
 			
 			return panel;
 			
 		}
 		
+		/**
+		 * Cria um JPanel com as tropas enviadas no alerta
+		 * 
+		 * @param map das unidades enviadas
+		 * @return JPanel
+		 */
 		private JPanel makeTropasPanel(Map<Unidade, Integer> map) {
 			
 			JPanel panel = new JPanel();
@@ -458,6 +518,13 @@ public class PopupManager {
 			
 		}
 		
+		/**
+		 * Cria um JPanel não editável com as notas do alerta
+		 * 
+		 * @param nota texto da nota
+		 * @param width do JPanel
+		 * @return JPanel
+		 */
 		private JPanel makeNotasPanel(String nota, int width) {
 			
 			JPanel panel = new JPanel();
@@ -494,6 +561,9 @@ public class PopupManager {
 			
 		}
 		
+		/**
+		 * Coloca o Popup no local adequado na tela, mostrando-o pelo tempo de 5 segundos (a menos que seja clicado)
+		 */
 		protected void showOnScreen() {
 			
 			pack();

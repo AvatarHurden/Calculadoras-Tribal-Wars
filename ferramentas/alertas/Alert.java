@@ -9,6 +9,12 @@ import java.util.Stack;
 
 import database.Unidade;
 
+/**
+ * Contém informações sobre um alerta criado pelo usuário. Este alerta possui várias configurações, e
+ * funciona como um despertador, aparecendo um popup na tela do usuário no horário informado.
+ * 
+ * @author Arthur
+ */
 public class Alert {
 
     protected enum Tipo {
@@ -37,15 +43,18 @@ public class Alert {
     private String nome;
     private String notas;
     private Date horário;
+    // Decidir se manter isso ou mudar a maneira
     private Long repete;
+    
     private Map<Unidade, Integer> tropas;
     private Aldeia origem;
     private Aldeia destino;
     private List<Date> avisos;
-
-    public Alert() {
-
-    }
+    
+    /**
+     * Cria um alerta vazio. Para definir as características, utilize os setters
+     */
+    public Alert() {}
 
     protected void setTipo(Tipo tipo) {
         this.tipo = tipo;
@@ -136,11 +145,9 @@ public class Alert {
 
     /**
      * Retorna um stack dos avisos, com o topo sendo ocupado pelo aviso mais cedo
-     * @return
      */
     protected Stack<Date> getAvisos() {
     	
-  
     	Stack<Date> retorno = new Stack<Date>();
     	retorno.addAll(avisos);
     	

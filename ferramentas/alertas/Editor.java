@@ -46,6 +46,11 @@ import database.Cores;
 import database.Unidade;
 
 @SuppressWarnings("serial")
+/**
+ * Classe para criar ou editar objetos da classe Alert
+ * 
+ * @author Arthur
+ */
 public class Editor extends JDialog{
 	
 	// Necessário para poder cancelar modificações
@@ -84,6 +89,9 @@ public class Editor extends JDialog{
 	// Scrollpane
 	private JScrollPane scroll;
 	
+	/**
+	 * Cria um editor em branco.
+	 */
 	protected Editor() {
 		
 		setResizable(false);
@@ -152,6 +160,10 @@ public class Editor extends JDialog{
 		pack();
 	}
 	
+	/**
+	 * Cria um editor com dados preenchidos, baseado no alerta passado como parâmetro
+	 * @param alerta com o qual preencher os dados
+	 */
 	@SuppressWarnings("unchecked")
 	protected Editor(Alert alerta) {
 		
@@ -233,6 +245,9 @@ public class Editor extends JDialog{
 		
 	}
 	
+	/**
+	 * Define o alerta com base no que está preenchido no editor.
+	 */
 	protected void setAlerta() {
 		
 		Alert alerta = new Alert();
@@ -287,6 +302,9 @@ public class Editor extends JDialog{
 		this.alerta = alerta;
 	}
 	
+	/**
+	 * Cria um JPanel para inserir o nome do alerta
+	 */
 	private JPanel makeNamePanel() {
 		
 		JPanel panel = new JPanel();
@@ -299,6 +317,9 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria um JPanel para definir o tipo do alerta
+	 */
 	private JPanel makeTipoPanel() {
 		
 		JPanel panel = new JPanel();
@@ -366,6 +387,9 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria um JPanel para definir o horário do alerta
+	 */
 	private JPanel makeDataPanel() {
 		
 		JPanel panel = new JPanel();
@@ -403,6 +427,9 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria um JPanel para definir a origem do alerta. Fica desativado caso o alerta seja de tipo Geral
+	 */
 	private JPanel makeOrigemPanel() {
 		
 		JPanel panel = new JPanel();
@@ -435,6 +462,9 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria um JPanel para definir o destino do alerta. Fica desativado caso o alerta seja de tipo Geral
+	 */
 	private JPanel makeDestinoPanel() {
 		
 		JPanel panel = new JPanel();
@@ -467,6 +497,9 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria um JPanel para definir as tropas enviadas do alerta. Fica desativado caso o alerta seja de tipo Geral
+	 */
 	private JPanel makeTropaPanel() {
 		
 		JPanel panel = new JPanel();
@@ -507,6 +540,9 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria um JPanel para definir as notas do alerta
+	 */
 	private JPanel makeNotasPanel(String nota) {
 		
 		JPanel panel = new JPanel();
@@ -525,6 +561,10 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria um JPanel para definir os avisos prévios do alerta. Cada aviso é composto de um número e uma
+	 * unidade (horas, minutos segundos). É possível adicionar novos avisos clicando no botão '+'.
+	 */
 	private JPanel makeAvisosPanel() {
 		
 		final JPanel panel = new JPanel();
@@ -578,6 +618,9 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Cria os botões que ficam na parte inferior do editor (salvar e cancelar).
+	 */
 	private JPanel makeButtons() {
 		
 		JPanel panel = new JPanel();
@@ -606,6 +649,10 @@ public class Editor extends JDialog{
 		return panel;
 	}
 	
+	/**
+	 * Retorna o alerta definido pelo editor
+	 * @return alerta
+	 */
 	protected Alert getAlerta() {
 		return alerta;
 	}
