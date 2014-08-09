@@ -73,7 +73,7 @@ public class GUI extends Ferramenta {
 			
 			alertas.add(alerta);
 			
-			popups.addAlerta(alerta);
+			//popups.addAlerta(alerta);
 		}
 		
 		Dimension d = MainWindow.getInstance().getPreferredSize();

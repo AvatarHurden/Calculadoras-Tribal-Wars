@@ -55,6 +55,11 @@ import database.Cores;
 import database.Unidade;
 
 @SuppressWarnings("serial")
+/**
+ * Classe para representar, em uma JTable, objetos da classe Alert
+ * 
+ * @author Arthur
+ */
 public class AlertTable extends JTable{
 	
 	private List<Alert> alerts = new ArrayList<Alert>();
@@ -169,6 +174,12 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Cria o sorter específico para a tabela. As mudanças em relação ao sorter padrão são:
+	 * - Não permite sortar pela coluna de notas
+	 * - Para comparar lista de tropas, testa qual possui menos unidades diferentes, sendo desempatado
+	 * pela quantidade específica de cada unidade, em ordem.
+	 */
 	private void setSorter() {
 		
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
@@ -211,22 +222,24 @@ public class AlertTable extends JTable{
 		
 	}
 	
-	// Creates a mouse listener that, when clicked over a note, opens a Dialog with the contents of
-	// the note to be edited
+	/**
+	 * Creates a mouse listener that, when clicked over a note, opens a Dialog with the contents of
+	 * the note to be edited.
+	 */
 	private void addNoteClickListener() {
 		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 			    if (e.getClickCount() == 2) {
 			
-			      final JTable target = (JTable)e.getSource();
+			      final AlertTable target = (AlertTable) e.getSource();
 			      
 			      final int clickrow = target.convertRowIndexToModel(target.getSelectedRow());
-			      int clickcolumn = target.getSelectedColumn();
+			      final int clickcolumn = target.getSelectedColumn();
 			      
-			      Rectangle cell = target.getCellRect(clickrow, target.getSelectedColumn(), false);
+			      Rectangle cell = target.getCellRect(clickrow, clickcolumn, false);
 			      
-			      // Only does this if the selected column is tne notes column
+			      // Only does this if the selected column is the notes column
 			      if (target.convertColumnIndexToModel(clickcolumn) == 7) {
 			      	
 			      		final JDialog dialog = new JDialog();
@@ -268,7 +281,7 @@ public class AlertTable extends JTable{
 			    		JButton salvar = new JButton("Salvar");
 			    		salvar.addActionListener(new ActionListener() {
 			    			public void actionPerformed(ActionEvent e) {
-			    				target.setValueAt(notas.getText(), clickrow, 7);
+			    				target.setValueAt(notas.getText(), clickrow, clickcolumn);
 			    				dialog.dispose();
 			    			}
 			    		});
@@ -318,6 +331,9 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Muda o Renderer do Header, pra ficar semelhante ao do resto do programa
+	 */
 	private void changeHeader() {
 		
 		getTableHeader().setBackground(Cores.FUNDO_ESCURO);
@@ -344,6 +360,10 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Adiciona um alerta à tabela
+	 * @param alerta
+	 */
 	protected void addAlert(Alert alerta) {
 		
 		alerts.add(alerta);
@@ -352,6 +372,11 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Modifica o conteúdo de um alerta em uma fileira específica
+	 * @param alerta, já modificado
+	 * @param row Fileira em que o alerta estava
+	 */
 	protected void changeAlert(Alert alerta, int row) {
 		
 		alerts.remove(row);
@@ -362,6 +387,10 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Remove um alerta da tabela, dada sua fileira
+	 * @param row em que o alerta está
+	 */
 	protected void removeAlert(int row) {
 		
 		alerts.remove(row);
@@ -370,6 +399,9 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Renderer para a nota. Possui um desenho representativo, com um tooltip explicativo
+	 */
 	private class NotaCellRenderer extends CustomCellRenderer {
 		
 		public Component getTableCellRendererComponent (final JTable table, 
@@ -393,6 +425,9 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Renderer para o horário do alerta. Possui um simples DateFormat.
+	 */
 	private class DateCellRenderer extends CustomCellRenderer {
 		
 		public Component getTableCellRendererComponent (final JTable table, 
@@ -409,6 +444,10 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Renderer para o tempo de repetição do alerta. Faz uma formatação do horário, se houver.
+	 * Caso não haja, imprime cinco hífens
+	 */
 	private class TimeCellRenderer extends CustomCellRenderer {
 		
 		public Component getTableCellRendererComponent (JTable table, 
@@ -445,6 +484,11 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Renderer para a lista de tropas enviadas. Caso haja 3 ou menos tipos de tropas, imprime todas.
+	 * Caso haja mais, imprime duas unidades, seguido de um sinal de que há mais. Possui um tooltip indicando
+	 * todas as unidades presentes.
+	 */
 	private class TropaCellRenderer extends CustomCellRenderer {
 		
 		public Component getTableCellRendererComponent (JTable table, 
@@ -493,6 +537,10 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Renderer padrão para todas as células. Define a cor de fundo da célula com base em
+	 * sua fileira. Caso o objeto seja nulo, imprime 5 hífens.
+	 */
 	private class CustomCellRenderer extends DefaultTableCellRenderer {
 		
 		public Component getTableCellRendererComponent (JTable table, 
@@ -522,6 +570,9 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	/**
+	 * Modelo para a tabela.
+	 */
 	protected class AlertTableModel extends AbstractTableModel implements TableModel  {
 		
 		protected AlertTableModel() {}
@@ -575,8 +626,8 @@ public class AlertTable extends JTable{
 
 
 		/**
-		 * Para valores entre 0 e 6 de coluna, retorna uma propriedade do alerta da linha correspondente.
-		 * <br>Para qualquer outro valor de coluna, retorna o alerta em si.
+		 * Para valores entre 0 e 7 de coluna, retorna uma propriedade do alerta da linha correspondente.
+		 * Para qualquer outro valor de coluna, retorna o alerta em si.
 		 */
 		public Object getValueAt(int row, int column) {
 			
@@ -588,7 +639,6 @@ public class AlertTable extends JTable{
 				case 4: return alerts.get(row).getTropas();
 				case 5: return alerts.get(row).getHorário();
 				case 6: return (alerts.get(row).getRepete() != null) ? alerts.get(row).getRepete() : 0;
-				// Não permite ordenar os alertas através das notas
 				case 7: return (alerts.get(row).getNotas() != null) ? alerts.get(row).getNotas() : "";
 				default: return alerts.get(row);
 			}
@@ -607,8 +657,10 @@ public class AlertTable extends JTable{
 		public void setValueAt(Object obj, int row, int column) {
 			
 			// The only one to be changed this way is the notes
-			if (column == 7)
+			if (column == 7) {
+				System.out.println("hi");
 				alerts.get(row).setNotas((String) obj);
+			}
 			
 		}
 		
