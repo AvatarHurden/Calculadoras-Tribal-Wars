@@ -5,6 +5,9 @@ import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 
 import javax.swing.*;
 import javax.swing.border.SoftBevelBorder;
+
+import tools.ToolManager;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,7 +18,7 @@ import java.awt.event.MouseListener;
  */
 public class Ferramenta extends JPanel {
 
-    protected ToolPanel tools;
+    protected ToolManager tools;
     private JPanel tab;
     private MainWindow frame = MainWindow.getInstance();
     private boolean corEscuraUsada;
@@ -27,7 +30,7 @@ public class Ferramenta extends JPanel {
 
         setBackground(Cores.FUNDO_CLARO);
 
-        tools = new ToolPanel();
+        tools = new ToolManager();
 
 //		setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 

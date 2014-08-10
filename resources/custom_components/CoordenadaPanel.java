@@ -32,7 +32,7 @@ import database.Cores;
 public abstract class CoordenadaPanel extends JPanel{
 
 	// X and Y coordinates
-	JTextField x, y;
+	private JTextField x, y;
 	
 	JSeparator separator;
 	
@@ -184,6 +184,13 @@ public abstract class CoordenadaPanel extends JPanel{
 			return Integer.parseInt(y.getText());
 	}
 	
+	public JTextField getXField() {
+		return x;
+	}
+	
+	public JTextField getYField() {
+		return y;
+	}
 	public void setCoordenadas(int x, int y) {
 		
 		this.x.setText(String.valueOf(x));

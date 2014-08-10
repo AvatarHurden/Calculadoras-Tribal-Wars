@@ -33,10 +33,10 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import simulador.GUI.InputInfo;
+import tools.ToolManager;
 import config.Lang;
 import config.Mundo_Reader;
 import custom_components.IntegerFormattedTextField;
-import custom_components.ToolPanel;
 import database.Bandeira;
 import database.Bandeira.CategoriaBandeira;
 import database.Cores;
@@ -74,7 +74,7 @@ public class StatInsertion extends JPanel {
 	 * @param tipo
 	 *            Se o panel é de atacante ou defensor
 	 */
-	public StatInsertion(Tipo tipo, InputInfo info, ToolPanel tool) {
+	public StatInsertion(Tipo tipo, InputInfo info, ToolManager tool) {
 
 		this.tipo = tipo;
 
