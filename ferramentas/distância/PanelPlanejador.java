@@ -2,7 +2,7 @@ package distância;
 
 import custom_components.TimeFormattedJLabel;
 import database.Cores;
-import selecionar_mundo.selectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -56,7 +56,7 @@ public class PanelPlanejador extends JPanel {
         add(makeInputPanel(), c);
 
         JButton invert = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/switch_arrow.png"))));
+                SelectWorldFrame.class.getResource("/images/switch_arrow.png"))));
         invert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 invertInOut();

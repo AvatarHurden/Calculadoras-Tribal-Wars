@@ -5,7 +5,7 @@ import config.ModeloAldeias_Reader;
 import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import database.*;
-import selecionar_mundo.selectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -172,7 +172,7 @@ public class ToolPanel {
             final JButton button = new JButton();
 
             button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                    selectWorldFrame.class.getResource("/images/down_arrow.png"))));
+                    SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
 
             button.setPreferredSize(new Dimension(20, 20));
 
@@ -243,7 +243,7 @@ public class ToolPanel {
             final JButton button = new JButton();
 
             button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                    selectWorldFrame.class.getResource("/images/edit_icon.png"))));
+                    SelectWorldFrame.class.getResource("/images/edit_icon.png"))));
 
             button.setPreferredSize(new Dimension(20, 20));
 
@@ -350,7 +350,7 @@ public class ToolPanel {
             final JButton button = new JButton();
 
             button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                    selectWorldFrame.class.getResource("/images/down_arrow.png"))));
+                    SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
 
             button.setPreferredSize(new Dimension(20, 20));
 
@@ -429,7 +429,7 @@ public class ToolPanel {
             final JButton button = new JButton();
 
             button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                    selectWorldFrame.class.getResource("/images/edit_icon.png"))));
+                    SelectWorldFrame.class.getResource("/images/edit_icon.png"))));
 
             button.setPreferredSize(new Dimension(20, 20));
 

@@ -34,6 +34,7 @@ public class Mundo_Reader {
 			// the exception), we use
 			// the default file
 		} catch (IOException e) {
+            //Trata melhor essas exceçoes :)
 			System.out.println("bugou geral");
 		}
 

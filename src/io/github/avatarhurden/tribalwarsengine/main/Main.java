@@ -6,7 +6,7 @@ import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.TrayIconClass;
 import org.json.JSONException;
 import org.json.JSONObject;
-import selecionar_mundo.selectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,7 @@ import java.net.URL;
 public class Main {
 
     public static double VERSION = 1.101; //Versão atual do TWE
-    private static selectWorldFrame selecionar;
+    private static SelectWorldFrame selectWorldFrame;
     private static MainWindow mainFrame;
     private static String REMOTE_URL = "https://raw.githubusercontent.com/AvatarHurden/Tribal-Wars-Engine/master/last_update.json";
 
@@ -57,8 +57,8 @@ public class Main {
         mainFrame.pack();
         mainFrame.setResizable(false);
 
-        mainFrame.setLocationRelativeTo(selecionar);
-        selecionar.dispose();
+        mainFrame.setLocationRelativeTo( selectWorldFrame );
+        selectWorldFrame.dispose();
         mainFrame.setVisible(true);
     }
 
@@ -87,12 +87,11 @@ public class Main {
      * Cria e mostra o frame de seleção de mundo
      */
     public void openWorldSelection() {
-        selecionar = new selectWorldFrame();
-        selecionar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        selecionar.pack();
-        selecionar.setVisible(true);
-        selecionar.setResizable(false);
-        selecionar.setLocationRelativeTo(null);
+        selectWorldFrame = new SelectWorldFrame();
+        selectWorldFrame.pack();
+        selectWorldFrame.setVisible(true);
+        selectWorldFrame.setResizable(false);
+        selectWorldFrame.setLocationRelativeTo(null);
     }
 
     /*

@@ -1,10 +1,12 @@
-package selecionar_mundo;
+package io.github.avatarhurden.tribalwarsengine.panels;
 
 import config.File_Manager;
 import config.Lang;
 import config.Mundo_Reader;
 import custom_components.EditDialog;
 import database.Mundo;
+import io.github.avatarhurden.tribalwarsengine.components.TWButton;
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
 
 import javax.swing.*;
@@ -15,24 +17,21 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 @SuppressWarnings("serial")
-public class Escolha_de_mundo extends JPanel {
+public class SelectWorldPanel extends JPanel {
 
     private JComboBox<String> selectionBox;
-
-    private JButton startButton;
-
+    private TWButton startButton;
     private JButton padrãoButton;
-
     private JButton editButton;
 
-    private selectWorldFrame selectWorldFrame;
+    private SelectWorldFrame selectWorldFrame;
 
     /**
      * JPanel com um comboBox para escolher o mundo e um botão para iniciar o frame de ferramentas
      *
      * @param selectWorldFrame Frame em que será inserido
      */
-    public Escolha_de_mundo(final selectWorldFrame selectWorldFrame) {
+    public SelectWorldPanel(final SelectWorldFrame selectWorldFrame) {
 
         this.selectWorldFrame = selectWorldFrame;
 
@@ -107,13 +106,11 @@ public class Escolha_de_mundo extends JPanel {
         constraints.anchor = GridBagConstraints.NORTHEAST;
         add(editButton, constraints);
 
-        startButton = new JButton(Lang.BtnIniciar.toString());
+        startButton = new TWButton( Lang.BtnIniciar.toString() );
 
         startButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent arg0) {
-
-                selectWorldFrame.setVisible(false);
 
                 // Define as características da classe estática "MundoSelecionado", que será
                 // utilizado por todas as ferramentas
