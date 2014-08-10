@@ -1,5 +1,7 @@
 package tools;
 
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
-import selecionar_mundo.selectWorldFrame;
 import config.ModeloTropas_Reader;
 import config.Mundo_Reader;
 import custom_components.EditDialog;
@@ -91,7 +92,7 @@ public class ModeloTropasPanel extends JPanel {
         final JButton button = new JButton();
 
         button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/down_arrow.png"))));
+                SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
 
         button.setPreferredSize(new Dimension(20, 20));
 
@@ -162,7 +163,7 @@ public class ModeloTropasPanel extends JPanel {
         final JButton button = new JButton();
 
         button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/edit_icon.png"))));
+                SelectWorldFrame.class.getResource("/images/edit_icon.png"))));
 
         button.setPreferredSize(new Dimension(20, 20));
 
