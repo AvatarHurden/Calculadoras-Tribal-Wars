@@ -1,18 +1,25 @@
 package selecionar_mundo;
 
-import config.Config_Gerais;
-import config.File_Manager;
+import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
+
 import config.Lang;
 import config.Mundo_Reader;
 import database.Cores;
-import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
-
-import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.SoftBevelBorder;
-import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 @SuppressWarnings("serial")
 public class selectWorldFrame extends JFrame {
