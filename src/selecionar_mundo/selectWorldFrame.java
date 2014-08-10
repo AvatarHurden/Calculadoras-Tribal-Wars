@@ -15,7 +15,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 @SuppressWarnings("serial")
-public class selectWorldFrame extends JFrame implements WindowListener {
+public class selectWorldFrame extends JFrame {
 
     public Informações_de_mundo informationTable;
     private Escolha_de_mundo selectionPanel;
@@ -75,33 +75,7 @@ public class selectWorldFrame extends JFrame implements WindowListener {
 
         getRootPane().setDefaultButton(selectionPanel.getStartButton());
 
-        this.addWindowListener(this);
     }
-
-    /* IMPLEMENTAÇÔES AO WINDOW LISTENER */
-    public void windowOpened(WindowEvent e) {
-    }
-
-    public void windowIconified(WindowEvent e) {
-    }
-
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    public void windowClosed(WindowEvent e) {
-    }
-
-    public void windowActivated(WindowEvent e) {
-    }
-
-    public void windowClosing(WindowEvent arg0) {
-        File_Manager.save();
-        Config_Gerais.save();
-    }
-
 
     /**
      * Cria um JLabel com a imagem do logo, e adiciona no frame

@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.listeners;
 
+import config.Config_Gerais;
+import config.File_Manager;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 
 import javax.swing.*;
@@ -33,6 +35,9 @@ public class TWEWindowListener implements WindowListener {
     }
 
     public void windowClosing(WindowEvent e) {
+        File_Manager.save();
+        Config_Gerais.save();
+
         Configuration config = Configuration.get();
 
         Window window = e.getWindow();
