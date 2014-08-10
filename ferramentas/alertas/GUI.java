@@ -1,17 +1,26 @@
 package alertas;
 
+import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
+
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
 import custom_components.Ferramenta;
 import database.Unidade;
-import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
-import java.util.List;
 
 public class GUI extends Ferramenta {
 
@@ -57,15 +66,17 @@ public class GUI extends Ferramenta {
 
             Date now = new Date();
 
-            alerta.setHorário(new Date(now.getTime() + (1 + i) * 3000));
+            alerta.setHorário(new Date(now.getTime() + (7-i) * 10000));
 
             alerta.setRepete((long) (Math.random() * 100000000));
-
-            alerta.setAvisos(new ArrayList<Date>());
+            
+            ArrayList<Date> avisos = new ArrayList<Date>();
+            avisos.add(new Date(now.getTime() + (7-i) * 3000));
+            alerta.setAvisos(avisos);
 
             alertas.add(alerta);
 
-            //popups.addAlerta(alerta);
+            popups.addAlert(alerta);
         }
 
         Dimension d = MainWindow.getInstance().getPreferredSize();
@@ -104,7 +115,7 @@ public class GUI extends Ferramenta {
 
                 if (alerta != null) {
                     table.addAlert(alerta);
-                    popups.addAlerta(alerta);
+                    popups.addAlert(alerta);
                 }
             }
         });
@@ -116,9 +127,10 @@ public class GUI extends Ferramenta {
 
                 if (table.getSelectedRow() == -1)
                     return;
-
-                Alert selected = (Alert) table.getModel().getValueAt(
-                        table.convertRowIndexToModel(table.getSelectedRow()), -1);
+                
+                int row = table.convertRowIndexToModel(table.getSelectedRow());
+                
+                Alert selected = table.getAlert(row);
 
                 Editor editor = new Editor(selected);
 
@@ -127,8 +139,9 @@ public class GUI extends Ferramenta {
 
                 Alert alerta = editor.getAlerta();
 
-                table.changeAlert(alerta, table.convertRowIndexToModel(table.getSelectedRow()));
-
+                table.changeAlert(alerta, row);
+                popups.changeAlert(alerta);
+                
             }
         });
 
@@ -139,9 +152,10 @@ public class GUI extends Ferramenta {
 
                 int row = table.convertRowIndexToModel(table.getSelectedRow());
 
-                if (row >= 0)
+                if (row >= 0) {
+                    popups.removeAlert(table.getAlert(row));
                     table.removeAlert(row);
-
+                }
             }
         });
 

@@ -400,6 +400,15 @@ public class AlertTable extends JTable{
 	}
 	
 	/**
+	 * Retorna o alerta que está na posição <code>row</code>
+	 * @param row do alerta
+	 * @return alerta na posição passada
+	 */
+	protected Alert getAlert(int row) {
+		return alerts.get(row);
+	}
+	
+	/**
 	 * Renderer para a nota. Possui um desenho representativo, com um tooltip explicativo
 	 */
 	private class NotaCellRenderer extends CustomCellRenderer {

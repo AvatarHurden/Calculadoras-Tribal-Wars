@@ -61,9 +61,22 @@ public class PopupManager {
 	/**
 	 * Cria um objeto do PopupManager. Para adicionar ou remover futuros popups, utilize addAlert e removeAlert.
 	 */
+	@SuppressWarnings("serial")
 	protected PopupManager() {
 			
-		dates = new TreeSet<AlertStack>(getComparator());		
+		dates = new TreeSet<AlertStack>(getComparator()) {
+			
+			public boolean remove(Object o){
+				
+				if (o instanceof Alert)
+					for (AlertStack s : this)
+						if (s.alert.equals(o))
+							return super.remove(s);
+				
+				return super.remove(o);
+			}
+			
+		};		
 		
 	}
 	
@@ -104,14 +117,19 @@ public class PopupManager {
 	 * Adiciona um alerta na lista, criando popups para os avisos e o horário
 	 * @param alerta
 	 */
-	protected void addAlerta(final Alert alerta) {
+	protected void addAlert(final Alert alerta) {
 		
 		alertas.add(alerta);
 		
 		Stack<Date> avisos = alerta.getAvisos();
 		// Para o popup, os avisos não se diferenciam do alerta real.
 		avisos.add(0, alerta.getHorário());
-
+		
+		// Remove todos os avisos que já deveriam ter sido mostrados
+		for (Date d : avisos)
+			if (d.compareTo(new Date()) < 1)
+				avisos.remove(d);
+		
 		AlertStack stack = new AlertStack(alerta, avisos);
 
 		dates.add(stack);
@@ -125,17 +143,22 @@ public class PopupManager {
 	 * Remove todos os popups relacionados ao alerta dado
 	 * @param alerta
 	 */
-	protected void removeAlerta(Alert alerta) {
+	protected void removeAlert(Alert alerta) {
 		
-		for (AlertStack s : dates)
-			if (s.alert.equals(alerta))
-				dates.remove(s);
+		dates.remove(alerta);
 		
 		for (Entry<Alert, TimerTask> e : tasksRodando.entrySet())
 			if (e.getKey().equals(alerta))
 				e.getValue().cancel();
 		
 		timer.purge();
+	}
+	
+	protected void changeAlert(Alert alerta) {
+		
+		removeAlert(alerta);
+		addAlert(alerta);
+		
 	}
 	
 	/**
@@ -154,13 +177,17 @@ public class PopupManager {
 				schedule(dates.first());
 			
 		} else if (a != null) {
+			
+			final AlertStack next = dates.first();
+			
 			tasksRodando.put(a.alert, new TimerTask() {
 				
 				public void run() {
 					new PopupGUI(a.alert).showOnScreen();
 					tasksRodando.remove(a.alert);
 					timer.purge();
-					schedule(dates.first());
+					if (next != null)
+						schedule(next);
 				}
 			});
 			
@@ -184,7 +211,7 @@ public class PopupManager {
 		}
 		
 		/**
-		 * Retorna a próxima data a ser feita. Caso não hajam mais datas, retorna null.
+		 * Retorna a próxima data a ser feita. Remove-a da lista. Caso não hajam mais datas, retorna null.
 		 */
 		private Date getDate() {
 			if (dates.isEmpty())
