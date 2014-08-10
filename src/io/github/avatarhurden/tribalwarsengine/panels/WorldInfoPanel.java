@@ -1,4 +1,4 @@
-package selecionar_mundo;
+package io.github.avatarhurden.tribalwarsengine.panels;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,7 +14,7 @@ import database.Cores;
 import database.Mundo;
 
 @SuppressWarnings("serial")
-public class Informações_de_mundo extends JPanel {
+public class WorldInfoPanel extends JPanel {
 
 	// Utilizando uma ferramenta apenas para a sua função de "getNextColor"
 	private Ferramenta ferramenta_cor;
@@ -24,7 +24,7 @@ public class Informações_de_mundo extends JPanel {
 	/**
 	 * Basicamente uma tabela com as informações de um mundo específico
 	 */
-	public Informações_de_mundo() {
+	public WorldInfoPanel() {
 
 		// Only creates the panel to be added later
 

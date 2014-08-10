@@ -4,7 +4,6 @@ import config.Lang;
 import custom_components.Ferramenta;
 import database.Cores;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
-import selecionar_mundo.selectWorldFrame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -39,7 +38,7 @@ public class MainWindow extends JFrame {
         setTitle(Lang.Titulo.toString());
         setPreferredSize(dimension);
         setIconImage(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/Icon.png")));
+                SelectWorldFrame.class.getResource("/images/Icon.png")));
 
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
         setBackground(Cores.FUNDO_CLARO);

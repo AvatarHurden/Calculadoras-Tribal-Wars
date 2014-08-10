@@ -5,7 +5,7 @@ import database.Cores;
 import property_classes.OnChange;
 import property_classes.Property;
 import property_classes.Property_Nome;
-import selecionar_mundo.selectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -336,7 +336,7 @@ public class EditDialog extends JDialog {
         rightPanel.add(saveButton, c);
 
         upButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/up_arrow.png"))));
+                SelectWorldFrame.class.getResource("/images/up_arrow.png"))));
 
         upButton.addActionListener(new ActionListener() {
 
@@ -370,7 +370,7 @@ public class EditDialog extends JDialog {
         rightPanel.add(upButton, c);
 
         downButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/down_arrow.png"))));
+                SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
 
         downButton.addActionListener(new ActionListener() {
 
@@ -516,7 +516,7 @@ public class EditDialog extends JDialog {
 
         // The symbol to be added to the objectName when it is unsaved
         private JLabel unsavedSignal = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/asterísco_vermelho.png"))));
+                SelectWorldFrame.class.getResource("/images/asterísco_vermelho.png"))));
 
         // Object with the function that will be called when any one the Property's
         // "textFields" are changed

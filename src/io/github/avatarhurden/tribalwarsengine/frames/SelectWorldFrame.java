@@ -1,24 +1,21 @@
-package selecionar_mundo;
+package io.github.avatarhurden.tribalwarsengine.frames;
 
-import config.Config_Gerais;
-import config.File_Manager;
 import config.Lang;
 import config.Mundo_Reader;
 import database.Cores;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
+import io.github.avatarhurden.tribalwarsengine.panels.SelectWorldPanel;
+import io.github.avatarhurden.tribalwarsengine.panels.WorldInfoPanel;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
-@SuppressWarnings("serial")
-public class selectWorldFrame extends JFrame {
+public class SelectWorldFrame extends JFrame {
 
-    public Informações_de_mundo informationTable;
-    private Escolha_de_mundo selectionPanel;
+    public WorldInfoPanel informationTable;
+    private SelectWorldPanel selectionPanel;
 
     private JPanel panelMundo;
 
@@ -29,7 +26,7 @@ public class selectWorldFrame extends JFrame {
      * - Lista dos mundos disponíveis
      * - Botão para abrir o "MainWindow"
      */
-    public selectWorldFrame() {
+    public SelectWorldFrame() {
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 
         setTitle(Lang.Titulo.toString());
@@ -37,7 +34,7 @@ public class selectWorldFrame extends JFrame {
         addWindowListener(new TWEWindowListener());
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/Icon.png")));
+                SelectWorldFrame.class.getResource("/images/Icon.png")));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{546, 1, 350};
@@ -74,7 +71,6 @@ public class selectWorldFrame extends JFrame {
         changeInformationPanel();
 
         getRootPane().setDefaultButton(selectionPanel.getStartButton());
-
     }
 
     /**
@@ -94,7 +90,7 @@ public class selectWorldFrame extends JFrame {
         * Assim, poderemos manter o projeto mais organizado e mover todos os pacotes para dentro da SRC
         */
         lblTítulo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                selectWorldFrame.class.getResource("/images/logo_engine_centralized.png"))));
+                SelectWorldFrame.class.getResource("/images/logo_engine_centralized.png"))));
 
         add(lblTítulo, c);
 
@@ -132,7 +128,7 @@ public class selectWorldFrame extends JFrame {
         constraints.insets = new Insets(25, 5, 25, 5);
 
         // Tabela de informações
-        informationTable = new Informações_de_mundo();
+        informationTable = new WorldInfoPanel();
 
         // Makes the table have a size that will be used as the parameter for te=he size
         // of the selection panel
@@ -157,7 +153,7 @@ public class selectWorldFrame extends JFrame {
         constraints.insets = new Insets(25, 5, 25, 5);
 
         // Lista dos mundos com o botão para inciar
-        selectionPanel = new Escolha_de_mundo(this);
+        selectionPanel = new SelectWorldPanel(this);
 
         panelMundo.add(selectionPanel, constraints);
 

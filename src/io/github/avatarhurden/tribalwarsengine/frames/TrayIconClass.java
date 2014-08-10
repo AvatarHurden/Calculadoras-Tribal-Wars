@@ -2,7 +2,6 @@ package io.github.avatarhurden.tribalwarsengine.frames;
 
 import config.File_Manager;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
-import selecionar_mundo.selectWorldFrame;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,7 +16,7 @@ public class TrayIconClass {
 
         try {
             final TrayIcon icon = new TrayIcon(Toolkit.getDefaultToolkit().getImage(
-                    selectWorldFrame.class.getResource("/images/Icon.png")));
+                    SelectWorldFrame.class.getResource("/images/Icon.png")));
 
             icon.setImageAutoSize(true);
 
