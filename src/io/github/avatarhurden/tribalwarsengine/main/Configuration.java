@@ -1,12 +1,16 @@
 package io.github.avatarhurden.tribalwarsengine.main;
 
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Classe responsavel por manipular as configurações baseadas em JSON
@@ -142,6 +146,14 @@ public class Configuration {
         } catch (JSONException e) {
             return def;
         }
+    }
+    
+    public JSONArray getConfig(String chave, JSONArray def) {
+    	try {
+    		return config.getJSONArray(chave);
+    	} catch (JSONException e) {
+    		return def;
+    	}
     }
 
     /**

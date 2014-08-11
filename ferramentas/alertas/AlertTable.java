@@ -1,5 +1,7 @@
 package alertas;
 
+import io.github.avatarhurden.tribalwarsengine.main.Configuration;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -47,10 +49,11 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.json.JSONArray;
+
 import sun.swing.table.DefaultTableCellHeaderRenderer;
 import alertas.Alert.Aldeia;
 import alertas.Alert.Tipo;
-import config.Config_Gerais;
 import database.Cores;
 import database.Unidade;
 
@@ -111,35 +114,33 @@ public class AlertTable extends JTable{
 		changeHeader();
 		
 		// Change the positions and widths of the columns
-		try {
-			
-			TableColumn column[] = new TableColumn[Config_Gerais.getColumnOrder().length];
-			
-			// Reordering the columns
-			for (int i = 0; i < column.length; i++)
-				 column[i] = columnModel.getColumn(Config_Gerais.getColumnOrder()[i]);
-			 
-			while (columnModel.getColumnCount() > 0) 
-				 columnModel.removeColumn(columnModel.getColumn(0));
-			 
-			for (int i = 0; i < column.length; i++)
-				 columnModel.addColumn(column[i]);
-			
-			// Putting the correct widths
-			for (int i = 0; i < Config_Gerais.getColumnWidths().length; i++)
-				getColumnModel().getColumn(i).setPreferredWidth(Config_Gerais.getColumnWidths()[i]);
-			
-		} catch (Exception e) {
-			getColumnModel().getColumn(0).setPreferredWidth(314);
-			getColumnModel().getColumn(1).setPreferredWidth(86);
-			getColumnModel().getColumn(2).setPreferredWidth(205);
-			getColumnModel().getColumn(3).setPreferredWidth(215);
-			getColumnModel().getColumn(4).setPreferredWidth(207);
-			getColumnModel().getColumn(5).setPreferredWidth(219);
-			getColumnModel().getColumn(6).setPreferredWidth(134);
-			getColumnModel().getColumn(7).setPreferredWidth(108);
-		}
 		
+		// Default values, if there are no saved
+		int[] default_order = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+		int[] default_widths = new int[] { 314, 86, 210, 210, 207, 219, 134, 108 };
+		
+		Configuration config = Configuration.get();
+		JSONArray order, widths;
+		
+		order = config.getConfig("column_order", new JSONArray(default_order));
+		widths = config.getConfig("column_width", new JSONArray(default_widths));
+		
+		TableColumn column[] = new TableColumn[order.length()];
+		
+		// Reordering the columns
+		for (int i = 0; i < column.length; i++)
+			 column[i] = columnModel.getColumn(order.getInt(i));
+		 
+		while (columnModel.getColumnCount() > 0) 
+			 columnModel.removeColumn(columnModel.getColumn(0));
+		 
+		for (int i = 0; i < column.length; i++)
+			 columnModel.addColumn(column[i]);
+		
+		// Putting the correct widths
+		for (int i = 0; i < widths.length(); i++)
+			getColumnModel().getColumn(i).setPreferredWidth(widths.getInt(i));
+					
 		getColumnModel().addColumnModelListener(new TableColumnModelListener() {
 			
 			public void columnSelectionChanged(ListSelectionEvent e) {}
@@ -154,7 +155,9 @@ public class AlertTable extends JTable{
 				for (int i = 0; i < order.length; i++)
 					order[i] = getColumnModel().getColumn(i).getModelIndex();
 				
-				Config_Gerais.setColumnOrder(order);
+				Configuration.get().setConfig("column_order", new JSONArray(order));
+				
+				
 			}
 			
 			public void columnMarginChanged(ChangeEvent e) {
@@ -164,8 +167,7 @@ public class AlertTable extends JTable{
 				for (int i = 0; i < width.length; i++)
 					width[i] = getColumnModel().getColumn(i).getPreferredWidth();
 				
-				Config_Gerais.setColumnWidths(width);
-				
+				Configuration.get().setConfig("column_width", new JSONArray(width));
 			}
 			
 			@Override

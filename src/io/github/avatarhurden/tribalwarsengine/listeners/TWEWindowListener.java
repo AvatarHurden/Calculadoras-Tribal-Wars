@@ -1,13 +1,16 @@
 package io.github.avatarhurden.tribalwarsengine.listeners;
 
-import config.Config_Gerais;
-import config.File_Manager;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+
+import config.File_Manager;
 
 /**
  * Não sei como descrever esta classe... Mas você seberá pra que serve!
@@ -36,7 +39,6 @@ public class TWEWindowListener implements WindowListener {
 
     public void windowClosing(WindowEvent e) {
         File_Manager.save();
-        Config_Gerais.save();
 
         Configuration config = Configuration.get();
 

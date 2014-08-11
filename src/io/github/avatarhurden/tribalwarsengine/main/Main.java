@@ -1,17 +1,19 @@
 package io.github.avatarhurden.tribalwarsengine.main;
 
-import config.Config_Gerais;
-import config.File_Manager;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
-import io.github.avatarhurden.tribalwarsengine.frames.TrayIconClass;
-import org.json.JSONException;
-import org.json.JSONObject;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.frames.TrayIconClass;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Font;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.swing.UIManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import config.File_Manager;
 
 /**
  * Tribal Wars Engine, uma ferramenta completa para o jogo Tribal Wars
@@ -72,11 +74,13 @@ public class Main {
     public void init() {
         Font oldLabelFont = UIManager.getFont("Label.font");
         UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
-        Config_Gerais.read();
+
         File_Manager.read();
         File_Manager.defineMundos();
+        
         new TrayIconClass();
         openWorldSelection();
+        
         //Inicia as configurações
         Configuration.get();
 
