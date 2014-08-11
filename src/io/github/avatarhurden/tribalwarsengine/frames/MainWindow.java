@@ -131,6 +131,7 @@ public class MainWindow extends JFrame {
             }
         });
         setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     /**
