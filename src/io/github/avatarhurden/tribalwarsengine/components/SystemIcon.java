@@ -23,11 +23,12 @@ public class SystemIcon implements ActionListener {
         item.setActionCommand("select_world_frame");
         item.addActionListener(this);
         popup.add(item);
-
+        /*
         item = new MenuItem("Janela principal");
         item.setActionCommand("main_window_frame");
         item.addActionListener(this);
         popup.add(item);
+        */
 
         item = new MenuItem("Procurar por atualizações.");
         item.setActionCommand("look_for_updates");
