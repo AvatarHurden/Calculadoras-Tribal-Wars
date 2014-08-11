@@ -60,16 +60,8 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
 
         padrãoButton = new TWSimpleButton(Lang.BtnPadrao.toString());
 
-        padrãoButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-
-                // Define o mundo padrão a ser usado
-                File_Manager.setMundoPadrão(selectionBox.getSelectedItem().toString());
-
-                changePadrãoButton();
-            }
-        });
+        padrãoButton.addActionListener(this);
+        padrãoButton.setActionCommand("default_button");
 
         constraints.gridy = 3;
         constraints.anchor = GridBagConstraints.SOUTHEAST;
@@ -178,6 +170,10 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
                         Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
 
                 Main.openMainFrame();
+                break;
+            case "default_button":
+                File_Manager.setMundoPadrão(selectionBox.getSelectedItem().toString());
+                changePadrãoButton();
                 break;
         }
     }
