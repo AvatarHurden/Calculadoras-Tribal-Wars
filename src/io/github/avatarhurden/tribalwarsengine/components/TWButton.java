@@ -19,16 +19,23 @@ public class TWButton extends JButton implements MouseListener {
      * #947A62 0%, #7B5C3D 22%, #6C4824 30%, #6C4824 100%
      *
      */
-    private Color backgroundOver = hex2Rgb("#947A62");
-    private Color backgroundNormal = hex2Rgb("#6C4824");
-    private Color backgroundUnable = Color.lightGray;
-    private float[] fractions = {0.0f, 0.22f, 0.3f, 1.0f};
-    private Color[] colors = {hex2Rgb("#947A62"), hex2Rgb("#7B5C3D"), hex2Rgb("#6C4824"), hex2Rgb("#6C4824")};
 
-    private LinearGradientPaint paintColor = new LinearGradientPaint( new Point2D.Double(0, 0), new Point2D.Double(0, 100),fractions, colors);
+    protected float[] fractions = {0.0f, 0.22f, 0.3f, 1.0f};
+    protected Color[] colors = {hex2Rgb("#947A62"), hex2Rgb("#7B5C3D"), hex2Rgb("#6C4824"), hex2Rgb("#6C4824")};
 
-    private Color foregroundNormal = Color.WHITE;
-    private Color foregroundUnable = Color.darkGray;
+    protected LinearGradientPaint paintColor = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(0, 100), fractions, colors);
+
+    protected Color backgroundUnable = Color.lightGray;
+    protected Color backgroundOver = hex2Rgb("#947A62");
+
+    protected Color foregroundNormal = Color.WHITE;
+    protected Color foregroundUnable = Color.darkGray;
+    protected Color foregroundOver = null;
+
+
+    protected Color borderNormal = Color.black;
+    protected Color borderUnable = Color.darkGray;
+
     private boolean isOver = false;
 
     public TWButton(String label) {
@@ -59,7 +66,7 @@ public class TWButton extends JButton implements MouseListener {
             g2d.setColor( backgroundUnable );
         }
         //Se o mouse estiver encima
-        else if( isOver ){
+        else if (isOver && backgroundOver != null) {
             g2d.setColor( backgroundOver );
         }
         //Se estiver normal!
@@ -69,16 +76,23 @@ public class TWButton extends JButton implements MouseListener {
         g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
 
         //Desenha a borda do botão
-        g2d.setColor( getBackground().darker().darker().darker() );
+        if (!isEnabled()) {
+            g2d.setColor(borderUnable);
+        } else {
+            g2d.setColor(borderNormal);
+        }
         g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
 
+
+        //Escreve o texto centralizado
         if(!isEnabled()) {
             g2d.setColor( foregroundUnable );
+        } else if (isOver && foregroundOver != null) {
+            g2d.setColor(foregroundOver);
         } else {
             g2d.setColor( foregroundNormal );
         }
 
-        //Escreve o texto centralizado
         Font f = getFont();
         if (f != null) {
             FontMetrics fm = getFontMetrics(getFont());
@@ -91,7 +105,7 @@ public class TWButton extends JButton implements MouseListener {
      */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(80, 30);
+        return new Dimension(80, 20);
     }
 
     /**
@@ -100,7 +114,7 @@ public class TWButton extends JButton implements MouseListener {
      */
     @Override
     public Dimension getMinimumSize() {
-        return new Dimension(80, 30);
+        return new Dimension(80, 20);
     }
 
     /**
@@ -110,7 +124,7 @@ public class TWButton extends JButton implements MouseListener {
      * @param colorStr - Uma cor em hex, exemplo: #FFFFFF
      * @return color - Color object
      */
-    public static Color hex2Rgb(String colorStr) {
+    protected Color hex2Rgb(String colorStr) {
         return new Color(
                 Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
                 Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
