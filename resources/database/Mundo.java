@@ -1,16 +1,16 @@
 package database;
 
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Boolean;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Escolha;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Nome;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Number;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import property_classes.Property;
-import property_classes.Property_Boolean;
-import property_classes.Property_Escolha;
-import property_classes.Property_Nome;
-import property_classes.Property_Number;
 
 /**
  * Classe para a criação de diferentes mundos

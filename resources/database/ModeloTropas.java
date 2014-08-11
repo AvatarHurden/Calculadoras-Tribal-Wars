@@ -1,5 +1,10 @@
 package database;
 
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Escopo;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Nome;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_UnidadeList;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,16 +12,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import property_classes.Property;
-import property_classes.Property_Escopo;
-import property_classes.Property_Nome;
-import property_classes.Property_UnidadeList;
 import config.Mundo_Reader;
 
 /**
  * Class that stores a specific number of every unit to be used in different
  * tools and reused after closing program.
- * 
+ * O
  * @author Arthur
  * 
  */

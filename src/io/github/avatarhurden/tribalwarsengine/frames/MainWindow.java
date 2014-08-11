@@ -1,12 +1,13 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
 import config.Lang;
-import custom_components.Ferramenta;
 import database.Cores;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
+import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;

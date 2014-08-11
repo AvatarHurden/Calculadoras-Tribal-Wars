@@ -1,20 +1,26 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
-import config.File_Manager;
-import config.Lang;
-import config.Mundo_Reader;
-import custom_components.EditDialog;
-import database.Mundo;
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
+import io.github.avatarhurden.tribalwarsengine.tools.EditDialog;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+
+import config.File_Manager;
+import config.Lang;
+import config.Mundo_Reader;
+import database.Mundo;
 
 @SuppressWarnings("serial")
 public class SelectWorldPanel extends JPanel {

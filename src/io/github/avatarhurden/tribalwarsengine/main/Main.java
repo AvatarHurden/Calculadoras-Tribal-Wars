@@ -1,5 +1,13 @@
 package io.github.avatarhurden.tribalwarsengine.main;
 
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.AssistenteSaquePanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade.DadosDeUnidadePanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.distância.DistânciaPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados.OponentesDerrotadosPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.pontos.PontosPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento.RecrutamentoPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.frames.TrayIconClass;
@@ -45,14 +53,14 @@ public class Main {
         mainFrame = MainWindow.getInstance();
 
         // Adicionando todas as ferramentas criadas
-        mainFrame.addPanel(new recrutamento.GUI());
-        mainFrame.addPanel(new dados_de_unidade.GUI());
-        mainFrame.addPanel(new pontos.GUI());
-        mainFrame.addPanel(new distância.GUI());
-        mainFrame.addPanel(new oponentes_derrotados.GUI());
-        mainFrame.addPanel(new simulador.GUI());
-        mainFrame.addPanel(new assistente_saque.GUI());
-        mainFrame.addPanel(new alertas.GUI());
+        mainFrame.addPanel(new RecrutamentoPanel());
+        mainFrame.addPanel(new DadosDeUnidadePanel());
+        mainFrame.addPanel(new PontosPanel());
+        mainFrame.addPanel(new DistânciaPanel());
+        mainFrame.addPanel(new OponentesDerrotadosPanel());
+        mainFrame.addPanel(new SimuladorPanel());
+        mainFrame.addPanel(new AssistenteSaquePanel());
+        mainFrame.addPanel(new AlertasPanel());
 
         mainFrame.selectFirst();
 

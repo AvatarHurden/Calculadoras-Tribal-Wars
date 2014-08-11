@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -8,8 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import property_classes.Property;
-import custom_components.Ferramenta;
 import database.Cores;
 import database.Mundo;
 

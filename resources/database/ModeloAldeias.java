@@ -1,16 +1,17 @@
 package database;
 
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Coordenada;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Edifícios;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Escopo;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Nome;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import property_classes.Property;
-import property_classes.Property_Coordenada;
-import property_classes.Property_Edifícios;
-import property_classes.Property_Escopo;
-import property_classes.Property_Nome;
 import config.Mundo_Reader;
 
 /**
