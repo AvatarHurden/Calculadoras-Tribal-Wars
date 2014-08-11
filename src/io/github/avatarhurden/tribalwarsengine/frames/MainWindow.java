@@ -2,12 +2,19 @@ package io.github.avatarhurden.tribalwarsengine.frames;
 
 import config.Lang;
 import database.Cores;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.AssistenteSaquePanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade.DadosDeUnidadePanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.distância.DistânciaPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados.OponentesDerrotadosPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.pontos.PontosPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento.RecrutamentoPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -123,7 +130,27 @@ public class MainWindow extends JFrame {
                 return false;
             }
         });
+        setResizable(false);
+    }
 
+    /**
+     * Adiciona os panels ao frame,
+     * mas somente se não tiver nenhum panel!
+     */
+    public void packPanels() {
+        if (getComponents().length > 1) {
+            return;
+        }
+        addPanel(new RecrutamentoPanel());
+        addPanel(new DadosDeUnidadePanel());
+        addPanel(new PontosPanel());
+        addPanel(new DistânciaPanel());
+        addPanel(new OponentesDerrotadosPanel());
+        addPanel(new SimuladorPanel());
+        addPanel(new AssistenteSaquePanel());
+        addPanel(new AlertasPanel());
+        selectFirst();
+        pack();
     }
 
     public static MainWindow getInstance() {
@@ -136,7 +163,7 @@ public class MainWindow extends JFrame {
      *
      * @param tool Ferramenta a ser adicionada
      */
-    public void addPanel(Ferramenta tool) {
+    private void addPanel(Ferramenta tool) {
 
         tool.setFrame(this);
 

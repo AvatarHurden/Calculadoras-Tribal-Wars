@@ -78,7 +78,7 @@ public class JSON {
         }
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.append(json.toString(1));
+        writer.append(json.toString(4));
         writer.flush();
         writer.close();
     }

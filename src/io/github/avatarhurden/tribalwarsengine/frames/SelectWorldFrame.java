@@ -18,6 +18,7 @@ public class SelectWorldFrame extends JFrame {
     private SelectWorldPanel selectionPanel;
 
     private JPanel panelMundo;
+    private static final SelectWorldFrame instance = new SelectWorldFrame();
 
     /**
      * Frame inicial, no qual ocorre a escolha do mundo. Ele possui:
@@ -71,6 +72,14 @@ public class SelectWorldFrame extends JFrame {
         changeInformationPanel();
 
         getRootPane().setDefaultButton(selectionPanel.getStartButton());
+
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
+    }
+
+    public static SelectWorldFrame getInstance() {
+        return instance;
     }
 
     /**

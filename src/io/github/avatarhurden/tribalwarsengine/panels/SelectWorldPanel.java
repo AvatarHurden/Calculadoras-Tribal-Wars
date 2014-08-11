@@ -1,34 +1,27 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
-import io.github.avatarhurden.tribalwarsengine.components.TWButton;
-import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
-import io.github.avatarhurden.tribalwarsengine.main.Main;
-import io.github.avatarhurden.tribalwarsengine.tools.EditDialog;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-
 import config.File_Manager;
 import config.Lang;
 import config.Mundo_Reader;
 import database.Mundo;
+import io.github.avatarhurden.tribalwarsengine.components.TWButton;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.main.Main;
+import io.github.avatarhurden.tribalwarsengine.tools.EditDialog;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @SuppressWarnings("serial")
-public class SelectWorldPanel extends JPanel {
+public class SelectWorldPanel extends JPanel implements ActionListener {
 
     private JComboBox<String> selectionBox;
     private TWButton startButton;
-    private JButton padrãoButton;
-    private JButton editButton;
+    private TWSimpleButton padrãoButton;
+    private TWSimpleButton editButton;
 
     private SelectWorldFrame selectWorldFrame;
 
@@ -37,7 +30,7 @@ public class SelectWorldPanel extends JPanel {
      *
      * @param selectWorldFrame Frame em que será inserido
      */
-    public SelectWorldPanel(final SelectWorldFrame selectWorldFrame) {
+    public SelectWorldPanel(SelectWorldFrame selectWorldFrame) {
 
         this.selectWorldFrame = selectWorldFrame;
 
@@ -65,7 +58,7 @@ public class SelectWorldPanel extends JPanel {
         constraints.anchor = GridBagConstraints.CENTER;
         add(selectionBox, constraints);
 
-        padrãoButton = new JButton(Lang.BtnPadrao.toString());
+        padrãoButton = new TWSimpleButton(Lang.BtnPadrao.toString());
 
         padrãoButton.addActionListener(new ActionListener() {
 
@@ -82,50 +75,19 @@ public class SelectWorldPanel extends JPanel {
         constraints.anchor = GridBagConstraints.SOUTHEAST;
         add(padrãoButton, constraints);
 
-        editButton = new JButton(Lang.BtnEditar.toString());
+        editButton = new TWSimpleButton(Lang.BtnEditar.toString());
 
-        editButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-
-                try {
-
-                    new EditDialog(Mundo.class, Mundo_Reader.getMundoList(),
-                            "variableList", getSelectedIndex(), null);
-
-                    selectionBox.removeItemListener(selectionBox.getItemListeners()[0]);
-                    selectionBox.removeAllItems();
-
-                    setSelectionBox();
-
-                    selectWorldFrame.changeInformationPanel();
-
-                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | InstantiationException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        });
+        editButton.addActionListener(this);
+        editButton.setActionCommand("edit_button");
 
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.NORTHEAST;
         add(editButton, constraints);
 
-        startButton = new TWButton( Lang.BtnIniciar.toString() );
+        startButton = new TWButton(Lang.BtnIniciar.toString());
 
-        startButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-
-                // Define as características da classe estática "MundoSelecionado", que será
-                // utilizado por todas as ferramentas
-                Mundo_Reader.setMundoSelecionado(
-                        Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
-
-                Main.openMainFrame();
-            }
-        });
+        startButton.addActionListener(this);
+        startButton.setActionCommand("start_button");
 
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.CENTER;
@@ -145,22 +107,22 @@ public class SelectWorldPanel extends JPanel {
 
         // Adiciona o nome de todos os mundos para a lista que será utilizada
         // no comboBox
-        for (Mundo m : Mundo_Reader.getMundoList())
+        for (Mundo m : Mundo_Reader.getMundoList()) {
             selectionBox.addItem(m.toString());
+        }
 
         selectionBox.setSelectedItem(File_Manager.getMundoPadrão());
-
+       /*
         selectionBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent arg0) {
 
                 // Cada vez que o mundo selecionado é alterado, altera as informações da tabela
-                selectWorldFrame.changeInformationPanel();
-
-                changePadrãoButton();
 
             }
         });
-
+        */
+        selectionBox.addActionListener(this);
+        selectionBox.setActionCommand("select_box");
     }
 
     private void changePadrãoButton() {
@@ -184,5 +146,39 @@ public class SelectWorldPanel extends JPanel {
 
     public JButton getStartButton() {
         return startButton;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+
+        switch (action) {
+            case "select_box":
+                selectWorldFrame.changeInformationPanel();
+                changePadrãoButton();
+                break;
+            case "edit_button":
+
+                try {
+                    new EditDialog(Mundo.class, Mundo_Reader.getMundoList(), "variableList", getSelectedIndex(), null);
+                } catch (NoSuchFieldException e1) {
+                    e1.printStackTrace();
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InstantiationException e1) {
+                    e1.printStackTrace();
+                }
+
+                selectionBox.removeItemListener(selectionBox.getItemListeners()[0]);
+                selectionBox.removeAllItems();
+                setSelectionBox();
+                selectWorldFrame.changeInformationPanel();
+                break;
+            case "start_button":
+                Mundo_Reader.setMundoSelecionado(
+                        Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
+
+                Main.openMainFrame();
+                break;
+        }
     }
 }
