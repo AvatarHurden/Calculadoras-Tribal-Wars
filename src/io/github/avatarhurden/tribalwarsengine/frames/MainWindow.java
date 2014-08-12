@@ -131,7 +131,6 @@ public class MainWindow extends JFrame {
             }
         });
         setResizable(false);
-        setLocationRelativeTo(null);
     }
 
     /**
@@ -152,6 +151,7 @@ public class MainWindow extends JFrame {
         addPanel(new AlertasPanel());
         selectFirst();
         pack();
+        setLocationRelativeTo(null);
     }
 
     public static MainWindow getInstance() {
