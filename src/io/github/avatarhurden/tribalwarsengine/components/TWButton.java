@@ -96,7 +96,7 @@ public class TWButton extends JButton implements MouseListener {
         Font f = getFont();
         if (f != null) {
             FontMetrics fm = getFontMetrics(getFont());
-            g2d.drawString( getText(), getWidth() / 2 - fm.stringWidth( getText()) / 2, getHeight() / 2 + fm.getMaxDescent());
+            g2d.drawString( getText(), getWidth() / 2 - fm.stringWidth( getText()) / 2, getHeight() / 2 + (fm.getMaxAscent() - fm.getMaxDescent()) / 2);
         }
     }
 
@@ -105,7 +105,7 @@ public class TWButton extends JButton implements MouseListener {
      */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(80, 20);
+        return new Dimension(80, 25);
     }
 
     /**
@@ -114,7 +114,7 @@ public class TWButton extends JButton implements MouseListener {
      */
     @Override
     public Dimension getMinimumSize() {
-        return new Dimension(80, 20);
+        return new Dimension(80, 25);
     }
 
     /**
