@@ -8,12 +8,12 @@ import java.awt.event.ActionListener;
 
 public class SystemIcon implements ActionListener {
     private Main main;
-    private SystemTray systemTray = SystemTray.getSystemTray();
+    private TrayIcon trayIcon;
 
     public SystemIcon(Main main) {
         this.main = main;
 
-        TrayIcon trayIcon = getTrayIcon();
+        trayIcon = getTrayIcon();
 
         trayIcon.setImageAutoSize(true);
 
@@ -23,12 +23,11 @@ public class SystemIcon implements ActionListener {
         item.setActionCommand("select_world_frame");
         item.addActionListener(this);
         popup.add(item);
-        /*
+
         item = new MenuItem("Janela principal");
         item.setActionCommand("main_window_frame");
         item.addActionListener(this);
-        popup.add(item);
-        */
+        // popup.add(item);
 
         item = new MenuItem("Procurar por atualizações.");
         item.setActionCommand("look_for_updates");
@@ -43,11 +42,21 @@ public class SystemIcon implements ActionListener {
         trayIcon.setPopupMenu(popup);
 
         try {
-            systemTray.add(trayIcon);
+            SystemTray.getSystemTray().add(trayIcon);
         }
         //Se não conseguir criar o icone no sistema... Faz nada :(
         catch (AWTException e) {
         }
+
+        /*
+        Adiciona um hook para remover o icone quando o app for fechado!
+         */
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                SystemTray.getSystemTray().remove(trayIcon);
+            }
+        });
     }
 
     private TrayIcon getTrayIcon() {
