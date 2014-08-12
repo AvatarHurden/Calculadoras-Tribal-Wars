@@ -137,7 +137,7 @@ public class MainWindow extends JFrame {
      * Adiciona os panels ao frame,
      * mas somente se não tiver nenhum panel!
      */
-    public void packPanels() {
+    public void packPanels(Component parent) {
         if (getComponents().length > 1) {
             return;
         }
@@ -151,7 +151,7 @@ public class MainWindow extends JFrame {
         addPanel(new AlertasPanel());
         selectFirst();
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
     }
 
     public static MainWindow getInstance() {

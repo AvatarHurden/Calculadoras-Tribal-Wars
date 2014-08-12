@@ -41,7 +41,7 @@ public class Main {
      */
     public static void openMainFrame() {
         File_Manager.defineModelos();
-        mainFrame.packPanels();
+        mainFrame.packPanels(selectWorldFrame);
         selectWorldFrame.dispose();
         mainFrame.setVisible(true);
         currentFrame = mainFrame;
