@@ -26,7 +26,7 @@ public class TWButton extends JButton implements MouseListener {
     protected LinearGradientPaint paintColor = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(0, 100), fractions, colors);
 
     protected Color backgroundUnable = Color.lightGray;
-    protected Color backgroundOver = hex2Rgb("#947A62");
+    protected Color backgroundPressed = hex2Rgb("#947A62");
 
     protected Color foregroundNormal = Color.WHITE;
     protected Color foregroundUnable = Color.darkGray;
@@ -37,7 +37,8 @@ public class TWButton extends JButton implements MouseListener {
     protected Color borderUnable = Color.darkGray;
 
     private boolean isOver = false;
-
+    private boolean isPressed = false;
+    
     public TWButton(String label) {
         setText(label);
         setBackground(new Color(220, 220, 220));
@@ -65,9 +66,9 @@ public class TWButton extends JButton implements MouseListener {
         if( !isEnabled() ){
             g2d.setColor( backgroundUnable );
         }
-        //Se o mouse estiver encima
-        else if (isOver && backgroundOver != null) {
-            g2d.setColor( backgroundOver );
+        //Se estiver sendo pressionado
+        else if (isPressed && backgroundPressed != null){
+        	g2d.setColor( backgroundPressed );
         }
         //Se estiver normal!
         else {
@@ -82,7 +83,12 @@ public class TWButton extends JButton implements MouseListener {
             g2d.setColor(borderNormal);
         }
         g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
-
+        
+        //Se o mouse estiver em cima
+        if (isOver || isDefaultButton()) {
+        	g2d.setColor(borderUnable);
+        	g2d.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 5, 5);
+        }
 
         //Escreve o texto centralizado
         if(!isEnabled()) {
@@ -133,9 +139,13 @@ public class TWButton extends JButton implements MouseListener {
 
     public void mouseClicked(MouseEvent e) {}
 
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+    	isPressed = true;
+    }
 
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+    	isPressed = false;
+    }
 
     public void mouseEntered(MouseEvent e) {
         isOver = true;

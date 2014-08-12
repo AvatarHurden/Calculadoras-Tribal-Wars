@@ -15,7 +15,7 @@ public class TWSimpleButton extends TWButton {
         this.foregroundNormal = this.hex2Rgb("#603000");
         this.borderNormal = this.hex2Rgb("#7d510f");
         this.foregroundOver = this.hex2Rgb("#e01f0f");
-        this.backgroundOver = null;
+        this.backgroundPressed = this.hex2Rgb("#e8ddc2");
 
         float[] fractions = {0.0f, 0.22f, 1.0f};
         Color[] colors = {hex2Rgb("#FFFFFF"), hex2Rgb("#e3d5b3"), hex2Rgb("#e3d5b3")};

@@ -52,7 +52,7 @@ import database.Unidade;
  * 
  * @author Arthur
  */
-public class Editor extends JDialog{
+public class AlertEditor extends JDialog{
 	
 	// Necessário para poder cancelar modificações
 	private Alert alerta;
@@ -93,7 +93,7 @@ public class Editor extends JDialog{
 	/**
 	 * Cria um editor em branco.
 	 */
-	protected Editor() {
+	protected AlertEditor() {
 		
 		setResizable(false);
 		
@@ -166,7 +166,7 @@ public class Editor extends JDialog{
 	 * @param alerta com o qual preencher os dados
 	 */
 	@SuppressWarnings("unchecked")
-	protected Editor(Alert alerta) {
+	protected AlertEditor(Alert alerta) {
 		
 		this();
 		

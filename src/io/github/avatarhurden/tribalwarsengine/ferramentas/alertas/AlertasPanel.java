@@ -106,12 +106,12 @@ public class AlertasPanel extends Ferramenta {
         addAlerta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                Editor editor = new Editor();
+                AlertEditor alertEditor = new AlertEditor();
 
-                editor.setModal(true);
-                editor.setVisible(true);
+                alertEditor.setModal(true);
+                alertEditor.setVisible(true);
 
-                Alert alerta = editor.getAlerta();
+                Alert alerta = alertEditor.getAlerta();
 
                 if (alerta != null) {
                     table.addAlert(alerta);
@@ -132,12 +132,12 @@ public class AlertasPanel extends Ferramenta {
                 
                 Alert selected = table.getAlert(row);
 
-                Editor editor = new Editor(selected);
+                AlertEditor alertEditor = new AlertEditor(selected);
 
-                editor.setModal(true);
-                editor.setVisible(true);
+                alertEditor.setModal(true);
+                alertEditor.setVisible(true);
 
-                Alert alerta = editor.getAlerta();
+                Alert alerta = alertEditor.getAlerta();
 
                 table.changeAlert(alerta, row);
                 popups.changeAlert(alerta);
