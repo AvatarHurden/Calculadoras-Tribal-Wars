@@ -1,16 +1,20 @@
 package io.github.avatarhurden.tribalwarsengine.main;
 
-import config.File_Manager;
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+
+import java.awt.Font;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
-import java.net.URL;
+import config.File_Manager;
 
 /**
  * Tribal Wars Engine, uma ferramenta completa para o jogo Tribal Wars

@@ -160,6 +160,7 @@ public class AlertEditor extends JDialog{
 
 		pack();
 		setLocationRelativeTo(null);
+		setVisible(true);
 		
 	}
 	
@@ -245,9 +246,6 @@ public class AlertEditor extends JDialog{
 			}
 		
 		scroll.getVerticalScrollBar().setValue(0);
-		
-		setModal(true);
-	    setVisible(true);
 	}
 	
 	/**
@@ -255,7 +253,8 @@ public class AlertEditor extends JDialog{
 	 */
 	protected void setAlerta() {
 		
-		Alert alerta = new Alert();
+		if (alerta == null)
+			alerta = new Alert();
 		
 		alerta.setNome(nome.getText());
 		
@@ -303,8 +302,6 @@ public class AlertEditor extends JDialog{
 			alerta.setRepete(0);
 		else
 			alerta.setRepete(this.alerta.getRepete());
-		
-		this.alerta = alerta;
 	}
 	
 	/**

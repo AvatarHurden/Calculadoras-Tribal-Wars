@@ -18,7 +18,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,16 +64,16 @@ import database.Unidade;
  */
 public class AlertTable extends JTable{
 	
-	private List<Alert> alerts = new ArrayList<Alert>();
+	private List<Alert> alerts;
 	
 	protected AlertTable(List<Alert> alertas) {
-		
-		this();
 		
 		this.alerts = alertas;
 		
 	}	
 	protected AlertTable() {
+		
+		alerts = AlertManager.getInstance().getAlertList();
 		
 		setModel(new AlertTableModel());
 		
@@ -363,39 +362,10 @@ public class AlertTable extends JTable{
 	}
 	
 	/**
-	 * Adiciona um alerta à tabela
-	 * @param alerta
+	 * Updates the table when there has been a change
 	 */
-	protected void addAlert(Alert alerta) {
-		
-		alerts.add(alerta);
-		((AlertTableModel) getModel()).fireTableDataChanged();
-		repaint();
-		
-	}
-	
-	/**
-	 * Modifica o conteúdo de um alerta em uma fileira específica
-	 * @param alerta, já modificado
-	 * @param row Fileira em que o alerta estava
-	 */
-	protected void changeAlert(Alert alerta, int row) {
-		
-		alerts.remove(row);
-		alerts.add(row, alerta);
+	protected void changedAlert() {
 
-		((AlertTableModel) getModel()).fireTableDataChanged();
-		repaint();
-		
-	}
-	
-	/**
-	 * Remove um alerta da tabela, dada sua fileira
-	 * @param row em que o alerta está
-	 */
-	protected void removeAlert(int row) {
-		
-		alerts.remove(row);
 		((AlertTableModel) getModel()).fireTableDataChanged();
 		repaint();
 		
@@ -668,10 +638,10 @@ public class AlertTable extends JTable{
 		public void setValueAt(Object obj, int row, int column) {
 			
 			// The only one to be changed this way is the notes
-			if (column == 7) {
-				System.out.println("hi");
+			if (column == 7)
+				
 				alerts.get(row).setNotas((String) obj);
-			}
+			
 			
 		}
 		

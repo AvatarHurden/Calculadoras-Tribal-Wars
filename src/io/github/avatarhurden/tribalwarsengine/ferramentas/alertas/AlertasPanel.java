@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -24,8 +23,7 @@ import database.Unidade;
 
 public class AlertasPanel extends Ferramenta {
 
-    List<Alert> alertas = new ArrayList<Alert>();
-    AlertTable table = new AlertTable(alertas);
+    AlertTable table;
     PopupManager popups = new PopupManager();
 
     public AlertasPanel() {
@@ -39,7 +37,7 @@ public class AlertasPanel extends Ferramenta {
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         setLayout(gridBagLayout);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 1; i++) {
 
             Alert alerta = new Alert();
 
@@ -66,22 +64,22 @@ public class AlertasPanel extends Ferramenta {
 
             Date now = new Date();
 
-            alerta.setHorário(new Date(now.getTime() + (7-i) * 10000));
+            alerta.setHorário(new Date(now.getTime() + (7-i) * 1000));
 
             alerta.setRepete((long) (Math.random() * 100000000));
             
             ArrayList<Date> avisos = new ArrayList<Date>();
-            avisos.add(new Date(now.getTime() + (7-i) * 3000));
-            alerta.setAvisos(avisos);
-
-            alertas.add(alerta);
-
-            popups.addAlert(alerta);
+            avisos.add(new Date(alerta.getHorário().getTime() - 10000));
+            alerta.setAvisos(new ArrayList<Date>());
+            
+            AlertManager.getInstance().addAlert(alerta);
         }
 
         Dimension d = MainWindow.getInstance().getPreferredSize();
         d.setSize(d.getWidth(), 570);
 
+        table = AlertManager.getInstance().getTable();
+        
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(d);
         table.setFillsViewportHeight(true);
@@ -105,18 +103,9 @@ public class AlertasPanel extends Ferramenta {
         JButton addAlerta = new JButton("Criar Novo");
         addAlerta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                AlertEditor alertEditor = new AlertEditor();
-                
-                alertEditor.setModal(true);
-                alertEditor.setVisible(true);
-                
-                Alert alerta = alertEditor.getAlerta();
-
-                if (alerta != null) {
-                    table.addAlert(alerta);
-                    popups.addAlert(alerta);
-                }
+            	
+            	AlertManager.getInstance().createAlert();
+            		
             }
         });
 
@@ -132,15 +121,7 @@ public class AlertasPanel extends Ferramenta {
                 
                 Alert selected = table.getAlert(row);
 
-                AlertEditor alertEditor = new AlertEditor(selected);
-
-                Alert alerta = alertEditor.getAlerta();
-                
-                if (alerta != null) {
-                	table.changeAlert(alerta, row);
-                	popups.changeAlert(alerta);
-                }
-                
+                AlertManager.getInstance().createAlert(selected, true);      
             }
         });
 
@@ -151,10 +132,7 @@ public class AlertasPanel extends Ferramenta {
 
                 int row = table.convertRowIndexToModel(table.getSelectedRow());
 
-                if (row >= 0) {
-                    popups.removeAlert(table.getAlert(row));
-                    table.removeAlert(row);
-                }
+                AlertManager.getInstance().removeAlert(table.getAlert(row));
             }
         });
 
