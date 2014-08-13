@@ -159,6 +159,8 @@ public class AlertEditor extends JDialog{
 			t.setEnabled(false);
 
 		pack();
+		setLocationRelativeTo(null);
+		
 	}
 	
 	/**
@@ -166,7 +168,7 @@ public class AlertEditor extends JDialog{
 	 * @param alerta com o qual preencher os dados
 	 */
 	@SuppressWarnings("unchecked")
-	protected AlertEditor(Alert alerta) {
+	public AlertEditor(Alert alerta) {
 		
 		this();
 		
@@ -244,6 +246,8 @@ public class AlertEditor extends JDialog{
 		
 		scroll.getVerticalScrollBar().setValue(0);
 		
+		setModal(true);
+	    setVisible(true);
 	}
 	
 	/**
@@ -640,6 +644,7 @@ public class AlertEditor extends JDialog{
 		JButton cancelar = new JButton("Cancelar");
 		cancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				alerta = null;
 				dispose();
 			}
 		});
@@ -654,7 +659,7 @@ public class AlertEditor extends JDialog{
 	 * Retorna o alerta definido pelo editor
 	 * @return alerta
 	 */
-	protected Alert getAlerta() {
+	public Alert getAlerta() {
 		return alerta;
 	}
 	

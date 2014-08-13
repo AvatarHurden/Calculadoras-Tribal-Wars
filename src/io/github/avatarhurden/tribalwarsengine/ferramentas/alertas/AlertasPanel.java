@@ -107,10 +107,10 @@ public class AlertasPanel extends Ferramenta {
             public void actionPerformed(ActionEvent e) {
 
                 AlertEditor alertEditor = new AlertEditor();
-
+                
                 alertEditor.setModal(true);
                 alertEditor.setVisible(true);
-
+                
                 Alert alerta = alertEditor.getAlerta();
 
                 if (alerta != null) {
@@ -134,13 +134,12 @@ public class AlertasPanel extends Ferramenta {
 
                 AlertEditor alertEditor = new AlertEditor(selected);
 
-                alertEditor.setModal(true);
-                alertEditor.setVisible(true);
-
                 Alert alerta = alertEditor.getAlerta();
-
-                table.changeAlert(alerta, row);
-                popups.changeAlert(alerta);
+                
+                if (alerta != null) {
+                	table.changeAlert(alerta, row);
+                	popups.changeAlert(alerta);
+                }
                 
             }
         });

@@ -5,6 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextFi
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertEditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +41,6 @@ public class AlertCreatorPanel extends JButton implements ActionListener {
 		
 		addActionListener(this);
 		
-		
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -66,6 +66,9 @@ public class AlertCreatorPanel extends JButton implements ActionListener {
 	
 			alert.setTropas(map);
 		}
-	
+		
+		AlertEditor editor = new AlertEditor(alert);
+		
+		editor.getAlerta();
 	}
 }

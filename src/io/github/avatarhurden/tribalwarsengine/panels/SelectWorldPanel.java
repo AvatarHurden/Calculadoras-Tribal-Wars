@@ -160,7 +160,6 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
                     e1.printStackTrace();
                 }
 
-                selectionBox.removeItemListener(selectionBox.getItemListeners()[0]);
                 selectionBox.removeAllItems();
                 setSelectionBox();
                 selectWorldFrame.changeInformationPanel();
