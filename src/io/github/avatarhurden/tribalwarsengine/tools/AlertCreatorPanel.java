@@ -2,18 +2,21 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertEditor;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.JButton;
 
 import database.Unidade;
 
@@ -23,7 +26,7 @@ import database.Unidade;
  * @author Arthur
  *
  */
-public class AlertCreatorPanel extends JButton implements ActionListener {
+public class AlertCreatorPanel extends TWSimpleButton implements ActionListener {
 	
 	private TimeFormattedJLabel datelbl;
 	private CoordenadaPanel origem, destino;
@@ -67,8 +70,13 @@ public class AlertCreatorPanel extends JButton implements ActionListener {
 			alert.setTropas(map);
 		}
 		
-		AlertEditor editor = new AlertEditor(alert);
+		if (origem == null && destino == null && tropas == null)
+			alert.setTipo(Tipo.Geral);
+		else
+			alert.setTipo(Tipo.Ataque);
 		
-		editor.getAlerta();
+		alert.setAvisos(new ArrayList<Date>());
+		
+		AlertManager.getInstance().createAlert(alert, false);
 	}
 }

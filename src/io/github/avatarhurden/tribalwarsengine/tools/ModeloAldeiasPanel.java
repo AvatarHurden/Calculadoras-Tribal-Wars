@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 
 import java.awt.Dimension;
@@ -91,7 +92,7 @@ public class ModeloAldeiasPanel extends JPanel {
 
     private JButton makeSelectionButton() {
 
-        final JButton button = new JButton();
+        final JButton button = new TWSimpleButton();
 
         button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
@@ -170,7 +171,7 @@ public class ModeloAldeiasPanel extends JPanel {
 
     private JButton makeEditButton() {
 
-        final JButton button = new JButton();
+        final JButton button = new TWSimpleButton();
 
         button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 SelectWorldFrame.class.getResource("/images/edit_icon.png"))));

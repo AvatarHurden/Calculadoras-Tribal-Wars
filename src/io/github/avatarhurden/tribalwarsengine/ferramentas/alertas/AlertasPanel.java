@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWButton;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
@@ -76,7 +78,7 @@ public class AlertasPanel extends Ferramenta {
         }
 
         Dimension d = MainWindow.getInstance().getPreferredSize();
-        d.setSize(d.getWidth(), 570);
+        d.setSize(d.getWidth() - 50, 570);
 
         table = AlertManager.getInstance().getTable();
         
@@ -100,7 +102,7 @@ public class AlertasPanel extends Ferramenta {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
 
-        JButton addAlerta = new JButton("Criar Novo");
+        JButton addAlerta = new TWButton("Criar Novo");
         addAlerta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
@@ -109,7 +111,7 @@ public class AlertasPanel extends Ferramenta {
             }
         });
 
-        JButton editAlerta = new JButton("Editar");
+        JButton editAlerta = new TWSimpleButton("Editar");
         editAlerta.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -125,7 +127,7 @@ public class AlertasPanel extends Ferramenta {
             }
         });
 
-        JButton deleteAlerta = new JButton("Deletar");
+        JButton deleteAlerta = new TWSimpleButton("Deletar");
         deleteAlerta.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {

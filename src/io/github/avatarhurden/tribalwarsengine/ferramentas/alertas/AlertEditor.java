@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 
@@ -160,7 +161,6 @@ public class AlertEditor extends JDialog{
 
 		pack();
 		setLocationRelativeTo(null);
-		setVisible(true);
 		
 	}
 	
@@ -582,7 +582,7 @@ public class AlertEditor extends JDialog{
 		
 		avisos = new LinkedHashMap<IntegerFormattedTextField, JComboBox<String>>();
 		
-		addAviso = new JButton("+");
+		addAviso = new TWSimpleButton("+");
 		addAviso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -628,7 +628,7 @@ public class AlertEditor extends JDialog{
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		
-		JButton salvar = new JButton("Salvar");
+		JButton salvar = new TWSimpleButton("Salvar");
 		salvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		
@@ -638,7 +638,7 @@ public class AlertEditor extends JDialog{
 			}
 		});
 		
-		JButton cancelar = new JButton("Cancelar");
+		JButton cancelar = new TWSimpleButton("Cancelar");
 		cancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				alerta = null;

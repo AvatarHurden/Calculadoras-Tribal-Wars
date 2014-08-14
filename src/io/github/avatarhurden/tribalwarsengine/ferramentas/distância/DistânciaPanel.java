@@ -114,6 +114,10 @@ public class DistânciaPanel extends Ferramenta {
 		constraints.insets = new Insets(5, 5, 5, 5);
 		add(panelPlanejador = new PanelPlanejador(this), constraints);
 		
+		constraints.gridx += 2;
+		add(tools.addAlertCreatorPanel(panelPlanejador.getDateLabel(), aldeiaOrigem, 
+				aldeiaDestino, null), constraints);
+		
 	}
 
 	protected void calculateDistanceAndTimes() {

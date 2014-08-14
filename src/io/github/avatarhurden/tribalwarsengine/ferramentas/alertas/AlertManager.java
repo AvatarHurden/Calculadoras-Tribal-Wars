@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -70,11 +71,13 @@ public class AlertManager {
 		AlertEditor editor = new AlertEditor();
 		
 		editor.setModal(true);
+		editor.setVisible(true);
 		
 		Alert alerta = editor.getAlerta();
 		
 		if (alerta != null)
 			addAlert(alerta);
+		
 	}
 	
 	/**
@@ -87,6 +90,7 @@ public class AlertManager {
 		AlertEditor editor = new AlertEditor(alerta);
 		
 		editor.setModal(true);
+		editor.setVisible(true);
 		
 		alerta = editor.getAlerta();
 		
@@ -165,15 +169,17 @@ public class AlertManager {
 		avisos.add(0, alerta.getHorário());
 		
 		// Remove todos os avisos que já deveriam ter sido mostrados (ou seja, Dates do passado)
-		for (Date d : avisos)
-			if (d.compareTo(new Date()) < 1)
-				avisos.remove(d);
+		Iterator<Date> it = avisos.iterator();
+		while (it.hasNext())
+			if (it.next().compareTo(new Date()) < 1)
+				it.remove();
 		
 		AlertStack stack = new AlertStack(alerta, avisos);
 
 		dates.add(stack);
 		
-		if (tasksRodando.isEmpty() || nextTimerDate == null || nextTimerDate.compareTo(avisos.peek()) > 0)
+		if (tasksRodando.isEmpty() || nextTimerDate == null 
+				|| (!avisos.isEmpty() && nextTimerDate.compareTo(avisos.peek()) > 0))
 			schedule(stack);
 		
 	}

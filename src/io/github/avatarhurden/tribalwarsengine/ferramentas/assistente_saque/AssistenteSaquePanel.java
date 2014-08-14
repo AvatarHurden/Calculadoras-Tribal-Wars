@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.NoIntervalException;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.SameDateException;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
@@ -260,7 +261,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 	
 	private JButton makeUseRecomenadoButton() {
 		
-		JButton button = new JButton("Usar");
+		JButton button = new TWSimpleButton("Usar");
 		
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

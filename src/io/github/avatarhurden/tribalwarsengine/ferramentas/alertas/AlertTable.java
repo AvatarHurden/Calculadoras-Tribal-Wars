@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
@@ -279,7 +280,7 @@ public class AlertTable extends JTable{
 			    		c.gridy++;
 			    		panel.add(notas, c);
 			      		
-			    		JButton salvar = new JButton("Salvar");
+			    		JButton salvar = new TWSimpleButton("Salvar");
 			    		salvar.addActionListener(new ActionListener() {
 			    			public void actionPerformed(ActionEvent e) {
 			    				target.setValueAt(notas.getText(), clickrow, clickcolumn);
@@ -287,7 +288,7 @@ public class AlertTable extends JTable{
 			    			}
 			    		});
 			    		
-			    		JButton cancelar = new JButton("Cancelar");
+			    		JButton cancelar = new TWSimpleButton("Cancelar");
 			    		cancelar.addActionListener(new ActionListener() {
 			    			public void actionPerformed(ActionEvent e) {
 			    				dialog.dispose();

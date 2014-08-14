@@ -1,8 +1,10 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.distância;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -66,8 +68,11 @@ public class PanelPlanejador extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         add(makeInputPanel(), c);
 
-        JButton invert = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+        JButton invert = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 SelectWorldFrame.class.getResource("/images/switch_arrow.png"))));
+        
+        invert.setPreferredSize(new Dimension(54,26));
+        
         invert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 invertInOut();
@@ -232,6 +237,10 @@ public class PanelPlanejador extends JPanel {
             respostaLabel.setDate(new Date(input + tempo));
 
 
+    }
+    
+    protected TimeFormattedJLabel getDateLabel() {
+    	return respostaLabel;
     }
 
 }
