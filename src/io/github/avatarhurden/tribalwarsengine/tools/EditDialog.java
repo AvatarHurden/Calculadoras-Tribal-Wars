@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.tools;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWButton;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property;
@@ -296,7 +298,7 @@ public class EditDialog extends JDialog {
         c.gridy = 0;
         c.gridx = 0;
 
-        JButton newButton = new JButton(Lang.BtnNovo.toString());
+        JButton newButton = new TWButton(Lang.BtnNovo.toString());
 
         newButton.addActionListener(new ActionListener() {
 
@@ -344,7 +346,7 @@ public class EditDialog extends JDialog {
         JPanel rightPanel = new JPanel();
         rightPanel.setOpaque(false);
 
-        saveButton = new JButton(Lang.BtnSalvar.toString());
+        saveButton = new TWSimpleButton(Lang.BtnSalvar.toString());
 
         saveButton.addActionListener(new ActionListener() {
 
@@ -358,8 +360,11 @@ public class EditDialog extends JDialog {
         c.gridx++;
         rightPanel.add(saveButton, c);
 
-        upButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+        upButton = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 SelectWorldFrame.class.getResource("/images/up_arrow.png"))));
+        
+        upButton.setPreferredSize(new Dimension(50,
+        		saveButton.getPreferredSize().height));
 
         upButton.addActionListener(new ActionListener() {
 
@@ -392,9 +397,12 @@ public class EditDialog extends JDialog {
 
         rightPanel.add(upButton, c);
 
-        downButton = new JButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+        downButton = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
 
+        downButton.setPreferredSize(new Dimension(50,
+        		upButton.getPreferredSize().height));
+        
         downButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent arg0) {
@@ -429,7 +437,7 @@ public class EditDialog extends JDialog {
         c.gridx++;
         rightPanel.add(downButton, c);
 
-        JButton deleteButton = new JButton(Lang.BtnDeletar.toString());
+        JButton deleteButton = new TWSimpleButton(Lang.BtnDeletar.toString());
 
         deleteButton.addActionListener(new ActionListener() {
 
@@ -511,7 +519,8 @@ public class EditDialog extends JDialog {
 
         saveButton.setEnabled(!selectedInterface.isSaved());
 
-        upButton.setEnabled(interfaceList.indexOf(selectedInterface) != 0);
+        upButton.setEnabled(interfaceList.indexOf(selectedInterface) != 0 
+        		&& interfaceList.isEmpty());
 
         downButton.setEnabled(interfaceList.indexOf(selectedInterface)
                 != interfaceList.size() - 1);

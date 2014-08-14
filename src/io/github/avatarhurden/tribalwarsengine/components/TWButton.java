@@ -1,11 +1,22 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.LinearGradientPaint;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.awt.image.ImageObserver;
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.border.Border;
 
 /**
  *  Botão customizado com o estilo do jogo
@@ -26,7 +37,7 @@ public class TWButton extends JButton implements MouseListener {
     protected LinearGradientPaint paintColor = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(0, 100), fractions, colors);
 
     protected Color backgroundUnable = Color.lightGray;
-    protected Color backgroundOver = hex2Rgb("#947A62");
+    protected Color backgroundPressed = hex2Rgb("#947A62");
 
     protected Color foregroundNormal = Color.WHITE;
     protected Color foregroundUnable = Color.darkGray;
@@ -37,15 +48,23 @@ public class TWButton extends JButton implements MouseListener {
     protected Color borderUnable = Color.darkGray;
 
     private boolean isOver = false;
-
-    public TWButton(String label) {
-        setText(label);
-        setBackground(new Color(220, 220, 220));
+    private boolean isPressed = false;
+    
+    public TWButton() {
+    	   	
+    	setBackground(new Color(220, 220, 220));
         Border border = BorderFactory.createLineBorder(Color.BLACK, 0);
         setBorder(border);
         addMouseListener(this);
         setContentAreaFilled(false);
 
+    }
+    
+    public TWButton(String label) {
+    	
+    	this();
+        setText(label);
+     
         /*
         font-family: Verdana,Arial;
         font-size: 12px;
@@ -53,6 +72,13 @@ public class TWButton extends JButton implements MouseListener {
          */
         Font font = new Font("VErdana,Arial", Font.BOLD, 12);
         this.setFont( font );
+    }
+    
+    public TWButton(Icon icon) {
+    	
+    	this();
+    	setIcon(icon);
+    	
     }
 
     @Override
@@ -65,9 +91,9 @@ public class TWButton extends JButton implements MouseListener {
         if( !isEnabled() ){
             g2d.setColor( backgroundUnable );
         }
-        //Se o mouse estiver encima
-        else if (isOver && backgroundOver != null) {
-            g2d.setColor( backgroundOver );
+        //Se estiver sendo pressionado
+        else if (isPressed && backgroundPressed != null){
+        	g2d.setColor( backgroundPressed );
         }
         //Se estiver normal!
         else {
@@ -82,7 +108,12 @@ public class TWButton extends JButton implements MouseListener {
             g2d.setColor(borderNormal);
         }
         g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
-
+        
+        //Se o mouse estiver em cima
+        if (isOver || isDefaultButton()) {
+        	g2d.setColor(borderUnable);
+        	g2d.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 5, 5);
+        }
 
         //Escreve o texto centralizado
         if(!isEnabled()) {
@@ -98,6 +129,11 @@ public class TWButton extends JButton implements MouseListener {
             FontMetrics fm = getFontMetrics(getFont());
             g2d.drawString( getText(), getWidth() / 2 - fm.stringWidth( getText()) / 2, getHeight() / 2 + (fm.getMaxAscent() - fm.getMaxDescent()) / 2);
         }
+        
+        if (getIcon() != null) {
+        	getIcon().paintIcon(this, g2d, getWidth() / 2 - getIcon().getIconWidth()/ 2, 
+        			getHeight() / 2 - getIcon().getIconHeight()/ 2);
+        }
     }
 
     /**
@@ -105,7 +141,16 @@ public class TWButton extends JButton implements MouseListener {
      */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(80, 25);
+    	// Permite a edição de tamanho apenas para botões com ícones
+    	if (getIcon() != null)
+    		return super.getPreferredSize();
+    	
+    	// Caso tenha texto maior do que o tamanho padrão, ajusta com 10 de cada lado
+    	if (super.getPreferredSize().width > 60)
+    		return new Dimension(super.getPreferredSize().width + 20, 25);
+    	else
+    		return new Dimension(80, 25);
+    
     }
 
     /**
@@ -114,7 +159,11 @@ public class TWButton extends JButton implements MouseListener {
      */
     @Override
     public Dimension getMinimumSize() {
-        return new Dimension(80, 25);
+    	// Permite a edição de tamanho apenas para botões com ícones
+    	if (getIcon() == null)
+    		return new Dimension(80, 25);
+    	else
+    		return super.getMinimumSize();
     }
 
     /**
@@ -133,9 +182,13 @@ public class TWButton extends JButton implements MouseListener {
 
     public void mouseClicked(MouseEvent e) {}
 
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+    	isPressed = true;
+    }
 
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+    	isPressed = false;
+    }
 
     public void mouseEntered(MouseEvent e) {
         isOver = true;

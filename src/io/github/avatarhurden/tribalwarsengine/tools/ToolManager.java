@@ -3,6 +3,8 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class ToolManager {
         JPanel resetPanel = new JPanel();
         resetPanel.setOpaque(false);
 
-        JButton resetButton = new JButton(Lang.BtnResetar.toString());
+        JButton resetButton = new TWSimpleButton(Lang.BtnResetar.toString());
         resetButton.addActionListener(listener);
 
         resetPanel.add(resetButton);
@@ -59,6 +61,27 @@ public class ToolManager {
 
         return makeResetPanel(action);
 
+    }
+    
+    /**
+     * Cria um panel com um botão que, quando clicado, cria um novo Alert com as informações
+     * presentes na ferramenta
+     * 
+     * @param datelbl com a data do alerta
+     * @param origem com a aldeia de origem do alerta
+     * @param destino com a aldeia de destino do alerta
+     * @param tropas mapa ligando as tropas aos seus textFields
+     * @return Um JPanel com o botão
+     */
+    public JPanel addAlertCreatorPanel(TimeFormattedJLabel datelbl, CoordenadaPanel origem,
+    		CoordenadaPanel destino, Map<Unidade, IntegerFormattedTextField> tropas) {
+    	
+    	JPanel panel = new JPanel();
+    	panel.setOpaque(false);
+    	
+    	panel.add(new AlertCreatorPanel(datelbl, origem, destino, tropas));
+    	
+    	return panel;
     }
 
     /**

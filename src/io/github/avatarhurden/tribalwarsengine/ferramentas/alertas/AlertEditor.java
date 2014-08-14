@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 
@@ -52,7 +53,7 @@ import database.Unidade;
  * 
  * @author Arthur
  */
-public class Editor extends JDialog{
+public class AlertEditor extends JDialog{
 	
 	// Necessário para poder cancelar modificações
 	private Alert alerta;
@@ -93,7 +94,7 @@ public class Editor extends JDialog{
 	/**
 	 * Cria um editor em branco.
 	 */
-	protected Editor() {
+	protected AlertEditor() {
 		
 		setResizable(false);
 		
@@ -159,6 +160,8 @@ public class Editor extends JDialog{
 			t.setEnabled(false);
 
 		pack();
+		setLocationRelativeTo(null);
+		
 	}
 	
 	/**
@@ -166,7 +169,7 @@ public class Editor extends JDialog{
 	 * @param alerta com o qual preencher os dados
 	 */
 	@SuppressWarnings("unchecked")
-	protected Editor(Alert alerta) {
+	public AlertEditor(Alert alerta) {
 		
 		this();
 		
@@ -243,7 +246,6 @@ public class Editor extends JDialog{
 			}
 		
 		scroll.getVerticalScrollBar().setValue(0);
-		
 	}
 	
 	/**
@@ -251,7 +253,8 @@ public class Editor extends JDialog{
 	 */
 	protected void setAlerta() {
 		
-		Alert alerta = new Alert();
+		if (alerta == null)
+			alerta = new Alert();
 		
 		alerta.setNome(nome.getText());
 		
@@ -299,8 +302,6 @@ public class Editor extends JDialog{
 			alerta.setRepete(0);
 		else
 			alerta.setRepete(this.alerta.getRepete());
-		
-		this.alerta = alerta;
 	}
 	
 	/**
@@ -581,7 +582,7 @@ public class Editor extends JDialog{
 		
 		avisos = new LinkedHashMap<IntegerFormattedTextField, JComboBox<String>>();
 		
-		addAviso = new JButton("+");
+		addAviso = new TWSimpleButton("+");
 		addAviso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -627,7 +628,7 @@ public class Editor extends JDialog{
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		
-		JButton salvar = new JButton("Salvar");
+		JButton salvar = new TWSimpleButton("Salvar");
 		salvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		
@@ -637,9 +638,10 @@ public class Editor extends JDialog{
 			}
 		});
 		
-		JButton cancelar = new JButton("Cancelar");
+		JButton cancelar = new TWSimpleButton("Cancelar");
 		cancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				alerta = null;
 				dispose();
 			}
 		});
@@ -654,7 +656,7 @@ public class Editor extends JDialog{
 	 * Retorna o alerta definido pelo editor
 	 * @return alerta
 	 */
-	protected Alert getAlerta() {
+	public Alert getAlerta() {
 		return alerta;
 	}
 	

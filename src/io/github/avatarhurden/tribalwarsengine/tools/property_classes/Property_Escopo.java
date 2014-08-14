@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -339,7 +341,7 @@ public class Property_Escopo implements Property {
 		
 		private JButton	makeToggleButton() {
 			
-			JButton button = new JButton("Inverter seleções");
+			JButton button = new TWSimpleButton("Inverter seleções");
 			
 			button.addActionListener(new ActionListener() {
 				

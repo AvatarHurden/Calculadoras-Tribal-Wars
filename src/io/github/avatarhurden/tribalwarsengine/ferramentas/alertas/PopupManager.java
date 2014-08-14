@@ -11,18 +11,14 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -49,190 +45,81 @@ import database.Unidade;
  */
 public class PopupManager {
 	
-	List<Alert> alertas = new ArrayList<Alert>();
+	List<PopupGUI> openPopups;
 	
-	private TreeSet<AlertStack> dates;
-	private Map<Alert, TimerTask> tasksRodando = new HashMap<Alert, TimerTask>();
-	private int openDialogs;
+	private Insets scnMax;
+	private int bottomBorder;
+	private int rightBorder;
 	
-	private Date nextPopupDate;
-	
-	private Timer timer = new Timer();
+	private int screenWidth;
+	private int screenHeight;
 	
 	/**
-	 * Cria um objeto do PopupManager. Para adicionar ou remover futuros popups, utilize addAlert e removeAlert.
+	 * Cria um objeto do PopupManager. Para adicionar popups, utilize showNewPopup.
 	 */
-	@SuppressWarnings("serial")
 	protected PopupManager() {
-			
-		dates = new TreeSet<AlertStack>(getComparator()) {
-			
-			public boolean remove(Object o){
 				
-				if (o instanceof Alert)
-					for (AlertStack s : this)
-						if (s.alert.equals(o))
-							return super.remove(s);
-				
-				return super.remove(o);
-			}
-			
-		};		
+		openPopups = new ArrayList<PopupGUI>();
+		
+		scnMax = Toolkit.getDefaultToolkit().getScreenInsets(new PopupGUI(null).getGraphicsConfiguration());
+		
+		bottomBorder = scnMax.bottom;
+		rightBorder = scnMax.right;
+		
+		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width - rightBorder;
+		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height - bottomBorder;
 		
 	}
 	
-	/**
-	 * Cria um comparador entre aldeias. No comparador, o menor valor é aquele que possui um horário mais
-	 * cedo.
-	 */
-	private Comparator<AlertStack> getComparator() {
+	protected void showNewPopup(Alert alerta) {
 		
-		return new Comparator<AlertStack>() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public int compare(AlertStack a1, AlertStack a2) {
-				
-				Stack<Date> avisos1 = (Stack<Date>) a1.dates.clone();
-				Stack<Date> avisos2 = (Stack<Date>) a2.dates.clone();
-				
-				int compare;
-				while (!avisos1.isEmpty() && !avisos2.isEmpty()) {
-					compare = avisos1.pop().compareTo(avisos2.pop());
-					if (compare != 0)
-						return compare;
-				}
-				
-				if (avisos1.isEmpty() && avisos2.isEmpty())
-					return 0;
-				else if (avisos1.isEmpty())
-					return -1;
-				else 
-					return 1;
-			}
-		};
+		final PopupGUI popup = new PopupGUI(alerta);
+		
+		openPopups.add(popup);
+		
+		popup.showOnScreen();
 
 	}
 	
-	/**
-	 * Adiciona um alerta na lista, criando popups para os avisos e o horário
-	 * @param alerta
-	 */
-	protected void addAlert(final Alert alerta) {
+	private void positionPopup(PopupGUI popup) {
 		
-		alertas.add(alerta);
+		if (!openPopups.contains(popup))
+			return;
 		
-		Stack<Date> avisos = alerta.getAvisos();
-		// Para o popup, os avisos não se diferenciam do alerta real.
-		avisos.add(0, alerta.getHorário());
+		int height = screenHeight;
 		
-		// Remove todos os avisos que já deveriam ter sido mostrados
-		for (Date d : avisos)
-			if (d.compareTo(new Date()) < 1)
-				avisos.remove(d);
+		// Coloca o ponto máximo do popup no primeiro lugar aberto
+		for (PopupGUI p : openPopups.subList(0, openPopups.indexOf(popup)))
+			height -= p.getHeight();
 		
-		AlertStack stack = new AlertStack(alerta, avisos);
-
-		dates.add(stack);
-		
-		if (tasksRodando.isEmpty() || nextPopupDate == null || nextPopupDate.compareTo(avisos.peek()) > 0)
-			schedule(stack);
-		
+		popup.setLocation(screenWidth - popup.getWidth(), 
+				height - popup.getHeight());
+			
 	}
 	
-	/**
-	 * Remove todos os popups relacionados ao alerta dado
-	 * @param alerta
-	 */
-	protected void removeAlert(Alert alerta) {
+	private void positionAllPopups(int startingPoint) {
 		
-		dates.remove(alerta);
-		
-		for (Entry<Alert, TimerTask> e : tasksRodando.entrySet())
-			if (e.getKey().equals(alerta))
-				e.getValue().cancel();
-		
-		timer.purge();
-	}
-	
-	protected void changeAlert(Alert alerta) {
-		
-		removeAlert(alerta);
-		addAlert(alerta);
-		
-	}
-	
-	/**
-	 * Cria um TimerTask para mostrar o próximo popup. Esse TimerTask, quando executado, chama novamente
-	 * schedule, marcando o próximo popup. Isso é feito para minimizar o load no JVM.
-	 * @param a AlertStack para ser marcado
-	 */
-	private void schedule(final AlertStack a) {
-		
-		Date date = a.getDate();
-		
-		if (date == null) {
-			dates.remove(a);
-			
-			if (!dates.isEmpty())
-				schedule(dates.first());
-			
-		} else if (a != null) {
-			
-			final AlertStack next = dates.first();
-			
-			tasksRodando.put(a.alert, new TimerTask() {
-				
-				public void run() {
-					new PopupGUI(a.alert).showOnScreen();
-					tasksRodando.remove(a.alert);
-					timer.purge();
-					if (next != null)
-						schedule(next);
-				}
-			});
-			
-			timer.schedule(tasksRodando.get(a.alert), date);
-			nextPopupDate = date; 
-		}
-	}
-	
-	/**
-	 * Classe que liga um alerta a um stack de dates. Cada vez que um popup para o alerta é marcado,
-	 * remove-se o date do stack.
-	 */
-	private class AlertStack {
-		
-		private Alert alert;
-		private Stack<Date> dates;
-		
-		private AlertStack(Alert alert, Stack<Date> dates){
-			this.alert = alert;
-			this.dates = dates;
-		}
-		
-		/**
-		 * Retorna a próxima data a ser feita. Remove-a da lista. Caso não hajam mais datas, retorna null.
-		 */
-		private Date getDate() {
-			if (dates.isEmpty())
-				return null;
-			else
-				return dates.pop();
-		}
+		for (PopupGUI p : openPopups.subList(startingPoint, openPopups.size()))
+			positionPopup(p);
 		
 	}
 	
 	@SuppressWarnings("serial")
 	private class PopupGUI extends JDialog {
 		
-		private int POSITION;
+		private Timer timer;
+		private TimerTask closeTask;
 		
 		/**
 		 * Cria o JDialog do popup
 		 * @param alerta
 		 */
 		private PopupGUI(Alert alerta) {
+			
+			if (alerta == null)
+				return;
+			
+			setCloseTime();
 			
 			setUndecorated(true);
 			((JPanel)getContentPane()).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
@@ -284,7 +171,12 @@ public class PopupManager {
 			c.gridy++;
 			add(datelbl, c);
 			
-			pack();
+			setSize(new Dimension(200,114));
+			
+			addFocusListener();
+			
+			setCloseTime();
+			
 		}
 		
 		/**
@@ -331,8 +223,7 @@ public class PopupManager {
 				
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					subtractOpenDialogs();
-					dispose();
+					close();
 				}
 			});
 			
@@ -392,7 +283,8 @@ public class PopupManager {
 					panel.remove((JComponent) e.getSource());
 					panel.add(spoiler, c);
 					
-					subtractOpenDialogs();
+					pack();
+					
 					showOnScreen();
 					
 				}
@@ -594,49 +486,63 @@ public class PopupManager {
 		 */
 		protected void showOnScreen() {
 			
-			pack();
-			setSize(getPreferredSize());
-			validate();
-			pack();
-			
-			// Setting the position
-			int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-			int height = Toolkit.getDefaultToolkit().getScreenSize().height;
-			
-			Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
-			int taskBarSize = scnMax.bottom;
-			
-			int pos = 0;
-			
-			// Finds out which position is empty
-			int empty = openDialogs;
-			while (empty % 2 != 0 && empty > 0) {
-				empty = (int) empty/2;
-				pos++;
-			}
-			
-			POSITION = pos;
-			
-			setLocation(width-getPreferredSize().width-5, 
-					// Moves the location of the dialog up for every open dialog
-					height - getPreferredSize().height*(POSITION+1) - taskBarSize);
+			positionAllPopups(openPopups.indexOf(this));
 			
 			setVisible(true);
 			setAlwaysOnTop(true);
 			
-			new Timer().schedule(new TimerTask() {
-				public void run() {
-					subtractOpenDialogs();
-					dispose();
-				}
-			}, 5000);
-			
-			openDialogs += Math.pow(2, POSITION);
-			
 		}
 		
-		private void subtractOpenDialogs() {
-			openDialogs -= Math.pow(2, POSITION);
+		private void setCloseTime() {
+			
+			if (timer == null)
+				timer = new Timer();
+			
+			if (closeTask != null)
+				closeTask.cancel();
+				
+			closeTask = new TimerTask() {	
+				public void run() {
+					close();
+				}
+			};
+				
+			timer.purge();
+			
+			timer.schedule(closeTask, 5000);
+		}
+			
+		private void close() {
+			openPopups.remove(this);
+			dispose();
+			positionAllPopups(0);
+		}
+		
+		private void addFocusListener() {
+			
+			addWindowFocusListener(new WindowFocusListener() {
+				
+				@Override
+				public void windowLostFocus(WindowEvent arg0) {
+					System.out.println("lost");
+					setCloseTime();
+				}
+				
+				@Override
+				public void windowGainedFocus(WindowEvent arg0) {}
+			});
+			
+			addMouseListener(new MouseAdapter() {
+				
+				@Override
+				public void mouseEntered(MouseEvent arg0) {
+					if (closeTask != null) {
+						closeTask.cancel();
+						closeTask = null;
+					}
+				}
+			});
+			
 		}
 		
 	}
