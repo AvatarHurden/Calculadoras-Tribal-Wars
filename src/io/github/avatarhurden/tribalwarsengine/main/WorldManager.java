@@ -25,7 +25,7 @@ public class WorldManager {
     }
 
     /**
-     * Carrega todos os mundo salvos no arquivo de configuração
+     * Converte cada objeto JSON salvo nas configurações em um objeto World
      */
     public void load() {
         //Pega o objeto Worlds, que contem todos os mundos :)
@@ -38,6 +38,11 @@ public class WorldManager {
         }
     }
 
+    /**
+     * Adiciona mundos ao Gerenciador de mundos
+     *
+     * @param world
+     */
     public void add(World world) {
         //Preve mundo duplicados
         if (!worlds.contains(world)) {
