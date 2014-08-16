@@ -1,117 +1,116 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
-import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
-
 import database.Cores;
-import database.Mundo;
+import io.github.avatarhurden.tribalwarsengine.main.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 
 @SuppressWarnings("serial")
 public class WorldInfoPanel extends JPanel {
+    private GridBagConstraints gbc;
 
-	// Utilizando uma ferramenta apenas para a sua função de "getNextColor"
-	private Ferramenta ferramenta_cor;
+    /**
+     * Muda as informações da tabela de informações
+     * As propriedades mostradas são escolinhas dinamicamente de acordo com o mundo!
+     */
+    public void changeProperties() {
+        World world = WorldManager.get().getSelectWorld();
 
-	private Mundo mundo;
+        removeAll();
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[]{290};
+        gridBagLayout.rowHeights = new int[]{};
+        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0,
+                Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+        setLayout(gridBagLayout);
+        setOpaque(false);
 
-	/**
-	 * Basicamente uma tabela com as informações de um mundo específico
-	 */
-	public WorldInfoPanel() {
+        setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
 
-		// Only creates the panel to be added later
+        gbc = new GridBagConstraints();
+        gbc.gridy = 0;
 
-	}
+        addProp("Nome", world.getName());
+        addProp("Velocidade", world.getWorldSpeed());
+        addProp("Velocidade das unidades", world.getUnitModifier());
+        addProp("Moral", world.isMoralWorld());
+        addProp("Sistema de pesquisa", world.getSearchSystem().getName());
+        addProp("Igreja", world.isChurchWorld());
+        addProp("Bonus Noturno", world.isNightBonusWorld());
+        addProp("Bandeiras", world.isFlagWorld());
+        addProp("Archeiros", world.isArcherWorld());
+        addProp("Paladino", world.isPaladinoWorld());
+        addProp("Itens Aprimorados", world.isBetterItensWorld());
+        addProp("Milícia", world.isMilitiaWorld());
+        addProp("Cunhagem de moedas", world.isCoiningWorld());
 
-	/**
-	 * Muda as informações da tabela A lista de propriedades inserida não é
-	 * exatamente igual à que será mostrada, pois ocorrem adaptações para
-	 * facilitar a visualização
-	 * 
-	 * @param prop
-	 *            Propriedades básicas
-	 */
-	public void changeProperties(Mundo mundo) {
+        this.revalidate();
+    }
 
-		removeAll();
+    /**
+     * Converte os valores para Strings que possam ser entendidas mais facilmente,
+     * cria o subpanel e adiciona ao superPanel
+     */
+    public void addProp(String propName, Object value) {
+        String propValue;
 
-		this.mundo = mundo;
+        //Se é um boleano
+        if (value instanceof Boolean) {
 
-		ferramenta_cor = new Ferramenta();
+            if ((Boolean) value) {
+                propValue = "Ativado";
+            } else {
+                propValue = "Desativado";
+            }
+        }
+        //Se é qualquer outra coisa!
+        else {
+            propValue = String.valueOf(value);
+        }
 
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 290 };
-		gridBagLayout.rowHeights = new int[] {};
-		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
-				Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-		setLayout(gridBagLayout);
-		setOpaque(false);
+        //Adiciona uma lina ao grid
+        gbc.gridy++;
 
-		setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
+        add(createPropPanel(propName, propValue), gbc);
+    }
 
-		addProperties();
+    public JPanel createPropPanel(String propName, String propValue) {
+        JPanel panel = new JPanel();
+        Color bg = Cores.ALTERNAR_ESCURO;
 
-	}
+        //Se for uma linha par, cor clara!
+        if (gbc.gridy % 2 == 0) {
+            bg = Cores.ALTERNAR_CLARO;
+        }
 
-	/**
-	 * Adds the properties to the panel, in a predefined order
-	 */
-	private void addProperties() {
+        panel.setBackground(bg);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridy = 0;
+        GridBagLayout gbl_panel = new GridBagLayout();
+        gbl_panel.columnWidths = new int[]{150, 20, 140};
+        gbl_panel.rowHeights = new int[]{20};
+        gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+        gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+        panel.setLayout(gbl_panel);
 
-		for (Property p : mundo.variableList) {
-			
-			// Only adds if paladin is active OR the property to be added is not "Itens Aprimorados"
-			// TODO maybe add a way to subordinar items a outros items.
-			if (!p.getName().equals("Itens Aprimorados") || mundo.hasPaladino() == true) {
-				gbc.gridy++;
-				add(panelProperty(p), gbc);
-			}
-			
-		}
-	
-	}
-	
-	private JPanel panelProperty (Property property) {
-		
-		JPanel panel = new JPanel();
-		
-		panel.setBackground(ferramenta_cor.getNextColor());
+        GridBagConstraints gbc_panel = new GridBagConstraints();
+        gbc_panel.insets = new Insets(5, 5, 5, 5);
 
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 150, 20, 140 };
-		gbl_panel.rowHeights = new int[] { 20 };
-		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-		panel.setLayout(gbl_panel);
+        JLabel lblName = new JLabel(propName);
 
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(5, 5, 5, 5);
+        gbc_panel.gridx = 0;
+        gbc_panel.gridy = 0;
+        panel.add(lblName, gbc_panel);
 
-		JLabel lblName = new JLabel(property.getName());
+        JLabel lblValue = new JLabel(propValue);
 
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 0;
-		panel.add(lblName, gbc_panel);
+        gbc_panel.gridx = 2;
+        gbc_panel.gridy = 0;
+        panel.add(lblValue, gbc_panel);
 
-		JLabel lblValue = new JLabel(property.getValueName());
-
-		gbc_panel.gridx = 2;
-		gbc_panel.gridy = 0;
-		panel.add(lblValue, gbc_panel);
-		
-		return panel;
-		
-	}
-
+        return panel;
+    }
 }
