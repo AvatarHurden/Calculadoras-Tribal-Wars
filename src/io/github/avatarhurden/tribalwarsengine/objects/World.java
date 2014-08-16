@@ -22,6 +22,13 @@ public class World {
     }
 
     /**
+     * Construtor que gera o mundo com todos os padroes
+     */
+    public World() {
+        this(new JSONObject("{}"));
+    }
+
+    /**
      * Retorna uma informação especifica sobre o mundo
      *
      * @param chave - Nome da informação
@@ -119,7 +126,7 @@ public class World {
     }
 
     public double getUnitModifier() {
-        return (Double) get("unit_modifier", 1);
+        return (Double) get("unit_modifier", 1.0);
     }
 
     public SearchSystem getSearchSystem() {
@@ -134,53 +141,65 @@ public class World {
         return get(chave, def);
     }
 
-    /* SETTERS */
-    public void setArcherWorld(boolean boo) {
+    /* SETTERS com self return*/
+    public World setArcherWorld(boolean boo) {
         this.set("archer", boo);
+        return this;
     }
 
-    public void setPaladinoWorld(boolean boo) {
+    public World setPaladinoWorld(boolean boo) {
         this.set("paladino", boo);
+        return this;
     }
 
-    public void setChurchWorld(boolean boo) {
+    public World setChurchWorld(boolean boo) {
         this.set("church", boo);
+        return this;
     }
 
-    public void setMoralWorld(boolean boo) {
+    public World setMoralWorld(boolean boo) {
         this.set("moral", boo);
+        return this;
     }
 
-    public void setFlogWorld(boolean boo) {
+    public World setFlogWorld(boolean boo) {
         this.set("flag", boo);
+        return this;
     }
 
     // MADI BOO
-    public void setNightBonusWorld(boolean boo) {
+    public World setNightBonusWorld(boolean boo) {
         this.set("nightbonus", boo);
+        return this;
     }
 
-    public void setBetterItensWorld(boolean boo) {
+    public World setBetterItensWorld(boolean boo) {
         this.set("betterworld", boo);
+        return this;
     }
 
-    public void setIsCoiningWorld(boolean boo) {
+    public World setIsCoiningWorld(boolean boo) {
         this.set("coining", boo);
+        return this;
     }
 
-    public void setWorldSpeed(int integer) {
+    public World setWorldSpeed(int integer) {
         this.set("speed", integer);
+        return this;
     }
 
-    public void setUnitModifier(double unitModifier) {
+    public World setUnitModifier(double unitModifier) {
         this.set("unit_modifier", unitModifier);
+        return this;
     }
 
-    public void setSearchSystem(SearchSystem ss) {
+    public World setSearchSystem(SearchSystem ss) {
         this.set("searchsystem", ss.getResearch());
+        return this;
     }
 
-    public void setName(String name) {
+    public World setName(String name) {
         this.set("name", name);
+        return this;
     }
 }
