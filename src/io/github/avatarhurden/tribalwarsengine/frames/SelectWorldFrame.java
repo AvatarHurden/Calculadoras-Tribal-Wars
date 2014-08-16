@@ -1,7 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Cores;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.panels.SelectWorldPanel;
@@ -69,7 +68,7 @@ public class SelectWorldFrame extends JFrame {
         constraints.insets = new Insets(0, 5, 5, 5);
         add(lblAuthor, constraints);
 
-        changeInformationPanel();
+        updateWorldInfoPanel();
 
         getRootPane().setDefaultButton(selectionPanel.getStartButton());
 
@@ -139,13 +138,6 @@ public class SelectWorldFrame extends JFrame {
         // Tabela de informações
         informationTable = new WorldInfoPanel();
 
-        // Makes the table have a size that will be used as the parameter for te=he size
-        // of the selection panel
-        if (Mundo_Reader.getMundoList().size() > 0) {
-            informationTable.changeProperties(Mundo_Reader.getMundoList().get(0));
-            informationTable.revalidate();
-        }
-
         panelMundo.add(informationTable, constraints);
 
         constraints.gridx = 1;
@@ -174,12 +166,9 @@ public class SelectWorldFrame extends JFrame {
      * Muda as informações da tabela, chamado toda vez que o mundo selecionado é
      * alterado
      */
-    public void changeInformationPanel() {
 
-        if (selectionPanel.getSelectedIndex() > -1) {
-            informationTable.changeProperties(Mundo_Reader.getMundoList().get(selectionPanel.getSelectedIndex()));
-            informationTable.revalidate();
-        }
+    public void updateWorldInfoPanel() {
+        informationTable.changeProperties();
     }
 
 }
