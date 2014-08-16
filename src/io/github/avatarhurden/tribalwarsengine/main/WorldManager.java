@@ -1,9 +1,10 @@
 package io.github.avatarhurden.tribalwarsengine.main;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
+import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 import org.json.JSONObject;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,8 @@ public class WorldManager {
 
     private List<World> worlds = new ArrayList<World>();
     private Configuration config = Configuration.get();
+
+    private World selectWorld;
 
     private static WorldManager instance;
 
@@ -51,13 +54,8 @@ public class WorldManager {
 
         //Server somente para debug
         if (this.worlds.size() < 1) {
-            JSONObject teste = new JSONObject();
-            teste.put("name", "Mundo de teste");
-            add(new World(teste));
-
-            teste = new JSONObject();
-            teste.put("name", "Mundo de teste1");
-            add(new World(teste));
+            add(new World().setName("Teste 1"));
+            add(new World().setName("Teste 2"));
         }
     }
 
@@ -78,7 +76,7 @@ public class WorldManager {
      *
      * @param combo - TWEComboBox ou Qualquer JComboBox
      */
-    public void setAddItens(JComboBox combo) {
+    public void setAddItens(TWEComboBox combo) {
         combo.removeAllItems();
 
         for (World world : this.worlds) {
@@ -91,6 +89,39 @@ public class WorldManager {
         }
     }
 
+    public World getSelectWorld() {
+        if (selectWorld == null) {
+            selectWorld = getDefaultWorld();
+        }
+        return selectWorld;
+    }
+
+    public void setSelectWorld(World world) {
+        this.selectWorld = world;
+        SelectWorldFrame selectWorldFrame = SelectWorldFrame.getInstance();
+        if (selectWorldFrame != null) {
+            selectWorldFrame.updateWorldInfoPanel();
+        }
+    }
+
+    /**
+     * Seta o mundo selecionado como padrão!
+     */
+    public void setSelectWorldSelected() {
+        setDefaultWorld(getSelectWorld());
+    }
+
+    /**
+     * Seta um mundo como padrão, só faz isso se esse mundo estiver na lista de mundo.
+     *
+     * @param world
+     */
+    public void setDefaultWorld(World world) {
+        if (getWorld(world) != null) {
+            config.setConfig("default_world", world.getName());
+        }
+    }
+
     /**
      * Retorna null se não tiver um mundo padrão definido, ou se os mundo nao for encontrado no Manager
      *
@@ -98,10 +129,18 @@ public class WorldManager {
      */
     public World getDefaultWorld() {
         String def = config.getConfig("default_world", "");
-        if (def == null) return null;
+        if (def == null) {
+            return new World();
+        }
         return getWorldByName(def);
     }
 
+    /**
+     * Procura por um World pelo nome
+     *
+     * @param name - O nome do mundo!
+     * @return World ou null caso nao encontre
+     */
     public World getWorldByName(String name) {
         for (World world : worlds) {
             if (world.getName().equals(name)) {
@@ -109,6 +148,24 @@ public class WorldManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Procura por um mundo na lista
+     *
+     * @return World ou null caso nao encontre
+     */
+    public World getWorld(World w) {
+        for (World world : worlds) {
+            if (world.equals(w)) {
+                return world;
+            }
+        }
+        return null;
+    }
+
+    public List<World> getList() {
+        return worlds;
     }
 
     /**
