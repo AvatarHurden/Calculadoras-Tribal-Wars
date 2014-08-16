@@ -1,13 +1,13 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
-import config.File_Manager;
 import config.Lang;
-import config.Mundo_Reader;
 import database.Mundo;
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
+import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
+import io.github.avatarhurden.tribalwarsengine.main.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.tools.EditDialog;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 @SuppressWarnings("serial")
 public class SelectWorldPanel extends JPanel implements ActionListener {
 
-    private JComboBox<String> selectionBox;
+    private TWEComboBox selectionBox2;
     private TWButton startButton;
     private TWSimpleButton padrãoButton;
     private TWSimpleButton editButton;
@@ -50,13 +50,14 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-        selectionBox = new JComboBox<String>();
+        selectionBox2 = new TWEComboBox();
 
         setSelectionBox();
 
         constraints.gridy = 1;
         constraints.anchor = GridBagConstraints.CENTER;
-        add(selectionBox, constraints);
+        //add(selectionBox, constraints);
+        add(selectionBox2, constraints);
 
         padrãoButton = new TWSimpleButton(Lang.BtnPadrao.toString());
 
@@ -88,52 +89,24 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         changePadrãoButton();
 
         editButton.setFocusable(false);
-        selectionBox.setFocusable(false);
-        selectionBox.setFocusable(true);
 
         startButton.requestFocusInWindow();
 
     }
 
     private void setSelectionBox() {
-
-        // Adiciona o nome de todos os mundos para a lista que será utilizada
-        // no comboBox
-        for (Mundo m : Mundo_Reader.getMundoList()) {
-            selectionBox.addItem(m.toString());
-        }
-
-        selectionBox.setSelectedItem(File_Manager.getMundoPadrão());
-       /*
-        selectionBox.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent arg0) {
-
-                // Cada vez que o mundo selecionado é alterado, altera as informações da tabela
-
-            }
-        });
-        */
-        selectionBox.addActionListener(this);
-        selectionBox.setActionCommand("select_box");
+        WorldManager worldManager = WorldManager.get();
+        worldManager.setAddItens(selectionBox2);
     }
 
     private void changePadrãoButton() {
+        WorldManager worldManager = WorldManager.get();
 
-        if (selectionBox.getSelectedItem() != null && selectionBox.getSelectedItem().toString()
-                .equals(File_Manager.getMundoPadrão()))
+        if (worldManager.getDefaultWorld() == worldManager.getDefaultWorld()) {
             padrãoButton.setEnabled(false);
-        else
+        } else {
             padrãoButton.setEnabled(true);
-
-    }
-
-    /**
-     * @return The selected index of the comboBox
-     */
-    public int getSelectedIndex() {
-
-        return selectionBox.getSelectedIndex();
-
+        }
     }
 
     public JButton getStartButton() {
@@ -144,14 +117,9 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         String action = e.getActionCommand();
 
         switch (action) {
-            case "select_box":
-                selectWorldFrame.changeInformationPanel();
-                changePadrãoButton();
-                break;
             case "edit_button":
-
                 try {
-                    new EditDialog(Mundo.class, Mundo_Reader.getMundoList(), "variableList", getSelectedIndex(), null);
+                    new EditDialog(Mundo.class, WorldManager.get().getList(), "nothing", 0, null);
                 } catch (NoSuchFieldException e1) {
                     e1.printStackTrace();
                 } catch (IllegalAccessException e1) {
@@ -160,18 +128,14 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
                     e1.printStackTrace();
                 }
 
-                selectionBox.removeAllItems();
                 setSelectionBox();
-                selectWorldFrame.changeInformationPanel();
+                selectWorldFrame.updateWorldInfoPanel();
                 break;
             case "start_button":
-                Mundo_Reader.setMundoSelecionado(
-                        Mundo_Reader.getMundoList().get(selectionBox.getSelectedIndex()));
-
                 Main.openMainFrame();
                 break;
             case "default_button":
-                File_Manager.setMundoPadrão(selectionBox.getSelectedItem().toString());
+                WorldManager.get().setSelectWorldSelected();
                 changePadrãoButton();
                 break;
         }
