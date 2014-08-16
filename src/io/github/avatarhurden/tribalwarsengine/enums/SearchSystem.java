@@ -4,16 +4,24 @@ package io.github.avatarhurden.tribalwarsengine.enums;
  * @author Wesley Nascimento
  */
 public enum SearchSystem {
-    SIMPLE(1), THREE_LEVELS(3), TEN_LEVELS(10);
+    SIMPLE(1, "Pesquisa simplificada"),
+    THREE_LEVELS(3, "Sistema de 3 níveis"),
+    TEN_LEVELS(10, "Sistema clássico");
 
     private int research;
+    private String name;
 
-    private SearchSystem(int availableResearch) {
+    private SearchSystem(int availableResearch, String name) {
         this.research = availableResearch;
+        this.name = name;
     }
 
     public int getResearch() {
         return research;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**
