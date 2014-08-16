@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,17 @@ public class WorldManager {
     private List<World> worlds = new ArrayList<World>();
     private Configuration config = Configuration.get();
 
+    private static WorldManager instance;
+
+    /* Poderia usar o metodo safe, mais quero manter sempre a mesma instancia do manager no projeto para que seja tudo
+    sincronomo */
+    public static WorldManager get() {
+        if (instance == null) {
+            instance = new WorldManager();
+        }
+        return instance;
+    }
+
     public WorldManager() {
         load();
     }
@@ -36,6 +48,17 @@ public class WorldManager {
         while (iterator.hasNext()) {
             add(new World(iterator.next()));
         }
+
+        //Server somente para debug
+        if (this.worlds.size() < 1) {
+            JSONObject teste = new JSONObject();
+            teste.put("name", "Mundo de teste");
+            add(new World(teste));
+
+            teste = new JSONObject();
+            teste.put("name", "Mundo de teste1");
+            add(new World(teste));
+        }
     }
 
     /**
@@ -48,6 +71,44 @@ public class WorldManager {
         if (!worlds.contains(world)) {
             this.worlds.add(world);
         }
+    }
+
+    /**
+     * Adiciona todos os Worlds em um comboBox
+     *
+     * @param combo - TWEComboBox ou Qualquer JComboBox
+     */
+    public void setAddItens(JComboBox combo) {
+        combo.removeAllItems();
+
+        for (World world : this.worlds) {
+            combo.addItem(world);
+        }
+
+        World def = getDefaultWorld();
+        if (worlds.size() > 0 && def != null) {
+            combo.setSelectedItem(def);
+        }
+    }
+
+    /**
+     * Retorna null se não tiver um mundo padrão definido, ou se os mundo nao for encontrado no Manager
+     *
+     * @return world
+     */
+    public World getDefaultWorld() {
+        String def = config.getConfig("default_world", "");
+        if (def == null) return null;
+        return getWorldByName(def);
+    }
+
+    public World getWorldByName(String name) {
+        for (World world : worlds) {
+            if (world.getName().equals(name)) {
+                return world;
+            }
+        }
+        return null;
     }
 
     /**
