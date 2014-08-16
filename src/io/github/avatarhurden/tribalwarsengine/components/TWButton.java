@@ -1,22 +1,13 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.LinearGradientPaint;
+import database.Cores;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
-import java.awt.image.ImageObserver;
-
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.border.Border;
 
 /**
  *  Botão customizado com o estilo do jogo
@@ -32,12 +23,12 @@ public class TWButton extends JButton implements MouseListener {
      */
 
     protected float[] fractions = {0.0f, 0.22f, 0.3f, 1.0f};
-    protected Color[] colors = {hex2Rgb("#947A62"), hex2Rgb("#7B5C3D"), hex2Rgb("#6C4824"), hex2Rgb("#6C4824")};
+    protected Color[] colors = {Cores.hex2Rgb("#947A62"), Cores.hex2Rgb("#7B5C3D"), Cores.hex2Rgb("#6C4824"), Cores.hex2Rgb("#6C4824")};
 
     protected LinearGradientPaint paintColor = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(0, 100), fractions, colors);
 
     protected Color backgroundUnable = Color.lightGray;
-    protected Color backgroundPressed = hex2Rgb("#947A62");
+    protected Color backgroundPressed = Cores.hex2Rgb("#947A62");
 
     protected Color foregroundNormal = Color.WHITE;
     protected Color foregroundUnable = Color.darkGray;
@@ -166,19 +157,6 @@ public class TWButton extends JButton implements MouseListener {
     		return super.getMinimumSize();
     }
 
-    /**
-     * Converte uma cor em hexadecimal para RGB
-     * O local adequado para colocar esse metodo não seria aqui. Depois eu movo para outro lugar
-     *
-     * @param colorStr - Uma cor em hex, exemplo: #FFFFFF
-     * @return color - Color object
-     */
-    protected Color hex2Rgb(String colorStr) {
-        return new Color(
-                Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
-                Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
-                Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) );
-    }
 
     public void mouseClicked(MouseEvent e) {}
 
