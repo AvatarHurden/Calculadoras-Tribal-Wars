@@ -9,26 +9,26 @@ public enum Unidade {
 
 	//  			Nome				   tipo            mad	  arg    fer   pop   atk   dg    dc    da    mov   saq  tempo
 	// TODO colocar o retorno das coisas pelos modificadores do mundo
-	LANCEIRO	  ("Lanceiro", 			Type.Geral,        50,    30,	  10,	 1,	  10,   15,   45,   20,	  18,   25,  680),
-	ESPADACHIM	  ("Espadachim",		Type.Geral,        30,    30,	  70,	 1,	  25,   50,   15,   40,	  22,   15,  1000),
-	BÁRBARO		  ("Bárbaro", 			Type.Geral,        60,    30,	  40,	 1,	  40,   10,   5,    10,	  18,   10,  880),
-	ARQUEIRO	  ("Arqueiro",			Type.Arqueiro,     100,   30,	  60,	 1,	  15,   50,   40,   5, 	  18,   10,  1200),
-	EXPLORADOR	  ("Explorador",		Type.unspecified,  50,    50,	  20,	 2,	  0,	2,    1,    2,    9,    0,   600),
-	CAVALOLEVE	  ("Cavalaria Leve",	Type.Cavalo,       125,   100,	  250,	 4,	  130,  30,   40,   30,   10,   80,  1200),
-	ARCOCAVALO	  ("Arqueiro a Cavalo", Type.Arqueiro,     250,   100,	  150,	 5,	  120,  40,   30,   50,   10,   50,  1800),
-	CAVALOPESADO  ("Cavalaria Pesada",  Type.Cavalo,       200,   150,	  600,	 6,	  150,  200,  80,   180,  11,   50,  2400),
-	ARÍETE		  ("Aríete", 			Type.Geral,        300,   200,	  200,	 5,	  2,	20,   50,   20,   30,   0,   3200),
-	CATAPULTA	  ("Catapulta", 		Type.Geral,        320,   400,	  100,	 8,	  100,  100,  50,   100,  30,   0,   4800),
-	PALADINO	  ("Paladino", 			Type.Cavalo,       20,    20,	  40,	 10,  150,  250,  400,  150,  10,   100, 21600),
-	NOBRE         ("Nobre", 		    Type.Geral,        40000, 50000,  50000, 100, 30,   100,  50,   100,  35,   0,   12000),
-	MILÍCIA		  ("Milícia", 			Type.unspecified,  0,     0,	  0,	 0,	  0,	15,   45,   25,   0, 0,   0);
+	LANCEIRO	  ("Lanceiro", 			UnidadeTipo.Geral,        50,    30,	  10,	 1,	  10,   15,   45,   20,	  18,   25,  680),
+	ESPADACHIM	  ("Espadachim",		UnidadeTipo.Geral,        30,    30,	  70,	 1,	  25,   50,   15,   40,	  22,   15,  1000),
+	BÁRBARO		  ("Bárbaro", 			UnidadeTipo.Geral,        60,    30,	  40,	 1,	  40,   10,   5,    10,	  18,   10,  880),
+	ARQUEIRO	  ("Arqueiro",			UnidadeTipo.Arqueiro,     100,   30,	  60,	 1,	  15,   50,   40,   5, 	  18,   10,  1200),
+	EXPLORADOR	  ("Explorador",		UnidadeTipo.unspecified,  50,    50,	  20,	 2,	  0,	2,    1,    2,    9,    0,   600),
+	CAVALOLEVE	  ("Cavalaria Leve",	UnidadeTipo.Cavalo,       125,   100,	  250,	 4,	  130,  30,   40,   30,   10,   80,  1200),
+	ARCOCAVALO	  ("Arqueiro a Cavalo", UnidadeTipo.Arqueiro,     250,   100,	  150,	 5,	  120,  40,   30,   50,   10,   50,  1800),
+	CAVALOPESADO  ("Cavalaria Pesada",  UnidadeTipo.Cavalo,       200,   150,	  600,	 6,	  150,  200,  80,   180,  11,   50,  2400),
+	ARÍETE		  ("Aríete", 			UnidadeTipo.Geral,        300,   200,	  200,	 5,	  2,	20,   50,   20,   30,   0,   3200),
+	CATAPULTA	  ("Catapulta", 		UnidadeTipo.Geral,        320,   400,	  100,	 8,	  100,  100,  50,   100,  30,   0,   4800),
+	PALADINO	  ("Paladino", 			UnidadeTipo.Cavalo,       20,    20,	  40,	 10,  150,  250,  400,  150,  10,   100, 21600),
+	NOBRE         ("Nobre", 		    UnidadeTipo.Geral,        40000, 50000,  50000, 100, 30,   100,  50,   100,  35,   0,   12000),
+	MILÍCIA		  ("Milícia", 			UnidadeTipo.unspecified,  0,     0,	  0,	 0,	  0,	15,   45,   25,   0, 0,   0);
 
 
 	private final static BigDecimal lvl2 = new BigDecimal("1.25");
 	private final static BigDecimal lvl3 = new BigDecimal("1.4");
 
 	private final String nome;
-	private final Type type;
+	private final UnidadeTipo type;
 	private final BigDecimal madeira;
 	private final BigDecimal argila;
 	private final BigDecimal ferro;
@@ -41,7 +41,7 @@ public enum Unidade {
 	private final BigDecimal saque;
 	private final BigDecimal tempoProdução;
 
-	public enum Type {
+	public enum UnidadeTipo {
 		Geral, Arqueiro, Cavalo, unspecified;
 	}
 
@@ -70,7 +70,7 @@ public enum Unidade {
 	 * @param tempo
 	 *            de produção em segundos (100%)
 	 */
-	private Unidade(String nome, Type tipo, int madeira, int argila, int ferro,
+	private Unidade(String nome, UnidadeTipo tipo, int madeira, int argila, int ferro,
 			int população, int ataque, int defGeral, int defCav, int defArq,
 			double velocidade, int saque, int tempo) {
 		this.nome = nome;
@@ -105,7 +105,7 @@ public enum Unidade {
 	/**
 	 * @return tipo da unidade, na classe "Type"
 	 */
-	public Type type() {
+	public UnidadeTipo type() {
 		return type;
 	}
 

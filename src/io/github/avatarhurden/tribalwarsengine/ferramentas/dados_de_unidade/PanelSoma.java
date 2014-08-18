@@ -186,15 +186,15 @@ public class PanelSoma {
 						.getNumberInstance(Locale.GERMANY)
 						.parse(i.getDano().getText()).toString()));
 				
-				if (i.getUnidade().type().equals(Unidade.Type.Geral))
+				if (i.getUnidade().type().equals(Unidade.UnidadeTipo.Geral))
 					danoGeral = danoGeral.add(new BigInteger(NumberFormat
 							.getNumberInstance(Locale.GERMANY)
 							.parse(i.getDano().getText()).toString()));
-				else if (i.getUnidade().type().equals(Unidade.Type.Cavalo))
+				else if (i.getUnidade().type().equals(Unidade.UnidadeTipo.Cavalo))
 					danoCavalo = danoCavalo.add(new BigInteger(NumberFormat
 							.getNumberInstance(Locale.GERMANY)
 							.parse(i.getDano().getText()).toString()));
-				else if (i.getUnidade().type().equals(Unidade.Type.Arqueiro))
+				else if (i.getUnidade().type().equals(Unidade.UnidadeTipo.Arqueiro))
 					danoArqueiro = danoArqueiro.add(new BigInteger(NumberFormat
 							.getNumberInstance(Locale.GERMANY)
 							.parse(i.getDano().getText()).toString()));

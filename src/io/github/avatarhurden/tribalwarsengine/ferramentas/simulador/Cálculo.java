@@ -15,7 +15,7 @@ import database.BigOperation;
 import database.Edifício;
 import database.ItemPaladino;
 import database.Unidade;
-import database.Unidade.Type;
+import database.Unidade.UnidadeTipo;
 
 /**
  * Classe que calcula a quantidade de tropas perdidas pelo atacante e defensor
@@ -70,8 +70,8 @@ public class Cálculo {
 
 	private BigDecimal ataqueTotal;
 
-	private Map<Unidade.Type, BigDecimal> ataqueTipos = new HashMap<Unidade.Type, BigDecimal>();
-	private Map<Unidade.Type, BigDecimal> defesaTipos = new HashMap<Unidade.Type, BigDecimal>();
+	private Map<Unidade.UnidadeTipo, BigDecimal> ataqueTipos = new HashMap<Unidade.UnidadeTipo, BigDecimal>();
+	private Map<Unidade.UnidadeTipo, BigDecimal> defesaTipos = new HashMap<Unidade.UnidadeTipo, BigDecimal>();
 
 	private Map<Unidade, BigDecimal> tropasPerdidasAtaque = new HashMap<Unidade, BigDecimal>();
 	private Map<Unidade, BigDecimal> tropasPerdidasDefesa = new HashMap<Unidade, BigDecimal>();
@@ -258,10 +258,10 @@ public class Cálculo {
 
 		ataqueTotal = BigDecimal.ZERO;
 
-		ataqueTipos.put(Type.Geral, BigDecimal.ZERO);
-		ataqueTipos.put(Type.Cavalo, BigDecimal.ZERO);
-		ataqueTipos.put(Type.Arqueiro, BigDecimal.ZERO);
-		ataqueTipos.put(Type.unspecified, BigDecimal.ZERO);
+		ataqueTipos.put(UnidadeTipo.Geral, BigDecimal.ZERO);
+		ataqueTipos.put(UnidadeTipo.Cavalo, BigDecimal.ZERO);
+		ataqueTipos.put(UnidadeTipo.Arqueiro, BigDecimal.ZERO);
+		ataqueTipos.put(UnidadeTipo.unspecified, BigDecimal.ZERO);
 
 		for (Entry<Unidade, BigDecimal> i : tropas.entrySet()) {
 
@@ -284,7 +284,7 @@ public class Cálculo {
 		else
 			religião = "0.5";
 
-		for (Type i : Type.values())
+		for (UnidadeTipo i : UnidadeTipo.values())
 			ataqueTipos.put( i,
 					ataqueTipos.get(i).multiply(
 							new BigDecimal(moral).divide(new BigDecimal("100")))
@@ -294,43 +294,43 @@ public class Cálculo {
 													.multiply(new BigDecimal(religião))));
 
 		if (bandeiraAtacante != null)
-			for (Type i : Type.values())
+			for (UnidadeTipo i : UnidadeTipo.values())
 				ataqueTipos.put(i,	ataqueTipos.get(i).multiply(
 								new BigDecimal(bandeiraAtacante.getValue())));
 
-		for (Type i : Type.values())
+		for (UnidadeTipo i : UnidadeTipo.values())
 			ataqueTotal = ataqueTotal.add(ataqueTipos.get(i));
 
 	}
 
 	private void setDefesas(Map<Unidade, BigDecimal> tropas) {
 
-		defesaTipos.put(Type.Geral, BigDecimal.ZERO);
-		defesaTipos.put(Type.Cavalo, BigDecimal.ZERO);
-		defesaTipos.put(Type.Arqueiro, BigDecimal.ZERO);
-		defesaTipos.put(Type.unspecified, BigDecimal.ZERO);
+		defesaTipos.put(UnidadeTipo.Geral, BigDecimal.ZERO);
+		defesaTipos.put(UnidadeTipo.Cavalo, BigDecimal.ZERO);
+		defesaTipos.put(UnidadeTipo.Arqueiro, BigDecimal.ZERO);
+		defesaTipos.put(UnidadeTipo.unspecified, BigDecimal.ZERO);
 
 		for (Entry<Unidade, BigDecimal> i : tropas.entrySet()) {
 
 			// I don't even know
 
-			defesaTipos.put(Type.Geral,
-					defesaTipos.get(Type.Geral).add(
+			defesaTipos.put(UnidadeTipo.Geral,
+					defesaTipos.get(UnidadeTipo.Geral).add(
 							i.getValue().multiply(i.getKey().defGeral(
 											nívelTropasDefesa.get(i.getKey()),
 											itemDefensor))));
 
 			defesaTipos.put(
-					Type.Cavalo,
-					defesaTipos.get(Type.Cavalo).add(
+					UnidadeTipo.Cavalo,
+					defesaTipos.get(UnidadeTipo.Cavalo).add(
 							i.getValue().multiply(
 									i.getKey().defCav(
 											nívelTropasDefesa.get(i.getKey()),
 											itemDefensor))));
 
 			defesaTipos.put(
-					Type.Arqueiro,
-					defesaTipos.get(Type.Arqueiro).add(
+					UnidadeTipo.Arqueiro,
+					defesaTipos.get(UnidadeTipo.Arqueiro).add(
 							i.getValue().multiply(
 									i.getKey().defArq(
 											nívelTropasDefesa.get(i.getKey()),
@@ -341,19 +341,19 @@ public class Cálculo {
 		// Calculando os modificadores (religião, noite e bandeira)
 
 		if (religiãoDefensor == false)
-			for (Type i : Type.values())
+			for (UnidadeTipo i : UnidadeTipo.values())
 				defesaTipos.put(
 						i,
 						defesaTipos.get(i).divide(new BigDecimal("2"),
 								rounding, RoundingMode.HALF_EVEN));
 
 		if (noite == true)
-			for (Type i : Type.values())
+			for (UnidadeTipo i : UnidadeTipo.values())
 				defesaTipos.put(i,
 						defesaTipos.get(i).multiply(new BigDecimal("2")));
 
 		if (bandeiraDefensor != null)
-			for (Type i : Type.values())
+			for (UnidadeTipo i : UnidadeTipo.values())
 				defesaTipos.put(
 						i,
 						defesaTipos.get(i).multiply(
@@ -392,12 +392,12 @@ public class Cálculo {
 
 			// Porcentagem de tropas perdidas para cada tipo de unidade
 			// No ataque, as perdas são apenas para o tipo de tropa representado
-			Map<Type, BigDecimal> ataqueRatioLoss = new HashMap<Type, BigDecimal>();
+			Map<UnidadeTipo, BigDecimal> ataqueRatioLoss = new HashMap<UnidadeTipo, BigDecimal>();
 			// Na defesa, é feita uma média ponderada das razões, e todas as
 			// tropas perdidas são nessa razão
-			Map<Type, BigDecimal> defenseRatioLoss = new HashMap<Type, BigDecimal>();
+			Map<UnidadeTipo, BigDecimal> defenseRatioLoss = new HashMap<UnidadeTipo, BigDecimal>();
 
-			for (Type i : Type.values()) {
+			for (UnidadeTipo i : UnidadeTipo.values()) {
 
 				// Adiciona o bônus de muralha na defesa
 				defesaTipos.put(i,
@@ -459,7 +459,7 @@ public class Cálculo {
 
 			// Fazer a média ponderada das perdas defensivas
 
-			for (Type i : Type.values())
+			for (UnidadeTipo i : UnidadeTipo.values())
 				defenseTotalLoss = defenseTotalLoss.add(ataqueTipos.get(i)
 						.multiply(defenseRatioLoss.get(i)));
 
@@ -504,7 +504,7 @@ public class Cálculo {
 
 		// Dando o valor ponderado de cada defesa, com base na proporção de
 		// força atacante
-		for (Type i : Type.values())
+		for (UnidadeTipo i : UnidadeTipo.values())
 			defesaTotal = defesaTotal.add(defesaTipos.get(i).multiply(
 					ataqueTipos.get(i)));
 
