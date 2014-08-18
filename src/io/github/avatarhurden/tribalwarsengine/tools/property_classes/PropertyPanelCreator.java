@@ -2,7 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
 
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
-import io.github.avatarhurden.tribalwarsengine.enums.SearchSystem;
+import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Scope.ScopeSelectionPanel;
 
 import java.awt.GridBagConstraints;
@@ -72,8 +72,8 @@ public class PropertyPanelCreator extends JPanel{
 				panel = makeNumberPanel(key, (Double) o);
 			else if (o instanceof String)
 				panel = makeStringPanel(key, (String) o);
-			else if (o instanceof SearchSystem)
-				panel = makeResearchPanel(key, (SearchSystem) o);
+			else if (o instanceof ResearchSystem)
+				panel = makeResearchPanel(key, (ResearchSystem) o);
 			else if (o instanceof Scope)
 				panel = makeEscopoPanel(key, (Scope) o);
 			else if (o instanceof EdifíciosMap) 
@@ -254,7 +254,7 @@ public class PropertyPanelCreator extends JPanel{
 		return panel;
 	}
 
-	private JPanel makeResearchPanel(String key, SearchSystem search) {
+	private JPanel makeResearchPanel(String key, ResearchSystem search) {
 		
 		JPanel panel = makeDefaultPanel();
 		
@@ -272,7 +272,7 @@ public class PropertyPanelCreator extends JPanel{
 		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
 		buttonPanel.setOpaque(false);
 		
-		for (SearchSystem s : SearchSystem.values()) {
+		for (ResearchSystem s : ResearchSystem.values()) {
 			
 			JRadioButton button = new JRadioButton(s.toString());
 			button.setOpaque(false);
@@ -407,7 +407,7 @@ public class PropertyPanelCreator extends JPanel{
 		return panel;
 	}
 	
-	private JPanel makeEscopoPanel(String key, Scope escopo) {
+	private JPanel makeEscopoPanel(String key, final Scope escopo) {
 		
 		JPanel panel = makeDefaultPanel();
 		

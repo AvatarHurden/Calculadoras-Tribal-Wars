@@ -1,6 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
-import io.github.avatarhurden.tribalwarsengine.enums.SearchSystem;
+import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,8 +93,8 @@ public class World {
         return (boolean) get("archer", false);
     }
 
-    public boolean isPaladinoWorld() {
-        return (boolean) get("paladino", false);
+    public boolean isPaladinWorld() {
+        return (boolean) get("paladin", false);
     }
 
     public boolean isChurchWorld() {
@@ -113,24 +113,24 @@ public class World {
         return (boolean) get("nightbonus", false);
     }
 
-    public boolean isBetterItensWorld() {
-        return (boolean) get("betterworld", false);
+    public boolean isBetterItemsWorld() {
+        return (boolean) get("betteritems", false);
     }
 
     public boolean isCoiningWorld() {
         return (boolean) get("coining", false);
     }
 
-    public int getWorldSpeed() {
-        return (Integer) get("speed", 1);
+    public double getWorldSpeed() {
+        return (Double) get("speed", 1.0);
     }
 
     public double getUnitModifier() {
         return (Double) get("unit_modifier", 1.0);
     }
 
-    public SearchSystem getSearchSystem() {
-        return SearchSystem.ConvertInteger((Integer) get("searchsystem", 0));
+    public ResearchSystem getResearchSystem() {
+        return ResearchSystem.ConvertInteger((Integer) get("researchsystem", 0));
     }
 
     public String getName() {
@@ -142,13 +142,18 @@ public class World {
     }
 
     /* SETTERS com self return*/
+    public World setMilitiaWorld(boolean boo) {
+    	this.set("militia", boo);
+    	return this;
+    }
+    
     public World setArcherWorld(boolean boo) {
         this.set("archer", boo);
         return this;
     }
 
-    public World setPaladinoWorld(boolean boo) {
-        this.set("paladino", boo);
+    public World setPaladinWorld(boolean boo) {
+        this.set("paladin", boo);
         return this;
     }
 
@@ -173,18 +178,18 @@ public class World {
         return this;
     }
 
-    public World setBetterItensWorld(boolean boo) {
-        this.set("betterworld", boo);
+    public World setBetterItemsWorld(boolean boo) {
+        this.set("betteritems", boo);
         return this;
     }
 
-    public World setIsCoiningWorld(boolean boo) {
+    public World setCoiningWorld(boolean boo) {
         this.set("coining", boo);
         return this;
     }
 
-    public World setWorldSpeed(int integer) {
-        this.set("speed", integer);
+    public World setWorldSpeed(double speed) {
+        this.set("speed", speed);
         return this;
     }
 
@@ -193,8 +198,8 @@ public class World {
         return this;
     }
 
-    public World setSearchSystem(SearchSystem ss) {
-        this.set("searchsystem", ss.getResearch());
+    public World setResearchSystem(ResearchSystem ss) {
+        this.set("researchsystem", ss.getResearch());
         return this;
     }
 

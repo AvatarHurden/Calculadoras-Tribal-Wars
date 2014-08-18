@@ -21,10 +21,11 @@ import org.json.JSONObject;
 public class Configuration {
 
     private static final String configFile = "config.json";
+    private static final String defaultConfig = "resources/config/default_worlds";
     private static Configuration instance;
     //Armazena as configurações
     private JSONObject config;
-    private File file;
+    private File file, defaultFile;
     private JFrame frame = MainWindow.getInstance();
 
     /**
@@ -32,6 +33,8 @@ public class Configuration {
      */
     private Configuration() {
         file = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), configFile);
+        defaultFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), defaultConfig);
+        
         loadConfigJSON();
     }
 
@@ -70,9 +73,8 @@ public class Configuration {
     private void loadConfigJSON() {
         try {
             //Se não existe, pega o padrão e o cria!
-            if (!file.exists()) {
-                JSON.createJSONFile(new JSONObject("{}"), file);
-            }
+            if (!file.exists()) 
+                JSON.createJSONFile(JSON.getJSON(defaultFile), file);
             config = JSON.getJSON(file);
         } catch (IOException e) {
             //JOptionPane.showMessageDialog( frame, "Não foi possivel criar um arquivo de configuração.\nSuas modificações não serão visiveis no proximo uso.", "Erro", JOptionPane.ERROR_MESSAGE);

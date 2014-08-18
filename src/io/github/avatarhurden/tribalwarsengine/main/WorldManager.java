@@ -3,11 +3,15 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import database.Unidade;
 
 /**
  * Resposavel por armazenar os Objetos World e fazer as operações cabiveis
@@ -44,19 +48,11 @@ public class WorldManager {
      */
     public void load() {
         //Pega o objeto Worlds, que contem todos os mundos :)
-        JSONObject worlds = config.getConfig("worlds", new JSONObject("{}"));
+        JSONArray worlds = config.getConfig("worlds", new JSONArray());
 
-        Iterator<JSONObject> iterator = worlds.keys();
+        for (int i = 0; i < worlds.length(); i++)
+            add(new World(worlds.getJSONObject(i)));
 
-        while (iterator.hasNext()) {
-            add(new World(iterator.next()));
-        }
-
-        //Server somente para debug
-        if (this.worlds.size() < 1) {
-            add(new World().setName("Teste 1"));
-            add(new World().setName("Teste 2"));
-        }
     }
 
     /**
@@ -89,26 +85,11 @@ public class WorldManager {
         }
     }
 
-    public World getSelectWorld() {
-        if (selectWorld == null) {
-            selectWorld = getDefaultWorld();
-        }
-        return selectWorld;
-    }
-
-    public void setSelectWorld(World world) {
-        this.selectWorld = world;
-        SelectWorldFrame selectWorldFrame = SelectWorldFrame.getInstance();
-        if (selectWorldFrame != null) {
-            selectWorldFrame.updateWorldInfoPanel();
-        }
-    }
-
     /**
      * Seta o mundo selecionado como padrão!
      */
-    public void setSelectWorldSelected() {
-        setDefaultWorld(getSelectWorld());
+    public void setDefaultWorldSelected() {
+        setDefaultWorld(getSelectedWorld());
     }
 
     /**
@@ -129,9 +110,8 @@ public class WorldManager {
      */
     public World getDefaultWorld() {
         String def = config.getConfig("default_world", "");
-        if (def == null) {
+        if (def.equals(""))
             return new World();
-        }
         return getWorldByName(def);
     }
 
@@ -156,12 +136,9 @@ public class WorldManager {
      * @return World ou null caso nao encontre
      */
     public World getWorld(World w) {
-        for (World world : worlds) {
-            if (world.equals(w)) {
-                return world;
-            }
-        }
-        return null;
+        if (worlds.contains(w))
+        	return w;
+    	return null;
     }
 
     public List<World> getList() {
@@ -172,16 +149,55 @@ public class WorldManager {
      * Salva todos os mundo no arquivo de configuração
      */
     public void save() {
-        JSONObject worlds = config.getConfig("worlds", new JSONObject("{}"));
-
-        String name;
+        JSONArray worlds = new JSONArray();
 
         for (World world : this.worlds) {
             JSONObject j = world.getJson();
 
-            name = j.getString("nome");
-            worlds.put(name, j);
+            worlds.put(j);
         }
         config.setConfig("worlds", worlds);
     }
+    
+    // Métodos relacionados ao mundo selecionado
+    
+    public World getSelectedWorld() {
+        if (selectWorld == null) {
+            selectWorld = getDefaultWorld();
+        }
+        return selectWorld;
+    }
+
+    public void setSelectedWorld(World world) {
+        this.selectWorld = world;
+        SelectWorldFrame selectWorldFrame = SelectWorldFrame.getInstance();
+        if (selectWorldFrame != null) {
+            selectWorldFrame.updateWorldInfoPanel();
+        }
+    }
+    
+    /**
+     * Retorna uma lista ordenada com todas as unidades disponíveis no mundo
+     * 
+     * @return ArrayList com as unidades
+     */
+    public ArrayList<Unidade> getAvailableUnits() {
+    	
+    	ArrayList<Unidade> list = new ArrayList<Unidade>();
+    	
+    	for (Unidade u : Unidade.values())
+    		list.add(u);
+    	
+    	if (!getSelectedWorld().isArcherWorld()) {
+    		list.remove(Unidade.ARQUEIRO);
+    		list.remove(Unidade.ARCOCAVALO);
+    	}
+    	if (!getSelectedWorld().isPaladinWorld())
+    		list.remove(Unidade.PALADINO);
+    	if (!getSelectedWorld().isMilitiaWorld())
+    		list.remove(Unidade.MILÍCIA);
+    	
+    	return list;
+    }
+    
 }

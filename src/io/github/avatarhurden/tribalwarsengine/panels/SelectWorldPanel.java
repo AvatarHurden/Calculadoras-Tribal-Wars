@@ -135,7 +135,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
                 Main.openMainFrame();
                 break;
             case "default_button":
-                WorldManager.get().setSelectWorldSelected();
+                WorldManager.get().setDefaultWorldSelected();
                 changePadrãoButton();
                 break;
         }

@@ -3,7 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.enums;
 /**
  * @author Wesley Nascimento
  */
-public enum SearchSystem {
+public enum ResearchSystem {
     SIMPLE(1, "Pesquisa simplificada"),
     THREE_LEVELS(3, "Sistema de 3 níveis"),
     TEN_LEVELS(10, "Sistema clássico");
@@ -11,7 +11,7 @@ public enum SearchSystem {
     private int research;
     private String name;
 
-    private SearchSystem(int availableResearch, String name) {
+    private ResearchSystem(int availableResearch, String name) {
         this.research = availableResearch;
         this.name = name;
     }
@@ -30,17 +30,17 @@ public enum SearchSystem {
      * @param searchs - Numero de pesquisas
      * @return
      */
-    public static SearchSystem ConvertInteger(int searchs) {
+    public static ResearchSystem ConvertInteger(int searchs) {
         switch (searchs) {
             case 1:
-                return SearchSystem.SIMPLE;
+                return ResearchSystem.SIMPLE;
             case 3:
-                return SearchSystem.THREE_LEVELS;
+                return ResearchSystem.THREE_LEVELS;
             case 10:
-                return SearchSystem.TEN_LEVELS;
+                return ResearchSystem.TEN_LEVELS;
         }
 
         //por padrão retorna
-        return SearchSystem.SIMPLE;
+        return ResearchSystem.SIMPLE;
     }
 }

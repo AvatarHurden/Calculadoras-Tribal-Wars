@@ -17,7 +17,7 @@ public class WorldInfoPanel extends JPanel {
      * As propriedades mostradas são escolinhas dinamicamente de acordo com o mundo!
      */
     public void changeProperties() {
-        World world = WorldManager.get().getSelectWorld();
+        World world = WorldManager.get().getSelectedWorld();
 
         removeAll();
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -38,13 +38,13 @@ public class WorldInfoPanel extends JPanel {
         addProp("Velocidade", world.getWorldSpeed());
         addProp("Velocidade das unidades", world.getUnitModifier());
         addProp("Moral", world.isMoralWorld());
-        addProp("Sistema de pesquisa", world.getSearchSystem().getName());
+        addProp("Sistema de pesquisa", world.getResearchSystem().getName());
         addProp("Igreja", world.isChurchWorld());
         addProp("Bonus Noturno", world.isNightBonusWorld());
         addProp("Bandeiras", world.isFlagWorld());
         addProp("Archeiros", world.isArcherWorld());
         addProp("Paladino", world.isPaladinoWorld());
-        addProp("Itens Aprimorados", world.isBetterItensWorld());
+        addProp("Itens Aprimorados", world.isBetterItemsWorld());
         addProp("Milícia", world.isMilitiaWorld());
         addProp("Cunhagem de moedas", world.isCoiningWorld());
 
