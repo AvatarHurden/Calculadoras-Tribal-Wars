@@ -1,12 +1,12 @@
 package io.github.avatarhurden.tribalwarsengine.main;
 
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
-import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
-import io.github.avatarhurden.tribalwarsengine.objects.World;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
 
 import java.awt.Font;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -16,9 +16,15 @@ import javax.swing.UIManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sun.org.mozilla.javascript.internal.json.JsonParser;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+
 import config.File_Manager;
 import config.Mundo_Reader;
-import database.Mundo;
+import database.Unidade;
 
 /**
  * Tribal Wars Engine, uma ferramenta completa para o jogo Tribal Wars
@@ -63,7 +69,8 @@ public class Main {
 
         File_Manager.read();
         File_Manager.defineMundos();
-        
+        Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(2));
+ 
         trayicon = new SystemIcon(this);
         mainFrame = MainWindow.getInstance();
         selectWorldFrame = SelectWorldFrame.getInstance();

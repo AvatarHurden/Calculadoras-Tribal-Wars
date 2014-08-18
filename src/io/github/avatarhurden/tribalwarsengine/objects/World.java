@@ -34,7 +34,7 @@ public class World {
      * @param chave - Nome da informação
      * @return
      */
-    public Object get(String chave, Object def) {
+    private Object get(String chave, Object def) {
         try {
             return json.get(chave);
         } catch (JSONException e) {
@@ -42,35 +42,8 @@ public class World {
         }
     }
 
-    public void set(String chave, Object valor) {
-        this.set(chave, valor, false);
-    }
-
-    /**
-     * Altera a configuração de um mundo
-     *
-     * @param chave
-     * @param valor -
-     * @param save  - is to save or not
-     */
-    public void set(String chave, Object valor, boolean save) {
+    private void set(String chave, Object valor) {
         json.put(chave, valor);
-
-        if (save) {
-            save();
-        }
-    }
-
-    /**
-     * Salva este mundo no Objeto Worlds dentro do arquivo de configuração
-     */
-    public void save() {
-        Configuration config = Configuration.get();
-
-        JSONObject worlds = config.getConfig("worlds", new JSONObject("{}"));
-
-        worlds.put(json.getString("name"), this.json);
-        config.setConfig("worlds", worlds);
     }
 
     /**
