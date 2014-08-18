@@ -43,7 +43,7 @@ public class WorldInfoPanel extends JPanel {
         addProp("Bonus Noturno", world.isNightBonusWorld());
         addProp("Bandeiras", world.isFlagWorld());
         addProp("Archeiros", world.isArcherWorld());
-        addProp("Paladino", world.isPaladinoWorld());
+        addProp("Paladino", world.isPaladinWorld());
         addProp("Itens Aprimorados", world.isBetterItemsWorld());
         addProp("Milícia", world.isMilitiaWorld());
         addProp("Cunhagem de moedas", world.isCoiningWorld());
