@@ -3,6 +3,8 @@ package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Scope.ScopeSelectionPanel;
 
 import java.awt.GridBagConstraints;
@@ -57,7 +59,6 @@ public class PropertyPanelCreator extends JPanel{
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
 
-		
 		for (String key : namesMap.keySet()) {
 			
 			if (!object.has(key))
@@ -76,9 +77,9 @@ public class PropertyPanelCreator extends JPanel{
 				panel = makeResearchPanel(key, (ResearchSystem) o);
 			else if (o instanceof Scope)
 				panel = makeEscopoPanel(key, (Scope) o);
-			else if (o instanceof EdifíciosMap) 
+			else if (o instanceof Army) 
 				panel = makeEdifíciosPanel(key, (EdifíciosMap) o);
-			else if (o instanceof TropasMap)
+			else if (o instanceof Buildings)
 				panel = makeTropasPanel(key, (TropasMap) o);
 			
 			add(panel, c);
@@ -306,7 +307,7 @@ public class PropertyPanelCreator extends JPanel{
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = -1;
+		
 		c.gridx = 0;
 		c.gridwidth = 1;
 
@@ -366,16 +367,14 @@ public class PropertyPanelCreator extends JPanel{
 		
 		for (Edifício i : Edifício.values()) {
 			
-			if (!i.equals(Edifício.NULL)) {
-
 				c.gridx = 0;
 				c.gridy++;
 				if (i.equals(Edifício.ACADEMIA_1NÍVEL))
-					panel.add(new JLabel(i.nome() + " (1 nível)"), c);
+					panel.add(new JLabel(i.toString() + " (1 nível)"), c);
 				else if (i.equals(Edifício.ACADEMIA_3NÍVEIS))
-					panel.add(new JLabel(i.nome() + " (3 níveis)"), c);
+					panel.add(new JLabel(i.toString() + " (3 níveis)"), c);
 				else
-					panel.add(new JLabel(i.nome()), c);
+					panel.add(new JLabel(i.toString()), c);
 	
 				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(i, map.get(i)) {
 					public void go() {}
@@ -398,8 +397,7 @@ public class PropertyPanelCreator extends JPanel{
 				panel.add(txt, c);
 				
 				textFieldMap.put(i, txt);
-			}
-
+		
 		}
 		
 		componentMap.put(key, textFieldMap);

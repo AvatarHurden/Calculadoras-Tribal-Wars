@@ -7,10 +7,11 @@ import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
-import io.github.avatarhurden.tribalwarsengine.main.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.tools.EditDialog;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +19,7 @@ import java.awt.event.ActionListener;
 @SuppressWarnings("serial")
 public class SelectWorldPanel extends JPanel implements ActionListener {
 
-    private TWEComboBox selectionBox2;
+    private TWEComboBox selectionBox;
     private TWButton startButton;
     private TWSimpleButton padrãoButton;
     private TWSimpleButton editButton;
@@ -35,7 +36,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         this.selectWorldFrame = selectWorldFrame;
 
         int height = selectWorldFrame.informationTable.getPreferredSize().height - 80;
-
+        
         setOpaque(false);
 
         GridBagLayout layout = new GridBagLayout();
@@ -50,15 +51,14 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-        selectionBox2 = new TWEComboBox();
+        selectionBox = new TWEComboBox();
 
         setSelectionBox();
 
         constraints.gridy = 1;
         constraints.anchor = GridBagConstraints.CENTER;
-        //add(selectionBox, constraints);
-        add(selectionBox2, constraints);
-
+        add(selectionBox, constraints);
+        
         padrãoButton = new TWSimpleButton(Lang.BtnPadrao.toString());
 
         padrãoButton.addActionListener(this);
@@ -96,7 +96,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
 
     private void setSelectionBox() {
         WorldManager worldManager = WorldManager.get();
-        worldManager.setAddItens(selectionBox2);
+        worldManager.setAddItens(selectionBox);
     }
 
     private void changePadrãoButton() {

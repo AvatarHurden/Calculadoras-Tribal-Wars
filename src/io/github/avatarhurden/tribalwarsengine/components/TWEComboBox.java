@@ -1,10 +1,11 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
 import database.Cores;
-import io.github.avatarhurden.tribalwarsengine.main.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -17,7 +18,7 @@ public class TWEComboBox extends JComboBox implements ItemListener {
     public TWEComboBox() {
         this.setRenderer(new TWEComboBoxRenderer());
         this.addItemListener(this);
-        setBackground(Cores.FUNDO_CLARO);
+        setBackground(Cores.FUNDO_ESCURO);
         setForeground(Color.DARK_GRAY);
     }
 

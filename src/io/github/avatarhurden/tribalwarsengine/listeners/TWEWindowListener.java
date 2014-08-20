@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.listeners;
 
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
-import io.github.avatarhurden.tribalwarsengine.main.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 import java.awt.Component;
 import java.awt.Window;

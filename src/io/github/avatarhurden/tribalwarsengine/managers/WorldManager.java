@@ -1,11 +1,11 @@
-package io.github.avatarhurden.tribalwarsengine.main;
+package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -48,7 +48,7 @@ public class WorldManager {
      */
     public void load() {
         //Pega o objeto Worlds, que contem todos os mundos :)
-        JSONArray worlds = config.getConfig("worlds", new JSONArray());
+        JSONArray worlds = config.getWorldConfig();
 
         for (int i = 0; i < worlds.length(); i++)
             add(new World(worlds.getJSONObject(i)));

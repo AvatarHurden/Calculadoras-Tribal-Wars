@@ -146,7 +146,7 @@ public class PanelSoma {
 		somaTotal.put("população", população);
 
 		// Calculando população restante
-		int popRestante = Edifício.FAZENDA.população(panelEdifícioMap.get(
+		int popRestante = Edifício.FAZENDA.getPopulação(panelEdifícioMap.get(
 				Edifício.FAZENDA).getNível());
 
 		BigInteger populaçãoRestante = new BigInteger(

@@ -1,6 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -22,26 +24,22 @@ import javax.swing.border.LineBorder;
 
 import config.Mundo_Reader;
 import database.Cores;
-import database.Mundo;
 
-public class Scope extends ArrayList<Mundo>{
+public class Scope{
 
+	private ArrayList<World> worlds;
 	private boolean isGlobal;
 	
 	public Scope() {
-		super();
+		worlds = new ArrayList<World>();
 	}
 	
 	public void setGlobal(boolean isGlobal) {
 		this.isGlobal = isGlobal;
 	}
 	
-	public boolean getGlobal() {
+	public boolean isGlobal() {
 		return isGlobal;
-	}
-	
-	private Scope getThis() {
-		return this;
 	}
 	
 	/**
@@ -54,17 +52,13 @@ public class Scope extends ArrayList<Mundo>{
 		
 		private OnChange change;
 		
-		private List<Mundo> mundosSelecionados = new ArrayList<Mundo>();
 		private List<JCheckBox> chkboxList = new ArrayList<JCheckBox>();
 		private List<JPanel> panelList = new ArrayList<JPanel>();
-		private List<Mundo> mundoList = new ArrayList<Mundo>();
+		private List<World> mundoList = new ArrayList<World>();
 
-		
 		public ScopeSelectionPanel(OnChange onChange) {
 			
 			change = onChange;
-			
-			mundosSelecionados = getThis();
 			
 			setOpaque(false);
 			setLayout(new GridBagLayout());
@@ -83,7 +77,7 @@ public class Scope extends ArrayList<Mundo>{
 			c.insets = new Insets(0, 0, 5, 5);
 			c.gridy++;
 			c.gridwidth = 1;
-			for (Mundo m : Mundo_Reader.getMundoList()) {
+			for (World m : WorldManager.get().getList()) {
 				
 				if (c.gridy >= maxY) {
 					c.gridy = 1;
@@ -91,12 +85,12 @@ public class Scope extends ArrayList<Mundo>{
 					c.insets = new Insets(0, 0, 5, 0);
 				}
 			
-				add(makeMundoPanel(m, mundosSelecionados.contains(m)), c);
+				add(makeMundoPanel(m, worlds.contains(m)), c);
 				c.gridy++;
 			}
 		}
 		
-		private JPanel makeMundoPanel(final Mundo m, boolean selected) {
+		private JPanel makeMundoPanel(final World m, boolean selected) {
 			
 			final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			
@@ -144,14 +138,14 @@ public class Scope extends ArrayList<Mundo>{
 			return panel;
 		}
 		
-		private void changeSelected(Mundo m, JPanel panel, boolean active) {
+		private void changeSelected(World m, JPanel panel, boolean active) {
 			
 			if (active) {
 				panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
-				mundosSelecionados.add(m);
+				worlds.add(m);
 			} else {
 				panel.setBorder(new LineBorder(Cores.FUNDO_CLARO));
-				mundosSelecionados.remove(m);
+				worlds.remove(m);
 			}
 		}
 		
@@ -175,8 +169,8 @@ public class Scope extends ArrayList<Mundo>{
 			return button;
 		}
 		
-		private List<Mundo> getSelecionados() {
-			return mundosSelecionados;
+		private List<World> getSelecionados() {
+			return worlds;
 		}
 		
 	}

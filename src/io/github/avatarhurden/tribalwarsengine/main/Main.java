@@ -3,12 +3,16 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.EditPanelCreator;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedHashMap;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -16,11 +20,8 @@ import javax.swing.UIManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sun.org.mozilla.javascript.internal.json.JsonParser;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
 import config.File_Manager;
 import config.Mundo_Reader;
@@ -54,6 +55,34 @@ public class Main {
      * configurações
      */
     public static void openMainFrame() {
+    	
+    	  LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+          
+          map.put("name", "Nome");
+          map.put("speed", "Velocidade");
+          map.put("unit_modifier", "Modificador");
+          map.put("moral", "Moral");
+          map.put("researchsystem", "Sistema de Pesquisa");
+          map.put("church", "Igreja");
+          map.put("nightbonus", "Bônus Noturno");
+          map.put("flag", "Bandeiras");
+          map.put("archer", "Arqueiros");
+          map.put("paladin", "Paladino");
+          map.put("betteritems", "Itens Aprimorados");
+          map.put("militia", "Milícia");
+          map.put("coining", "Cunhagem de Moedas");
+          
+          JFrame frame = new JFrame();
+          frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+          frame.setVisible(true);
+          frame.add(new EditPanelCreator(WorldManager.get().getSelectedWorld().getJson(), 
+          		map, new OnChange() {
+  					public void run() {}
+  				}));
+          
+          frame.pack();
+          
+    	
         File_Manager.defineModelos();
         mainFrame.packPanels(selectWorldFrame);
         selectWorldFrame.dispose();
@@ -70,7 +99,23 @@ public class Main {
         File_Manager.read();
         File_Manager.defineMundos();
         Mundo_Reader.setMundoSelecionado(Mundo_Reader.getMundo(2));
- 
+        
+        Army army = new Army();
+        army.addTropa(Unidade.CATAPULTA, 1, 100);
+        
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JSONObject json = new JSONObject();
+        json.put("army", new JSONObject(gson.toJson(army)));
+        	
+        try {
+        	Army m = gson.fromJson(json.get("army").toString(), Army.class);
+        	System.out.println(m.getQuantidade(Unidade.CATAPULTA));
+			JSON.createJSONFile(json, new File("test.txt"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         trayicon = new SystemIcon(this);
         mainFrame = MainWindow.getInstance();
         selectWorldFrame = SelectWorldFrame.getInstance();

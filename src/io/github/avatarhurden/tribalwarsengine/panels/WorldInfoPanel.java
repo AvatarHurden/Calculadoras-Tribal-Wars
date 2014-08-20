@@ -1,11 +1,12 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
 import database.Cores;
-import io.github.avatarhurden.tribalwarsengine.main.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+
 import java.awt.*;
 
 @SuppressWarnings("serial")

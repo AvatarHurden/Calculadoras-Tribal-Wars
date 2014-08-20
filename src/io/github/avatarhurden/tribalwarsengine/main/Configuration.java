@@ -19,21 +19,29 @@ import org.json.JSONObject;
  * @date 08/08/2014
  */
 public class Configuration {
+	
+	private static final String worldString = "TWEconfig/worlds.json";
+    private static final String defaultString = "resources/config/default_worlds";
+	private static final String villageModelString = "TWEconfig/villageModels.json";
+	private static final String armyModelString = "TWEconfig/armyModels.json";
+	
+    private static final String configString = "TWEconfig/config.json";
 
-    private static final String configFile = "config.json";
-    private static final String defaultConfig = "resources/config/default_worlds";
     private static Configuration instance;
     //Armazena as configurações
-    private JSONObject config;
-    private File file, defaultFile;
+    private JSONObject config, worldConfig, villageConfig, armyConfig;
+    private File configFile, worldFile, villageFile, armyFile, defaultFile;
     private JFrame frame = MainWindow.getInstance();
 
     /**
      * Só é possivel usar esta classe atravez do objeto estatico.
      */
     private Configuration() {
-        file = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), configFile);
-        defaultFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), defaultConfig);
+    	configFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), configString);
+    	defaultFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), defaultString);
+    	worldFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), worldString);
+    	villageFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), villageModelString);
+    	armyFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), armyModelString);
         
         loadConfigJSON();
     }
@@ -62,9 +70,12 @@ public class Configuration {
     /**
      *
      */
-    public void savaConfigJSON() {
+    public void salvaConfigJSON() {
         try {
-            JSON.createJSONFile(config, file);
+            JSON.createJSONFile(config, configFile);
+            JSON.createJSONFile(worldConfig, worldFile);
+            JSON.createJSONFile(villageConfig, villageFile);
+            JSON.createJSONFile(armyConfig, armyFile);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Não foi possivel salvar o arquivo de configuração.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -72,13 +83,28 @@ public class Configuration {
 
     private void loadConfigJSON() {
         try {
-            //Se não existe, pega o padrão e o cria!
-            if (!file.exists()) 
-                JSON.createJSONFile(JSON.getJSON(defaultFile), file);
-            config = JSON.getJSON(file);
-        } catch (IOException e) {
+        	if (!new File("TWEConfig").exists())
+        		new File("TWEConfig").mkdir();
+        	
+            if (!worldFile.exists())
+                JSON.createJSONFile(JSON.getJSON(defaultFile), worldFile);
+            if (!configFile.exists())
+            	JSON.createJSONFile(new JSONObject("{}"), configFile);
+            if (!villageFile.exists())
+            	JSON.createJSONFile(new JSONObject("{}"), villageFile);
+            if (!armyFile.exists())
+            	JSON.createJSONFile(new JSONObject("{}"), armyFile);
+            
+            config = JSON.getJSON(configFile);
+            worldConfig = JSON.getJSON(worldFile);
+            armyConfig = JSON.getJSON(armyFile);
+            villageConfig = JSON.getJSON(villageFile);
+            } catch (IOException e) {
             //JOptionPane.showMessageDialog( frame, "Não foi possivel criar um arquivo de configuração.\nSuas modificações não serão visiveis no proximo uso.", "Erro", JOptionPane.ERROR_MESSAGE);
             config = new JSONObject("{}");
+            worldConfig = new JSONObject("{}");
+            armyConfig = new JSONObject("{}");
+            villageConfig = new JSONObject("{}");
             return;
         }
     }
@@ -157,6 +183,18 @@ public class Configuration {
     		return def;
     	}
     }
+    
+    public JSONArray getWorldConfig() {
+    	return worldConfig.getJSONArray("worlds");
+    }
+    
+    public JSONArray getVillageModelConfig() {
+    	return villageConfig.getJSONArray("villageModels");
+    }
+    
+    public JSONArray getArmyModelConfig() {
+    	return armyConfig.getJSONArray("armyModels");
+    }
 
     /**
      * Setter unico para valores
@@ -166,6 +204,13 @@ public class Configuration {
      */
     public void setConfig(String chave, Object valor) {
         try {
+        	if (chave.equals("worlds"))
+        		worldConfig.put(chave, valor);
+        	else if (chave.equals("villageModels"))
+        		villageConfig.put(chave, valor);
+        	else if (chave.equals("armyModels"))
+        		armyConfig.put(chave, valor);
+        	else
             config.put(chave, valor);
         }
         //Faz nada se der erro :(
@@ -174,7 +219,7 @@ public class Configuration {
         }
         //salva o arquivo :)
         finally {
-            savaConfigJSON();
+            salvaConfigJSON();
         }
     }
 }

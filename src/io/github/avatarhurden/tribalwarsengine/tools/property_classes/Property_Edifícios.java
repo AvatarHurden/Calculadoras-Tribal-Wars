@@ -31,16 +31,14 @@ public class Property_Edifícios extends HashMap<Edifício, Integer> implements Pr
 		
 		for (Edifício i : Edifício.values()) {
 			
-			if (!i.equals(Edifício.NULL)) {
-
 				c.gridx = 0;
 				c.gridy++;
 				if (i.equals(Edifício.ACADEMIA_1NÍVEL))
-					panel.add(new JLabel(i.nome() + " (1 nível)"), c);
+					panel.add(new JLabel(i.toString() + " (1 nível)"), c);
 				else if (i.equals(Edifício.ACADEMIA_3NÍVEIS))
-					panel.add(new JLabel(i.nome() + " (3 níveis)"), c);
+					panel.add(new JLabel(i.toString() + " (3 níveis)"), c);
 				else
-					panel.add(new JLabel(i.nome()), c);
+					panel.add(new JLabel(i.toString()), c);
 	
 				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(i, get(i)) {
 					public void go() {}
@@ -65,8 +63,7 @@ public class Property_Edifícios extends HashMap<Edifício, Integer> implements Pr
 				panel.add(txt, c);
 				
 				textFieldMap.put(i, txt);
-			}
-
+			
 		}
 		
 		return panel;

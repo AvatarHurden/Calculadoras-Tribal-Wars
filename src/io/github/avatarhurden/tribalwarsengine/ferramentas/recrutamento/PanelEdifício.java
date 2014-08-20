@@ -93,10 +93,10 @@ public class PanelEdifício extends JPanel {
 		// Checa se edifício é masculino ou feminino (de forma não geral mas
 		// aplicável nesse caso)
 		JLabel lblNível;
-		if (edifício.nome().endsWith("a"))
-			lblNível = new JLabel(Lang.NivelDaEdificio.toString() + edifício.nome());
+		if (edifício.toString().endsWith("a"))
+			lblNível = new JLabel(Lang.NivelDaEdificio.toString() + edifício.toString());
 		else
-			lblNível = new JLabel(Lang.NivelDoEdificio.toString() + edifício.nome());
+			lblNível = new JLabel(Lang.NivelDoEdificio.toString() + edifício.toString());
 
 		gbc_finish.fill = GridBagConstraints.NONE;
 		gbc_finish.anchor = GridBagConstraints.CENTER;

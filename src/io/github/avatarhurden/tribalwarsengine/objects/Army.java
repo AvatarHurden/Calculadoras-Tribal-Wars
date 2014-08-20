@@ -1,11 +1,9 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import database.Bandeira;
-import database.Bandeira.CategoriaBandeira;
-import database.Edifício;
 import database.ItemPaladino;
 import database.Unidade;
 import database.Unidade.UnidadeTipo;
@@ -20,206 +18,171 @@ import database.Unidade.UnidadeTipo;
 public class Army {
 	
 	private List<Tropa> tropas = new ArrayList<Tropa>();
-	private int muralha;
-	private ItemPaladino item;
-	private Bandeira bandeira;
-	private double sorte;
-	private int moral;
-	private boolean religioso;
-	private boolean bonusNoturno;
 	
+	public Army() {}
 	
-	public Army() {
-		
-		// Valores padrões para as coisas
-		muralha = 0;
-		item = ItemPaladino.NULL;
-		bandeira = new Bandeira(CategoriaBandeira.NULL, 0);
-		sorte = 0;
-		moral = 100;
-		religioso = true;
-		bonusNoturno = false;
-		
-	}
-	
-	
+	/**
+	 * Adiciona uma nova tropa ao exército. Se já existe uma tropa com a
+	 * unidade especificada, ela será removida
+	 * 
+	 * @param unidade
+	 * @param nivel
+	 * @param quantidade
+	 */
 	public void addTropa(Unidade unidade, int nivel, int quantidade) {
+		
+		Iterator<Tropa> iter = tropas.iterator();
+		while (iter.hasNext())
+			if (iter.next().unidade.equals(unidade))
+				iter.remove();
 		
 		tropas.add(new Tropa(unidade, quantidade, nivel));
 		
 	}
 
-	public void setMuralha(int muralha) {
-		this.muralha = muralha;
-	}
-
-	public void setItem(ItemPaladino item) {
-		this.item = item;
-	}
-
-	public void setBandeira(Bandeira bandeira) {
-		this.bandeira = bandeira;
+	public int getQuantidade(Unidade i) {
+		return getTropa(i).quantidade;
 	}
 	
-	/**
-	 * @param sorte - Um valor entre -25 e 25
-	 */
-	public void setSorte(double sorte) {
-		this.sorte = sorte;
-	}
-
-	public void setMoral(int moral) {
-		this.moral = moral;
-	}
-
-	public void setReligioso(boolean religioso) {
-		this.religioso = religioso;
+	private Tropa getTropa(Unidade u) {
+		for (Tropa t : tropas)
+			if (t.unidade.equals(u))
+				return t;
+		
+		return null;
 	}
 	
-	public void setBonusNoturno(boolean bonusNoturno) {
-		this.bonusNoturno = bonusNoturno;
+	public boolean contains(Unidade u) {
+		for (Tropa t : tropas)
+			if (t.unidade.equals(u))
+				return true;
+		
+		return false;
 	}
-
-	public int getAtaque(Unidade... units) {
+	
+	public int getAtaque(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
 		if (units == null)
 			for (Tropa t : tropas)
-				ataque += t.getAtaque();
+				ataque += t.getAtaque(item);
 		else
 			for (Unidade u : units)
-				ataque += getTropa(u).getAtaque();
-		
-		ataque *= 1 + sorte/100;
-		ataque *= moral/100;
+				ataque += getTropa(u).getAtaque(item);
 		
 		return ataque;
 	}
 	
-	public int getAtaqueGeral(Unidade... units) {
+	public int getAtaque(Unidade... units) {
+		return getAtaque(ItemPaladino.NULL, units);
+	}
+	
+	public int getAtaqueGeral(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
 		if (units == null) {
 			for (Tropa t : tropas)
 				if (t.getTipo().equals(UnidadeTipo.Geral))
-					ataque += t.getAtaque();
+					ataque += t.getAtaque(item);
 		} else
 			for (Unidade u : units)
 				if (getTropa(u).getTipo().equals(UnidadeTipo.Geral))
-					ataque += getTropa(u).getAtaque();
-		
-		ataque *= 1 + sorte/100;
-		ataque *= moral/100;
+					ataque += getTropa(u).getAtaque(item);
 		
 		return ataque;
 	}
 	
-	public int getAtaqueCavalaria(Unidade... units) {
+	public int getAtaqueGeral(Unidade... units) {
+		return getAtaqueGeral(ItemPaladino.NULL, units);
+	}
+	
+	public int getAtaqueCavalaria(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
 		if (units == null) {
 			for (Tropa t : tropas)
 				if (t.getTipo().equals(UnidadeTipo.Cavalo))
-					ataque += t.getAtaque();
+					ataque += t.getAtaque(item);
 		} else
 			for (Unidade u : units)
 				if (getTropa(u).getTipo().equals(UnidadeTipo.Cavalo))
-					ataque += getTropa(u).getAtaque();
-		
-		ataque *= 1 + sorte/100;
-		ataque *= moral/100;
+					ataque += getTropa(u).getAtaque(item);
 		
 		return ataque;
 	}
 	
-	public int getAtaqueArqueiro(Unidade... units) {
+	public int getAtaqueCavalaria(Unidade... units) {
+		return getAtaqueCavalaria(ItemPaladino.NULL, units);
+	}
+	
+	public int getAtaqueArqueiro(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
 		if (units == null) {
 			for (Tropa t : tropas)
 				if (t.getTipo().equals(UnidadeTipo.Arqueiro))
-					ataque += t.getAtaque();
+					ataque += t.getAtaque(item);
 		} else
 			for (Unidade u : units)
 				if (getTropa(u).getTipo().equals(UnidadeTipo.Arqueiro))
-					ataque += getTropa(u).getAtaque();
-		
-		ataque *= 1 + sorte/100;
-		ataque *= moral/100;
+					ataque += getTropa(u).getAtaque(item);
 		
 		return ataque;
 	}
 	
-	public int getDefesaGeral(Unidade... units) {
+	public int getAtaqueArqueiro(Unidade... units) {
+		return getAtaqueArqueiro(ItemPaladino.NULL, units);
+	}
+	
+	public int getDefesaGeral(ItemPaladino item, Unidade... units) {
 		int defesa = 0;
 		
 		if (units == null) {
 			for (Tropa t : tropas)
-				defesa += t.getDefesaGeral();
+				defesa += t.getDefesaGeral(item);
 		} else
 			for (Unidade u : units)
-				defesa += getTropa(u).getDefesaGeral();
+				defesa += getTropa(u).getDefesaGeral(item);
 		
-		if (religioso == false)
-			defesa /= 2;
-		if (bonusNoturno == true)
-			defesa *= 2;
-		if (bandeira.getTipo().equals(CategoriaBandeira.DEFESA))
-			defesa *= bandeira.getValue();
+		return defesa;
+	}
+	
+	public int getDefesaGeral(Unidade... units) {
+		return getDefesaGeral(ItemPaladino.NULL, units);
+	}
+	
+	public int getDefesaCavalaria(ItemPaladino item, Unidade... units) {
+		int defesa = 0;
 		
-		defesa *= Edifício.MURALHA.bônusPercentual(muralha).intValue();
-		
-		defesa += Edifício.MURALHA.bônusFlat(muralha).intValue();
+		if (units == null) {
+			for (Tropa t : tropas)
+				defesa += t.getDefesaCavalaria(item);
+		} else
+			for (Unidade u : units)
+				defesa += getTropa(u).getDefesaCavalaria(item);
 		
 		return defesa;
 	}
 	
 	public int getDefesaCavalaria(Unidade... units) {
+		return getDefesaCavalaria(ItemPaladino.NULL, units);
+	}
+	
+	public int getDefesaArqueiro(ItemPaladino item, Unidade... units) {
 		int defesa = 0;
 		
 		if (units == null) {
 			for (Tropa t : tropas)
-				defesa += t.getDefesaCavalaria();
+				defesa += t.getDefesaArqueiro(item);
 		} else
 			for (Unidade u : units)
-				defesa += getTropa(u).getDefesaCavalaria();
-		
-		if (religioso == false)
-			defesa /= 2;
-		if (bonusNoturno == true)
-			defesa *= 2;
-		if (bandeira.getTipo().equals(CategoriaBandeira.DEFESA))
-			defesa *= bandeira.getValue();
-		
-		defesa *= Edifício.MURALHA.bônusPercentual(muralha).intValue();
-		
-		defesa += Edifício.MURALHA.bônusFlat(muralha).intValue();
+				defesa += getTropa(u).getDefesaArqueiro(item);
 		
 		return defesa;
 	}
 	
 	public int getDefesaArqueiro(Unidade... units) {
-		int defesa = 0;
-		
-		if (units == null) {
-			for (Tropa t : tropas)
-				defesa += t.getDefesaArqueiro();
-		} else
-			for (Unidade u : units)
-				defesa += getTropa(u).getDefesaArqueiro();
-		
-		if (religioso == false)
-			defesa /= 2;
-		if (bonusNoturno == true)
-			defesa *= 2;
-		if (bandeira.getTipo().equals(CategoriaBandeira.DEFESA))
-			defesa *= bandeira.getValue();
-		
-		defesa *= Edifício.MURALHA.bônusPercentual(muralha).intValue();
-		
-		defesa += Edifício.MURALHA.bônusFlat(muralha).intValue();
-		
-		return defesa;
+		return getDefesaArqueiro(ItemPaladino.NULL, units);
 	}
 	
 	public int getSaque(Unidade... units) {
@@ -231,9 +194,6 @@ public class Army {
 		} else
 			for (Unidade u : units)
 				saque += getTropa(u).getSaque();
-		
-		if (bandeira.getTipo().equals(CategoriaBandeira.SAQUE))
-			saque *= bandeira.getValue();
 		
 		return saque;
 	}
@@ -290,55 +250,40 @@ public class Army {
 		return ferro;
 	}
 	
-	public int getQuantidade(Unidade i) {
-		
-		return getTropa(i).quantidade;
-		
-	}
-	
-	private Tropa getTropa(Unidade u) {
-		for (Tropa t : tropas)
-			if (t.unidade.equals(u))
-				return t;
-		
-		return null;
-	}
-	
+	/**
+	 * Classe que representa uma tropa específica, com a unidade, nível e quantidade
+	 * @author Arthur
+	 *
+	 */
 	private class Tropa {
 		
 		private Unidade unidade;
 		private int nivel;
 		private int quantidade;
 		
-		private Tropa(Unidade unidade, int quantidade) {
-			
-			this.unidade = unidade;
-			this.quantidade = quantidade;
-			this.nivel = 1;
-			
-		}
-		
 		private Tropa(Unidade unidade, int quantidade, int nivel) {
-			
 			this.unidade = unidade;
 			this.quantidade = quantidade;
 			this.nivel = nivel;
-			
 		}
 		
-		private int getAtaque() {
+		private Tropa(Unidade unidade, int quantidade) {
+			this(unidade, quantidade, 1);
+		}
+		
+		private int getAtaque(ItemPaladino item) {
 			return unidade.ataque(nivel, item).intValue() * quantidade;
 		}
 		
-		private int getDefesaGeral() {
+		private int getDefesaGeral(ItemPaladino item) {
 			return unidade.defGeral(nivel, item).intValue() * quantidade;
 		}
 		
-		private int getDefesaCavalaria() {
+		private int getDefesaCavalaria(ItemPaladino item) {
 			return unidade.defCav(nivel, item).intValue() * quantidade;
 		}
 		
-		private int getDefesaArqueiro() {
+		private int getDefesaArqueiro(ItemPaladino item) {
 			return unidade.defArq(nivel, item).intValue() * quantidade;
 		}
 		
@@ -362,9 +307,6 @@ public class Army {
 			return unidade.saque().intValue() * quantidade;
 		}
 		
-		/**
-		 * @return tempo de produção de todas as unidades, em milissegundos 
-		 */
 		private int getTempoProdução() {
 			return unidade.tempoDeProdução().intValue() * quantidade * 1000;
 		}
@@ -372,7 +314,7 @@ public class Army {
 		private UnidadeTipo getTipo() {
 			return unidade.type();
 		}
-		
-	}
 
+	}
+	
 }

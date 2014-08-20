@@ -1,15 +1,26 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
-import config.Lang;
-import database.Cores;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.panels.SelectWorldPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.WorldInfoPanel;
 
-import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
-import java.awt.*;
+
+import config.Lang;
+import database.Cores;
 
 public class SelectWorldFrame extends JFrame {
 
@@ -137,6 +148,7 @@ public class SelectWorldFrame extends JFrame {
 
         // Tabela de informações
         informationTable = new WorldInfoPanel();
+        informationTable.changeProperties();
 
         panelMundo.add(informationTable, constraints);
 

@@ -3,6 +3,9 @@ package io.github.avatarhurden.tribalwarsengine.objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * Classe que representa modelos de exércitos
  * 
@@ -12,6 +15,7 @@ import org.json.JSONObject;
 public class ArmyModel {
 
 	private JSONObject json;
+	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	
 	/**
 	 * Construtor com as informações do modelo já criadas. Para gerar um modelo vazio,
@@ -46,7 +50,7 @@ public class ArmyModel {
     }
     
     public Army getArmy() {
-    	return (Army) get("army", null);
+    	return gson.fromJson(get("army", "").toString(), Army.class);
     }
     
     // Setters
@@ -57,7 +61,7 @@ public class ArmyModel {
     }
     
     public ArmyModel setArmy(Army army) {
-    	set("army", army);
+    	set("army", new JSONObject(gson.toJson(army)));
     	return this;
     }
 	

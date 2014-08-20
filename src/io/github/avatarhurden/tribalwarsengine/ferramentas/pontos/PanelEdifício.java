@@ -164,7 +164,7 @@ public class PanelEdifício {
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 
-		nome = new JLabel(edifício.nome());
+		nome = new JLabel(edifício.toString());
 		identificadores.add(nome, constraints);
 
 		addSeparator(constraints, identificadores);
@@ -239,10 +239,10 @@ public class PanelEdifício {
 	// unidades
 	private void changeValues(int nível) {
 
-		pontos.setText(String.format("%,d", edifício.pontos(nível)));
+		pontos.setText(String.format("%,d", edifício.getPontos(nível)));
 
 		if (!edifício.equals(Edifício.FAZENDA))
-			população.setText(String.format("%,d", edifício.população(nível)));
+			população.setText(String.format("%,d", edifício.getPopulação(nível)));
 		else
 			população.setText("0");
 	}
