@@ -1,20 +1,24 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
-import config.Lang;
-import database.Mundo;
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 import io.github.avatarhurden.tribalwarsengine.tools.EditDialog;
 
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import config.Lang;
 
 @SuppressWarnings("serial")
 public class SelectWorldPanel extends JPanel implements ActionListener {
@@ -118,8 +122,10 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
 
         switch (action) {
             case "edit_button":
-                try {
-                    new EditDialog(Mundo.class, WorldManager.get().getList(), "nothing", 0, null);
+            	
+            	try {
+                    new EditDialog(WorldManager.get().getGenericList(), WorldManager.get().getFieldNames(),
+                    		selectionBox.getSelectedIndex(), new World());
                 } catch (NoSuchFieldException e1) {
                     e1.printStackTrace();
                 } catch (IllegalAccessException e1) {

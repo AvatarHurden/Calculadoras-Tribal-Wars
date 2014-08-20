@@ -1,8 +1,8 @@
-package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
+package io.github.avatarhurden.tribalwarsengine.objects;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
-import io.github.avatarhurden.tribalwarsengine.objects.World;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -22,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.json.JSONObject;
+
 import config.Mundo_Reader;
 import database.Cores;
 
@@ -32,6 +34,7 @@ public class Scope{
 	
 	public Scope() {
 		worlds = new ArrayList<World>();
+		isGlobal = true;
 	}
 	
 	public void setGlobal(boolean isGlobal) {
@@ -173,6 +176,10 @@ public class Scope{
 			return worlds;
 		}
 		
+	}
+	
+	public static boolean isScopeJson(JSONObject json) {
+		return json.has("isGlobal");
 	}
 	
 }

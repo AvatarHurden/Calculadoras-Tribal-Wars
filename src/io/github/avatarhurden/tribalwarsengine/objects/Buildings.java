@@ -3,6 +3,8 @@ package io.github.avatarhurden.tribalwarsengine.objects;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.json.JSONObject;
+
 import database.Edifício;
 
 /**
@@ -13,7 +15,14 @@ import database.Edifício;
  */
 public class Buildings {
 	
-	private ArrayList<Building> buildings;
+	private ArrayList<Building> buildings = new ArrayList<Building>();;
+	
+	public Buildings() {
+		
+		for (Edifício e : Edifício.values())
+			buildings.add(new Building(e, 0));
+		
+	}
 	
 	public void addBuilding(Edifício ed, int nível) {
 		
@@ -57,6 +66,10 @@ public class Buildings {
 			return ed.getCustoMadeira(nivel+1);
 		}
 		
+	}
+	
+	public static boolean isBuildingJson(JSONObject json) {
+		return json.has("buildings");
 	}
 	
 }

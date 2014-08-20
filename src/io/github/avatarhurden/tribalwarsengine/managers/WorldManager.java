@@ -3,9 +3,11 @@ package io.github.avatarhurden.tribalwarsengine.managers;
 import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
+import io.github.avatarhurden.tribalwarsengine.objects.EditableObject;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -22,8 +24,8 @@ import database.Unidade;
  * @date 08/08/2014
  */
 public class WorldManager {
-
-    private List<World> worlds = new ArrayList<World>();
+	
+	private List<World> worlds = new ArrayList<World>();
     private Configuration config = Configuration.get();
 
     private World selectWorld;
@@ -144,6 +146,40 @@ public class WorldManager {
     public List<World> getList() {
         return worlds;
     }
+    
+    public List<? extends EditableObject> getGenericList() {
+    	return (List<? extends EditableObject>) worlds;
+    }
+    
+    public List<JSONObject> getJsonList() {
+    	List<JSONObject> list = new ArrayList<JSONObject>();
+    	
+    	for (World w : worlds)
+    		list.add(w.getJson());
+    	
+    	return list;
+    }
+    
+    public LinkedHashMap<String, String> getFieldNames() {
+    	
+    	LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+    	
+        map.put("name", "Nome");
+        map.put("speed", "Velocidade");
+        map.put("unit_modifier", "Modificador");
+        map.put("moral", "Moral");
+        map.put("researchsystem", "Sistema de Pesquisa");
+        map.put("church", "Igreja");
+        map.put("nightbonus", "Bônus Noturno");
+        map.put("flag", "Bandeiras");
+        map.put("archer", "Arqueiros");
+        map.put("paladin", "Paladino");
+        map.put("betteritems", "Itens Aprimorados");
+        map.put("militia", "Milícia");
+        map.put("coining", "Cunhagem de Moedas");
+        
+        return map;
+    }
 
     /**
      * Salva todos os mundo no arquivo de configuração
@@ -153,9 +189,9 @@ public class WorldManager {
 
         for (World world : this.worlds) {
             JSONObject j = world.getJson();
-
             worlds.put(j);
         }
+        
         config.setConfig("worlds", worlds);
     }
     

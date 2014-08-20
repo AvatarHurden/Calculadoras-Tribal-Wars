@@ -3,8 +3,11 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.ArmyModel;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.VillageModel;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.EditPanelCreator;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -15,6 +18,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
 import org.json.JSONException;
@@ -59,26 +63,27 @@ public class Main {
     	  LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
           
           map.put("name", "Nome");
-          map.put("speed", "Velocidade");
-          map.put("unit_modifier", "Modificador");
-          map.put("moral", "Moral");
-          map.put("researchsystem", "Sistema de Pesquisa");
-          map.put("church", "Igreja");
-          map.put("nightbonus", "Bônus Noturno");
-          map.put("flag", "Bandeiras");
-          map.put("archer", "Arqueiros");
-          map.put("paladin", "Paladino");
-          map.put("betteritems", "Itens Aprimorados");
-          map.put("militia", "Milícia");
-          map.put("coining", "Cunhagem de Moedas");
+          map.put("buildings", "");
+          map.put("scope", "");
+//          map.put("unit_modifier", "Modificador");
+//          map.put("moral", "Moral");
+//          map.put("researchsystem", "Sistema de Pesquisa");
+//          map.put("church", "Igreja");
+//          map.put("nightbonus", "Bônus Noturno");
+//          map.put("flag", "Bandeiras");
+//          map.put("archer", "Arqueiros");
+//          map.put("paladin", "Paladino");
+//          map.put("betteritems", "Itens Aprimorados");
+//          map.put("militia", "Milícia");
+//          map.put("coining", "Cunhagem de Moedas");
           
           JFrame frame = new JFrame();
           frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
           frame.setVisible(true);
-          frame.add(new EditPanelCreator(WorldManager.get().getSelectedWorld().getJson(), 
+          frame.add(new JScrollPane(new EditPanelCreator(new VillageModel().getJson(), 
           		map, new OnChange() {
   					public void run() {}
-  				}));
+  				})));
           
           frame.pack();
           

@@ -1,14 +1,14 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
 import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
-import io.github.avatarhurden.tribalwarsengine.main.Configuration;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Classe que representa as configurações de um mundo.
  */
-public class World {
+public class World implements EditableObject {
 
     private JSONObject json;
 
@@ -26,6 +26,26 @@ public class World {
      */
     public World() {
         this(new JSONObject("{}"));
+        
+        setStartingValues();
+    }
+    
+    private void setStartingValues() {
+    	
+    	setName("Novo Mundo");
+    	setWorldSpeed(1.0);
+    	setUnitModifier(1.0);
+    	setArcherWorld(false);
+    	setFlagWorld(false);
+    	setMoralWorld(false);
+    	setChurchWorld(false);
+    	setPaladinWorld(false);
+    	setCoiningWorld(false);
+    	setMilitiaWorld(false);
+    	setBetterItemsWorld(false);
+    	setNightBonusWorld(false);
+    	setResearchSystem(ResearchSystem.SIMPLE);
+    	
     }
 
     /**
@@ -113,6 +133,10 @@ public class World {
     public Object getCustomProp(String chave, Object def) {
         return get(chave, def);
     }
+    
+    public String toString() {
+    	return getName();
+    }
 
     /* SETTERS com self return*/
     public World setMilitiaWorld(boolean boo) {
@@ -140,7 +164,7 @@ public class World {
         return this;
     }
 
-    public World setFlogWorld(boolean boo) {
+    public World setFlagWorld(boolean boo) {
         this.set("flag", boo);
         return this;
     }

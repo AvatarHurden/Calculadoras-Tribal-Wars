@@ -7,7 +7,8 @@ import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
-import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Scope.ScopeSelectionPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.Scope;
+import io.github.avatarhurden.tribalwarsengine.objects.Scope.ScopeSelectionPanel;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -45,7 +46,6 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 
 import database.Cores;
 import database.Edifício;
@@ -61,6 +61,9 @@ public class EditPanelCreator extends JPanel {
 	private Gson gson;
 	
 	private ArrayList<DefaultPanel> panels;
+	
+	// The name of an editable object must be unique
+	private JTextField nameTextField;
 	
 	public EditPanelCreator(JSONObject json, LinkedHashMap<String, String> names,
 			OnChange onChange) {
@@ -78,39 +81,66 @@ public class EditPanelCreator extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
 		
-		for (String key : names.keySet())
-			if (json.get(key) instanceof Double)
+		for (String key : names.keySet()) {
+			
+			Object value = json.get(key);
+			
+			if (value instanceof Double)
 				panels.add(new DoublePanel(key));
-			else if (json.get(key) instanceof String)
+			else if (value instanceof String)
 				panels.add(new StringPanel(key));
-			else if (json.get(key) instanceof Boolean)
+			else if (value instanceof Boolean)
 				panels.add(new BooleanPanel(key));
 			 // ResearchSystem is saved as Integer
-			else if (json.get(key) instanceof Integer)
+			else if (value instanceof Integer)
 				panels.add(new ResearchPanel(key));
 			else {
 				
-				try {
-					gson.fromJson(json.getString(key), Army.class);
+				// É um dos objetos compostos
+				if (Army.isArmyJson(json.getJSONObject(key)))
 					panels.add(new ArmyPanel(key));
-				} catch (JsonSyntaxException e) {}
-				try {
-					gson.fromJson(json.getString(key), Buildings.class);
+				else if (Buildings.isBuildingJson(json.getJSONObject(key)))
 					panels.add(new BuildingsPanel(key));
-				} catch (JsonSyntaxException e) {}
-				try {
-					gson.fromJson(json.getString(key), Scope.class);
+				else if (Scope.isScopeJson(json.getJSONObject(key)))
 					panels.add(new ScopePanel(key));
-				} catch (JsonSyntaxException e) {}
 				
+//				try {
+//					System.out.println(Army.isArmyJson(json.getJSONObject(key)));
+//					gson.fromJson(json.get(key).toString(), new Army().getClass());
+//					panels.add(new ArmyPanel(key));
+//				} catch (Exception e) {
+//					System.out.println("buildings");
+//					try {
+//						((JSONObject) json.get(key)).get("buildings");
+//						gson.fromJson(json.get(key).toString(), Buildings.class);
+//						panels.add(new BuildingsPanel(key));
+//					} catch (Exception e1) {
+//						e1.printStackTrace();;
+//						try {
+//							gson.fromJson(json.get(key).toString(), Scope.class);
+//							panels.add(new ScopePanel(key));
+//						} catch (Exception e2) {}
+//					}
+//				}
+//				
 				
 			}
+		}
 		
 		for (JPanel panel : panels) {
 			add(panel, c);
 			c.gridy++;
 		}
 			
+	}
+	
+	public void setValues() {
+		for (DefaultPanel panel : panels)
+			panel.setValue();
+	}
+	
+	public JTextField getNameTextField() {
+		return nameTextField;
 	}
 	
 	private class DoublePanel extends DefaultPanel {
@@ -201,9 +231,9 @@ public class EditPanelCreator extends JPanel {
 			
 			add(new JLabel(objectNames.get(key)), c);
 			
-			JTextField txtName = new JTextField(16);
+			textField = new JTextField(16);
 			
-			txtName.setDocument(new PlainDocument() {
+			textField.setDocument(new PlainDocument() {
 				
 				  @Override
 			        public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {
@@ -216,9 +246,9 @@ public class EditPanelCreator extends JPanel {
 				
 			});
 			
-			txtName.setText(json.getString(key));
+			textField.setText(json.getString(key));
 			
-			txtName.getDocument().addDocumentListener(new DocumentListener() {
+			textField.getDocument().addDocumentListener(new DocumentListener() {
 			
 				public void removeUpdate(DocumentEvent arg0) {
 					onChange.run();
@@ -234,7 +264,10 @@ public class EditPanelCreator extends JPanel {
 			c.anchor = GridBagConstraints.EAST;
 			c.gridy++;
 			c.gridwidth = 2;
-			add(txtName, c);
+			add(textField, c);
+			
+			if (key.equals("name"))
+				nameTextField = textField;
 			
 		}
 		
@@ -254,7 +287,7 @@ public class EditPanelCreator extends JPanel {
 			JLabel namelbl = new JLabel(objectNames.get(key));
 			add(namelbl, c);
 
-			JCheckBox checkBox = new JCheckBox();
+			checkBox = new JCheckBox();
 			checkBox.setOpaque(false);
 			checkBox.setSelected(json.getBoolean(key));
 			
@@ -344,7 +377,9 @@ public class EditPanelCreator extends JPanel {
 		private ArmyPanel(String key) {
 			super(key);
 			
-			army = gson.fromJson(json.getString(key), Army.class);
+			quantidades = new HashMap<Unidade, IntegerFormattedTextField>();
+			levels = new HashMap<Unidade, TroopLevelComboBox>();
+			army = gson.fromJson(json.get(key).toString(), Army.class);
 			
 			c.gridy = -1;
 			
@@ -404,7 +439,8 @@ public class EditPanelCreator extends JPanel {
 		private BuildingsPanel(String key) {
 			super(key);
 			
-			builds = gson.fromJson(json.getString(key), Buildings.class);
+			texts = new HashMap<Edifício, EdifícioFormattedTextField>();
+			builds = gson.fromJson(json.get(key).toString(), Buildings.class);
 			
 			c.gridy = -1;
 			
@@ -450,7 +486,7 @@ public class EditPanelCreator extends JPanel {
 		private ScopePanel(String key) {
 			super(key);
 			
-			escopo = gson.fromJson(json.getString(key), Scope.class);
+			escopo = gson.fromJson(json.get(key).toString(), Scope.class);
 			
 			c.fill = GridBagConstraints.HORIZONTAL;
 			

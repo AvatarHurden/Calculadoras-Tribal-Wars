@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
  * @author Arthur
  *
  */
-public class ArmyModel {
+public class ArmyModel implements EditableObject {
 
 	private JSONObject json;
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -29,6 +29,15 @@ public class ArmyModel {
 	
 	public ArmyModel() {
 		this(new JSONObject());
+		
+		setStartingValues();
+	}
+	
+	private void setStartingValues() {
+		
+		setName("Novo Modelo");
+		setArmy(new Army());
+		
 	}
 	
     private Object get(String chave, Object def) {
@@ -41,6 +50,10 @@ public class ArmyModel {
 
     private void set(String chave, Object valor) {
         json.put(chave, valor);
+    }
+    
+    public JSONObject getJson() {
+    	return json;
     }
     
     // Getters

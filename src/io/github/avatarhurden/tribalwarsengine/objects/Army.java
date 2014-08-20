@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import database.ItemPaladino;
 import database.Unidade;
 import database.Unidade.UnidadeTipo;
@@ -19,7 +21,12 @@ public class Army {
 	
 	private List<Tropa> tropas = new ArrayList<Tropa>();
 	
-	public Army() {}
+	public Army() {
+		
+		for (Unidade i : Unidade.values())
+			tropas.add(new Tropa(i, 0));
+		
+	}
 	
 	/**
 	 * Adiciona uma nova tropa ao exército. Se já existe uma tropa com a
@@ -315,6 +322,12 @@ public class Army {
 			return unidade.type();
 		}
 
+	}
+	
+	public static boolean isArmyJson(JSONObject json) {
+		
+		return json.has("army");
+		
 	}
 	
 }

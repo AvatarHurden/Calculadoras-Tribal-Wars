@@ -3,9 +3,9 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.objects.EditableObject;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.EditPanelCreator;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
-import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property;
-import io.github.avatarhurden.tribalwarsengine.tools.property_classes.Property_Nome;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -19,12 +19,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,7 +33,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
@@ -51,18 +48,15 @@ import database.Cores;
  *
  * @author Arthur
  */
-@SuppressWarnings({"rawtypes", "unchecked", "serial"})
+@SuppressWarnings({"unchecked", "serial"})
 public class EditDialog extends JDialog {
 
-    Class objectClass;
-    Object newObject;
+    EditableObject newObject;
 
-    List<Object> objects;
-
-    Map<Object, ArrayList<Property>> variableMap;
-
-    Field variableField;
-
+    List<EditableObject> objects;
+    
+    LinkedHashMap<String, String> names;
+    
     // Used for setting the visibility of the information panels
     List<ObjectInterface> interfaceList = new ArrayList<ObjectInterface>();
     JPanel namePanel;
@@ -97,40 +91,26 @@ public class EditDialog extends JDialog {
      * @throws IllegalArgumentException
      * @throws InstantiationException
      */
-    public EditDialog(Class objectClass, List objects, String variableName,
-                      int selected, Object newObject)
+    public EditDialog(List<? extends EditableObject> objects, LinkedHashMap<String, String> names,
+                      int selected, EditableObject newObject)
             throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InstantiationException {
-
-        this.objectClass = objectClass;
-
-        this.objects = objects;
-
-        variableField = objectClass.getDeclaredField(variableName);
-
-        if (newObject != null)
-            this.newObject = newObject;
-        else
-            this.newObject = objectClass.newInstance();
-
-        variableMap = new HashMap<Object, ArrayList<Property>>();
-
-        // Puts every object and their variable in a map, for reference
-        for (Object o : objects)
-            variableMap.put(o, (ArrayList<Property>) variableField.get(o));
-
+    	
+        this.newObject = newObject;
+        this.objects = (List<EditableObject>) objects;
+        this.names = names;
+        
         setLayout(new GridBagLayout());
-
+        
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
-//		c.insets = new Insets(0,0,0,0);
 
         // Create and add the right-side Panel
         getContentPane().add(makeScrollPanel(), c);
 
         // Creates an ObjectInterface for every object, adding it to the scrollPanel
-        for (Object o : objects) {
+        for (EditableObject o : objects) {
             createInterface(o);
             addInterfaceToScroll(interfaceList.get(objects.indexOf(o)), listNumber++);
         }
@@ -138,8 +118,7 @@ public class EditDialog extends JDialog {
         // Makes the information panel as thick as any given objectInformation,
         // and also makes it as tall as necessary to fit an integer number of namePanels
 
-        nullInterface = new ObjectInterface(objectClass.newInstance(),
-                (ArrayList<Property>) variableField.get(objectClass.newInstance()));
+        nullInterface = new ObjectInterface(newObject.getClass().newInstance());
 
         informationPanel.setBackground(Cores.ALTERNAR_ESCURO);
 
@@ -228,9 +207,9 @@ public class EditDialog extends JDialog {
 
     }
 
-    private void createInterface(Object o) {
+    private void createInterface(EditableObject o) {
 
-        ObjectInterface oi = new ObjectInterface(o, variableMap.get(o));
+        ObjectInterface oi = new ObjectInterface(o);
 
         interfaceList.add(oi);
 
@@ -306,11 +285,9 @@ public class EditDialog extends JDialog {
 
                 try {
 
-                    Object obj = newObject;
-
+                    EditableObject obj = newObject;
+                    
                     newObject = newObject.getClass().newInstance();
-
-                    variableMap.put(obj, (ArrayList<Property>) variableField.get(obj));
 
                     // Puts object in the list
                     objects.add(obj);
@@ -534,15 +511,14 @@ public class EditDialog extends JDialog {
          * <br> All editing and saving of the object is done in the <class>Object
          * Interface</class>.
          */
-        private Object object;
+        private EditableObject object;
 
         private JPanel objectName;
 
-        private JPanel objectInformation;
-
-        // JTextField that contains the name of the object. Needed because name is very important
+        private EditPanelCreator objectInformation;
+        
         private JTextField nameTextField;
-
+        
         // Boolean that says if the object has been saved after any changes
         private boolean isSaved = true;
 
@@ -554,11 +530,7 @@ public class EditDialog extends JDialog {
         // "textFields" are changed
         private OnChange onChange;
 
-        private List<Property> propertyList;
-
-        public ObjectInterface(Object object, List<Property> list) {
-
-            propertyList = list;
+        public ObjectInterface(EditableObject object) {
 
             this.object = object;
 
@@ -608,48 +580,13 @@ public class EditDialog extends JDialog {
         }
 
         private void createInformationPanel() {
-
-            objectInformation = new JPanel(new GridBagLayout());
-
-            GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(0, 10, 5, 10);
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.gridy = 0;
-
-            for (Property i : propertyList) {
-
-                objectInformation.add(i.makeEditDialogPanel(makeDefaultPanel(), onChange), c);
-                c.gridy++;
-
-                if (i instanceof Property_Nome)
-                    nameTextField = ((Property_Nome) i).getTextField();
-
-            }
-
-            objectInformation.setBackground(Cores.ALTERNAR_ESCURO);
+        	
+        	objectInformation = new EditPanelCreator(object.getJson(), names, onChange);
+        	
+        	nameTextField = objectInformation.getNameTextField();
+        	
+        	objectInformation.setBackground(Cores.ALTERNAR_ESCURO);
             objectInformation.setVisible(false);
-
-        }
-
-        /**
-         * Creates the default panel, with adequate colors, borders and GridBagLayout
-         */
-        private JPanel makeDefaultPanel() {
-
-            JPanel panel = new JPanel();
-
-            panel.setBackground(Cores.FUNDO_CLARO);
-
-            panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
-
-            GridBagLayout layout = new GridBagLayout();
-            layout.columnWidths = new int[]{,};
-            layout.rowHeights = new int[]{20};
-            layout.columnWeights = new double[]{1, Double.MIN_VALUE};
-            layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-            panel.setLayout(layout);
-
-            return panel;
 
         }
 
@@ -674,17 +611,8 @@ public class EditDialog extends JDialog {
 
             if (isUniqueName(nameTextField.getText())) {
 
-                for (Property i : propertyList)
-                    i.setValue();
-
-                objectName.removeAll();
-                objectName.add(new JLabel(object.toString()));
-
-                objectName.revalidate();
-                objectName.repaint();
-
-                setSaved(true);
-
+                objectInformation.setValues();
+                         	
             } else {
 
                 String s = nameTextField.getText();

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class VillageModel {
+public class VillageModel implements EditableObject {
 	
 	private JSONObject json;
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -23,6 +23,16 @@ public class VillageModel {
 	
 	public VillageModel() {
 		this(new JSONObject());
+	
+		setStartingValues();
+	}
+	
+	private void setStartingValues() {
+		
+		setName("Novo Modelo");
+		setBuildings(new Buildings());
+		setScope(new Scope());
+		
 	}
 	
     private Object get(String chave, Object def) {
@@ -51,6 +61,10 @@ public class VillageModel {
     	return gson.fromJson(get("buildings", "").toString(), Buildings.class);
     }
     
+    public Scope getScope() {
+    	return gson.fromJson(get("scope", "").toString(), Scope.class);
+    }
+    
     // Setters
     
     public VillageModel setName(String name) {
@@ -58,8 +72,13 @@ public class VillageModel {
     	return this;
     }
     
-    public VillageModel setArmy(Army army) {
-    	set("buildings", new JSONObject(gson.toJson(army)));
+    public VillageModel setBuildings(Buildings builds) {
+    	set("buildings", new JSONObject(gson.toJson(builds)));
+    	return this;
+    }
+    
+    public VillageModel setScope(Scope escopo) {
+    	set("scope", new JSONObject(gson.toJson(escopo)));
     	return this;
     }
     
