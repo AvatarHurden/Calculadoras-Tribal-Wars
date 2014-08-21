@@ -1,16 +1,15 @@
 package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
 
-import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
-import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
-import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
 import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
-import io.github.avatarhurden.tribalwarsengine.objects.Scope;
 import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.Scope;
 import io.github.avatarhurden.tribalwarsengine.objects.Scope.ScopeSelectionPanel;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -19,13 +18,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import javax.swing.AbstractButton;
@@ -49,8 +45,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import database.Cores;
-import database.Edifício;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class EditPanelCreator extends JPanel {
@@ -374,51 +368,27 @@ public class EditPanelCreator extends JPanel {
 	}
 	
 	private class BuildingsPanel extends DefaultPanel {
-		
 		private Buildings builds;
-		private HashMap<Edifício, EdifícioFormattedTextField> texts;
+		private BuildingsEditPanel panel;
 		
 		private BuildingsPanel(String key) {
 			super(key);
 			
-			texts = new HashMap<Edifício, EdifícioFormattedTextField>();
 			builds = gson.fromJson(json.get(key).toString(), Buildings.class);
+			panel = builds.new BuildingsEditPanel(onChange, true, true, true);
 			
-			c.gridy = -1;
+			setLayout(new BorderLayout());
 			
-			for (Edifício i : Edifício.values()) {
-				
-				c.gridx = 0;
-				c.gridy++;
-				if (i.equals(Edifício.ACADEMIA_1NÍVEL))
-					add(new JLabel(i.toString() + " (1 nível)"), c);
-				else if (i.equals(Edifício.ACADEMIA_3NÍVEIS))
-					add(new JLabel(i.toString() + " (3 níveis)"), c);
-				else
-					add(new JLabel(i.toString()), c);
-				
-				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(i, builds.getLevel(i)) {
-					public void go() {
-						onChange.run();
-					}
-				};
-				
-				c.gridx = 1;
-				add(txt, c);
-				
-				texts.put(i, txt);
+			add(panel);
 			
-			}
 		}
 		
 		protected void setValue() {
 			
-			for (Edifício i : Edifício.values()) 
-				builds.addBuilding(i, texts.get(i).getValueInt());
-			
+			panel.setValue();
 			json.put(key, new JSONObject(gson.toJson(builds)));
 		}
-		
+			
 	}
 	
 	private class ScopePanel extends DefaultPanel{
