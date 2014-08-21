@@ -8,6 +8,7 @@ import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
 import io.github.avatarhurden.tribalwarsengine.objects.Scope;
+import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.Scope.ScopeSelectionPanel;
 
 import java.awt.GridBagConstraints;
@@ -351,74 +352,23 @@ public class EditPanelCreator extends JPanel {
 	private class ArmyPanel extends DefaultPanel {
 		
 		private Army army;
-		private HashMap<Unidade, IntegerFormattedTextField> quantidades;
-		private HashMap<Unidade, TroopLevelComboBox> levels;
+		private ArmyEditPanel panel;
 		
 		private ArmyPanel(String key) {
 			super(key);
 			
-			quantidades = new HashMap<Unidade, IntegerFormattedTextField>();
-			levels = new HashMap<Unidade, TroopLevelComboBox>();
 			army = gson.fromJson(json.get(key).toString(), Army.class);
+			panel = army.new ArmyEditPanel(onChange, true, true);
 			
-			c.gridy = -1;
+			add(panel);
 			
-			for (Unidade i : Unidade.values()) {
-				
-				c.gridx = 0;
-				c.gridy++;
-				add(new JLabel(i.toString()), c);
-
-				IntegerFormattedTextField txt = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
-					public void go() {}
-				};
-				
-				if (army.contains(i))
-					txt.setText(String.valueOf(army.getQuantidade(i)));
-				
-				// This is made because the editing of the textField fires the listener
-				txt.getDocument().addDocumentListener(new DocumentListener() {
-					
-					public void removeUpdate(DocumentEvent arg0) {
-						onChange.run();
-					}
-					
-					public void insertUpdate(DocumentEvent arg0) {
-						onChange.run();
-					}
-					
-					public void changedUpdate(DocumentEvent arg0) {}
-				});
-				
-				quantidades.put(i, txt);
-
-				c.gridx++;
-				add(txt, c);
-				
-				TroopLevelComboBox combo = new TroopLevelComboBox(
-						WorldManager.get().getSelectedWorld().getResearchSystem().getResearch());
-				levels.put(i, combo);
-					
-				combo.addItemListener(new ItemListener() {
-					public void itemStateChanged(ItemEvent e) {
-						onChange.run();
-					}
-				});
-				
-				if (combo.getItemCount() > 1) {
-					c.gridx++;
-					add(combo, c);
-				}
-			}
 		}
 		
 		protected void setValue() {
 			
-			for (Unidade i : Unidade.values())
-				army.addTropa(i, (int) levels.get(i).getSelectedItem(), 
-						quantidades.get(i).getValue().intValue());
-			
+			panel.setValues();
 			json.put(key, new JSONObject(gson.toJson(army)));
+			
 		}
 		
 	}
@@ -562,6 +512,7 @@ public class EditPanelCreator extends JPanel {
 		}
 		
 	}
+	
 	
 	private abstract class DefaultPanel extends JPanel {
 		

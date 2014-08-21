@@ -1,8 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
 import javax.swing.SwingConstants;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.AbstractDocument;
 
 import database.Edifício;
 
@@ -20,19 +18,9 @@ public abstract class EdifícioFormattedTextField extends IntegerFormattedTextFie
 	
 	public EdifícioFormattedTextField(final Edifício ed, int initial) {
 		
-		super(3, ed.nívelMáximo());
-		
-		DocumentListener doc = ((AbstractDocument) getDocument()).getDocumentListeners()[0];
-		
-		// Removes document to allow edition of text without invoking go().
-		getDocument().removeDocumentListener(doc);
-		
-		setText(""+initial);
-		
-		getDocument().addDocumentListener(doc);
+		super(initial, 3, ed.nívelMáximo());
 		
 		setHorizontalAlignment(SwingConstants.CENTER);
-		
 		
 	}
 	

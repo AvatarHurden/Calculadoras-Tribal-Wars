@@ -173,9 +173,9 @@ public class ModeloTropasPanel extends JPanel {
                 	Army army = new Army();
                     for (Unidade i : Unidade.values())
                         if (mapTextFields.containsKey(i))
-                            army.addTropa(i, 1, mapTextFields.get(i).getValue().intValue());
+                            army.addTropa(i, mapTextFields.get(i).getValue().intValue(), 1);
                         else
-                            army.addTropa(i, 1, 0);
+                            army.addTropa(i, 0, 1);
 
                     ArmyModel modelo = new ArmyModel();
                     modelo.setArmy(army);

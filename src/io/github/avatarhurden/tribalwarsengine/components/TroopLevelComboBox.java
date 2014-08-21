@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.components;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,15 +18,18 @@ import database.Cores;
 @SuppressWarnings("serial")
 public class TroopLevelComboBox extends JComboBox<Integer>{
 	
-	public TroopLevelComboBox(int maxLevel) {
+	Color cor;
+	
+	public TroopLevelComboBox(int maxLevel, Color cor) {
 		
+		this.cor = cor;
 		setRenderer(new TroopComboBoxRenderer());
 		
 		for (int i = 1; i <= maxLevel; i++)
 			addItem(i);
 		
 		UIManager.put("ComboBox.selectionBackground", Cores.FUNDO_ESCURO);
-		UIManager.put("ComboBox.background", Cores.FUNDO_CLARO);
+		UIManager.put("ComboBox.background", cor);
 		
 		// Zera a largura do botão
 		setUI(new BasicComboBoxUI() {
@@ -40,13 +44,17 @@ public class TroopLevelComboBox extends JComboBox<Integer>{
 			}
 		});
 		
+		setBackground(cor);
 		setOpaque(true);
 
 	}
 	
 	private class TroopComboBoxRenderer extends JLabel implements ListCellRenderer<Integer> {
 		
-		private TroopComboBoxRenderer() {}
+		private TroopComboBoxRenderer() {
+			setHorizontalAlignment(SwingConstants.CENTER);
+			setOpaque(true);
+		}
 		
 		@SuppressWarnings("rawtypes")
 		@Override
@@ -59,13 +67,11 @@ public class TroopLevelComboBox extends JComboBox<Integer>{
 			if (isSelected)
 				setBackground(Cores.FUNDO_ESCURO);
 			else
-				setBackground(Cores.FUNDO_CLARO);
-			
-			setHorizontalAlignment(SwingConstants.CENTER);
-			setOpaque(true);
+				setBackground(cor);
 			
 			return this;
 		}
+	
 	}
 	
 }

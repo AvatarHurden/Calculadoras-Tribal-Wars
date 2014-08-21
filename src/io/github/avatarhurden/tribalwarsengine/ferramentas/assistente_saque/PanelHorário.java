@@ -182,7 +182,7 @@ public abstract class PanelHorário extends JPanel{
 		
 		switch(produtor) {
 		case POÇO_DE_ARGILA:
-			recursosRestantes[0] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
+			recursosRestantes[0] = new IntegerFormattedTextField() {
 				public void go() {
 					doAction();
 				}
@@ -190,7 +190,7 @@ public abstract class PanelHorário extends JPanel{
 			recursoQuantidade.add(recursosRestantes[0]);
 			break;
 		case BOSQUE:
-			recursosRestantes[1] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
+			recursosRestantes[1] = new IntegerFormattedTextField() {
 				public void go() {
 					doAction();
 				}
@@ -198,7 +198,7 @@ public abstract class PanelHorário extends JPanel{
 			recursoQuantidade.add(recursosRestantes[1]);
 			break;
 		case MINA_DE_FERRO:
-			recursosRestantes[2] = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
+			recursosRestantes[2] = new IntegerFormattedTextField() {
 				public void go() {
 					doAction();
 				}

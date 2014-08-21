@@ -1,13 +1,22 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import database.Cores;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.border.Border;
+
+import database.Cores;
 
 /**
  *  Botão customizado com o estilo do jogo
@@ -162,17 +171,19 @@ public class TWButton extends JButton implements MouseListener {
 
     public void mousePressed(MouseEvent e) {
     	isPressed = true;
+    	isOver = false;
     }
 
-    public void mouseReleased(MouseEvent e) {
-    	isPressed = false;
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     public void mouseEntered(MouseEvent e) {
-        isOver = true;
+    	if (!isPressed)
+    		isOver = true;
+        isPressed = false;
     }
 
     public void mouseExited(MouseEvent e) {
         isOver = false;
+        isPressed = false;
     }
 }

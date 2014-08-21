@@ -111,7 +111,7 @@ public abstract class PanelUnidade extends JPanel{
 				// Adds the IntegerFormattedTextField
 				JPanel unitQuantity = new JPanel();
 				
-				textFields.put(i, new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
+				textFields.put(i, new IntegerFormattedTextField() {
 					public void go() {
 						doAction();
 					}

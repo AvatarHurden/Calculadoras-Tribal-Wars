@@ -39,16 +39,21 @@ public abstract class IntegerFormattedTextField extends JTextField {
 			.getNumberInstance(Locale.GERMANY);
 
 	/**
-	 * @param length
+	 * @param startingValue
+	 * 			  Value that the textField starts with
+	 * @param maxLength
 	 *            Maximum number of digits allowed
 	 * @param upperLimit
 	 * 			  Maximum value of the textField
 	 */
-	public IntegerFormattedTextField(final int maxLength,final int upperLimit) {
+	public IntegerFormattedTextField(int startingValue, final int maxLength, final int upperLimit) {
 		
 		setColumns(3+(maxLength-2)/2);
 		
 		setHorizontalAlignment(SwingConstants.LEFT);
+		
+		if (startingValue > 0)
+			setText(String.valueOf(startingValue));
 		
 		((AbstractDocument) getDocument()).setDocumentFilter(new DocumentFilter() {
 			
@@ -160,6 +165,18 @@ public abstract class IntegerFormattedTextField extends JTextField {
 		
 	}
 
+	public IntegerFormattedTextField(int startingValue, int maxLength) {
+		this(startingValue, maxLength, Integer.MAX_VALUE);
+	}
+	
+	public IntegerFormattedTextField(int startingValue) {
+		this(startingValue, 9, Integer.MAX_VALUE);
+	}
+	
+	public IntegerFormattedTextField() {
+		this(0, 9, Integer.MAX_VALUE);
+	}
+	
 	// Returns the unformatted value of a formatted string
 	private String getUnformattedNumber(String input) {
 

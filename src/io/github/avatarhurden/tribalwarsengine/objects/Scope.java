@@ -176,16 +176,6 @@ public class Scope{
 			return button;
 		}
 		
-		private List<World> getSelecionados() {
-			
-			List<World> list = new ArrayList<World>();
-					
-			for (String s : selectedWorlds)
-				list.add(WorldManager.get().getWorldByName(s));
-			
-			return list;
-		}
-		
 	}
 	
 	public static boolean isScopeJson(JSONObject json) {

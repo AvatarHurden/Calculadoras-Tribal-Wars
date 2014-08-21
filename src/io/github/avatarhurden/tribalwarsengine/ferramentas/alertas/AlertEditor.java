@@ -525,7 +525,7 @@ public class AlertEditor extends JDialog{
 				c.gridy++;
 				panel.add(new JLabel(i.nome()), c);
 
-				IntegerFormattedTextField txt = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
+				IntegerFormattedTextField txt = new IntegerFormattedTextField() {
 					public void go() {}
 				};
 			
@@ -586,7 +586,7 @@ public class AlertEditor extends JDialog{
 		addAviso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				IntegerFormattedTextField amount = new IntegerFormattedTextField(4, Integer.MAX_VALUE){
+				IntegerFormattedTextField amount = new IntegerFormattedTextField(0, 4){
 					public void go() {}
 				};
 				
