@@ -80,7 +80,7 @@ public class EditPanelCreator extends JPanel {
         c.insets = new Insets(0, 10, 5, 10);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
-		
+        
 		for (String key : names.keySet()) {
 			
 			Object value = json.get(key);
@@ -103,26 +103,6 @@ public class EditPanelCreator extends JPanel {
 					panels.add(new BuildingsPanel(key));
 				else if (Scope.isScopeJson(json.getJSONObject(key)))
 					panels.add(new ScopePanel(key));
-				
-//				try {
-//					System.out.println(Army.isArmyJson(json.getJSONObject(key)));
-//					gson.fromJson(json.get(key).toString(), new Army().getClass());
-//					panels.add(new ArmyPanel(key));
-//				} catch (Exception e) {
-//					System.out.println("buildings");
-//					try {
-//						((JSONObject) json.get(key)).get("buildings");
-//						gson.fromJson(json.get(key).toString(), Buildings.class);
-//						panels.add(new BuildingsPanel(key));
-//					} catch (Exception e1) {
-//						e1.printStackTrace();;
-//						try {
-//							gson.fromJson(json.get(key).toString(), Scope.class);
-//							panels.add(new ScopePanel(key));
-//						} catch (Exception e2) {}
-//					}
-//				}
-//				
 				
 			}
 		}
@@ -390,18 +370,30 @@ public class EditPanelCreator extends JPanel {
 				add(new JLabel(i.toString()), c);
 
 				IntegerFormattedTextField txt = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
-					public void go() {
-						onChange.run();
-					}
+					public void go() {}
 				};
-				quantidades.put(i, txt);
 				
 				if (army.contains(i))
 					txt.setText(String.valueOf(army.getQuantidade(i)));
+				
+				// This is made because the editing of the textField fires the listener
+				txt.getDocument().addDocumentListener(new DocumentListener() {
+					
+					public void removeUpdate(DocumentEvent arg0) {
+						onChange.run();
+					}
+					
+					public void insertUpdate(DocumentEvent arg0) {
+						onChange.run();
+					}
+					
+					public void changedUpdate(DocumentEvent arg0) {}
+				});
+				
+				quantidades.put(i, txt);
 
 				c.gridx++;
 				add(txt, c);
-				
 				
 				TroopLevelComboBox combo = new TroopLevelComboBox(
 						WorldManager.get().getSelectedWorld().getResearchSystem().getResearch());
@@ -471,9 +463,10 @@ public class EditPanelCreator extends JPanel {
 		
 		protected void setValue() {
 			
-			for (Edifício i : Edifício.values())
+			for (Edifício i : Edifício.values()) 
 				builds.addBuilding(i, texts.get(i).getValueInt());
 			
+			json.put(key, new JSONObject(gson.toJson(builds)));
 		}
 		
 	}

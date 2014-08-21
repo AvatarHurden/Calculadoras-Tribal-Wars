@@ -1,10 +1,16 @@
 package io.github.avatarhurden.tribalwarsengine.main;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.*;
-import java.net.URL;
 
 /**
  * Lê e escreve arquivos ou String em json.

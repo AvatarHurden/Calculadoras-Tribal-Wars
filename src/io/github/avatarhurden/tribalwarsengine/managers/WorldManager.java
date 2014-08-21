@@ -113,7 +113,7 @@ public class WorldManager {
     public World getDefaultWorld() {
         String def = config.getConfig("default_world", "");
         if (def.equals(""))
-            return new World();
+            return worlds.get(0);
         return getWorldByName(def);
     }
 

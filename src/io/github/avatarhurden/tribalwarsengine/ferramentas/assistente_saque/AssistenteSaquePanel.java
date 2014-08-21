@@ -4,6 +4,7 @@ import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextFi
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.NoIntervalException;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.SameDateException;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
 import java.awt.Color;
@@ -25,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
 
-import config.Mundo_Reader;
 import database.Cores;
 import database.Unidade;
 
@@ -97,13 +97,11 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		// Add modeloAldeia for interval
 		c.gridx += 2; // empty space for recommendations
-		add(tools.addModelosAldeiasPanel(true, panelIntervalo.getEdifícios(), 
-				panelIntervalo.getCoordenadaDestino()), c);
+		add(tools.addModelosAldeiasPanel(true, panelIntervalo.getEdifícios()), c);
 		
 		// Add modeloAldeia for time
 		c.gridx += 2;
-		add(tools.addModelosAldeiasPanel(false, null, 
-				panelHorário.getCoordenadaOrigem()), c);
+		add(tools.addModelosAldeiasPanel(false, null), c);
 		
 		// Add units panel
 		c.gridx = 0;
@@ -235,7 +233,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridy++;
 		panelRecomendado.add(buttonPanel, c);
 		
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : WorldManager.get().getAvailableUnits()) {
 			
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
 				

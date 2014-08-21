@@ -3,6 +3,9 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.managers.ArmyModelManager;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.ArmyModel;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -11,8 +14,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,10 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
-import config.ModeloTropas_Reader;
-import config.Mundo_Reader;
 import database.Cores;
-import database.ModeloTropas;
 import database.Unidade;
 
 @SuppressWarnings("serial")
@@ -121,19 +119,17 @@ public class ModeloTropasPanel extends JPanel {
         popup = new JPopupMenu();
 
         // Adds all the models to the dropdown menu
-        for (final ModeloTropas i : ModeloTropas_Reader.getListModelosAtivos()) {
-
+        for (final ArmyModel i : ArmyModelManager.get().getActiveList())
             popup.add(makeMenuItem(i));
-
-        }
+        
 
     }
 
-    private JMenuItem makeMenuItem(final ModeloTropas i) {
+    private JMenuItem makeMenuItem(final ArmyModel i) {
 
-        JMenuItem item = new JMenuItem(i.getNome());
+        JMenuItem item = new JMenuItem(i.getName());
 
-        item.setName(i.getNome());
+        item.setName(i.getName());
 
         item.addActionListener(new ActionListener() {
 
@@ -142,11 +138,11 @@ public class ModeloTropasPanel extends JPanel {
                 // Edits all the textfields according to the model
                 for (Entry<Unidade, IntegerFormattedTextField> e : mapTextFields
                         .entrySet())
-                    if (i.getQuantidade(e.getKey()).equals(BigDecimal.ZERO))
+                    if (i.getArmy().getQuantidade((e.getKey())) == 0)
                         e.getValue().setText("");
                     else
-                        e.getValue().setText(
-                                i.getQuantidade(e.getKey()).toString());
+                        e.getValue().setText(String.valueOf(
+                                i.getArmy().getQuantidade(e.getKey())));
 
                 // puts the focus on the first textfield (for consistency)
                 mapTextFields.get(Unidade.LANCEIRO).requestFocus();
@@ -173,21 +169,22 @@ public class ModeloTropasPanel extends JPanel {
             public void actionPerformed(ActionEvent arg0) {
 
                 try {
-
-                    Map<Unidade, BigDecimal> map = new HashMap<Unidade, BigDecimal>();
+                	
+                	Army army = new Army();
                     for (Unidade i : Unidade.values())
                         if (mapTextFields.containsKey(i))
-                            map.put(i, mapTextFields.get(i).getValue());
+                            army.addTropa(i, 1, mapTextFields.get(i).getValue().intValue());
                         else
-                            map.put(i, BigDecimal.ZERO);
+                            army.addTropa(i, 1, 0);
 
-                    ModeloTropas modelo = new ModeloTropas(null, map, Mundo_Reader.MundoSelecionado);
+                    ArmyModel modelo = new ArmyModel();
+                    modelo.setArmy(army);
+                    
+                    new EditDialog(ArmyModelManager.get().getList(),
+                    		ArmyModelManager.get().getFieldNames(),
+                            0, modelo);
 
-                    new EditDialog(ModeloTropas.class,
-                            ModeloTropas_Reader.getListModelos(),
-                            "variableList", 0, modelo);
-
-                    ModeloTropas_Reader.checkAtivos();
+                    ArmyModelManager.get().setActives();
 
                     makePopupMenu();
 

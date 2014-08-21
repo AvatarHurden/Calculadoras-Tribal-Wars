@@ -5,6 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextFi
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -43,7 +44,6 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 
-import config.Mundo_Reader;
 import database.Cores;
 import database.Unidade;
 
@@ -518,7 +518,7 @@ public class AlertEditor extends JDialog{
 		
 		tropas = new HashMap<Unidade, IntegerFormattedTextField>();
 		
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : WorldManager.get().getAvailableUnits()) {
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
 				
 				c.gridx = 0;

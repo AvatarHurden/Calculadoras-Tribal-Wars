@@ -51,6 +51,10 @@ public class VillageModel implements EditableObject {
         return json;
     }
     
+    public String toString() {
+    	return getName();
+    }
+    
     // Getters
     
     public String getName() {

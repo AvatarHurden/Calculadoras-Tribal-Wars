@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import config.Mundo_Reader;
 import database.BigOperation;
 import database.Edifício;
 import database.Unidade;
@@ -285,7 +285,8 @@ public class Cálculo {
 		for (int i = 0; i < 3; i++) {
 			produção[i] = produção[i].divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_DOWN);
 			// Arruma para a velocidade do mundo
-			produção[i] = produção[i].multiply(Mundo_Reader.MundoSelecionado.getVelocidade());
+			produção[i] = produção[i].multiply(new BigDecimal(
+					WorldManager.get().getSelectedWorld().getWorldSpeed()));
 		}
 			
 		
@@ -318,8 +319,10 @@ public class Cálculo {
 		}
 		
 		// Arruma a velocidade pelo mundo
-		velocidade = velocidade.multiply(Mundo_Reader.MundoSelecionado.getModificarUnidaes());
-		velocidade = velocidade.multiply(Mundo_Reader.MundoSelecionado.getVelocidade());
+		velocidade = velocidade.multiply(new BigDecimal(
+				WorldManager.get().getSelectedWorld().getUnitModifier()));
+		velocidade = velocidade.multiply(new BigDecimal(
+				WorldManager.get().getSelectedWorld().getWorldSpeed()));
 		
 		// de minutos/campo para milissegundos/campo
 		velocidade = velocidade.multiply(new BigDecimal("60000"));

@@ -14,6 +14,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -101,14 +103,24 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
     private void setSelectionBox() {
         WorldManager worldManager = WorldManager.get();
         worldManager.setAddItens(selectionBox);
+        
+        selectionBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent event) {
+				if (event.getStateChange() == ItemEvent.SELECTED && event.getItem() != null) {
+					WorldManager worldManager = WorldManager.get();
+					worldManager.setSelectedWorld((World) event.getItem());
+					changePadrãoButton();
+				}
+			}
+		});
     }
 
     private void changePadrãoButton() {
         WorldManager worldManager = WorldManager.get();
-
-        if (worldManager.getDefaultWorld() == worldManager.getDefaultWorld()) {
-            padrãoButton.setEnabled(false);
-        } else {
+        
+        if (worldManager.getDefaultWorld().equals(worldManager.getSelectedWorld()))
+        	padrãoButton.setEnabled(false);
+        else {
             padrãoButton.setEnabled(true);
         }
     }

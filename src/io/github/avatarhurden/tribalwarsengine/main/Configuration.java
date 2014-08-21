@@ -91,14 +91,15 @@ public class Configuration {
             if (!configFile.exists())
             	JSON.createJSONFile(new JSONObject("{}"), configFile);
             if (!villageFile.exists())
-            	JSON.createJSONFile(new JSONObject("{}"), villageFile);
+            	JSON.createJSONFile(new JSONObject().put("villageModels", new JSONArray()), villageFile);
             if (!armyFile.exists())
-            	JSON.createJSONFile(new JSONObject("{}"), armyFile);
+            	JSON.createJSONFile(new JSONObject().put("armyModels", new JSONArray()), armyFile);
             
             config = JSON.getJSON(configFile);
             worldConfig = JSON.getJSON(worldFile);
             armyConfig = JSON.getJSON(armyFile);
             villageConfig = JSON.getJSON(villageFile);
+            
             } catch (IOException e) {
             //JOptionPane.showMessageDialog( frame, "Não foi possivel criar um arquivo de configuração.\nSuas modificações não serão visiveis no proximo uso.", "Erro", JOptionPane.ERROR_MESSAGE);
             config = new JSONObject("{}");

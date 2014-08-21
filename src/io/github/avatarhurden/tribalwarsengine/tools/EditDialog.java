@@ -144,15 +144,12 @@ public class EditDialog extends JDialog {
         c.gridwidth = 2;
         getContentPane().add(makeEditPanel(), c);
 
-
         // Selects the desired object and puts the scroll in the necessary position
         // If there are no interfaces, select the "null" one.
         if (interfaceList.size() > 0)
             interfaceList.get(selected).setSelected(true);
         else
             nullInterface.setSelected(true);
-
-        addKeyListeners();
 
         // Puts it always on top of the program
         setModal(true);
@@ -168,43 +165,6 @@ public class EditDialog extends JDialog {
 
         setVisible(true);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    }
-
-    private void addKeyListeners() {
-
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-            public boolean dispatchKeyEvent(KeyEvent e) {
-
-                if (e.getID() == KeyEvent.KEY_PRESSED) {
-
-                    if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                        if (interfaceList.indexOf(selectedInterface) < interfaceList.size() - 1) {
-                            selectedInterface.setSelected(false);
-                            selectedInterface = interfaceList.get(interfaceList.indexOf(selectedInterface) + 1);
-                            selectedInterface.setSelected(true);
-                            setScrollPosition(scroll.getVerticalScrollBar(), false);
-                            revalidate();
-                        }
-                        selectedInterface.nameTextField.requestFocus();
-                    } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-                        if (interfaceList.indexOf(selectedInterface) > 0) {
-                            selectedInterface.setSelected(false);
-                            selectedInterface = interfaceList.get(interfaceList.indexOf(selectedInterface) - 1);
-                            selectedInterface.setSelected(true);
-                            setScrollPosition(scroll.getVerticalScrollBar(), true);
-                            revalidate();
-                        }
-                        selectedInterface.nameTextField.requestFocus();
-                    }
-
-                    changeButtons();
-
-                }
-
-                return false;
-            }
-        });
-
     }
 
     private void createInterface(EditableObject o) {
@@ -496,8 +456,7 @@ public class EditDialog extends JDialog {
 
         saveButton.setEnabled(!selectedInterface.isSaved());
 
-        upButton.setEnabled(interfaceList.indexOf(selectedInterface) != 0 
-        		&& interfaceList.isEmpty());
+        upButton.setEnabled(interfaceList.indexOf(selectedInterface) != 0);
 
         downButton.setEnabled(interfaceList.indexOf(selectedInterface)
                 != interfaceList.size() - 1);
@@ -596,7 +555,7 @@ public class EditDialog extends JDialog {
                 objectInformation.setVisible(true);
                 objectName.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
                 objectName.setBackground(Cores.FUNDO_ESCURO);
-
+                
                 selectedInterface = this;
                 changeButtons();
 
@@ -612,7 +571,8 @@ public class EditDialog extends JDialog {
             if (isUniqueName(nameTextField.getText())) {
 
                 objectInformation.setValues();
-                         	
+                setSaved(true); 
+                
             } else {
 
                 String s = nameTextField.getText();

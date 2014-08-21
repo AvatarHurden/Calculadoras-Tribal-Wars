@@ -1,9 +1,9 @@
 package database;
 
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
-import config.Mundo_Reader;
 
 public enum Unidade {
 
@@ -91,7 +91,7 @@ public enum Unidade {
 		// As características flutuantes são adicionadas depois, visto que são
 		// final
 
-		if (!Mundo_Reader.MundoSelecionado.hasArqueiro()
+		if (!WorldManager.get().getSelectedWorld().isArcherWorld()
 				&& nome.equals("Espadachim"))
 			this.defCav = new BigDecimal("25");
 		else
@@ -261,14 +261,14 @@ public enum Unidade {
 
 		BigDecimal total = value;
 		
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() == 3) {
+		if (WorldManager.get().getSelectedWorld().getResearchSystem().getResearch() == 3) {
 			if (lvl == 2)
 				total = total.multiply(lvl2);
 			else if (lvl == 3)
 				total = total.multiply(lvl3);
 			else
 				return value;
-		} else if (Mundo_Reader.MundoSelecionado.getQuanNíveis() == 10)
+		} else if (WorldManager.get().getSelectedWorld().getResearchSystem().getResearch() == 10)
 			total = total.multiply(new BigDecimal("1.04605").pow(lvl-1));
 
 		return total.setScale(0, RoundingMode.HALF_UP);

@@ -141,12 +141,12 @@ public class MainWindow extends JFrame {
         if (getComponents().length > 1) {
             return;
         }
-        addPanel(new RecrutamentoPanel());
-        addPanel(new DadosDeUnidadePanel());
-        addPanel(new PontosPanel());
-        addPanel(new DistânciaPanel());
-        addPanel(new OponentesDerrotadosPanel());
-        addPanel(new SimuladorPanel());
+//        addPanel(new RecrutamentoPanel());
+//        addPanel(new DadosDeUnidadePanel());
+//        addPanel(new PontosPanel());
+//        addPanel(new DistânciaPanel());
+//        addPanel(new OponentesDerrotadosPanel());
+//        addPanel(new SimuladorPanel());
         addPanel(new AssistenteSaquePanel());
         addPanel(new AlertasPanel());
         selectFirst();

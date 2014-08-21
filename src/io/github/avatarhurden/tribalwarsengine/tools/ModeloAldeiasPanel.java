@@ -1,9 +1,11 @@
 package io.github.avatarhurden.tribalwarsengine.tools;
 
-import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.managers.VillageModelManager;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.VillageModel;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -12,7 +14,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,26 +25,21 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
-import config.ModeloAldeias_Reader;
-import config.Mundo_Reader;
 import database.Cores;
 import database.Edifício;
-import database.ModeloAldeias;
 
 @SuppressWarnings("serial")
 public class ModeloAldeiasPanel extends JPanel {
 
     private Map<Edifício, EdifícioFormattedTextField> mapTextFields;
-    private CoordenadaPanel coord;
 
     private JPopupMenu popup;
     private ToolManager manager;
 
     public ModeloAldeiasPanel(boolean edit,Map<Edifício, EdifícioFormattedTextField> textFields,
-    		CoordenadaPanel coord, ToolManager manager) {
+    		ToolManager manager) {
 
         mapTextFields = textFields;
-        this.coord = coord;
         this.manager = manager;
 
         makePopupMenu();
@@ -124,43 +120,32 @@ public class ModeloAldeiasPanel extends JPanel {
         popup = new JPopupMenu();
 
         // Adds all the models to the dropdown menu
-        for (final ModeloAldeias i : ModeloAldeias_Reader.getListModelosAtivos()) {
-
+        for (final VillageModel i : VillageModelManager.get().getList())
             popup.add(makeMenuItem(i));
 
-        }
 
     }
 
-    private JMenuItem makeMenuItem(final ModeloAldeias i) {
+    private JMenuItem makeMenuItem(final VillageModel i) {
 
-        JMenuItem item = new JMenuItem(i.getNome());
+        JMenuItem item = new JMenuItem(i.getName());
 
-        item.setName(i.getNome());
+        item.setName(i.getName());
 
         item.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent a) {
-
+            	
                 if (mapTextFields != null) {
-
+                		
                     // Edits all the textfields according to the model
-                    for (Entry<Edifício, EdifícioFormattedTextField> e : mapTextFields.entrySet())
-                        e.getValue().setText(
-                                String.valueOf(i.getNível(e.getKey())));
+                    for (Entry<Edifício, EdifícioFormattedTextField> e : mapTextFields.entrySet()) {
+                        System.out.println(i.getBuildings().getLevel(e.getKey()));
+                    	e.getValue().setText(
+                                String.valueOf(i.getBuildings().getLevel(e.getKey())));
+                    }
 
                 }
-
-                if (coord != null) {
-                    coord.getXField().setText(String.valueOf(i.getCoordenadaX()));
-                    coord.getYField().setText(String.valueOf(i.getCoordenadaY()));
-                }
-
-                // If there are coordinates, focus them. If not, focus the first building
-                if (coord != null)
-                    coord.getXField().requestFocus();
-                else
-                    mapTextFields.get(Edifício.EDIFÍCIO_PRINCIPAL).requestFocus();
 
             }
         });
@@ -184,29 +169,22 @@ public class ModeloAldeiasPanel extends JPanel {
             public void actionPerformed(ActionEvent arg0) {
 
                 try {
-
-                    int x = 0, y = 0;
-
-                    Map<Edifício, Integer> map = new HashMap<Edifício, Integer>();
+                	
+                	Buildings predios = new Buildings();
                     for (Edifício i : Edifício.values())
                         if (mapTextFields != null && mapTextFields.containsKey(i))
-                            map.put(i, mapTextFields.get(i).getValue().intValue());
+                        	predios.addBuilding(i, mapTextFields.get(i).getValue().intValue());
                         else
-                            map.put(i, 0);
-
-                    if (coord != null) {
-                        x = coord.getCoordenadaX();
-                        y = coord.getCoordenadaY();
-                    }
-
-                    ModeloAldeias modelo = new ModeloAldeias(null, map, x, y,
-                            Mundo_Reader.MundoSelecionado);
-
-                    new EditDialog(ModeloAldeias.class,
-                            ModeloAldeias_Reader.getListModelos(),
-                            "variableList", 0, modelo);
-
-                    ModeloAldeias_Reader.checkAtivos();
+                        	predios.addBuilding(i, 0);
+                    
+                    VillageModel modelo = new VillageModel();
+                    modelo.setBuildings(predios);
+                    
+                    new EditDialog(VillageModelManager.get().getList(),
+                    		VillageModelManager.get().getFieldNames(),
+                            0, modelo);
+                    
+                    VillageModelManager.get().setActives();
 
                     makePopupMenu();
 

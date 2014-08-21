@@ -24,16 +24,15 @@ import javax.swing.border.LineBorder;
 
 import org.json.JSONObject;
 
-import config.Mundo_Reader;
 import database.Cores;
 
 public class Scope{
 
-	private ArrayList<World> worlds;
+	private ArrayList<String> selectedWorlds;
 	private boolean isGlobal;
 	
 	public Scope() {
-		worlds = new ArrayList<World>();
+		selectedWorlds = new ArrayList<String>();
 		isGlobal = true;
 	}
 	
@@ -45,22 +44,28 @@ public class Scope{
 		return isGlobal;
 	}
 	
+	public boolean contains(World world) {
+		return selectedWorlds.contains(world.toString()) || isGlobal;
+	}
+	
 	/**
 	 * Possui todos os mundos disponíveis, salvando quais estão selecionados ou não
 	 * 
 	 * @author Arthur
 	 *
 	 */
+	@SuppressWarnings("serial")
 	public class ScopeSelectionPanel extends JPanel {
 		
 		private OnChange change;
 		
 		private List<JCheckBox> chkboxList = new ArrayList<JCheckBox>();
 		private List<JPanel> panelList = new ArrayList<JPanel>();
-		private List<World> mundoList = new ArrayList<World>();
+		private List<World> mundoList;
 
 		public ScopeSelectionPanel(OnChange onChange) {
 			
+			mundoList = new ArrayList<>(WorldManager.get().getList());
 			change = onChange;
 			
 			setOpaque(false);
@@ -75,25 +80,24 @@ public class Scope{
 			c.insets = new Insets(5, 5, 5, 5);
 			add(makeToggleButton(), c);
 			
-			int maxY = Mundo_Reader.getMundoList().size()/2+1;
+			int maxY = WorldManager.get().getList().size()/2+1;
 			
 			c.insets = new Insets(0, 0, 5, 5);
 			c.gridy++;
 			c.gridwidth = 1;
-			for (World m : WorldManager.get().getList()) {
+			for (World m : mundoList) {
 				
 				if (c.gridy >= maxY) {
 					c.gridy = 1;
 					c.gridx++;
 					c.insets = new Insets(0, 0, 5, 0);
 				}
-			
-				add(makeMundoPanel(m, worlds.contains(m)), c);
+				add(makeMundoPanel(m.toString(), selectedWorlds.contains(m.toString())), c);
 				c.gridy++;
 			}
 		}
 		
-		private JPanel makeMundoPanel(final World m, boolean selected) {
+		private JPanel makeMundoPanel(final String m, boolean selected) {
 			
 			final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			
@@ -131,7 +135,6 @@ public class Scope{
 			
 			chkboxList.add(checkBox);
 			panelList.add(panel);
-			mundoList.add(m);
 			
 			panel.add(checkBox);
 			panel.add(new JLabel(m.toString()));
@@ -141,14 +144,14 @@ public class Scope{
 			return panel;
 		}
 		
-		private void changeSelected(World m, JPanel panel, boolean active) {
+		private void changeSelected(String m, JPanel panel, boolean active) {
 			
 			if (active) {
 				panel.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
-				worlds.add(m);
+				selectedWorlds.add(m);
 			} else {
 				panel.setBorder(new LineBorder(Cores.FUNDO_CLARO));
-				worlds.remove(m);
+				selectedWorlds.remove(m);
 			}
 		}
 		
@@ -162,7 +165,8 @@ public class Scope{
 					
 					for (JCheckBox c : chkboxList) {
 						c.setSelected(!c.isSelected());
-						changeSelected(mundoList.get(chkboxList.indexOf(c)),panelList.get(chkboxList.indexOf(c)), c.isSelected());
+						changeSelected(mundoList.get(chkboxList.indexOf(c)).toString(),
+								panelList.get(chkboxList.indexOf(c)), c.isSelected());
 					}
 					
 					change.run();
@@ -173,7 +177,13 @@ public class Scope{
 		}
 		
 		private List<World> getSelecionados() {
-			return worlds;
+			
+			List<World> list = new ArrayList<World>();
+					
+			for (String s : selectedWorlds)
+				list.add(WorldManager.get().getWorldByName(s));
+			
+			return list;
 		}
 		
 	}

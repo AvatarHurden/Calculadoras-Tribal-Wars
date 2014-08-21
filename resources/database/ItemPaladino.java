@@ -1,6 +1,6 @@
 package database;
 
-import config.Mundo_Reader;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 public enum ItemPaladino {
 
@@ -30,7 +30,7 @@ public enum ItemPaladino {
 
 		this.name = nome;
 		this.unit = unidade;
-		if (Mundo_Reader.MundoSelecionado.hasItensAprimorados()) {
+		if (WorldManager.get().getSelectedWorld().isBetterItemsWorld()) {
 			this.modifierAtk = advancedAtk;
 			this.modifierDef = advancedDef;
 		} else {

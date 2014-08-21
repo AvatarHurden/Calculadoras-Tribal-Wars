@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -15,7 +16,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Cores;
 import database.Unidade;
 
@@ -93,7 +93,7 @@ public abstract class PanelUnidade extends JPanel{
 		/** Variável para controlar a cor do unitPanel*/
 		int cor = -1;
 		
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : WorldManager.get().getAvailableUnits()) {
 			
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
 				

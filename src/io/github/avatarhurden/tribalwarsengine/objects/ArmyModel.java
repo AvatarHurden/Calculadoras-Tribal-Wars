@@ -37,6 +37,7 @@ public class ArmyModel implements EditableObject {
 		
 		setName("Novo Modelo");
 		setArmy(new Army());
+		setScope(new Scope());
 		
 	}
 	
@@ -56,6 +57,10 @@ public class ArmyModel implements EditableObject {
     	return json;
     }
     
+    public String toString() {
+    	return getName();
+    }
+    
     // Getters
     
     public String getName() {
@@ -64,6 +69,10 @@ public class ArmyModel implements EditableObject {
     
     public Army getArmy() {
     	return gson.fromJson(get("army", "").toString(), Army.class);
+    }
+    
+    public Scope getScope() {
+    	return gson.fromJson(get("scope", "").toString(), Scope.class);
     }
     
     // Setters
@@ -77,5 +86,12 @@ public class ArmyModel implements EditableObject {
     	set("army", new JSONObject(gson.toJson(army)));
     	return this;
     }
+    
+    public ArmyModel setScope(Scope scope) {
+    	set("scope", new JSONObject(gson.toJson(scope)));
+    	return this;
+    }
+    
+    
 	
 }

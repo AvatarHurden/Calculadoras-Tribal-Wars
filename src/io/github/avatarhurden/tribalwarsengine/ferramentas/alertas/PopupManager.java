@@ -524,7 +524,6 @@ public class PopupManager {
 				
 				@Override
 				public void windowLostFocus(WindowEvent arg0) {
-					System.out.println("lost");
 					setCloseTime();
 				}
 				

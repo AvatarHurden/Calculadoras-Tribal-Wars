@@ -13,20 +13,12 @@ import java.awt.event.ItemListener;
 /**
  * @author Wesley Nascimento
  */
-public class TWEComboBox extends JComboBox implements ItemListener {
+public class TWEComboBox extends JComboBox{
 
     public TWEComboBox() {
         this.setRenderer(new TWEComboBoxRenderer());
-        this.addItemListener(this);
         setBackground(Cores.FUNDO_ESCURO);
         setForeground(Color.DARK_GRAY);
-    }
-
-    public void itemStateChanged(ItemEvent event) {
-        if (event.getStateChange() == ItemEvent.SELECTED && event.getItem() != null) {
-            WorldManager worldManager = WorldManager.get();
-            worldManager.setSelectedWorld((World) event.getItem());
-        }
     }
 
     //Render desse combo!

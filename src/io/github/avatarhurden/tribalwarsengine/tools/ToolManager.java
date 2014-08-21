@@ -109,9 +109,9 @@ public class ToolManager {
      * @return Um JPanel com as coisas faladas
      */
     public JPanel addModelosAldeiasPanel(boolean edit,
-                                         Map<Edifício, EdifícioFormattedTextField> textFields, CoordenadaPanel coord) {
+                                         Map<Edifício, EdifícioFormattedTextField> textFields) {
 
-        ModeloAldeiasPanel panel = new ModeloAldeiasPanel(edit, textFields, coord, this);
+        ModeloAldeiasPanel panel = new ModeloAldeiasPanel(edit, textFields, this);
 
         aldeiasPanelList.add(panel);
 

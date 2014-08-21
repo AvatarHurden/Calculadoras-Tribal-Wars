@@ -1,8 +1,16 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
+import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import javafx.util.Pair;
+
+import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
@@ -325,9 +333,26 @@ public class Army {
 	}
 	
 	public static boolean isArmyJson(JSONObject json) {
+		return json.has("tropas");
 		
-		return json.has("army");
+	}
+	
+	/**
+	 * Returns a JPanel for editing an army and a HashMap that maps Unidades to
+	 * their corresponding textfields and comboboxes for obtaining quantities and levels
+	 * @return
+	 */
+	public Pair<JPanel, HashMap<Unidade, 
+		Pair<IntegerFormattedTextField, TroopLevelComboBox>>> getEditPanel() {
 		
+		
+		
+		HashMap<Unidade, IntegerFormattedTextField> map = new HashMap<Unidade, IntegerFormattedTextField>();
+		JPanel panel = new JPanel();
+		
+		
+		
+		return new Pair<JPanel, HashMap<Unidade,IntegerFormattedTextField>>(panel, map);
 	}
 	
 }

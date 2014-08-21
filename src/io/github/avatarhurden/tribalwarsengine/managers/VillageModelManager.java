@@ -1,18 +1,14 @@
 package io.github.avatarhurden.tribalwarsengine.managers;
 
-import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
-import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.objects.VillageModel;
-import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import database.Unidade;
 
 /**
  * Classe que armazena os modelos de aldeias
@@ -22,6 +18,7 @@ import database.Unidade;
 public class VillageModelManager {
 	
     private List<VillageModel> models = new ArrayList<VillageModel>();
+    private List<VillageModel> activeModels = new ArrayList<VillageModel>();
     private Configuration config = Configuration.get();
 
     private static VillageModelManager instance;
@@ -64,6 +61,17 @@ public class VillageModelManager {
     public List<VillageModel> getList() {
         return models;
     }
+    
+    public LinkedHashMap<String, String> getFieldNames() {
+    	
+    	LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+    	
+        map.put("name", "Nome");
+        map.put("buildings", "");
+        map.put("scope", "");
+        
+        return map;
+    }
 
     /**
      * Salva todos os mundo no arquivo de configuração
@@ -76,7 +84,20 @@ public class VillageModelManager {
 
             models.put(j);
         }
-        config.setConfig("worlds", models);
+        config.setConfig("villageModels", models);
     }
+    
+    public void setActives() {
+    	
+   	 // Zera a lista para checagem
+       activeModels.removeAll(activeModels);
+
+       for (VillageModel modelo : models)
+           if (modelo.getScope().contains(WorldManager.get().getSelectedWorld()))
+           	activeModels.add(modelo);
+           else
+           	activeModels.remove(modelo);
+   	
+   }
  
 }
