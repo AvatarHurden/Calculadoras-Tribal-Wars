@@ -58,7 +58,7 @@ public class PanelUnidade extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		nome = new JLabel(unidade.nome());
+		nome = new JLabel(unidade.getNome());
 		add(nome, c);
 
 		quantidade = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
@@ -143,7 +143,7 @@ public class PanelUnidade extends JPanel {
 			else
 				nível = 1;
 		
-		BigDecimal tempo = unidade.tempoDeProdução().multiply(Mundo_Reader.MundoSelecionado
+		BigDecimal tempo = unidade.getTempoDeProdução().multiply(Mundo_Reader.MundoSelecionado
 								.getPorcentagemDeProdução(nível)).multiply(new BigDecimal("1000"));
 		
 		tempoUnitário.setTime(tempo.longValue());

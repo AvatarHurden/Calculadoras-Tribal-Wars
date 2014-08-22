@@ -153,7 +153,7 @@ public class ResultTroopDisplay extends JPanel {
 							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
 				// Creating the TextField for the quantity of troops
-				JLabel lbl = new JLabel(i.nome());
+				JLabel lbl = new JLabel(i.getNome());
 
 				tropaPanel.add(lbl);
 

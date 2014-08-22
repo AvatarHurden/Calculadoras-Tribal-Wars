@@ -134,7 +134,7 @@ public class DistânciaPanel extends Ferramenta {
 
 			BigDecimal distância = BigOperation.sqrt(xSquared.add(ySquared), 30);
 			
-			BigDecimal tempo = distância.multiply(panelUnidade.getSlowestSelected().velocidade());
+			BigDecimal tempo = distância.multiply(panelUnidade.getSlowestSelected().getVelocidade());
 			tempo = tempo.multiply(new BigDecimal("60000"));
 			
 			time = tempo.longValue();

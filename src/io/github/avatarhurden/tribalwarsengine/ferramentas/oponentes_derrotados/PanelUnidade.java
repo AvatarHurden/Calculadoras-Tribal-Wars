@@ -122,7 +122,7 @@ public class PanelUnidade {
 		gbl.rowWeights = new double[] { 0.0, 0.0, 1.0 };
 		panelDados.setLayout(gbl);
 
-		nome = new JLabel(unidade.nome());
+		nome = new JLabel(unidade.getNome());
 		GridBagConstraints gbc_nome = new GridBagConstraints();
 		gbc_nome.anchor = GridBagConstraints.WEST;
 		gbc_nome.insets = new Insets(5, 5, 5, 5);

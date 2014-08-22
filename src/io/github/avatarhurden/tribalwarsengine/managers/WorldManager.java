@@ -212,28 +212,4 @@ public class WorldManager {
         }
     }
     
-    /**
-     * Retorna uma lista ordenada com todas as unidades disponíveis no mundo
-     * 
-     * @return ArrayList com as unidades
-     */
-    public ArrayList<Unidade> getAvailableUnits() {
-    	
-    	ArrayList<Unidade> list = new ArrayList<Unidade>();
-    	
-    	for (Unidade u : Unidade.values())
-    		list.add(u);
-    	
-    	if (!getSelectedWorld().isArcherWorld()) {
-    		list.remove(Unidade.ARQUEIRO);
-    		list.remove(Unidade.ARCOCAVALO);
-    	}
-    	if (!getSelectedWorld().isPaladinWorld())
-    		list.remove(Unidade.PALADINO);
-    	if (!getSelectedWorld().isMilitiaWorld())
-    		list.remove(Unidade.MILÍCIA);
-    	
-    	return list;
-    }
-    
 }

@@ -245,7 +245,7 @@ public class PanelUnidade {
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 
-		nome = new JLabel(unidade.nome());
+		nome = new JLabel(unidade.getNome());
 		identificadores.add(nome, constraints);
 
 		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
@@ -481,26 +481,26 @@ public class PanelUnidade {
 
 		int lvl = nível.getSelectedIndex() + 1;
 
-		dano.setText(getFormattedNumber(quantia.multiply(unidade.ataque(lvl))
+		dano.setText(getFormattedNumber(quantia.multiply(unidade.getAtaque(lvl))
 				.toString()));
 		defGeral.setText(getFormattedNumber(quantia.multiply(
-				unidade.defGeral(lvl)).toString()));
+				unidade.getDefGeral(lvl)).toString()));
 		defCavalo.setText(getFormattedNumber(quantia.multiply(
-				unidade.defCav(lvl)).toString()));
+				unidade.getDefCav(lvl)).toString()));
 		defArqueiro.setText(getFormattedNumber(quantia.multiply(
-				unidade.defArq(lvl)).toString()));
+				unidade.getDefArq(lvl)).toString()));
 
-		saque.setText(getFormattedNumber(quantia.multiply(unidade.saque())
+		saque.setText(getFormattedNumber(quantia.multiply(unidade.getSaque())
 				.toString()));
 
-		madeira.setText(getFormattedNumber(quantia.multiply(unidade.madeira())
+		madeira.setText(getFormattedNumber(quantia.multiply(unidade.getMadeira())
 				.toString()));
-		argila.setText(getFormattedNumber(quantia.multiply(unidade.argila())
+		argila.setText(getFormattedNumber(quantia.multiply(unidade.getArgila())
 				.toString()));
-		ferro.setText(getFormattedNumber(quantia.multiply(unidade.ferro())
+		ferro.setText(getFormattedNumber(quantia.multiply(unidade.getFerro())
 				.toString()));
 		população.setText(getFormattedNumber(quantia.multiply(
-				unidade.população()).toString()));
+				unidade.getPopulação()).toString()));
 	}
 
 	// Zera os valores quando a "quantidade" é nula

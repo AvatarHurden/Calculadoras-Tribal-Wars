@@ -46,6 +46,13 @@ public class Army {
 		
 	}
 	
+	public Army(List<Unidade> units) {
+		
+		for (Unidade i : units)
+			tropas.add(new Tropa(i, 0));
+		
+	}
+	
 	/**
 	 * Adiciona uma nova tropa ao exército. Se já existe uma tropa com a
 	 * unidade especificada, ela será removida
@@ -84,6 +91,10 @@ public class Army {
 		tropas.add(new Tropa(unidade, quantidade, nivel3, nivel10));
 		
 	}
+	
+	public List<Tropa> getTropas() {
+		return tropas;
+	}
 
 	public int getQuantidade(Unidade i) {
 		return getTropa(i).quantidade;
@@ -108,7 +119,7 @@ public class Army {
 	public int getAtaque(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
-		if (units == null)
+		if (units.length == 0)
 			for (Tropa t : tropas)
 				ataque += t.getAtaque(item);
 		else
@@ -125,7 +136,7 @@ public class Army {
 	public int getAtaqueGeral(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				if (t.getTipo().equals(UnidadeTipo.Geral))
 					ataque += t.getAtaque(item);
@@ -144,7 +155,7 @@ public class Army {
 	public int getAtaqueCavalaria(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				if (t.getTipo().equals(UnidadeTipo.Cavalo))
 					ataque += t.getAtaque(item);
@@ -163,7 +174,7 @@ public class Army {
 	public int getAtaqueArqueiro(ItemPaladino item, Unidade... units) {
 		int ataque = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				if (t.getTipo().equals(UnidadeTipo.Arqueiro))
 					ataque += t.getAtaque(item);
@@ -182,7 +193,7 @@ public class Army {
 	public int getDefesaGeral(ItemPaladino item, Unidade... units) {
 		int defesa = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				defesa += t.getDefesaGeral(item);
 		} else
@@ -199,7 +210,7 @@ public class Army {
 	public int getDefesaCavalaria(ItemPaladino item, Unidade... units) {
 		int defesa = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				defesa += t.getDefesaCavalaria(item);
 		} else
@@ -216,7 +227,7 @@ public class Army {
 	public int getDefesaArqueiro(ItemPaladino item, Unidade... units) {
 		int defesa = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				defesa += t.getDefesaArqueiro(item);
 		} else
@@ -233,7 +244,7 @@ public class Army {
 	public int getSaque(Unidade... units) {
 		int saque = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				saque += t.getSaque();
 		} else
@@ -246,7 +257,7 @@ public class Army {
 	public int getPopulação(Unidade... units) {
 		int população = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				população += t.getPopulação();
 		} else
@@ -259,7 +270,7 @@ public class Army {
 	public int getCustoMadeira(Unidade... units) {
 		int madeira = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				madeira += t.getCustoMadeira();
 		} else
@@ -272,7 +283,7 @@ public class Army {
 	public int getCustoArgila(Unidade... units) {
 		int argila = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				argila += t.getCustoArgila();
 		} else
@@ -285,7 +296,7 @@ public class Army {
 	public int getCustoFerro(Unidade... units) {
 		int ferro = 0;
 		
-		if (units == null) {
+		if (units.length == 0) {
 			for (Tropa t : tropas)
 				ferro += t.getCustoFerro();
 		} else
@@ -296,11 +307,32 @@ public class Army {
 	}
 	
 	/**
+	 * Retorna a "velocidade" da unidade mais lenta do exército, em milissegundos/campo.
+	 * São consideradas a velocidade e modificador de unidade do mundo.
+	 */
+	public double getVelocidade(Unidade... units) {
+		
+		double slowest = 0;
+		
+		if (units.length == 0) {
+			for (Tropa t : tropas)
+				if (t.getVelocidade() > slowest)
+					slowest = t.getVelocidade();
+		} else 
+			for (Unidade u : units)
+				if (getTropa(u).getVelocidade() > slowest)
+					slowest = getTropa(u).getVelocidade();
+	
+		// Transforma de minutos/campo para milissegundos/campo
+		return slowest*60000;
+	}
+	
+	/**
 	 * Classe que representa uma tropa específica, com a unidade, nível e quantidade
 	 * @author Arthur
 	 *
 	 */
-	private class Tropa {
+	public class Tropa {
 		
 		private Unidade unidade;
 		private int quantidade;
@@ -328,53 +360,100 @@ public class Army {
 		}
 		
 		private int getAtaque(ItemPaladino item) {
-			return unidade.ataque(nivel, item).intValue() * quantidade;
+			return unidade.getAtaque(nivel, item) * quantidade;
 		}
 		
 		private int getDefesaGeral(ItemPaladino item) {
-			return unidade.defGeral(nivel, item).intValue() * quantidade;
+			return unidade.getDefGeral(nivel, item) * quantidade;
 		}
 		
 		private int getDefesaCavalaria(ItemPaladino item) {
-			return unidade.defCav(nivel, item).intValue() * quantidade;
+			return unidade.getDefCav(nivel, item) * quantidade;
 		}
 		
 		private int getDefesaArqueiro(ItemPaladino item) {
-			return unidade.defArq(nivel, item).intValue() * quantidade;
+			return unidade.getDefArq(nivel, item) * quantidade;
 		}
 		
 		private int getCustoMadeira() {
-			return unidade.madeira().intValue() * quantidade;
+			return unidade.getMadeira() * quantidade;
 		}
 		
 		private int getCustoArgila() {
-			return unidade.argila().intValue() * quantidade;
+			return unidade.getArgila() * quantidade;
 		}
 		
 		private int getCustoFerro() {
-			return unidade.ferro().intValue() * quantidade;
+			return unidade.getFerro() * quantidade;
 		}
 		
 		private int getPopulação() {
-			return unidade.população().intValue() * quantidade;
+			return unidade.getPopulação() * quantidade;
 		}
 		
 		private int getSaque() {
-			return unidade.saque().intValue() * quantidade;
+			return unidade.getSaque() * quantidade;
 		}
 		
 		private int getTempoProdução() {
-			return unidade.tempoDeProdução().intValue() * quantidade * 1000;
+			return unidade.getTempoDeProdução() * quantidade * 1000;
+		}
+		
+		private double getVelocidade() {
+			if (quantidade == 0)
+				return 0;
+			else
+				return unidade.getVelocidade()
+						* WorldManager.get().getSelectedWorld().getWorldSpeed()
+						* WorldManager.get().getSelectedWorld().getUnitModifier();
 		}
 		
 		private UnidadeTipo getTipo() {
-			return unidade.type();
+			return unidade.getType();
+		}
+		
+		public Unidade getUnidade() {
+			return unidade;
+		}
+		
+		public int getQuantidade() {
+			return quantidade;
 		}
 
 	}
 	
 	public static boolean isArmyJson(JSONObject json) {
 		return json.has("tropas");
+		
+	}
+	
+	public static ArrayList<Unidade> getAvailableUnits() {
+		
+		ArrayList<Unidade> list = new ArrayList<Unidade>();
+    	
+    	for (Unidade u : Unidade.values())
+    		list.add(u);
+    	
+    	if (!WorldManager.get().getSelectedWorld().isArcherWorld()) {
+    		list.remove(Unidade.ARQUEIRO);
+    		list.remove(Unidade.ARCOCAVALO);
+    	}
+    	if (!WorldManager.get().getSelectedWorld().isPaladinWorld())
+    		list.remove(Unidade.PALADINO);
+    	if (!WorldManager.get().getSelectedWorld().isMilitiaWorld())
+    		list.remove(Unidade.MILÍCIA);
+    	
+    	return list;
+		
+	}
+	
+	public static ArrayList<Unidade> getAttackingUnits() {
+		
+		ArrayList<Unidade> list = getAvailableUnits();
+    	
+    	list.remove(Unidade.MILÍCIA);
+    	
+    	return list;
 		
 	}
 	
@@ -504,8 +583,11 @@ public class Army {
 			panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 			
 			Unidade[] values = unidades;
-			if (values.length == 0)
-				values = Unidade.values();
+			if (values.length == 0) {
+				values = new Unidade[tropas.size()];
+				for (int i = 0; i < tropas.size(); i++)
+					values[i] = tropas.get(i).unidade;
+			}
 			
 			for (int i = 0; i < values.length; i++) {
 				
@@ -577,12 +659,42 @@ public class Army {
 			
 		}
 		
-		public void setValues() {
+		public void saveValues() {
 			
 			for (Unidade i : quantities.keySet())
 				Army.this.addTropa(i, quantities.get(i).getValue().intValue(),
 						(int) level3.get(i).getSelectedItem(),
 						(int) level10.get(i).getSelectedItem() );
+		}
+		
+		public void resetComponents() {
+			
+			for (IntegerFormattedTextField t : quantities.values())
+				t.setText("");
+			for (TroopLevelComboBox t : level3.values())
+				t.setSelectedIndex(0);
+			for (TroopLevelComboBox t : level10.values())
+				t.setSelectedIndex(0);
+			
+		}
+		
+		public void setValues(Army army) {
+			
+			resetComponents();
+			
+			for (Tropa t : army.tropas) {
+				if (t.quantidade > 0)
+					quantities.get(t.unidade).setText(String.valueOf(t.quantidade));	
+				level3.get(t.unidade).setSelectedItem(t.nivel3);
+				level10.get(t.unidade).setSelectedItem(t.nivel10);
+			}
+			
+			saveValues();
+			
+		}
+		
+		public Army getArmy() {
+			return Army.this;
 		}
 		
 	}

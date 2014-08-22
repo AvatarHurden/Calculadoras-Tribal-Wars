@@ -1,10 +1,9 @@
 package io.github.avatarhurden.tribalwarsengine.tools;
 
-import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.managers.ArmyModelManager;
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.ArmyModel;
 
 import java.awt.Dimension;
@@ -14,8 +13,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,19 +23,17 @@ import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
 import database.Cores;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class ModeloTropasPanel extends JPanel {
 
-    private Map<Unidade, IntegerFormattedTextField> mapTextFields;
-
+	private ArmyEditPanel armyEdit;
     private JPopupMenu popup;
     private ToolManager manager;
 
-    public ModeloTropasPanel(boolean edit, Map<Unidade, IntegerFormattedTextField> textFields, ToolManager manager) {
+    public ModeloTropasPanel(boolean edit, ArmyEditPanel armyEdit, ToolManager manager) {
 
-        mapTextFields = textFields;
+        this.armyEdit = armyEdit;
         this.manager = manager;
         
         makePopupMenu();
@@ -135,18 +130,8 @@ public class ModeloTropasPanel extends JPanel {
 
             public void actionPerformed(ActionEvent a) {
 
-                // Edits all the textfields according to the model
-                for (Entry<Unidade, IntegerFormattedTextField> e : mapTextFields
-                        .entrySet())
-                    if (i.getArmy().getQuantidade((e.getKey())) == 0)
-                        e.getValue().setText("");
-                    else
-                        e.getValue().setText(String.valueOf(
-                                i.getArmy().getQuantidade(e.getKey())));
-
-                // puts the focus on the first textfield (for consistency)
-                mapTextFields.get(Unidade.LANCEIRO).requestFocus();
-
+               armyEdit.setValues(i.getArmy());
+            	
             }
         });
 
@@ -170,15 +155,8 @@ public class ModeloTropasPanel extends JPanel {
 
                 try {
                 	
-                	Army army = new Army();
-                    for (Unidade i : Unidade.values())
-                        if (mapTextFields.containsKey(i))
-                            army.addTropa(i, mapTextFields.get(i).getValue().intValue(), 1);
-                        else
-                            army.addTropa(i, 0, 1);
-
-                    ArmyModel modelo = new ArmyModel();
-                    modelo.setArmy(army);
+                	ArmyModel modelo = new ArmyModel();
+                    modelo.setArmy(armyEdit.getArmy());
                     
                     new EditDialog(ArmyModelManager.get().getList(),
                     		ArmyModelManager.get().getFieldNames(),

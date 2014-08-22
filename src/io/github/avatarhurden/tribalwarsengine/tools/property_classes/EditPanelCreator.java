@@ -359,7 +359,7 @@ public class EditPanelCreator extends JPanel {
 		
 		protected void setValue() {
 			
-			panel.setValues();
+			panel.saveValues();
 			json.put(key, new JSONObject(gson.toJson(army)));
 			
 		}

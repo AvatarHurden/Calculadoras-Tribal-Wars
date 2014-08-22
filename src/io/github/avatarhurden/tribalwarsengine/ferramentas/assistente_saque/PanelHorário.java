@@ -273,8 +273,8 @@ public abstract class PanelHorário extends JPanel{
 		
 	}
 
-	protected void setDisplayHorario(long tempo) {
-		respostaLabel.setDate(new Date(tempo));
+	protected void setDisplayHorario(Date tempo) {
+		respostaLabel.setDate(tempo);
 		
 		errorMessage.setText(" ");
 	}
@@ -289,7 +289,7 @@ public abstract class PanelHorário extends JPanel{
 	 * Returns the time of the last attack, in milliseconds
 	 * @return long
 	 */
-	protected long getDataEnviada() {
+	protected Date getDataEnviada() {
 		
 		long time;
 		
@@ -300,7 +300,7 @@ public abstract class PanelHorário extends JPanel{
 		// Gets the hours part of the time                  days*minutes*millis
 		time += ((Date) hourSpinner.getModel().getValue()).getTime()%(24*3600*1000);
 		
-		return time;
+		return new Date(time);
 	}
 	
 	/**

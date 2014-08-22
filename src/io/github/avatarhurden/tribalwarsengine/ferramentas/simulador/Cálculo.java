@@ -187,7 +187,7 @@ public class Cálculo {
 
 		// max = #rams*religion*attackOfRams / (8* 1.09^wallLevel)
 
-		BigDecimal attack = Unidade.ARÍETE.ataque(
+		BigDecimal attack = Unidade.ARÍETE.getAtaque(
 				nívelTropasAtaque.get(Unidade.ARÍETE), itemAtacante);
 
 		BigDecimal levelsLowered = tropasAtacantes.get(Unidade.ARÍETE)
@@ -265,12 +265,12 @@ public class Cálculo {
 
 		for (Entry<Unidade, BigDecimal> i : tropas.entrySet()) {
 
-			BigDecimal ataque = i.getKey().ataque(
+			BigDecimal ataque = i.getKey().getAtaque(
 					nívelTropasAtaque.get(i.getKey()), itemAtacante);
 
 			ataqueTipos.put(
-					i.getKey().type(),
-					ataqueTipos.get(i.getKey().type()).add(
+					i.getKey().getType(),
+					ataqueTipos.get(i.getKey().getType()).add(
 							i.getValue().multiply(ataque)));
 
 		}
@@ -316,7 +316,7 @@ public class Cálculo {
 
 			defesaTipos.put(UnidadeTipo.Geral,
 					defesaTipos.get(UnidadeTipo.Geral).add(
-							i.getValue().multiply(i.getKey().defGeral(
+							i.getValue().multiply(i.getKey().getDefGeral(
 											nívelTropasDefesa.get(i.getKey()),
 											itemDefensor))));
 
@@ -324,7 +324,7 @@ public class Cálculo {
 					UnidadeTipo.Cavalo,
 					defesaTipos.get(UnidadeTipo.Cavalo).add(
 							i.getValue().multiply(
-									i.getKey().defCav(
+									i.getKey().getDefCav(
 											nívelTropasDefesa.get(i.getKey()),
 											itemDefensor))));
 
@@ -332,7 +332,7 @@ public class Cálculo {
 					UnidadeTipo.Arqueiro,
 					defesaTipos.get(UnidadeTipo.Arqueiro).add(
 							i.getValue().multiply(
-									i.getKey().defArq(
+									i.getKey().getDefArq(
 											nívelTropasDefesa.get(i.getKey()),
 											itemDefensor))));
 
@@ -445,13 +445,13 @@ public class Cálculo {
 				tropasPerdidasAtaque.put(i.getKey(),
 								tropasPerdidasAtaque.get(i.getKey())
 										.add(i.getValue().multiply(
-												ataqueRatioLoss.get(i.getKey().type())))
+												ataqueRatioLoss.get(i.getKey().getType())))
 										.setScale(0, RoundingMode.HALF_UP));
 				
 				// remover as tropas perdidas de atacantesSobrando
 				i.setValue(i.getValue().multiply(
 								BigDecimal.ONE.subtract(ataqueRatioLoss.get(
-										i.getKey().type())))
+										i.getKey().getType())))
 						.setScale(0, RoundingMode.HALF_UP));
 			}
 
@@ -635,7 +635,7 @@ public class Cálculo {
 
 			BigDecimal levelsLowered = tropasAtacantes.get(Unidade.CATAPULTA)
 					.multiply(
-							Unidade.CATAPULTA.ataque(
+							Unidade.CATAPULTA.getAtaque(
 									nívelTropasAtaque.get(Unidade.CATAPULTA),
 									itemAtacante));
 
@@ -683,7 +683,7 @@ public class Cálculo {
 		System.out.println("Unidades Ofensivas");
 
 		for (Unidade i : tropasPerdidasAtaque.keySet())
-			System.out.println(i.nome()
+			System.out.println(i.getNome()
 					+ ": "
 					+ tropasPerdidasAtaque.get(i).setScale(0,
 							RoundingMode.HALF_DOWN));
@@ -693,7 +693,7 @@ public class Cálculo {
 		System.out.println("Unidades Defensivas");
 
 		for (Unidade i : tropasPerdidasDefesa.keySet())
-			System.out.println(i.nome()
+			System.out.println(i.getNome()
 					+ ": "
 					+ tropasPerdidasDefesa.get(i).setScale(0,
 							RoundingMode.HALF_DOWN));

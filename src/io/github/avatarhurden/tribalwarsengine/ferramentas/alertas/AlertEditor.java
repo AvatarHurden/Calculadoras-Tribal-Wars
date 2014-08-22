@@ -523,7 +523,7 @@ public class AlertEditor extends JDialog{
 				
 				c.gridx = 0;
 				c.gridy++;
-				panel.add(new JLabel(i.nome()), c);
+				panel.add(new JLabel(i.getNome()), c);
 
 				IntegerFormattedTextField txt = new IntegerFormattedTextField() {
 					public void go() {}

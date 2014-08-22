@@ -145,7 +145,7 @@ public class PanelUnidade extends JPanel{
 		Unidade slowest = Unidade.MILÍCIA;
 		
 		for (Entry<Unidade, JCheckBox> e : units.entrySet())
-			if (e.getValue().isSelected() && e.getKey().velocidade().compareTo(slowest.velocidade()) == 1)
+			if (e.getValue().isSelected() && e.getKey().getVelocidade().compareTo(slowest.getVelocidade()) == 1)
 				slowest = e.getKey();
 		
 		return slowest;

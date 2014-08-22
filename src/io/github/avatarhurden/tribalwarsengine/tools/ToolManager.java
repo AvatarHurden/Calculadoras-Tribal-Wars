@@ -5,6 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextF
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -91,9 +92,9 @@ public class ToolManager {
      * @param textFields Map com IntegerFormattedTextField ligados a unidades, para utilizar os Modelos
      * @return Um JPanel com as coisas faladas
      */
-    public JPanel addModelosTropasPanel(boolean edit, Map<Unidade, IntegerFormattedTextField> textFields) {
+    public JPanel addModelosTropasPanel(boolean edit, ArmyEditPanel armyPanel) {
 
-        ModeloTropasPanel panel = new ModeloTropasPanel(edit, textFields, this);
+        ModeloTropasPanel panel = new ModeloTropasPanel(edit, armyPanel, this);
 
         tropasPanelList.add(panel);
 
