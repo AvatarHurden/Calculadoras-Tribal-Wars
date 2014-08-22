@@ -5,7 +5,6 @@ import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -16,9 +15,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 import org.json.JSONObject;
 
@@ -384,56 +385,164 @@ public class Army {
 		private HashMap<Unidade, TroopLevelComboBox> level3;
 		private HashMap<Unidade, TroopLevelComboBox> level10;
 		
-		public ArmyEditPanel(OnChange onChange, boolean nivel3, 
-				boolean nivel10, Unidade... unidades) {
+		private GridBagLayout layout;
+		
+		private boolean hasNames, hasAmount, hasNivel3, hasNivel10;
+		private OnChange onChange;
+		
+		public ArmyEditPanel(OnChange onChange, boolean hasHeader, 
+				boolean hasNames, boolean hasAmount,
+				boolean hasNivel3, boolean hasNivel10, Unidade... unidades) {
 			
 			quantities = new HashMap<Unidade, IntegerFormattedTextField>();
 			level3 = new HashMap<Unidade, TroopLevelComboBox>();
 			level10 = new HashMap<Unidade, TroopLevelComboBox>();
 			
+			this.hasNames = hasNames;
+			this.hasAmount = hasAmount;
+			this.hasNivel3 = hasNivel3;
+			this.hasNivel10 = hasNivel10;
+			this.onChange = onChange;
+			
+			setLayout();
+			
 			setOpaque(false);
 			
-	        GridBagLayout layout = new GridBagLayout();
-	        layout.columnWidths = new int[]{,};
-	        layout.rowHeights = new int[]{20};
-	        layout.columnWeights = new double[]{1, Double.MIN_VALUE};
-	        layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-	        setLayout(layout);
+	        setLayout(new GridBagLayout());
 	        
 	        GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(0, 0, 0, 0);
 	        c.gridx = 0;
-			c.gridy = -1;
+			c.gridy = 0;
 	        c.gridwidth = 1;
 	        c.anchor = GridBagConstraints.EAST;
 	        c.fill = GridBagConstraints.BOTH;
 			
-	        Unidade[] values = unidades;
+	        if (hasHeader) {
+	        	c.insets = new Insets(0, 0, 5, 0);
+	        	add(headerPanel(), c);
+	        	c.gridy++;
+	        }
+	        
+	        c.insets = new Insets(0, 0, 0, 0);
+	        add(mainPanel(unidades), c);
+		}
+		
+		private void setLayout() {
+			
+			ArrayList<Integer> widths = new ArrayList<Integer>();
+			if (hasNames)
+				widths.add(125);
+			if (hasAmount)
+				widths.add(100);
+			if (hasNivel3)
+				widths.add(40);
+			if (hasNivel10)
+				widths.add(40);
+			
+			int[] widthsArray = new int[widths.size()];
+			
+			for (int i = 0; i < widthsArray.length; i++)
+				widthsArray[i] = widths.get(i);
+			
+			layout = new GridBagLayout();
+		    layout.columnWidths = widthsArray;
+		    layout.rowHeights = new int[]{20};
+		    layout.columnWeights = new double[]{1, Double.MIN_VALUE};
+		    layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+			
+		}
+		
+		private JPanel headerPanel() {
+			
+			JPanel panel = new JPanel();
+			panel.setBackground(Cores.FUNDO_ESCURO);
+			panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+
+			// Custom height for header panel
+			GridBagLayout layout = this.layout;
+			layout.rowHeights = new int[] {25};
+			panel.setLayout(layout);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			c.anchor = GridBagConstraints.CENTER;
+			
+			if (hasNames)
+				panel.add(new JLabel("Unidade"), c);
+			
+			if (hasAmount) {
+				c.gridx++;
+				panel.add(new JLabel("Quantidade"), c);
+			}
+			
+			if (hasNivel3 && hasNivel10) {
+				c.gridx++;
+				panel.add(new JLabel("<html><center>Nível<br>(3)</center></html>"), c);
+				c.gridx++;
+				panel.add(new JLabel("<html><center>Nível<br>(10)</center></html>"), c);
+			} else {
+				if (hasNivel3) {
+					c.gridx++;
+					panel.add(new JLabel("Nível"), c);
+				}
+			
+				if (hasNivel10) {
+					c.gridx++;
+					panel.add(new JLabel("Nível"), c);
+				}
+			}
+			
+			return panel;
+		}
+		
+		private JPanel mainPanel(Unidade... unidades) {
+			
+			JPanel panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			panel.setOpaque(false);
+			panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+			
+			Unidade[] values = unidades;
 			if (values.length == 0)
 				values = Unidade.values();
 			
-			for (Unidade i : values) {
+			for (int i = 0; i < values.length; i++) {
 				
-				JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-				panel.setBackground(Cores.getAlternar(c.gridy));
+				Unidade u = values[i];
 				
-				JLabel label = new JLabel(i.toString());
+				JPanel unitPanel = new JPanel(layout);
+				unitPanel.setBackground(Cores.getAlternar(i));
+				
+				GridBagConstraints panelC = new GridBagConstraints();
+				panelC.insets = new Insets(5, 5, 5, 5);
+				panelC.gridx = 0;
+				panelC.gridy = 0;
+				panelC.fill = GridBagConstraints.BOTH;
+				
+				JLabel label = new JLabel(u.toString());
 				label.setHorizontalAlignment(SwingConstants.LEADING);
-				panel.add(label);
-
-				IntegerFormattedTextField txt = new IntegerFormattedTextField(getQuantidade(i)) {
+				if (hasNames) {
+					unitPanel.add(label, panelC);
+					panelC.gridx++;
+				}
+				
+				IntegerFormattedTextField txt = new IntegerFormattedTextField(getQuantidade(u)) {
 					public void go() {
 						onChange.run();
 					}
 				};
 				
-				quantities.put(i, txt);
-
-				panel.add(txt);
+				quantities.put(u, txt);
+	
+				if (hasAmount) {
+					unitPanel.add(txt, panelC);
+					panelC.gridx++;
+				}
 				
 				TroopLevelComboBox combo3 = new TroopLevelComboBox(3, panel.getBackground());
-				combo3.setSelectedItem(Army.this.getTropa(i).nivel3);
-				level3.put(i, combo3);
+				combo3.setSelectedItem(Army.this.getTropa(u).nivel3);
+				level3.put(u, combo3);
 					
 				combo3.addItemListener(new ItemListener() {
 					public void itemStateChanged(ItemEvent e) {
@@ -441,13 +550,14 @@ public class Army {
 					}
 				});
 				
-				if (nivel3)
-					panel.add(combo3);
-				
+				if (hasNivel3) {
+					unitPanel.add(combo3, panelC);
+					panelC.gridx++;
+				}
 				
 				TroopLevelComboBox combo10 = new TroopLevelComboBox(10, panel.getBackground());
-				combo10.setSelectedItem(Army.this.getTropa(i).nivel10);
-				level10.put(i, combo10);
+				combo10.setSelectedItem(Army.this.getTropa(u).nivel10);
+				level10.put(u, combo10);
 					
 				combo10.addItemListener(new ItemListener() {
 					public void itemStateChanged(ItemEvent e) {
@@ -455,13 +565,16 @@ public class Army {
 					}
 				});
 				
-				if (nivel10)
-					panel.add(combo10);
+				if (hasNivel10){
+					unitPanel.add(combo10, panelC);
+					panelC.gridx++;
+				}
 				
-				c.gridy++;
-				add(panel, c);
+				panel.add(unitPanel);
 			}
-	        
+			
+			return panel;
+			
 		}
 		
 		public void setValues() {

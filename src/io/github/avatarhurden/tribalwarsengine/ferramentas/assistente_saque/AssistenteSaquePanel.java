@@ -5,7 +5,9 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.NoIntervalException;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.SameDateException;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.EditPanelCreator;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -45,6 +47,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 	
 	private Map<Unidade, JLabel> mapRecomendado = new HashMap<Unidade, JLabel>();
 	
+	private Army army;
 	
 	public AssistenteSaquePanel () {
 		
@@ -83,6 +86,8 @@ public class AssistenteSaquePanel extends Ferramenta{
 			}
 		};
 		
+		army = new Army();
+		
 		makePanelRecomendado();
 		panelRecomendado.setVisible(false);
 		
@@ -109,7 +114,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridwidth = 2;
 		c.gridheight = 2;
 		c.anchor = GridBagConstraints.NORTH;
-		add(panelUnidades,c);
+		add(army.new ArmyEditPanel(null, true, true, true, false, false),c);
 		
 		// Add recomended units panel
 		JPanel container = new JPanel(new GridLayout(1,0));

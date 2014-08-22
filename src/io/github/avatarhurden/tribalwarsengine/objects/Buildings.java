@@ -95,7 +95,7 @@ public class Buildings {
 		private HashMap<Edifício, EdifícioFormattedTextField> map;
 		GridBagLayout layout;
 		
-		public BuildingsEditPanel(final OnChange onChange, boolean hasHeader, boolean hasNames,
+		public BuildingsEditPanel(OnChange onChange, boolean hasHeader, boolean hasNames,
 				boolean hasLevels, Edifício... edifícios) {
 			
 			map = new HashMap<Edifício, EdifícioFormattedTextField>();

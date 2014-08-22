@@ -9,7 +9,6 @@ import io.github.avatarhurden.tribalwarsengine.objects.Scope;
 import io.github.avatarhurden.tribalwarsengine.objects.Scope.ScopeSelectionPanel;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -352,7 +351,7 @@ public class EditPanelCreator extends JPanel {
 			super(key);
 			
 			army = gson.fromJson(json.get(key).toString(), Army.class);
-			panel = army.new ArmyEditPanel(onChange, true, true);
+			panel = army.new ArmyEditPanel(onChange, false, true, true, true, true);
 			
 			add(panel);
 			
