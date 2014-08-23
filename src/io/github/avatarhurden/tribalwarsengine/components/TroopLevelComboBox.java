@@ -2,7 +2,6 @@ package io.github.avatarhurden.tribalwarsengine.components;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;

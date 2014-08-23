@@ -79,7 +79,7 @@ public class Updater implements FileDownloaderDelegate {
     @Override
     public void didFinishDownload(FileDownloader fileDownloader) {
         JOptionPane.showMessageDialog(MainWindow.getInstance(), "O download foi concluido com sucesso. Por favor, reinicie o Tribal Wars Engine!", "Download concluido!", JOptionPane.INFORMATION_MESSAGE);
-        System.exit(-1);
+        System.exit(0);
     }
 
     @Override

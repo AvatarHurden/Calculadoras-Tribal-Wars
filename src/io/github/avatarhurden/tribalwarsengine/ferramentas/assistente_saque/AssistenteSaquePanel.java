@@ -67,6 +67,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		onChange = new OnChange() {
 			public void run() {
 				armyEdit.saveValues();
+				panelIntervalo.getBuildingsEdit().saveValues();
 				editIntervalObject();
 				editHorárioObject();
 			}
@@ -74,18 +75,8 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		cálculo = new Cálculo();
 		
-//		panelUnidades = new PanelUnidade() {
-//			protected void doAction() {
-//				editIntervalObject();
-//				editHorárioObject();
-//			}
-//		};
-		panelIntervalo = new PanelIntervalo() {
-			protected void doAction() {
-				editIntervalObject();
-				editHorárioObject();
-			}
-		};
+		panelIntervalo = new PanelIntervalo(onChange);
+		
 		panelHorário = new PanelHorário() {
 			protected void doAction() {
 				editIntervalObject();
@@ -110,7 +101,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		// Add modeloAldeia for interval
 		c.gridx += 2; // empty space for recommendations
-		add(tools.addModelosAldeiasPanel(true, panelIntervalo.getEdifícios()), c);
+		add(tools.addModelosAldeiasPanel(true, panelIntervalo.getBuildingsEdit()), c);
 		
 		// Add modeloAldeia for time
 		c.gridx += 2;
@@ -214,7 +205,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridy++;
 		panelRecomendado.add(buttonPanel, c);
 		
-		for (Tropa i : army.getTropas()) {
+		for (Unidade i : army.getUnidades()) {
 			
 			// Adds the JLabel
 			JPanel unitQuantity = new JPanel();
@@ -222,7 +213,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 			
 			unitQuantity.setPreferredSize(new Dimension(panelRecomendado.getPreferredSize().width, 30));
 			
-			mapRecomendado.put(i.getUnidade(), new JLabel(" "));
+			mapRecomendado.put(i, new JLabel(" "));
 			unitQuantity.add(mapRecomendado.get(i));
 			
 			// Changes the font color to gray
@@ -269,7 +260,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 
 	private void editIntervalObject() {
 		
-		cálculo.setProduçãoEArmazenamento(panelIntervalo.getEdifícios());
+		cálculo.setProduçãoEArmazenamento(panelIntervalo.getBuildings());
 		cálculo.setArmy(army);
 		
 		cálculo.setIntervalo();

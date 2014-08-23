@@ -11,6 +11,7 @@ import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,10 +41,7 @@ public class Army {
 	private List<Tropa> tropas = new ArrayList<Tropa>();
 	
 	public Army() {
-		
-		for (Unidade i : Unidade.values())
-			tropas.add(new Tropa(i, 0));
-		
+		this(Arrays.asList(Unidade.values()));
 	}
 	
 	public Army(List<Unidade> units) {
@@ -82,25 +80,39 @@ public class Army {
 	 * @param nivel10 - Nível da Unidade em um mundo com pesquisa clássica
 	 */
 	public void addTropa(Unidade unidade, int quantidade, int nivel3, int nivel10) {
+		addTropa(new Tropa(unidade, quantidade, nivel3, nivel10));
+	}
+	
+	public void addTropa(Tropa tropa) {
+		int position = tropas.size()-1;
 		
 		Iterator<Tropa> iter = tropas.iterator();
 		while (iter.hasNext())
-			if (iter.next().unidade.equals(unidade))
+			if (iter.next().unidade.equals(tropa.unidade)) {
+				position = tropas.indexOf(getTropa(tropa.unidade));
 				iter.remove();
+			}
 		
-		tropas.add(new Tropa(unidade, quantidade, nivel3, nivel10));
-		
+		tropas.add(position, tropa);
 	}
 	
 	public List<Tropa> getTropas() {
 		return tropas;
+	}
+	
+	public List<Unidade> getUnidades() {
+		List<Unidade> list = new ArrayList<>();
+		for (Tropa t : tropas)
+			list.add(t.unidade);
+		
+		return list;
 	}
 
 	public int getQuantidade(Unidade i) {
 		return getTropa(i).quantidade;
 	}
 	
-	private Tropa getTropa(Unidade u) {
+	public Tropa getTropa(Unidade u) {
 		for (Tropa t : tropas)
 			if (t.unidade.equals(u))
 				return t;
@@ -466,9 +478,25 @@ public class Army {
 		
 		private GridBagLayout layout;
 		
-		private boolean hasNames, hasAmount, hasNivel3, hasNivel10;
+		private boolean hasHeader, hasNames, hasAmount, hasNivel3, hasNivel10;
 		private OnChange onChange;
 		
+		/**
+		 * Cria um JPanel para edição de um Army. É possível escolher quais 
+		 * componentes ele possui. <p>Caso <code>hasHeader</code> seja <code>false</code>,
+		 * o resto do JPanel não possui uma borda. Caso seja <code>true</code>,
+		 * o header fica localizado a 5px acima das informações, com uma borda em
+		 * volta de cada um. <p>Para que todas as unidades possam ser modificadas
+		 * pelo JPanel, deixar <code>unidades</code> em branco.
+		 * 
+		 * @param onChange
+		 * @param hasHeader
+		 * @param hasNames
+		 * @param hasAmount
+		 * @param hasNivel3
+		 * @param hasNivel10
+		 * @param unidades
+		 */
 		public ArmyEditPanel(OnChange onChange, boolean hasHeader, 
 				boolean hasNames, boolean hasAmount,
 				boolean hasNivel3, boolean hasNivel10, Unidade... unidades) {
@@ -477,6 +505,7 @@ public class Army {
 			level3 = new HashMap<Unidade, TroopLevelComboBox>();
 			level10 = new HashMap<Unidade, TroopLevelComboBox>();
 			
+			this.hasHeader = hasHeader;
 			this.hasNames = hasNames;
 			this.hasAmount = hasAmount;
 			this.hasNivel3 = hasNivel3;
@@ -536,8 +565,7 @@ public class Army {
 			JPanel panel = new JPanel();
 			panel.setBackground(Cores.FUNDO_ESCURO);
 			panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-
-			// Custom height for header panel
+			
 			GridBagLayout layout = this.layout;
 			layout.rowHeights = new int[] {25};
 			panel.setLayout(layout);
@@ -580,7 +608,8 @@ public class Army {
 			JPanel panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 			panel.setOpaque(false);
-			panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+			if (hasHeader)
+				panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 			
 			Unidade[] values = unidades;
 			if (values.length == 0) {
@@ -622,7 +651,7 @@ public class Army {
 					panelC.gridx++;
 				}
 				
-				TroopLevelComboBox combo3 = new TroopLevelComboBox(3, panel.getBackground());
+				TroopLevelComboBox combo3 = new TroopLevelComboBox(3, unitPanel.getBackground());
 				combo3.setSelectedItem(Army.this.getTropa(u).nivel3);
 				level3.put(u, combo3);
 					
@@ -637,7 +666,7 @@ public class Army {
 					panelC.gridx++;
 				}
 				
-				TroopLevelComboBox combo10 = new TroopLevelComboBox(10, panel.getBackground());
+				TroopLevelComboBox combo10 = new TroopLevelComboBox(10, unitPanel.getBackground());
 				combo10.setSelectedItem(Army.this.getTropa(u).nivel10);
 				level10.put(u, combo10);
 					

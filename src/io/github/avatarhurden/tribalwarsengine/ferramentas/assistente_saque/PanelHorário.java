@@ -41,7 +41,6 @@ public abstract class PanelHorário extends JPanel{
 	
 	private IntegerFormattedTextField[] recursosRestantes = new IntegerFormattedTextField[3];
 	
-	
 	private TimeFormattedJLabel respostaLabel;
 	private JLabel errorMessage;
 	

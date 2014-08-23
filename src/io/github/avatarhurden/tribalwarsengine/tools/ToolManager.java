@@ -1,11 +1,11 @@
 package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
-import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -16,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import config.Lang;
-import database.Edifício;
 import database.Unidade;
 
 /**
@@ -109,10 +108,9 @@ public class ToolManager {
      * @param textFields Map com IntegerFormattedTextField ligados a unidades, para utilizar os Modelos
      * @return Um JPanel com as coisas faladas
      */
-    public JPanel addModelosAldeiasPanel(boolean edit,
-                                         Map<Edifício, EdifícioFormattedTextField> textFields) {
+    public JPanel addModelosAldeiasPanel(boolean edit, BuildingsEditPanel buildings) {
 
-        ModeloAldeiasPanel panel = new ModeloAldeiasPanel(edit, textFields, this);
+        ModeloAldeiasPanel panel = new ModeloAldeiasPanel(edit, buildings, this);
 
         aldeiasPanelList.add(panel);
 

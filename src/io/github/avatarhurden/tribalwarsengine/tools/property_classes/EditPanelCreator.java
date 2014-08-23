@@ -8,7 +8,6 @@ import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPa
 import io.github.avatarhurden.tribalwarsengine.objects.Scope;
 import io.github.avatarhurden.tribalwarsengine.objects.Scope.ScopeSelectionPanel;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -374,9 +373,7 @@ public class EditPanelCreator extends JPanel {
 			super(key);
 			
 			builds = gson.fromJson(json.get(key).toString(), Buildings.class);
-			panel = builds.new BuildingsEditPanel(onChange, true, true, true);
-			
-			setLayout(new BorderLayout());
+			panel = builds.new BuildingsEditPanel(onChange, false, true, true);
 			
 			add(panel);
 			
@@ -384,7 +381,7 @@ public class EditPanelCreator extends JPanel {
 		
 		protected void setValue() {
 			
-			panel.setValue();
+			panel.saveValues();
 			json.put(key, new JSONObject(gson.toJson(builds)));
 		}
 			
@@ -497,9 +494,9 @@ public class EditPanelCreator extends JPanel {
 	        setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 
 	        GridBagLayout layout = new GridBagLayout();
-	        layout.columnWidths = new int[]{,};
+	        layout.columnWidths = new int[]{};
 	        layout.rowHeights = new int[]{20};
-	        layout.columnWeights = new double[]{1, Double.MIN_VALUE};
+	        layout.columnWeights = new double[]{1, 1};
 	        layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 	        setLayout(layout);
 	        

@@ -31,9 +31,9 @@ public class Main {
 
     private static JFrame currentFrame;
     private SystemIcon trayicon;
-
+    
     public static void main(String[] args) {
-        new Main().init(args);
+    	new Main().init(args);
     }
 
     /**

@@ -1,10 +1,9 @@
 package io.github.avatarhurden.tribalwarsengine.tools;
 
-import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.managers.VillageModelManager;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.VillageModel;
 
 import java.awt.Dimension;
@@ -14,8 +13,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,20 +23,18 @@ import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
 import database.Cores;
-import database.Edifício;
 
 @SuppressWarnings("serial")
 public class ModeloAldeiasPanel extends JPanel {
 
-    private Map<Edifício, EdifícioFormattedTextField> mapTextFields;
+    private BuildingsEditPanel buildingsEdit;
 
     private JPopupMenu popup;
     private ToolManager manager;
 
-    public ModeloAldeiasPanel(boolean edit,Map<Edifício, EdifícioFormattedTextField> textFields,
-    		ToolManager manager) {
+    public ModeloAldeiasPanel(boolean edit, BuildingsEditPanel buildingsEdit, ToolManager manager) {
 
-        mapTextFields = textFields;
+        this.buildingsEdit = buildingsEdit;
         this.manager = manager;
 
         makePopupMenu();
@@ -136,16 +131,8 @@ public class ModeloAldeiasPanel extends JPanel {
 
             public void actionPerformed(ActionEvent a) {
             	
-                if (mapTextFields != null) {
-                		
-                    // Edits all the textfields according to the model
-                    for (Entry<Edifício, EdifícioFormattedTextField> e : mapTextFields.entrySet()) {
-                        System.out.println(i.getBuildings().getLevel(e.getKey()));
-                    	e.getValue().setText(
-                                String.valueOf(i.getBuildings().getLevel(e.getKey())));
-                    }
-
-                }
+            	
+            	buildingsEdit.setValues(i.getBuildings());
 
             }
         });
@@ -170,15 +157,8 @@ public class ModeloAldeiasPanel extends JPanel {
 
                 try {
                 	
-                	Buildings predios = new Buildings();
-                    for (Edifício i : Edifício.values())
-                        if (mapTextFields != null && mapTextFields.containsKey(i))
-                        	predios.addBuilding(i, mapTextFields.get(i).getValue().intValue());
-                        else
-                        	predios.addBuilding(i, 0);
-                    
                     VillageModel modelo = new VillageModel();
-                    modelo.setBuildings(predios);
+                    modelo.setBuildings(buildingsEdit.getBuildings());
                     
                     new EditDialog(VillageModelManager.get().getList(),
                     		VillageModelManager.get().getFieldNames(),

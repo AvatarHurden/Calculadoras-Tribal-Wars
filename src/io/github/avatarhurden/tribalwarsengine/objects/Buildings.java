@@ -3,7 +3,6 @@ package io.github.avatarhurden.tribalwarsengine.objects;
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,15 +12,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import org.json.JSONObject;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
-import config.Lang;
 import database.Cores;
 import database.Edifício;
 
@@ -36,52 +33,161 @@ public class Buildings {
 	private ArrayList<Building> buildings = new ArrayList<Building>();;
 	
 	public Buildings() {
+		this(Arrays.asList(Edifício.values()));
+	}
+	
+	public Buildings(List<Edifício> list) {
 		
-		for (Edifício e : Edifício.values())
+		for (Edifício e : list)
 			buildings.add(new Building(e, 0));
 		
 	}
 	
 	public void addBuilding(Edifício ed, int nível) {
+		addBuilding(new Building(ed, nível));
+	}
+	
+	public void addBuilding(Building b) {
+		int position = buildings.size()-1;
 		
 		Iterator<Building> iter = buildings.iterator();
 		while (iter.hasNext())
-			if (iter.next().ed.equals(ed))
+			if (iter.next().edifício.equals(b.edifício)) {
+				position = buildings.indexOf(getBuilding(b.edifício));
 				iter.remove();
+			}
 		
-		buildings.add(new Building(ed, nível));
+		buildings.add(position, b);
 		
+	}
+	
+	public boolean contains(Edifício u) {
+		for (Building t : buildings)
+			if (t.edifício.equals(u))
+				return true;
+		
+		return false;
+	}
+	
+	public Building getBuilding(Edifício ed) {
+		for (Building b : buildings)
+			if (b.edifício.equals(ed))
+				return b;
+		
+		return null;
 	}
 	
 	public int getLevel(Edifício ed) {
 		
 		for (Building b : buildings)
-			if (b.ed.equals(ed))
+			if (b.edifício.equals(ed))
 				return b.nivel;
 		
 		return -1;
 	}
 	
+	public List<Edifício> getEdifícios() {
+		List<Edifício> list = new ArrayList<>();
+		for (Building t : buildings)
+			list.add(t.edifício);
+		
+		return list;
+	}
+	
+	/**
+	 * Se o objeto possui Bosque, retorna a produção de madeira do mesmo, 
+	 * em recursos/hora.
+	 * <p> Caso não possua, retorna 0.
+	 */
+	public int getWoodProduction() {
+		if (buildings.contains(getBuilding(Edifício.BOSQUE))) {
+			if (getLevel(Edifício.BOSQUE) == 0)
+				return 5;
+			else
+				return (int) Math.round(
+					30 * Math.pow(1.163118, getLevel(Edifício.BOSQUE)-1));
+		} else
+			return 0;
+	}
+	
+	/**
+	 * Se o objeto possui Poço de Argila, retorna a produção de argila do mesmo, 
+	 * em recursos/hora.
+	 * <p> Caso não possua, retorna 0.
+	 */
+	public int getClayProduction() {
+		if (buildings.contains(getBuilding(Edifício.POÇO_DE_ARGILA))) {
+			if (getLevel(Edifício.POÇO_DE_ARGILA) == 0)
+				return 5;
+			else
+				return (int) Math.round(
+					30 * Math.pow(1.163118, getLevel(Edifício.POÇO_DE_ARGILA)-1));
+		} else
+			return 0;
+	}
+	
+	/**
+	 * Se o objeto possui Mina de Ferro, retorna a produção de ferro do mesmo, 
+	 * em recursos/hora.
+	 * <p> Caso não possua, retorna 0.
+	 */
+	public int getIronProduction() {
+		if (buildings.contains(getBuilding(Edifício.MINA_DE_FERRO))) {
+			if (getLevel(Edifício.MINA_DE_FERRO) == 0)
+				return 5;
+			else
+				return (int) Math.round(
+					30 * Math.pow(1.163118, getLevel(Edifício.MINA_DE_FERRO)-1));
+		} else
+			return 0;
+	}
+	
+	/**
+	 * Retorna todo o armazenamento da aldeia. Caso <code>usaEsconderijo</code>
+	 * seja verdadeiro, desconta a quantidade que fica escondida.
+	 * @param usaEsconderijo
+	 */
+	public int getArmazenamento(boolean usaEsconderijo) {
+		
+		int armazenamento;
+		
+		if (buildings.contains(getBuilding(Edifício.ARMAZÉM))) {
+			if (getLevel(Edifício.ARMAZÉM) == 0)
+				armazenamento = 0;
+			else
+				armazenamento = (int) Math.round(
+					1000 * Math.pow(1.2294934, getLevel(Edifício.ARMAZÉM)-1));
+		} else
+			return 0;
+		
+		if (usaEsconderijo && buildings.contains(getBuilding(Edifício.ESCONDERIJO))
+				&& getLevel(Edifício.ESCONDERIJO) > 0)
+			armazenamento -= (int) Math.round(
+					150 * Math.pow(1.3333333, getLevel(Edifício.ESCONDERIJO)-1));
+		
+		return armazenamento;
+	}
+	
 	private class Building {
 		
-		private Edifício ed;
+		private Edifício edifício;
 		private int nivel;
 		
 		private Building(Edifício ed, int nivel) {
-			this.ed = ed;
+			this.edifício = ed;
 			this.nivel = nivel;
 		}
 		
 		private int getCustoFerroNext() {
-			return ed.getCustoFerro(nivel+1);
+			return edifício.getCustoFerro(nivel+1);
 		}
 		
 		private int getCustoArgilaNext() {
-			return ed.getCustoArgila(nivel+1);
+			return edifício.getCustoArgila(nivel+1);
 		}
 		
 		private int getCustoMadeiraNext() {
-			return ed.getCustoMadeira(nivel+1);
+			return edifício.getCustoMadeira(nivel+1);
 		}
 		
 	}
@@ -93,87 +199,52 @@ public class Buildings {
 	public class BuildingsEditPanel extends JPanel {
 		
 		private HashMap<Edifício, EdifícioFormattedTextField> map;
-		GridBagLayout layout;
+		private GridBagLayout layout;
+		
+		private boolean hasHeader, hasNames, hasLevels;
+		private OnChange onChange;
 		
 		public BuildingsEditPanel(OnChange onChange, boolean hasHeader, boolean hasNames,
 				boolean hasLevels, Edifício... edifícios) {
 			
 			map = new HashMap<Edifício, EdifícioFormattedTextField>();
 			
-		    layout = new GridBagLayout();
-	        layout.columnWidths = new int[]{};
-	        layout.rowHeights = new int[]{ 20
-	        		
-	        };
-	        layout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-	        layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-	        setLayout(layout);
+			this.onChange = onChange;
+			this.hasHeader = hasHeader;
+			this.hasNames = hasNames;
+			this.hasLevels = hasLevels;
+			
+			setOpaque(false);
+			
+			setLayout();
+
+			setLayout(new GridBagLayout());
 	        
 	        GridBagConstraints c = new GridBagConstraints();
-			c.gridx = 0;
-	        c.gridy = 0;
-	        c.fill = GridBagConstraints.HORIZONTAL;
-	        
+	        c.gridx = 0;
+			c.gridy = 0;
+	        c.gridwidth = 1;
+	        c.anchor = GridBagConstraints.EAST;
+	        c.fill = GridBagConstraints.BOTH;
+	
 	        if (hasHeader) {
 	        	c.insets = new Insets(0, 0, 5, 0);
 	        	add(headerPanel(), c);
-	        	c.gridy++;
-	        	c.insets = new Insets(0, 0, 0, 0);
+		        c.gridy++;
 	        }
 	        
-	        List<Edifício> values = new ArrayList<Edifício>(Arrays.asList(edifícios));
-	        if (values.isEmpty())
-	        	values.addAll(Arrays.asList(Edifício.values()));
-	        
-	        for (Edifício i : values) {
-
-				JPanel panel = new JPanel(layout);
-				panel.setBackground(Cores.getAlternar(c.gridy));
-				
-				GridBagConstraints panelC = new GridBagConstraints();
-				panelC.insets = new Insets(5, 5, 5, 5);
-				panelC.gridx = 0;
-				panelC.gridy = 0;
-				panelC.fill = GridBagConstraints.BOTH;
-				
-				JLabel label = new JLabel(i.toString());
-				
-				if (values.contains(Edifício.ACADEMIA_1NÍVEL) && values.contains(Edifício.ACADEMIA_3NÍVEIS)) {
-				
-					if (i.equals(Edifício.ACADEMIA_1NÍVEL))
-						label.setText(i.toString() + " (1 nível)");
-					else if (i.equals(Edifício.ACADEMIA_3NÍVEIS))
-						label.setText(i.toString() + " (3 níveis)");
-						
-				}
-				
-				if (hasNames) {
-					panel.add(label, panelC);
-					panelC.gridx++;
-				}
-				
-				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(i, getLevel(i)) {
-					public void go() {
-						onChange.run();
-					}
-				};
-				
-				if (hasLevels) {
-					panel.add(txt, panelC);
-					panelC.gridx++;
-				}
-				map.put(i, txt);
-			
-				add(panel, c);
-				c.gridy++;
-			}
-	        
+	        c.insets = new Insets(0, 0, 0, 0);
+	        add(mainPanel(edifícios), c);
+	       
 		}
 		
-		public void setValue() {
+		private void setLayout() {
 			
-			for (Edifício i : map.keySet()) 
-				addBuilding(i, map.get(i).getValueInt());
+			layout = new GridBagLayout();
+		    layout.columnWidths = new int[] {};
+		    layout.rowHeights = new int[]{20};
+		    layout.columnWeights = new double[]{1, Double.MIN_VALUE};
+		    layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 			
 		}
 		
@@ -197,6 +268,100 @@ public class Buildings {
 			panel.add(new JLabel("Nível"), c);
 			
 			return panel;
+		}
+		
+		private JPanel mainPanel(Edifício... edifícios) {
+			
+			JPanel panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			panel.setOpaque(false);
+			if (hasHeader)
+				panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+			
+			Edifício[] values = edifícios;
+			if (values.length == 0) {
+				values = new Edifício[buildings.size()];
+				for (int i = 0; i < buildings.size(); i++)
+					values[i] = buildings.get(i).edifício;
+			}
+			
+			for (int i = 0; i < values.length; i++) {
+
+				Edifício ed = values[i];
+				
+				JPanel edPanel = new JPanel(layout);
+				edPanel.setBackground(Cores.getAlternar(i));
+				
+				GridBagConstraints panelC = new GridBagConstraints();
+				panelC.insets = new Insets(5, 5, 5, 5);
+				panelC.gridx = 0;
+				panelC.gridy = 0;
+				panelC.fill = GridBagConstraints.BOTH;
+				
+				JLabel label = new JLabel(ed.toString());
+				
+				if (Buildings.this.contains(Edifício.ACADEMIA_1NÍVEL) 
+						&& Buildings.this.contains(Edifício.ACADEMIA_3NÍVEIS)) {
+				
+					if (ed.equals(Edifício.ACADEMIA_1NÍVEL))
+						label.setText(ed.toString() + " (1 nível)");
+					else if (ed.equals(Edifício.ACADEMIA_3NÍVEIS))
+						label.setText(ed.toString() + " (3 níveis)");
+						
+				}
+				
+				if (hasNames) {
+					edPanel.add(label, panelC);
+					panelC.gridx++;
+				}
+				
+				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(ed, getLevel(ed)) {
+					public void go() {
+						onChange.run();
+					}
+				};
+				
+				if (hasLevels) {
+					edPanel.add(txt, panelC);
+					panelC.gridx++;
+				}
+				map.put(ed, txt);
+			
+				panel.add(edPanel);
+			}
+		       
+			return panel;
+			
+		}
+		
+		public void saveValues() {
+			
+			for (Edifício i : map.keySet()) 
+				addBuilding(i, map.get(i).getValueInt());
+			
+		}
+		
+		public void resetComponents() {
+			
+			for (EdifícioFormattedTextField t : map.values())
+				t.setText("");
+			
+		}
+		
+		public void setValues(Buildings buildings) {
+			
+			resetComponents();
+			
+			for (Building t : buildings.buildings)
+				if (t.nivel > 0)
+					map.get(t.edifício).setText(String.valueOf(t.nivel));	
+				
+			saveValues();
+			
+		}
+		
+		public Buildings getBuildings() {
+			return Buildings.this;
 		}
 		
 	}

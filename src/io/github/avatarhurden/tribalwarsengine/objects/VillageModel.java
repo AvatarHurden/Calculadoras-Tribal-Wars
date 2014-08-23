@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import database.Edifício;
+
 public class VillageModel implements EditableObject {
 	
 	private JSONObject json;
@@ -76,9 +78,17 @@ public class VillageModel implements EditableObject {
     	return this;
     }
     
-    public VillageModel setBuildings(Buildings builds) {
-    	set("buildings", new JSONObject(gson.toJson(builds)));
+    public VillageModel setBuildings(Buildings buildings) {
+    	
+    	Buildings toSave = new Buildings();
+    	for (Edifício u : toSave.getEdifícios()) {
+    		if (buildings.contains(u))
+    			toSave.addBuilding(buildings.getBuilding(u));
+    	}
+    	
+    	set("buildings", new JSONObject(gson.toJson(toSave)));
     	return this;
+        
     }
     
     public VillageModel setScope(Scope escopo) {

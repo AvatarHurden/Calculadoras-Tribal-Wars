@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import database.Unidade;
+
 /**
  * Classe que representa modelos de exércitos
  * 
@@ -83,7 +85,14 @@ public class ArmyModel implements EditableObject {
     }
     
     public ArmyModel setArmy(Army army) {
-    	set("army", new JSONObject(gson.toJson(army)));
+    	
+    	Army toSave = new Army();
+    	for (Unidade u : toSave.getUnidades()) {
+    		if (army.contains(u))
+    			toSave.addTropa(army.getTropa(u));
+    	}
+    	
+    	set("army", new JSONObject(gson.toJson(toSave	)));
     	return this;
     }
     

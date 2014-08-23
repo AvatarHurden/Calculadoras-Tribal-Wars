@@ -1,14 +1,16 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import database.Cores;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
 
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
+import database.Cores;
 
 /**
  * @author Wesley Nascimento

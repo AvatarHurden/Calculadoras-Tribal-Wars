@@ -1,17 +1,18 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
-import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,18 +31,16 @@ import database.Edifício;
  *
  */
 @SuppressWarnings("serial")
-public abstract class PanelIntervalo extends JPanel{
+public class PanelIntervalo extends JPanel{
 
 	private CoordenadaPanel coordenadas;
-	private JPanel edifífcioPanel, nívelPanel;
+	private Buildings buildings;
+	private BuildingsEditPanel buildingsEdit;
 	
 	private TimeFormattedJLabel respostaLabel;
 	private JLabel errorMessage;
 	
-	private Map<Edifício, EdifícioFormattedTextField> edificios = 
-			new HashMap<Edifício, EdifícioFormattedTextField>();
-	
-	protected PanelIntervalo() {
+	protected PanelIntervalo(OnChange onChange) {
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0 };
@@ -57,57 +56,29 @@ public abstract class PanelIntervalo extends JPanel{
 		c.gridy = 0;
 		c.gridx = 0;
 		
+		List<Edifício> edifícioList = new ArrayList<Edifício>();
+		edifícioList.add(Edifício.BOSQUE);
+		edifícioList.add(Edifício.POÇO_DE_ARGILA);
+		edifícioList.add(Edifício.MINA_DE_FERRO);
+		edifícioList.add(Edifício.ARMAZÉM);
+		edifícioList.add(Edifício.ESCONDERIJO);
+		
+		buildings = new Buildings(edifícioList);
+		buildingsEdit = buildings.new BuildingsEditPanel(onChange, true, true, true);
+		
 		// Adds the village coordinates
 		coordenadas = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
 			public void go() {
-				doAction();
+				onChange.run();
 			}
 		};
 		
 		c.gridwidth = 2;
 		c.insets = new Insets(0, 0, 10, 0);
 		add(coordenadas, c);
-		
-		// Adding "Unidades" panel
-		
-		edifífcioPanel= new JPanel();
-		edifífcioPanel.add(new JLabel(Lang.Edificio.toString()));
 	
-		edifífcioPanel.setBackground(Cores.FUNDO_ESCURO);
-		edifífcioPanel.setBorder(new MatteBorder(1, 1, 1, 0,Cores.SEPARAR_ESCURO));
-				
-		c.gridwidth = 1;
-		c.fill = GridBagConstraints.BOTH;
-		c.insets = new Insets(0, 0, 0, 0);
 		c.gridy++;
-		add(edifífcioPanel, c);
-				
-		// Adding "Quantidades" panel
-			
-		nívelPanel = new JPanel();
-		nívelPanel.add(new JLabel(Lang.Nivel.toString()));
-			
-		nívelPanel.setBackground(Cores.FUNDO_ESCURO);
-		nívelPanel.setBorder(new MatteBorder(1, 0, 1, 1,Cores.SEPARAR_ESCURO));
-		
-		c.gridx++;
-		add(nívelPanel, c);
-			
-		// Adding the buildings
-		c.gridy++;
-		addBuildingPanel(Edifício.BOSQUE, c);
-		
-		c.gridy++;
-		addBuildingPanel(Edifício.POÇO_DE_ARGILA, c);
-		
-		c.gridy++;
-		addBuildingPanel(Edifício.MINA_DE_FERRO, c);
-		
-		c.gridy++;
-		addBuildingPanel(Edifício.ARMAZÉM, c);
-		
-		c.gridy++;
-		addBuildingPanel(Edifício.ESCONDERIJO, c);
+		add(buildingsEdit, c);
 		
 		// Adds the panel with the interval
 		c.gridy++;
@@ -126,47 +97,6 @@ public abstract class PanelIntervalo extends JPanel{
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(10, 0, 0, 0);
 		add(errorMessage, c);
-	}
-	
-	// Cria um painel para o edifício dado
-	private void addBuildingPanel(Edifício ed, GridBagConstraints c) {
-		
-		// Adds the unit name
-		JPanel buildingName = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		buildingName.add(new JLabel(ed.toString()));
-		
-		// Uses the height to determine the color
-		buildingName.setBackground(Cores.getAlternar(c.gridy));
-		if (ed.equals(Edifício.ESCONDERIJO))
-			buildingName.setBorder(new MatteBorder(0, 1, 1, 0,Cores.SEPARAR_ESCURO));
-		else
-			buildingName.setBorder(new MatteBorder(0, 1, 0, 0,Cores.SEPARAR_ESCURO));
-
-		c.gridx = 0;
-		add(buildingName, c);
-				
-		// Adds the IntegerFormattedTextField
-		JPanel buildingLevel = new JPanel();
-				
-		edificios.put(ed, new EdifícioFormattedTextField(ed, 0) {
-			public void go() {
-				doAction();
-			}
-		});
-		buildingLevel.add(edificios.get(ed));
-				
-		buildingLevel.setBackground(Cores.getAlternar(c.gridy));
-		if (ed.equals(Edifício.ESCONDERIJO))
-			buildingLevel.setBorder(
-					new MatteBorder(0, 0, 1, 1,Cores.SEPARAR_ESCURO));
-		else
-			buildingLevel.setBorder(
-				new MatteBorder(0, 0, 0, 1,Cores.SEPARAR_ESCURO));
-		
-				
-		c.gridx++;
-		add(buildingLevel, c);
-		
 	}
 	
 	private JPanel makePanelResposta() {
@@ -198,8 +128,12 @@ public abstract class PanelIntervalo extends JPanel{
 		return panel;
 	}
 	
-	protected Map<Edifício, EdifícioFormattedTextField> getEdifícios() {
-		return edificios;
+	protected Buildings getBuildings() {
+		return buildings;
+	}	
+	
+	protected BuildingsEditPanel getBuildingsEdit() {
+		return buildingsEdit;
 	}
 	
 	/**
@@ -231,16 +165,9 @@ public abstract class PanelIntervalo extends JPanel{
 		
 		coordenadas.reset();
 		
-		for (EdifícioFormattedTextField c : edificios.values())
-			c.setText(" ");
+		buildingsEdit.resetComponents();
 		
 		respostaLabel.setText("");
 		
 	}
-	
-	/**
-	 * Method that is called whenever any component is edited
-	 */
-	protected abstract void doAction();
-	
 }

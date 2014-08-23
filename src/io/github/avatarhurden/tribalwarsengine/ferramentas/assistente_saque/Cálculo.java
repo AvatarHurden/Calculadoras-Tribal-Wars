@@ -1,20 +1,17 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
-import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.Tropa;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import database.Edifício;
 import database.Unidade;
 
 public class Cálculo {
@@ -110,12 +107,12 @@ public class Cálculo {
 				
 		}
 		
-		for (Tropa i : army.getTropas()) {
-			if (!preferência.contains(i.getUnidade()))
-				tropasRecomendadas.addTropa(i.getUnidade(), army.getQuantidade(i.getUnidade()), 1);
+		for (Unidade i : army.getUnidades()) {
+			if (!preferência.contains(i))
+				tropasRecomendadas.addTropa(i, army.getQuantidade(i), 1);
 			// If the 'preferência' broke, puts the remaining things with zero
-			if (!tropasRecomendadas.contains(i.getUnidade()))
-				tropasRecomendadas.addTropa(i.getUnidade(), 0, 1);
+			if (!tropasRecomendadas.contains(i))
+				tropasRecomendadas.addTropa(i, 0, 1);
 		}
 		
 	}
@@ -213,61 +210,12 @@ public class Cálculo {
 	 * e a produção por segundo dos recursos.
 	 * @param Mapa relacionando edifícios aos seus níveis
 	 */
-	protected void setProduçãoEArmazenamento(
-				Map<Edifício, EdifícioFormattedTextField> edifícios) {
+	protected void setProduçãoEArmazenamento(Buildings buildings) {
 		
-		armazenamento = 0;
-		
-		for (Edifício ed : edifícios.keySet()) {
-			
-			
-			switch (ed) {
-			case ARMAZÉM:
-				if (edifícios.get(ed).getValueInt() > 0)
-					armazenamento += 
-						new BigDecimal("1.22949").pow(
-								edifícios.get(ed).getValueInt()-1)
-								.multiply(new BigDecimal("1000").setScale(0, RoundingMode.HALF_EVEN)).intValue();
-				break;
-			case ESCONDERIJO:
-				if (edifícios.get(ed).getValueInt() > 0)
-					armazenamento -= (
-						new BigDecimal("1.3335").pow(
-							edifícios.get(ed).getValueInt()-1).
-							multiply(new BigDecimal("100"))).setScale(0, RoundingMode.HALF_EVEN).intValue();
-				break;
-			// Caso não seja nem armazém nem esconderijo, é um dos
-			// produtores
-			case BOSQUE:
-				if (edifícios.get(ed).getValueInt() == 0)
-					produção[0] = BigDecimal.ZERO;
-				else
-					produção[0] = new BigDecimal("1.16311").pow(
-							edifícios.get(ed).getValueInt()-1)
-							.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);
-
-				break;
-			case POÇO_DE_ARGILA:
-				if (edifícios.get(ed).getValueInt() == 0)
-					produção[1] = BigDecimal.ZERO;
-				else
-					produção[1] = new BigDecimal("1.16311").pow(
-							edifícios.get(ed).getValueInt()-1)
-							.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
-
-				break;
-			case MINA_DE_FERRO:
-				if (edifícios.get(ed).getValueInt() == 0)
-					produção[2] = BigDecimal.ZERO;
-				else
-					produção[2] = new BigDecimal("1.16311").pow(
-							edifícios.get(ed).getValueInt()-1)
-							.multiply(new BigDecimal("30")).setScale(0, RoundingMode.HALF_EVEN);;
-
-				break;
-			default:
-			}
-		}
+		armazenamento = buildings.getArmazenamento(true);
+		produção[0] = new BigDecimal(buildings.getWoodProduction());
+		produção[1] = new BigDecimal(buildings.getClayProduction());
+		produção[2] = new BigDecimal(buildings.getIronProduction());
 		
 		// Changes production from per hour to per millissecond
 		for (int i = 0; i < 3; i++) {
@@ -325,15 +273,6 @@ public class Cálculo {
 			
 		if (armazenamento == 0)
 			throw new NoIntervalException("Sem Armazenamento");
-		
-		errorChecking: {
-			for (BigDecimal i : produção)
-				if (i.compareTo(BigDecimal.ZERO) == 1)
-					break errorChecking;
-			
-			throw new NoIntervalException("<html><div style=\"text-align: center;\">"
-					+ "Sem Produção<br>de Recursos</html>");
-		}
 		
 		return intervalo;
 		
