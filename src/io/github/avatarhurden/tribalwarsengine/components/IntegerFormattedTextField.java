@@ -35,7 +35,7 @@ public abstract class IntegerFormattedTextField extends JTextField {
 
 	// Location on format
 	// TODO make location changeable, depending on language;
-	public NumberFormat numberFormat = NumberFormat
+	private NumberFormat numberFormat = NumberFormat
 			.getNumberInstance(Locale.GERMANY);
 
 	/**

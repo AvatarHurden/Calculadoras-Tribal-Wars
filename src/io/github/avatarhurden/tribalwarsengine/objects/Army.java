@@ -371,47 +371,63 @@ public class Army {
 			this(unidade, quantidade, 1, 1);
 		}
 		
-		private int getAtaque(ItemPaladino item) {
+		public int getAtaque() {
+			return getAtaque(ItemPaladino.NULL);
+		}
+		
+		public int getAtaque(ItemPaladino item) {
 			return unidade.getAtaque(nivel, item) * quantidade;
 		}
 		
-		private int getDefesaGeral(ItemPaladino item) {
+		public int getDefesaGeral() {
+			return getDefesaGeral(ItemPaladino.NULL);
+		}
+	
+		public int getDefesaGeral(ItemPaladino item) {
 			return unidade.getDefGeral(nivel, item) * quantidade;
 		}
 		
-		private int getDefesaCavalaria(ItemPaladino item) {
+		public int getDefesaCavalaria() {
+			return getDefesaCavalaria(ItemPaladino.NULL);
+		}
+		
+		public int getDefesaCavalaria(ItemPaladino item) {
 			return unidade.getDefCav(nivel, item) * quantidade;
 		}
 		
-		private int getDefesaArqueiro(ItemPaladino item) {
+		public int getDefesaArqueiro() {
+			return getDefesaArqueiro(ItemPaladino.NULL);
+		}
+		
+		public int getDefesaArqueiro(ItemPaladino item) {
 			return unidade.getDefArq(nivel, item) * quantidade;
 		}
 		
-		private int getCustoMadeira() {
+		public int getCustoMadeira() {
 			return unidade.getMadeira() * quantidade;
 		}
 		
-		private int getCustoArgila() {
+		public int getCustoArgila() {
 			return unidade.getArgila() * quantidade;
 		}
 		
-		private int getCustoFerro() {
+		public int getCustoFerro() {
 			return unidade.getFerro() * quantidade;
 		}
 		
-		private int getPopulação() {
+		public int getPopulação() {
 			return unidade.getPopulação() * quantidade;
 		}
 		
-		private int getSaque() {
+		public int getSaque() {
 			return unidade.getSaque() * quantidade;
 		}
 		
-		private int getTempoProdução() {
+		public int getTempoProdução() {
 			return unidade.getTempoDeProdução() * quantidade * 1000;
 		}
 		
-		private double getVelocidade() {
+		public double getVelocidade() {
 			if (quantidade == 0)
 				return 0;
 			else
@@ -420,7 +436,7 @@ public class Army {
 						* WorldManager.get().getSelectedWorld().getUnitModifier();
 		}
 		
-		private UnidadeTipo getTipo() {
+		public UnidadeTipo getTipo() {
 			return unidade.getType();
 		}
 		
@@ -554,7 +570,7 @@ public class Army {
 			
 			layout = new GridBagLayout();
 		    layout.columnWidths = widthsArray;
-		    layout.rowHeights = new int[]{20};
+		    layout.rowHeights = new int[]{ 30 };
 		    layout.columnWeights = new double[]{1, Double.MIN_VALUE};
 		    layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 			
@@ -565,9 +581,6 @@ public class Army {
 			JPanel panel = new JPanel();
 			panel.setBackground(Cores.FUNDO_ESCURO);
 			panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-			
-			GridBagLayout layout = this.layout;
-			layout.rowHeights = new int[] {25};
 			panel.setLayout(layout);
 			
 			GridBagConstraints c = new GridBagConstraints();
@@ -711,11 +724,12 @@ public class Army {
 			
 			resetComponents();
 			
-			for (Tropa t : army.tropas) {
-				if (t.quantidade > 0)
-					quantities.get(t.unidade).setText(String.valueOf(t.quantidade));	
-				level3.get(t.unidade).setSelectedItem(t.nivel3);
-				level10.get(t.unidade).setSelectedItem(t.nivel10);
+			for (Tropa t : army.tropas)
+				if (getUnidades().contains(t.unidade)) {
+					if (t.quantidade > 0)
+						quantities.get(t.unidade).setText(String.valueOf(t.quantidade));	
+					level3.get(t.unidade).setSelectedItem(t.nivel3);
+					level10.get(t.unidade).setSelectedItem(t.nivel10);
 			}
 			
 			saveValues();

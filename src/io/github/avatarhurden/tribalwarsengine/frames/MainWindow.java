@@ -142,7 +142,7 @@ public class MainWindow extends JFrame {
             return;
         }
 //        addPanel(new RecrutamentoPanel());
-//        addPanel(new DadosDeUnidadePanel());
+        addPanel(new DadosDeUnidadePanel());
 //        addPanel(new PontosPanel());
 //        addPanel(new DistânciaPanel());
 //        addPanel(new OponentesDerrotadosPanel());

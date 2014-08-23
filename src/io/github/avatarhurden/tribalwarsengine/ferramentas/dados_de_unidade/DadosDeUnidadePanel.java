@@ -1,23 +1,32 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade;
 
-import config.Lang;
-import config.Mundo_Reader;
-import database.Cores;
-import database.Unidade;
-import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
+
+import config.Lang;
+import database.Cores;
+import database.Unidade;
 
 @SuppressWarnings("serial")
 public class DadosDeUnidadePanel extends Ferramenta {
@@ -25,14 +34,15 @@ public class DadosDeUnidadePanel extends Ferramenta {
     // List<Unidade> unidadesUtilizadas = new ArrayList<Unidade>();
     // List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
 
-    Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
+    Army army;
+    ArmyEditPanel armyEdit;
+    
+    List<InformaçãoTropaPanel> panelTropaList = new ArrayList<InformaçãoTropaPanel>();
 
-    List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
-
-    Map<String, BigInteger> somaTotal = new HashMap<String, BigInteger>();
-
-    PanelSoma total = new PanelSoma();
-
+    InformaçãoTropaPanel armyInformationPanel;
+    
+    OnChange onChange;
+    
     /**
      * Ferramenta com informações de unidades. Possui:
      * <br>- Ataque
@@ -48,11 +58,29 @@ public class DadosDeUnidadePanel extends Ferramenta {
      */
     public DadosDeUnidadePanel() {
         super(Lang.FerramentaUnidade.toString());
-        setUnidades();
-
-        total.setPanelListAndColor(panelUnidadeList, getNextColor());
-
-        GridBagLayout gridBagLayout = new GridBagLayout();
+        
+        onChange = new OnChange() {
+			public void run() {
+				armyEdit.saveValues();
+				System.out.println(army.getQuantidade(Unidade.LANCEIRO));
+				for (InformaçãoTropaPanel p : panelTropaList)
+					p.changeValues(army.getTropas().get(panelTropaList.indexOf(p)));
+				armyInformationPanel.changeValues(army);
+			}
+		};
+		
+		int levels = WorldManager.get().getSelectedWorld().getResearchSystem().getResearch();
+		
+        army = new Army(Army.getAvailableUnits());
+        armyEdit = army.new ArmyEditPanel(onChange, true, true, true, levels == 3, levels == 10);
+        
+        makePanels();
+        
+        setGUI();
+    }
+    
+    private void setGUI() {
+    	GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{0, 0, 0};
         gridBagLayout.rowHeights = new int[]{0, 0, 0};
         gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
@@ -64,140 +92,180 @@ public class DadosDeUnidadePanel extends Ferramenta {
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        ActionListener action = new ActionListener() {
+        gbc.anchor = GridBagConstraints.WEST;
+        add(tools.addResetPanel(getResetButtonAction()), gbc);
 
-            public void actionPerformed(ActionEvent arg0) {
+        gbc.anchor = GridBagConstraints.EAST;
+        add(tools.addModelosTropasPanel(true, armyEdit), gbc);
+        
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.gridy++;
+        add(armyEdit, gbc);
+        
+        gbc.gridx++;
+        add(dadosPrincipaisPanel(), gbc);
+        
+        gbc.gridx++;
+        add(dadosCustoPanel(), gbc);
+    }
+    
+    private void makePanels() {
+	   
+	   for (int i = 0; i < army.getTropas().size(); i++) {
+		   InformaçãoTropaPanel panel = new InformaçãoTropaPanel(getNextColor());
+		   panel.setBorder(new MatteBorder(0, 1, 0, 1, Cores.SEPARAR_ESCURO));
+		   panelTropaList.add(panel);
+	   }
+	   
+	   // Fixes the border of first and last panel
+	   panelTropaList.get(0).setBorder(new MatteBorder(1, 1, 0, 1, Cores.SEPARAR_ESCURO));
+	   panelTropaList.get(panelTropaList.size()-1).setBorder(new MatteBorder(0, 1, 1, 1, Cores.SEPARAR_ESCURO));
+	   
+	   armyInformationPanel = new InformaçãoTropaPanel(getNextColor());
+	   armyInformationPanel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    }
+    
+    private JPanel dadosPrincipaisPanel() {
+	   
+	   JPanel panel = new JPanel();
+	   panel.setOpaque(false);
+	   panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	   
+	   panel.add(dadosPrincipaisHeader());
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+	   for (InformaçãoTropaPanel u : panelTropaList)
+		   panel.add(u.getDadosPanel());
+	   
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   panel.add(dadosPrincipaisHeader());
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+	   panel.add(armyInformationPanel.getDadosPanel());
+	   
+	   return panel;
+    }
+    
+    private JPanel dadosPrincipaisHeader() {
+	   
+    	JPanel header = new JPanel();
+    	header.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    	header.setBackground(Cores.FUNDO_ESCURO);
+    	header.setLayout(panelTropaList.get(0).getDadosPanel().getLayout());
+	   
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridx = 0;
+    	c.gridy = 0;
+    	c.fill = GridBagConstraints.VERTICAL;
+	   
+    	header.add(new JLabel("Ataque"), c);
+	   
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
+	   
+    	c.gridx++;
+    	header.add(new JLabel("Def. Geral"), c);
+	   
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
+	   
+    	c.gridx++;
+    	header.add(new JLabel("Def. Cav."), c);
+	   
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
+	   
+    	if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO)) {
+    		c.gridx++;
+    		header.add(new JLabel("Def. Arq."), c);
+		   
+    		c.gridx++;
+    		header.add(makeSeparator(), c);
+    	}
+    	
+    	c.gridx++;
+    	header.add(new JLabel("Saque"), c);
+   
+    	return header;	   
+	   
+    }
 
-                for (IntegerFormattedTextField i : mapQuantidades.values())
-                    i.setText("");
+    private JPanel dadosCustoPanel() {
+	   
+    	JPanel panel = new JPanel();
+    	panel.setOpaque(false);
+    	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	  
+    	panel.add(dadosCustoHeader());
+    	panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+    	for (InformaçãoTropaPanel u : panelTropaList)
+    		panel.add(u.getCustoPanel());
+    	
+    	panel.add(Box.createRigidArea(new Dimension(0, 5)));
+    	panel.add(dadosCustoHeader());
+    	panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+    	panel.add(armyInformationPanel.getCustoPanel());
+	   
+    	return panel;
+    }
 
-                for (PanelUnidade p : panelUnidadeList)
-                    p.getNível().setSelectedIndex(0);
-
+    private JPanel dadosCustoHeader() {
+	   
+    	JPanel header = new JPanel();
+    	header.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    	header.setBackground(Cores.FUNDO_ESCURO);
+    	header.setLayout(panelTropaList.get(0).getCustoPanel().getLayout());
+    	
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridx = 0;
+    	c.gridy = 0;
+    	c.fill = GridBagConstraints.VERTICAL;
+    	
+    	header.add(new JLabel("Madeira"), c);
+    	
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
+    	
+    	c.gridx++;
+    	header.add(new JLabel("Argila"), c);
+    	
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
+    	
+    	c.gridx++;
+    	header.add(new JLabel("Ferro"), c);
+    	
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
+    	
+    	c.gridx++;
+    	header.add(new JLabel("População"), c);
+    	
+    	return header;	   	
+    }
+   
+    private JSeparator makeSeparator() {
+    	
+    	JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+    	separator.setForeground(Cores.SEPARAR_ESCURO);              
+	                                                                  
+    	return separator;                                              
+    }
+ 
+    private ActionListener getResetButtonAction() {
+    	
+    	ActionListener action = new ActionListener() {
+    		public void actionPerformed(ActionEvent arg0) {	
+            	armyEdit.resetComponents();
+            	for (InformaçãoTropaPanel p : panelTropaList)
+            		p.resetValues();
+            	armyInformationPanel.resetValues();
             }
         };
 
-        gbc.anchor = GridBagConstraints.WEST;
-        add(tools.addResetPanel(action), gbc);
-
-        gbc.anchor = GridBagConstraints.EAST;
-        add(tools.addModelosTropasPanel(true, mapQuantidades), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        addHeader(true, gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        add(unitePanels("identificadores"), gbc);
-
-        gbc.gridx++;
-        add(unitePanels("dadosPrincipais"), gbc);
-
-        gbc.gridx++;
-        add(unitePanels("dadosCusto"), gbc);
-
-        gbc.gridy = 2;
-        gbc.gridx = 0;
-        addHeader(false, gbc);
-
-        gbc.gridy = 3;
-        gbc.gridx = 0;
-        addPanelTotal(gbc);
-
-    }
-
-    /**
-     * Adiciona um cabeçalho com os nomes das informações de cada coluna
-     *
-     * @param withIdentifiers com "nome" e "quantidade", para ser usável embaixo
-     */
-    private void addHeader(boolean withIdentifiers, GridBagConstraints gbc) {
-
-        PanelUnidade header = new PanelUnidade();
-
-        if (withIdentifiers) {
-            header.getIdentificadores().setBorder(
-                    new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-            add(header.getIdentificadores(), gbc);
-        }
-
-        gbc.gridx++;
-        header.getDadosPrincipais().setBorder(
-                new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-        add(header.getDadosPrincipais(), gbc);
-
-        gbc.gridx++;
-        header.getDadosCusto().setBorder(
-                new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-        add(header.getDadosCusto(), gbc);
-
-    }
-
-    /**
-     * Junta os panels de todas as unidades num único panel
-     *
-     * @param string qual panel pegar
-     */
-    private JPanel unitePanels(String string) {
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-
-        panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridy = 0;
-
-        for (PanelUnidade i : panelUnidadeList) {
-
-            gbc.gridy++;
-            if (string.toLowerCase().equals("identificadores"))
-                panel.add(i.getIdentificadores(), gbc);
-            else if (string.toLowerCase().equals("dadosprincipais"))
-                panel.add(i.getDadosPrincipais(), gbc);
-            else if (string.toLowerCase().equals("dadoscusto"))
-                panel.add(i.getDadosCusto(), gbc);
-        }
-
-        return panel;
-
-    }
-
-    /**
-     * Adiciona o PanelTotal no gui
-     */
-    private void addPanelTotal(GridBagConstraints gbc) {
-
-        gbc.gridx++;
-        total.getDadosPrincipais().setBorder(
-                new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-        add(total.getDadosPrincipais(), gbc);
-
-        gbc.gridx++;
-        total.getDadosCusto().setBorder(
-                new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-        add(total.getDadosCusto(), gbc);
-
-    }
-
-    /**
-     * Define quais unidades serão utilizadas, com as configurações do mundo
-     */
-    private void setUnidades() {
-
-        for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
-
-            if (i != null) {
-                panelUnidadeList
-                        .add(new PanelUnidade(getNextColor(), i, total));
-                mapQuantidades.put(i,
-                        panelUnidadeList.get(panelUnidadeList.size() - 1)
-                                .getQuantidade());
-            }
-
-        }
-
+        return action;
     }
 
 }

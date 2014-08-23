@@ -61,7 +61,7 @@ public class PanelEdifício extends JPanel {
 	}
 
 	/**
-	 * @param PanelUnidade
+	 * @param DadosPanels
 	 *            para ser adicionado
 	 */
 	public void addPanel(PanelUnidade panel) {
