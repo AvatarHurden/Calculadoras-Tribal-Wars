@@ -47,9 +47,9 @@ public class TWEWindowListener implements WindowListener {
         Configuration config = Configuration.get();
 
         Window window = e.getWindow();
-
+        
         if (config.getConfig("always_close", false)) {
-            System.exit(0);
+            System.exit(-1);
         } else if (config.getConfig("always_dispose", false)) {
             window.dispose();
         }
@@ -73,7 +73,7 @@ public class TWEWindowListener implements WindowListener {
             }
 
             if (choose == 0) {
-                System.exit(0);
+                System.exit(-1);
             } else {
                 window.dispose();
             }

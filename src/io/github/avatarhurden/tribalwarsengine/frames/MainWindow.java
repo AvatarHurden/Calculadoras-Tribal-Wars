@@ -1,24 +1,28 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
-import config.Lang;
-import database.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.AssistenteSaquePanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade.DadosDeUnidadePanel;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.distância.DistânciaPanel;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados.OponentesDerrotadosPanel;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.pontos.PontosPanel;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento.RecrutamentoPanel;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+
+import config.Lang;
+import database.Cores;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {

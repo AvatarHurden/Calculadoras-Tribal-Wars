@@ -225,9 +225,12 @@ public class AlertManager {
 
 					popups.showNewPopup(a.alert);
 					tasksRodando.remove(a.alert);
-					timer.purge();
+					cancel();
 					if (next != null)
 						schedule(next);
+					else
+						timer.cancel();
+					timer.purge();
 				}
 			});
 			

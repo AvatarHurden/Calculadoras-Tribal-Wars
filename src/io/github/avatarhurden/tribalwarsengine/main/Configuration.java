@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public class Configuration {
 	
 	private static final String worldString = "TWEconfig/worlds.json";
-    private static final String defaultString = "resources/config/default_worlds";
+    private static final String defaultString = "/config/default_worlds";
 	private static final String villageModelString = "TWEconfig/villageModels.json";
 	private static final String armyModelString = "TWEconfig/armyModels.json";
 	
@@ -30,7 +30,7 @@ public class Configuration {
     private static Configuration instance;
     //Armazena as configurações
     private JSONObject config, worldConfig, villageConfig, armyConfig;
-    private File configFile, worldFile, villageFile, armyFile, defaultFile;
+    private File configFile, worldFile, villageFile, armyFile;
     private JFrame frame = MainWindow.getInstance();
 
     /**
@@ -38,7 +38,6 @@ public class Configuration {
      */
     private Configuration() {
     	configFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), configString);
-    	defaultFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), defaultString);
     	worldFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), worldString);
     	villageFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), villageModelString);
     	armyFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), armyModelString);
@@ -87,7 +86,7 @@ public class Configuration {
         		new File("TWEConfig").mkdir();
         	
             if (!worldFile.exists())
-                JSON.createJSONFile(JSON.getJSON(defaultFile), worldFile);
+                JSON.createJSONFile(JSON.getJSON(Configuration.class.getResourceAsStream(defaultString)), worldFile);
             if (!configFile.exists())
             	JSON.createJSONFile(new JSONObject("{}"), configFile);
             if (!villageFile.exists())
@@ -101,7 +100,7 @@ public class Configuration {
             villageConfig = JSON.getJSON(villageFile);
             
             } catch (IOException e) {
-            //JOptionPane.showMessageDialog( frame, "Não foi possivel criar um arquivo de configuração.\nSuas modificações não serão visiveis no proximo uso.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog( frame, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             config = new JSONObject("{}");
             worldConfig = new JSONObject("{}");
             armyConfig = new JSONObject("{}");

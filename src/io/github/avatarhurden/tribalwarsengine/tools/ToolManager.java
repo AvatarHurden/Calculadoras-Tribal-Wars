@@ -98,7 +98,6 @@ public class ToolManager {
         tropasPanelList.add(panel);
 
         return panel;
-
     }
 
     /**

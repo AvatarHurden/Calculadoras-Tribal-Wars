@@ -51,13 +51,10 @@ public class Main {
 
     public void init(String[] args) {
         lookForUpdate();
-
+                
         Font oldLabelFont = UIManager.getFont("Label.font");
         UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
 
-//        File_Manager.read();
-//        File_Manager.defineMundos();
-        
         trayicon = new SystemIcon(this);
         mainFrame = MainWindow.getInstance();
         selectWorldFrame = SelectWorldFrame.getInstance();
@@ -97,6 +94,7 @@ public class Main {
                 //Se estiver algum erro no json
                 catch (JSONException e) {
                 }
+                
             }
         }).start();
     }

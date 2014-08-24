@@ -5,7 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextFi
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -518,7 +518,7 @@ public class AlertEditor extends JDialog{
 		
 		tropas = new HashMap<Unidade, IntegerFormattedTextField>();
 		
-		for (Unidade i : WorldManager.get().getAvailableUnits()) {
+		for (Unidade i : Army.getAttackingUnits()) {
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
 				
 				c.gridx = 0;

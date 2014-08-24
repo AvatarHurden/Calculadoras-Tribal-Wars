@@ -48,15 +48,15 @@ public class SystemIcon implements ActionListener {
         catch (AWTException e) {
         }
 
-        /*
-        Adiciona um hook para remover o icone quando o app for fechado!
-         */
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                SystemTray.getSystemTray().remove(trayIcon);
-            }
-        });
+//        /*
+//        Adiciona um hook para remover o icone quando o app for fechado!
+//         */
+//        Runtime.getRuntime().addShutdownHook(new Thread() {
+//            @Override
+//            public void run() {
+//                SystemTray.getSystemTray().remove(trayIcon);
+//            }
+//        });
     }
 
     private TrayIcon getTrayIcon() {
@@ -80,7 +80,7 @@ public class SystemIcon implements ActionListener {
                 main.lookForUpdate();
                 break;
             case "exit":
-                System.exit(0);
+                System.exit(-1);
         }
     }
 

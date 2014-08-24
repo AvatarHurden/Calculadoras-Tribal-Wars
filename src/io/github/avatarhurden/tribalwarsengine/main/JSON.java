@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -53,6 +54,24 @@ public class JSON {
         }
         return new JSONObject(sb.toString());
     }
+    
+    /**
+     * Read and return a JSON from an InputStream
+     *
+     * @param stream InputStream
+     * @return JSONObject
+     * @throws IOException
+     */
+    public static JSONObject getJSON(InputStream stream) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        int cp; 
+        while ((cp = reader.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return new JSONObject(sb.toString());
+    }
+
 
     /**
      * Read and return a JSON from URL

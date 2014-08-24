@@ -17,8 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -107,8 +105,7 @@ public class PopupManager {
 	@SuppressWarnings("serial")
 	private class PopupGUI extends JDialog {
 		
-		private Timer timer;
-		private TimerTask closeTask;
+		Thread closeThread;
 		
 		/**
 		 * Cria o JDialog do popup
@@ -495,21 +492,19 @@ public class PopupManager {
 		
 		private void setCloseTime() {
 			
-			if (timer == null)
-				timer = new Timer();
+			if (closeThread != null)
+				closeThread.interrupt();
 			
-			if (closeTask != null)
-				closeTask.cancel();
-				
-			closeTask = new TimerTask() {	
+			closeThread = new Thread(new Runnable() {
 				public void run() {
+					try {
+					Thread.sleep(5000);
 					close();
+					} catch (Exception e) {}
 				}
-			};
-				
-			timer.purge();
+			});
+			closeThread.start();;
 			
-			timer.schedule(closeTask, 5000);
 		}
 			
 		private void close() {
@@ -535,9 +530,9 @@ public class PopupManager {
 				
 				@Override
 				public void mouseEntered(MouseEvent arg0) {
-					if (closeTask != null) {
-						closeTask.cancel();
-						closeTask = null;
+					System.out.println("entered");
+					if (closeThread != null) {
+						closeThread.interrupt();
 					}
 				}
 			});
