@@ -8,6 +8,8 @@ import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -85,6 +88,7 @@ public class Army {
 		for (Unidade i : units)
 			tropas.add(new Tropa(i, 0));
 		
+		item = ItemPaladino.NULL;
 	}
 	
 	/**
@@ -310,29 +314,45 @@ public class Army {
 	}
 	
 	public ArmyEditPanel getEditPanelFull(OnChange onChange) {
-		return new ArmyEditPanel(onChange, true, true, true, true, true);
+		return new ArmyEditPanel(onChange, true, true, false, true, true, true);
 	}
 	
 	public ArmyEditPanel getEditPanelFullNoHeader(OnChange onChange) {
-		return new ArmyEditPanel(onChange, false, true, true, true, true);
+		return new ArmyEditPanel(onChange, false, true, false, true, true, true);
 	}
 	
 	public ArmyEditPanel getEditPanelWorldLevels(OnChange onChange) {
 		int levels = WorldManager.get().getSelectedWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, true, true, true, levels == 3, levels == 10);
+		return new ArmyEditPanel(onChange, true, true, false, true, levels == 3, levels == 10);
 	}
 	
 	public ArmyEditPanel getEditPanelWorldLevelsNoHeader(OnChange onChange) {
 		int levels = WorldManager.get().getSelectedWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, false, true, true, levels == 3, levels == 10);
+		return new ArmyEditPanel(onChange, false, true, false, true, levels == 3, levels == 10);
 	}
 	
 	public ArmyEditPanel getEditPanelNoLevels(OnChange onChange) {
-		return new ArmyEditPanel(onChange, true, true, true, false, false);
+		return new ArmyEditPanel(onChange, true, true, false, true, false, false);
 	}
 	
 	public ArmyEditPanel getEditPanelNoLevelsNoHeader(OnChange onChange) {
-		return new ArmyEditPanel(onChange, false, true, true, false, false);
+		return new ArmyEditPanel(onChange, false, true, false, true, false, false);
+	}
+	
+	public ArmyEditPanel getEditPanelSelectetion(OnChange onChange) {
+		return new ArmyEditPanel(onChange, true, true, true, false, false, false);
+	}
+	
+	public ArmyEditPanel getEditPanelSelectionNoHeader(OnChange onChange) {
+		return new ArmyEditPanel(onChange, false, true, true, false, false, false);
+	}
+	
+	public ArmyEditPanel getEditPanelNoInputs() {
+		return new ArmyEditPanel(null, true, true, false, false, false, false);
+	}
+	
+	public ArmyEditPanel getEditPanelNoInputsNoHeader() {
+		return new ArmyEditPanel(null, false, true, false, false, false, false);
 	}
 	
 	/**
@@ -457,13 +477,14 @@ public class Army {
 	@SuppressWarnings("serial")
 	public class ArmyEditPanel extends JPanel {
 		
+		private HashMap<Unidade, JCheckBox> selected;
 		private HashMap<Unidade, IntegerFormattedTextField> quantities;
 		private HashMap<Unidade, TroopLevelComboBox> level3;
 		private HashMap<Unidade, TroopLevelComboBox> level10;
 		
 		private GridBagLayout layout;
 		
-		private boolean hasHeader, hasNames, hasAmount, hasNivel3, hasNivel10;
+		private boolean hasHeader, hasNames, hasSelected, hasAmount, hasNivel3, hasNivel10;
 		private OnChange onChange;
 		
 		/**
@@ -483,15 +504,17 @@ public class Army {
 		 * @param unidades
 		 */
 		private ArmyEditPanel(OnChange onChange, boolean hasHeader, 
-				boolean hasNames, boolean hasAmount,
+				boolean hasNames, boolean hasSelected, boolean hasAmount,
 				boolean hasNivel3, boolean hasNivel10) {
 			
+			selected = new HashMap<Unidade, JCheckBox>();
 			quantities = new HashMap<Unidade, IntegerFormattedTextField>();
 			level3 = new HashMap<Unidade, TroopLevelComboBox>();
 			level10 = new HashMap<Unidade, TroopLevelComboBox>();
 			
 			this.hasHeader = hasHeader;
 			this.hasNames = hasNames;
+			this.hasSelected = hasSelected;
 			this.hasAmount = hasAmount;
 			this.hasNivel3 = hasNivel3;
 			this.hasNivel10 = hasNivel10;
@@ -525,6 +548,8 @@ public class Army {
 			ArrayList<Integer> widths = new ArrayList<Integer>();
 			if (hasNames)
 				widths.add(125);
+			if (hasSelected)
+				widths.add(30);
 			if (hasAmount)
 				widths.add(100);
 			if (hasNivel3)
@@ -563,6 +588,10 @@ public class Army {
 			if (hasAmount) {
 				c.gridx++;
 				panel.add(new JLabel("Quantidade"), c);
+			}
+			
+			if (hasSelected) {
+				c.gridx++;
 			}
 			
 			if (hasNivel3 && hasNivel10) {
@@ -613,12 +642,26 @@ public class Army {
 					panelC.gridx++;
 				}
 				
+				JCheckBox chck = new JCheckBox();
+				chck.setOpaque(false);
+				selected.put(u, chck);
+				
+				chck.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						onChange.run();
+					}
+				});
+				
+				if (hasSelected) {
+					unitPanel.add(chck, panelC);
+					panelC.gridx++;
+				}
+				
 				IntegerFormattedTextField txt = new IntegerFormattedTextField(getQuantidade(u)) {
 					public void go() {
 						onChange.run();
 					}
 				};
-				
 				quantities.put(u, txt);
 	
 				if (hasAmount) {
@@ -666,15 +709,22 @@ public class Army {
 		public void saveValues() {
 			
 			for (Unidade i : quantities.keySet())
-				Army.this.addTropa(i, quantities.get(i).getValue().intValue(),
+				if (hasSelected)
+					Army.this.addTropa(i, selected.get(i).isSelected() ? 1 : 0, 
+							(int) level3.get(i).getSelectedItem(),
+							(int) level10.get(i).getSelectedItem());
+				else
+					Army.this.addTropa(i, quantities.get(i).getValue().intValue(),
 						(int) level3.get(i).getSelectedItem(),
-						(int) level10.get(i).getSelectedItem() );
+						(int) level10.get(i).getSelectedItem());
 		}
 		
 		public void resetComponents() {
 			
 			for (IntegerFormattedTextField t : quantities.values())
 				t.setText("");
+			for (JCheckBox c : selected.values())
+				c.setSelected(false);
 			for (TroopLevelComboBox t : level3.values())
 				t.setSelectedIndex(0);
 			for (TroopLevelComboBox t : level10.values())

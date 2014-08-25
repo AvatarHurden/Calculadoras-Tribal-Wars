@@ -201,9 +201,6 @@ public class OponentesDerrotadosPanel extends Ferramenta {
     	ActionListener action = new ActionListener() {
     		public void actionPerformed(ActionEvent arg0) {	
             	armyEdit.resetComponents();
-            	for (ODTropaPanel p : panelUnidadeList)
-            		p.resetValues();
-            	armyInformationPanel.resetValues();
             }
         };
 

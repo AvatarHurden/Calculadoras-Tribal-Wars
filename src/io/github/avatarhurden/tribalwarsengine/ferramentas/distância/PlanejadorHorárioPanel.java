@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.distância;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -29,8 +30,7 @@ import javax.swing.event.ChangeListener;
 
 import database.Cores;
 
-@SuppressWarnings("serial")
-public class PanelPlanejador extends JPanel {
+public class PlanejadorHorárioPanel extends JPanel {
 
     private JSpinner dateSpinner, hourSpinner;
 
@@ -39,58 +39,60 @@ public class PanelPlanejador extends JPanel {
     private JPanel topPanel, bottomPanel;
     private boolean inputTop = true;
 
-    private DistânciaPanel distânciaPanel;
+    private OnChange onChange;
 
-    public PanelPlanejador(final DistânciaPanel distânciaPanel) {
-
-        this.distânciaPanel = distânciaPanel;
+    public PlanejadorHorárioPanel(OnChange onChange) {
+        this.onChange = onChange;
 
         setOpaque(false);
 
         setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[]{0};
-        gridBagLayout.rowHeights = new int[]{0};
-        gridBagLayout.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-        setLayout(gridBagLayout);
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(10, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridy = 0;
-        c.gridx = 0;
-
-        add(new JLabel("Planejador de Ataque"), c);
-
-        c.gridy++;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        add(makeInputPanel(), c);
-
-        JButton invert = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/switch_arrow.png"))));
         
-        invert.setPreferredSize(new Dimension(54,26));
-        
-        invert.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                invertInOut();
-            }
-        });
-
-        c.gridy++;
-        c.fill = GridBagConstraints.NONE;
-        add(invert, c);
-
-        c.gridy++;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        add(makeOutputPanel(), c);
-
+        makeGUI();
+       
         changeDate(0);
-
     }
 
+    private void makeGUI() {
+    	 GridBagLayout gridBagLayout = new GridBagLayout();
+         gridBagLayout.columnWidths = new int[]{0};
+         gridBagLayout.rowHeights = new int[]{0};
+         gridBagLayout.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+         setLayout(gridBagLayout);
+
+         GridBagConstraints c = new GridBagConstraints();
+         c.insets = new Insets(10, 10, 10, 10);
+         c.anchor = GridBagConstraints.CENTER;
+         c.gridy = 0;
+         c.gridx = 0;
+         
+         add(new JLabel("Planejador de Ataque"), c);
+
+         c.gridy++;
+         c.fill = GridBagConstraints.HORIZONTAL;
+         add(makeInputPanel(), c);
+         
+         JButton invert = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+                 SelectWorldFrame.class.getResource("/images/switch_arrow.png"))));
+         
+         invert.setPreferredSize(new Dimension(54,26));
+         
+         invert.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent arg0) {
+                 invertInOut();
+             }
+         });
+
+         c.gridy++;
+         c.fill = GridBagConstraints.NONE;
+         add(invert, c);
+
+         c.gridy++;
+         c.fill = GridBagConstraints.HORIZONTAL;
+         add(makeOutputPanel(), c);
+    }
+    
     private JPanel makeInputPanel() {
 
         JPanel panel = new JPanel(new GridLayout(0, 1));
@@ -111,7 +113,7 @@ public class PanelPlanejador extends JPanel {
         dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy"));
         dateSpinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent arg0) {
-                changeDate(distânciaPanel.getTime());
+                onChange.run();
             }
         });
 
@@ -119,7 +121,7 @@ public class PanelPlanejador extends JPanel {
         hourSpinner.setEditor(new JSpinner.DateEditor(hourSpinner, "HH:mm:ss"));
         hourSpinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent arg0) {
-                changeDate(distânciaPanel.getTime());
+            	onChange.run();
             }
         });
 

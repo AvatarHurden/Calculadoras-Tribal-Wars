@@ -251,9 +251,6 @@ public class DadosDeUnidadePanel extends Ferramenta {
     	ActionListener action = new ActionListener() {
     		public void actionPerformed(ActionEvent arg0) {	
             	armyEdit.resetComponents();
-            	for (InformaçãoTropaPanel p : panelTropaList)
-            		p.resetValues();
-            	armyInformationPanel.resetValues();
             }
         };
 

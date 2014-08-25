@@ -30,7 +30,6 @@ import database.Edifício;
  * @author Arthur
  *
  */
-@SuppressWarnings("serial")
 public class PanelIntervalo extends JPanel{
 
 	private CoordenadaPanel coordenadas;

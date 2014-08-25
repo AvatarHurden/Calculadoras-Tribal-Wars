@@ -2,7 +2,10 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.distância;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,36 +25,36 @@ import database.Cores;
 
 @SuppressWarnings("serial")
 public class DistânciaPanel extends Ferramenta {
-
+	
+	private Army army;
+	private ArmyEditPanel armyEdit;
+	
+	private OnChange onChange;
+	
 	private CoordenadaPanel aldeiaOrigem, aldeiaDestino;
 	
-	private PanelUnidade panelUnidade;
-	
-	private PanelPlanejador panelPlanejador;
+	private PlanejadorHorárioPanel planejadorHorárioPanel;
 	
 	private long time;
-	
-	private TimeFormattedJLabel interval;
+	private TimeFormattedJLabel timeLabel;
 
 	/**
 	 * Calcula o tempo de deslocamento entre duas aldeias. Mostra o tempo de
 	 * cada unidade.
 	 */
 	public DistânciaPanel() {
-
 		super(Lang.FerramentaDistancia.toString());
-
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-		setLayout(gridBagLayout);
-
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.insets = new Insets(5, 5, 5, 5);
-		constraints.gridy = 0;
-		constraints.gridx = 0;
+		
+		onChange = new OnChange() {	
+			public void run() {
+				armyEdit.saveValues();
+				calculateDistanceAndTimes();
+				planejadorHorárioPanel.changeDate(time);
+			}
+		};
+		
+		army = new Army(Army.getAttackingUnits());
+		armyEdit = army.getEditPanelSelectetion(onChange);
 		
 		aldeiaDestino = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
 			public void go() {
@@ -65,83 +68,79 @@ public class DistânciaPanel extends Ferramenta {
 			}
 		};
 		
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {	
-				aldeiaOrigem.reset();
-				aldeiaDestino.reset();
-				
-			}
-		};
+		makeGUI();
+	}
+	
+	private void makeGUI() {
+		GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] { 0, 0 };
+		layout.rowHeights = new int[] { 0 };
+		layout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+		setLayout(layout);
 
-		constraints.anchor = GridBagConstraints.WEST;
-		add(tools.addResetPanel(action), constraints);
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5, 5, 5, 5);
+		c.gridy = 0;
+		c.gridx = 0;
 		
-		constraints.gridx++;
-		add(tools.addModelosAldeiasPanel(true, null, aldeiaOrigem));
+		c.anchor = GridBagConstraints.WEST;
+		add(tools.addResetPanel(getResetButtonAction()), c);
 		
-		constraints.gridx++;
-		add(tools.addModelosAldeiasPanel(false, null, aldeiaDestino));
-		
-		constraints.gridy++;
-		constraints.gridx = 0;
-		constraints.gridheight = 3;
-		constraints.insets = new Insets(5, 5, 5, 25);
-		add(panelUnidade = new PanelUnidade(this), constraints);
+		c.gridy++;
+		c.gridx = 0;
+		c.gridheight = 3;
+		c.insets = new Insets(5, 5, 5, 25);
+		add(armyEdit, c);
 		
 		// Adiciona aldeia de origem
-		constraints.gridheight = 1;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.gridx++;
-		constraints.insets = new Insets(5, 5, 5, 5);
-		add(aldeiaOrigem, constraints);
+		c.gridheight = 1;
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridx++;
+		c.insets = new Insets(5, 5, 5, 5);
+		add(aldeiaOrigem, c);
 		
 		// Adiciona aldeia de destino
-		constraints.gridx++;
-		add(aldeiaDestino, constraints);
+		c.gridx++;
+		add(aldeiaDestino, c);
 		
-		constraints.gridx--;
-		constraints.gridy++;
-		constraints.gridwidth = 2;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx--;
+		c.gridy++;
+		c.gridwidth = 2;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		//Foi a única maneira que achei pra fazer funcionar
-		constraints.insets = new Insets(40, 5, 5, 5);
-		add(createTimePanel(), constraints);
+		c.insets = new Insets(40, 5, 5, 5);
+		add(createTimePanel(), c);
 		
-		constraints.gridy++;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.anchor = GridBagConstraints.SOUTH;
-		constraints.gridwidth = 2;
-		constraints.insets = new Insets(5, 5, 5, 5);
-		add(panelPlanejador = new PanelPlanejador(this), constraints);
+		c.gridy++;
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.SOUTH;
+		c.gridwidth = 2;
+		c.insets = new Insets(5, 5, 5, 5);
+		add(planejadorHorárioPanel = new PlanejadorHorárioPanel(onChange), c);
 		
-		constraints.gridx += 2;
-		add(tools.addAlertCreatorPanel(panelPlanejador.getDateLabel(), aldeiaOrigem, 
-				aldeiaDestino, null), constraints);
-		
+		c.gridx += 2;
+		add(tools.addAlertCreatorPanel(planejadorHorárioPanel.getDateLabel(), aldeiaOrigem, 
+				aldeiaDestino, null), c);
 	}
 
 	protected void calculateDistanceAndTimes() {
-
+		
 			int diferençaX = aldeiaOrigem.getCoordenadaX()
 					- aldeiaDestino.getCoordenadaX();
 			int diferençaY = aldeiaOrigem.getCoordenadaY()
 					- aldeiaDestino.getCoordenadaY();
 
-			BigDecimal xSquared = new BigDecimal(String.valueOf(diferençaX))
-					.pow(2);
-			BigDecimal ySquared = new BigDecimal(String.valueOf(diferençaY))
-					.pow(2);
+			BigDecimal xSquared = new BigDecimal(diferençaX).pow(2);
+			BigDecimal ySquared = new BigDecimal(diferençaY).pow(2);
 
 			BigDecimal distância = BigOperation.sqrt(xSquared.add(ySquared), 30);
 			
-			BigDecimal tempo = distância.multiply(panelUnidade.getSlowestSelected().getVelocidade());
-			tempo = tempo.multiply(new BigDecimal("60000"));
+			time = distância.multiply(new BigDecimal(army.getVelocidade())).longValue();
 			
-			time = tempo.longValue();
+			timeLabel.setTime(time);
 			
-			interval.setTime(time);
-			
-			panelPlanejador.changeDate(time);
+			planejadorHorárioPanel.changeDate(time);
 			
 	}
 	
@@ -150,7 +149,6 @@ public class DistânciaPanel extends Ferramenta {
 		JPanel panel = new JPanel(new GridLayout(0,1));
 		panel.setOpaque(false);
 		
-		// Add panel de último ataque
 		JPanel ataquePanel = new JPanel();
 		ataquePanel.add(new JLabel("Tempo de Deslocamento"));
 			
@@ -159,12 +157,10 @@ public class DistânciaPanel extends Ferramenta {
 				
 		panel.add(ataquePanel);
 				
-		// Add panel de horário
-		
-		interval = new TimeFormattedJLabel(true);
+		timeLabel = new TimeFormattedJLabel(true);
 		
 		JPanel horaPanel = new JPanel();
-		horaPanel.add(interval);
+		horaPanel.add(timeLabel);
 						
 		horaPanel.setBackground(Cores.ALTERNAR_ESCURO);
 		horaPanel.setBorder(new MatteBorder(0, 1, 1, 1,Cores.SEPARAR_ESCURO));
@@ -172,8 +168,19 @@ public class DistânciaPanel extends Ferramenta {
 		panel.add(horaPanel);
 		
 		return panel;
-
+	}
+	
+	private ActionListener getResetButtonAction() {	
 		
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				aldeiaOrigem.reset();
+				aldeiaDestino.reset();
+				armyEdit.resetComponents();
+			}
+		};
+		
+		return action;
 	}
 	
 	protected long getTime() {

@@ -250,10 +250,6 @@ public class PontosPanel extends Ferramenta {
     	ActionListener action = new ActionListener() {
     		public void actionPerformed(ActionEvent arg0) {	
             	buildingsEdit.resetComponents();
-            	for (InformaçõesEdifícioPanel p : panelEdifícioList)
-            		p.resetValues();
-            	buildingsInformationPanel.resetValues();
-            	setPopulaçãoRestante();
             }
         };
 
