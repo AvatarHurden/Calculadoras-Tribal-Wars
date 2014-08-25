@@ -105,7 +105,7 @@ public class PopupManager {
 	@SuppressWarnings("serial")
 	private class PopupGUI extends JDialog {
 		
-		Thread closeThread;
+		private Thread closeThread;
 		
 		/**
 		 * Cria o JDialog do popup

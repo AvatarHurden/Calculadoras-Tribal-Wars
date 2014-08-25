@@ -1,232 +1,263 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.pontos;
 
-import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigInteger;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Cores;
-import database.Edifício;
 
-@SuppressWarnings("serial")
 public class PontosPanel extends Ferramenta {
 
-	List<Edifício> edifíciosUtilizados = new ArrayList<Edifício>();
-	List<PanelEdifício> panelEdifícioList = new ArrayList<PanelEdifício>();
+    private Buildings buildings;
+    private BuildingsEditPanel buildingsEdit;
+    
+    private List<InformaçõesEdifícioPanel> panelEdifícioList = new ArrayList<InformaçõesEdifícioPanel>();
 
-	Map<String, BigInteger> somaTotal = new HashMap<String, BigInteger>();
-
-	PanelSoma total = new PanelSoma();
-
-	/**
-	 * Ferramenta que calcula a pontuação e a população utilizada com base nos
-	 * níveis dos edifícios inseridos. Também calcula a população restante
-	 * através do nível fornecido da fazenda
-	 */
-	public PontosPanel() {
-
-		super(Lang.FerramentaPontos.toString());
-
-		setEdifícios();
-
-		total.setPanelListAndColor(panelEdifícioList, getNextColor());
-
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-		setLayout(gridBagLayout);
-
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.insets = new Insets(5, 5, 5, 5);
-
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				for (PanelEdifício i : panelEdifícioList)
-					i.getComboBox().setText(" ");
-				
+    private InformaçõesEdifícioPanel buildingsInformationPanel;
+    private JLabel populaçãoRestanteLabel;
+    
+    private OnChange onChange;
+    
+    /**
+     * Ferramenta com informações de unidades. Possui:
+     * <br>- Ataque
+     * <br>- Defesas
+     * <br>- Saque
+     * <br>- Custo de recursos para produção
+     * <br>- Uso de população
+     * <p/>
+     * Em caso de mundo com níveis, é possível escolher o nível das unidades
+     * (não é limitado a 15 níveis)
+     * <p/>
+     * Não consigo entender a gambiarra ( Os recursos tecnicos avançados ) que você usou nesse jPanel... Se puder ajeitar eu agradeceria :)
+     */
+    public PontosPanel() {
+        super(Lang.FerramentaPontos.toString());
+        
+        onChange = new OnChange() {
+			public void run() {
+				buildingsEdit.saveValues();
+				for (InformaçõesEdifícioPanel p : panelEdifícioList)
+					p.changeValues(buildings.getBuildings().get(panelEdifícioList.indexOf(p)));
+				buildingsInformationPanel.changeValues(buildings);
+				setPopulaçãoRestante();
 			}
 		};
 		
-		gbc.anchor = GridBagConstraints.WEST;
-		add(tools.addResetPanel(action), gbc);
+        buildings = new Buildings(Buildings.getAvailableBuildings());
+        buildingsEdit = buildings.getEditPanelFull(onChange);
+        
+        makePanels();
+        
+        setGUI();
+    }
+    
+    private void setGUI() {
+    	GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[]{0, 0, 0};
+        gridBagLayout.rowHeights = new int[]{0, 0, 0};
+        gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+        setLayout(gridBagLayout);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        
+        gbc.anchor = GridBagConstraints.WEST;
+        add(tools.addResetPanel(getResetButtonAction()), gbc);
+        
+        gbc.gridx++;
+        gbc.anchor = GridBagConstraints.EAST;
+        add(tools.addModelosAldeiasPanel(true, buildingsEdit), gbc);
+        
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.gridy++;
+        gbc.gridx = 0;
+        add(buildingsEdit, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.gridx += 2;
+        add(dadosPrincipaisPanel(), gbc);
+        
+        gbc.anchor = GridBagConstraints.SOUTHWEST;
+        gbc.gridx++;
+        add(populaçãoRestantePanel(), gbc);
+        
+    }
+    
+    private void makePanels() {
+	   
+	   for (int i = 0; i < buildings.getEdifícios().size(); i++) {
+		   System.out.println(buildings.getEdifícios().get(i).toString());
+		   InformaçõesEdifícioPanel panel = new InformaçõesEdifícioPanel(getNextColor());
+		   panel.setBorder(new MatteBorder(0, 1, 0, 1, Cores.SEPARAR_ESCURO));
+		   panelEdifícioList.add(panel);
+	   }
+	   
+	   // Fixes the border of first and last panel
+	   panelEdifícioList.get(0).setBorder(new MatteBorder(1, 1, 0, 1, Cores.SEPARAR_ESCURO));
+	   panelEdifícioList.get(panelEdifícioList.size()-1).setBorder(new MatteBorder(0, 1, 1, 1, Cores.SEPARAR_ESCURO));
+	   
+	   buildingsInformationPanel = new InformaçõesEdifícioPanel(getNextColor());
+	   buildingsInformationPanel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    }
+    
+    private JPanel dadosPrincipaisPanel() {
+	   
+	   JPanel panel = new JPanel();
+	   panel.setOpaque(false);
+	   panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	   
+	   panel.add(dadosPrincipaisHeader());
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+	   for (InformaçõesEdifícioPanel u : panelEdifícioList)
+		   panel.add(u.getDadosPanel());
+	   
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   panel.add(dadosPrincipaisHeader());
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+	   panel.add(buildingsInformationPanel.getDadosPanel());
+	   
+	   return panel;
+    }
+    
+    private JPanel dadosPrincipaisHeader() {
+	   
+    	JPanel header = new JPanel();
+    	header.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    	header.setBackground(Cores.FUNDO_ESCURO);
+    	
+    	GridBagLayout layout = new GridBagLayout();
+    	layout.columnWidths = ((GridBagLayout)
+    			panelEdifícioList.get(0).getDadosPanel().getLayout()).columnWidths;
+    	layout.rowHeights = new int[] { 30 };
+    	header.setLayout(layout);
+ 	   
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridx = 0;
+    	c.gridy = 0;
+    	c.fill = GridBagConstraints.VERTICAL;
+	   
+    	header.add(new JLabel("Pontos"), c);
+	   
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
+	   
+    	c.gridx++;
+    	header.add(new JLabel("População"), c);
+    	
+    	return header;	   
+	   
+    }
+    
+    private JPanel populaçãoRestantePanel() {
+    	
+    	JPanel panel = new JPanel();
+ 	   	panel.setOpaque(false);
+ 	   	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+ 	   
+ 	   	panel.add(populaçãoRestanteHeader());
+ 	   	panel.add(Box.createRigidArea(new Dimension(0, 5)));
+ 	   	
+ 	   	panel.add(populaçãoRestanteLabel());
+ 	   
+ 	   	return panel;
+    }
+    
+    private JPanel populaçãoRestanteLabel() {
+    	
+    	JPanel panel = new JPanel();
+    	panel.setPreferredSize(new Dimension(131, 30));
+    	panel.setBackground(buildingsInformationPanel.getDadosPanel().getBackground());
+    	panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    	panel.setLayout(new GridBagLayout());
+    	
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.insets = new Insets(5, 5, 5, 5);
+    	
+		populaçãoRestanteLabel = new JLabel();
+		panel.add(populaçãoRestanteLabel, c);
 		
-		Map<Edifício, EdifícioFormattedTextField> map = new HashMap<Edifício, EdifícioFormattedTextField>();
-		for (PanelEdifício i : panelEdifícioList)
-			map.put(i.getEdifício(), i.getComboBox());
-		
-		gbc.gridx++;
-		//gbc.insets = new Insets(5, 0, 5, 0);
-		add(tools.addModelosAldeiasPanel(true, map, null), gbc);
-		
-		gbc.gridy++;
-		gbc.gridx = 0;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		addHeader(true, gbc);
-
-		gbc.gridy++;
-		gbc.gridwidth = 2;
-		gbc.gridx = 0;
-		add(unitePanels("identificadores"), gbc);
-
-		gbc.gridwidth = 1;
-		gbc.gridx += 2;
-		add(unitePanels("dadosPanel"), gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
-		addHeader(false, gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 1;
-		addPanelTotal(gbc);
-
-	}
-
-	/**
-	 * Adiciona um cabeçalho com os nomes das informações de cada coluna
-	 * 
-	 * @param boolean com "edifício" e "nível", para ser usável embaixo
-	 */
-	private void addHeader(boolean topHeader, GridBagConstraints gbc) {
-
-		PanelEdifício header = new PanelEdifício(!topHeader);
-
-		if (topHeader) {
-			gbc.gridwidth = 2;
-			header.getIdentificadores().setBorder(
-					new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-			add(header.getIdentificadores(), gbc);
-			
-		}
-		
-		gbc.gridwidth = 1;
-		gbc.gridx += 2;
-		header.getDadosPanel().setBorder(
-				new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-		add(header.getDadosPanel(), gbc);
-
-		if (!topHeader) {
-			gbc.gridx++;
-			header.getPopulaçãoRestantePanel().setBorder(
-					new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-			add(header.getPopulaçãoRestantePanel(), gbc);
-		}
-
-	}
-
-	/**
-	 * Junta os panels de todas as unidades num único panel
-	 * 
-	 * @param String
-	 *            qual panel pegar
-	 */
-	private JPanel unitePanels(String s) {
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridBagLayout());
-
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridy = 0;
-
-		for (PanelEdifício i : panelEdifícioList) {
-
-			gbc.gridy++;
-			if (s.toLowerCase().equals("identificadores"))
-				panel.add(i.getIdentificadores(), gbc);
-			else if (s.toLowerCase().equals("dadospanel"))
-				panel.add(i.getDadosPanel(), gbc);
-
-		}
-
 		return panel;
+    }
+    
+    private JPanel populaçãoRestanteHeader() {
+    	
+    	JPanel panel = new JPanel();
+    	panel.setPreferredSize(new Dimension(131, 32));
+    	panel.setBackground(Cores.FUNDO_ESCURO);
+    	panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    	panel.setLayout(new GridBagLayout());
+    	
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.insets = new Insets(5, 5, 5, 5);
+    	
+		panel.add(new JLabel("População Restante"), c);
+    	
+		return panel;
+    }
+    
+    private JSeparator makeSeparator() {
+    	
+    	JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+    	separator.setForeground(Cores.SEPARAR_ESCURO);              
+	                                                                  
+    	return separator;                                              
+    }
+    
+    private void setPopulaçãoRestante() {
+    	
+    	if (buildings.getPopulaçãoUsada() == 0)
+    		populaçãoRestanteLabel.setText("");
+    	else {
+    		int text = buildings.getPopulaçãoDisponível();
+    		populaçãoRestanteLabel.setText(
+    				NumberFormat.getNumberInstance(Locale.GERMANY).format(text));
+    	}
+    	
+    }
+ 
+    private ActionListener getResetButtonAction() {
+    	
+    	ActionListener action = new ActionListener() {
+    		public void actionPerformed(ActionEvent arg0) {	
+            	buildingsEdit.resetComponents();
+            	for (InformaçõesEdifícioPanel p : panelEdifícioList)
+            		p.resetValues();
+            	buildingsInformationPanel.resetValues();
+            	setPopulaçãoRestante();
+            }
+        };
 
-	}
-
-	/**
-	 * Adiciona o PanelTotal no gui
-	 */
-	private void addPanelTotal(GridBagConstraints gbc) {
-
-		gbc.gridx++;
-		total.getDadosPrincipais().setBorder(
-				new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-		add(total.getDadosPrincipais(), gbc);
-
-		gbc.gridx++;
-		total.getPopulaçãoRestantePanel().setBorder(
-				new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-		add(total.getPopulaçãoRestantePanel(), gbc);
-
-	}
-
-	/**
-	 * Cria a lista de PanelEdifício, utilizando os edifícios do mundo
-	 */
-	private void createPanelEdifício() {
-
-		for (Edifício i : edifíciosUtilizados)
-			panelEdifícioList.add(new PanelEdifício(getNextColor(), i, total));
-
-	}
-
-	/**
-	 * Define quais edifícios serão utilizadas, com as configurações do mundo
-	 */
-	private void setEdifícios() {
-
-		edifíciosUtilizados.add(Edifício.EDIFÍCIO_PRINCIPAL);
-		edifíciosUtilizados.add(Edifício.QUARTEL);
-		edifíciosUtilizados.add(Edifício.ESTÁBULO);
-		edifíciosUtilizados.add(Edifício.OFICINA);
-
-		if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
-			edifíciosUtilizados.add(Edifício.IGREJA);
-			edifíciosUtilizados.add(Edifício.PRIMEIRA_IGREJA);
-		}
-
-		if (Mundo_Reader.MundoSelecionado.isAcademiaDeNíveis())
-			edifíciosUtilizados.add(Edifício.ACADEMIA_3NÍVEIS);
-		else
-			edifíciosUtilizados.add(Edifício.ACADEMIA_1NÍVEL);
-
-		edifíciosUtilizados.add(Edifício.FERREIRO);
-		edifíciosUtilizados.add(Edifício.PRAÇA_DE_REUNIÃO);
-
-		if (Mundo_Reader.MundoSelecionado.hasPaladino())
-			edifíciosUtilizados.add(Edifício.ESTÁTUA);
-
-		edifíciosUtilizados.add(Edifício.MERCADO);
-		edifíciosUtilizados.add(Edifício.BOSQUE);
-		edifíciosUtilizados.add(Edifício.POÇO_DE_ARGILA);
-		edifíciosUtilizados.add(Edifício.MINA_DE_FERRO);
-		edifíciosUtilizados.add(Edifício.FAZENDA);
-		edifíciosUtilizados.add(Edifício.ARMAZÉM);
-		edifíciosUtilizados.add(Edifício.ESCONDERIJO);
-		edifíciosUtilizados.add(Edifício.MURALHA);
-
-		createPanelEdifício();
-	}
+        return action;
+    }
 
 }

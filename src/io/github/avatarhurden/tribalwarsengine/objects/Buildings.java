@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.GridBagConstraints;
@@ -31,6 +32,31 @@ import database.Edifício;
 public class Buildings {
 	
 	private ArrayList<Building> buildings = new ArrayList<Building>();;
+	
+	public static boolean isBuildingJson(JSONObject json) {
+		return json.has("buildings");
+	}
+	
+	public static List<Edifício> getAvailableBuildings() {
+		ArrayList<Edifício> list = new ArrayList<Edifício>();
+		
+    	for (Edifício ed : Edifício.values())
+    		list.add(ed);
+    	
+    	if (!WorldManager.get().getSelectedWorld().isChurchWorld()) {
+    		list.remove(Edifício.IGREJA);
+    		list.remove(Edifício.PRIMEIRA_IGREJA);
+    	}
+    	if (WorldManager.get().getSelectedWorld().isCoiningWorld())
+    		list.remove(Edifício.ACADEMIA_3NÍVEIS);
+    	else
+    		list.remove(Edifício.ACADEMIA_1NÍVEL);
+    	
+    	if (!WorldManager.get().getSelectedWorld().isPaladinWorld())
+    		list.remove(Edifício.ESTÁTUA);
+    	
+    	return list;
+	}
 	
 	public Buildings() {
 		this(Arrays.asList(Edifício.values()));
@@ -86,6 +112,10 @@ public class Buildings {
 		return -1;
 	}
 	
+	public List<Building> getBuildings() {
+		return buildings;
+	}
+	
 	public List<Edifício> getEdifícios() {
 		List<Edifício> list = new ArrayList<>();
 		for (Building t : buildings)
@@ -94,13 +124,39 @@ public class Buildings {
 		return list;
 	}
 	
+	public int getPontos() {
+		int points = 0;
+		for (Building b : buildings)
+			points += b.getPontos();
+		return points;
+	}
+	
+	public int getPopulaçãoTotal() {
+		if (contains(Edifício.FAZENDA))
+			return getBuilding(Edifício.FAZENDA).getPopulação();
+		else
+			return 0;
+	}
+	
+	public int getPopulaçãoUsada() {
+		int pop = 0;
+		for (Building b : buildings)
+			if (!b.edifício.equals(Edifício.FAZENDA))
+				pop += b.getPopulação();
+		return pop;
+	}
+	
+	public int getPopulaçãoDisponível() {
+		return getPopulaçãoTotal() - getPopulaçãoUsada();
+	}
+	
 	/**
 	 * Se o objeto possui Bosque, retorna a produção de madeira do mesmo, 
 	 * em recursos/hora.
 	 * <p> Caso não possua, retorna 0.
 	 */
-	public int getWoodProduction() {
-		if (buildings.contains(getBuilding(Edifício.BOSQUE))) {
+	public int getProduçãoMadeira() {
+		if (contains(Edifício.BOSQUE)) {
 			if (getLevel(Edifício.BOSQUE) == 0)
 				return 5;
 			else
@@ -115,8 +171,8 @@ public class Buildings {
 	 * em recursos/hora.
 	 * <p> Caso não possua, retorna 0.
 	 */
-	public int getClayProduction() {
-		if (buildings.contains(getBuilding(Edifício.POÇO_DE_ARGILA))) {
+	public int getProduçãoArgila() {
+		if (contains(Edifício.POÇO_DE_ARGILA)) {
 			if (getLevel(Edifício.POÇO_DE_ARGILA) == 0)
 				return 5;
 			else
@@ -131,8 +187,8 @@ public class Buildings {
 	 * em recursos/hora.
 	 * <p> Caso não possua, retorna 0.
 	 */
-	public int getIronProduction() {
-		if (buildings.contains(getBuilding(Edifício.MINA_DE_FERRO))) {
+	public int getProduçãoFerro() {
+		if (contains(Edifício.MINA_DE_FERRO)) {
 			if (getLevel(Edifício.MINA_DE_FERRO) == 0)
 				return 5;
 			else
@@ -151,7 +207,7 @@ public class Buildings {
 		
 		int armazenamento;
 		
-		if (buildings.contains(getBuilding(Edifício.ARMAZÉM))) {
+		if (contains(Edifício.ARMAZÉM)) {
 			if (getLevel(Edifício.ARMAZÉM) == 0)
 				armazenamento = 0;
 			else
@@ -168,7 +224,15 @@ public class Buildings {
 		return armazenamento;
 	}
 	
-	private class Building {
+	public BuildingsEditPanel getEditPanelFull(OnChange onChange) {
+		return new BuildingsEditPanel(onChange, true, true, true);
+	}
+	
+	public BuildingsEditPanel getEditPanelFullNoHeader(OnChange onChange) {
+		return new BuildingsEditPanel(onChange, false, true, true);
+	}
+	
+	public class Building {
 		
 		private Edifício edifício;
 		private int nivel;
@@ -176,6 +240,22 @@ public class Buildings {
 		private Building(Edifício ed, int nivel) {
 			this.edifício = ed;
 			this.nivel = nivel;
+		}
+		
+		public int getNível() {
+			return nivel;
+		}
+		
+		public Edifício getEdifício() {
+			return edifício;
+		}
+		
+		public int getPontos() {
+			return edifício.getPontos(nivel);
+		}
+		
+		public int getPopulação() {
+			return edifício.getPopulação(nivel);
 		}
 		
 		private int getCustoFerroNext() {
@@ -192,9 +272,7 @@ public class Buildings {
 		
 	}
 	
-	public static boolean isBuildingJson(JSONObject json) {
-		return json.has("buildings");
-	}
+	
 	
 	public class BuildingsEditPanel extends JPanel {
 		
@@ -204,8 +282,8 @@ public class Buildings {
 		private boolean hasHeader, hasNames, hasLevels;
 		private OnChange onChange;
 		
-		public BuildingsEditPanel(OnChange onChange, boolean hasHeader, boolean hasNames,
-				boolean hasLevels, Edifício... edifícios) {
+		public BuildingsEditPanel(OnChange onChange, boolean hasHeader, 
+				boolean hasNames, boolean hasLevels) {
 			
 			map = new HashMap<Edifício, EdifícioFormattedTextField>();
 			
@@ -234,7 +312,7 @@ public class Buildings {
 	        }
 	        
 	        c.insets = new Insets(0, 0, 0, 0);
-	        add(mainPanel(edifícios), c);
+	        add(mainPanel(), c);
 	       
 		}
 		
@@ -242,7 +320,7 @@ public class Buildings {
 			
 			layout = new GridBagLayout();
 		    layout.columnWidths = new int[] {};
-		    layout.rowHeights = new int[]{20};
+		    layout.rowHeights = new int[]{ 28 };
 		    layout.columnWeights = new double[]{1, Double.MIN_VALUE};
 		    layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 			
@@ -251,9 +329,13 @@ public class Buildings {
 		private JPanel headerPanel() {
 			
 			JPanel panel = new JPanel();
-			panel.setLayout(layout);
 			panel.setBackground(Cores.FUNDO_ESCURO);
 			panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+
+			GridBagLayout layout = new GridBagLayout();
+			layout.rowHeights = new int[] { 30 };
+			layout.columnWeights = new double[]{1, Double.MIN_VALUE};
+			panel.setLayout(layout);
 
 			GridBagConstraints c = new GridBagConstraints();
 			c.insets = new Insets(5, 5, 5, 5);
@@ -270,7 +352,7 @@ public class Buildings {
 			return panel;
 		}
 		
-		private JPanel mainPanel(Edifício... edifícios) {
+		private JPanel mainPanel() {
 			
 			JPanel panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -278,22 +360,15 @@ public class Buildings {
 			if (hasHeader)
 				panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 			
-			Edifício[] values = edifícios;
-			if (values.length == 0) {
-				values = new Edifício[buildings.size()];
-				for (int i = 0; i < buildings.size(); i++)
-					values[i] = buildings.get(i).edifício;
-			}
-			
-			for (int i = 0; i < values.length; i++) {
+			for (int i = 0; i < buildings.size(); i++) {
 
-				Edifício ed = values[i];
+				Edifício ed = buildings.get(i).edifício;
 				
 				JPanel edPanel = new JPanel(layout);
-				edPanel.setBackground(Cores.getAlternar(i));
+				edPanel.setBackground(Cores.getAlternar(i+1));
 				
 				GridBagConstraints panelC = new GridBagConstraints();
-				panelC.insets = new Insets(5, 5, 5, 5);
+				panelC.insets = new Insets(4, 5, 4, 5);
 				panelC.gridx = 0;
 				panelC.gridy = 0;
 				panelC.fill = GridBagConstraints.BOTH;
@@ -326,7 +401,7 @@ public class Buildings {
 					panelC.gridx++;
 				}
 				map.put(ed, txt);
-			
+				
 				panel.add(edPanel);
 			}
 		       

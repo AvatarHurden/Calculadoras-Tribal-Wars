@@ -1,6 +1,5 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade;
 
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
@@ -28,20 +27,16 @@ import config.Lang;
 import database.Cores;
 import database.Unidade;
 
-@SuppressWarnings("serial")
 public class DadosDeUnidadePanel extends Ferramenta {
-
-    // List<Unidade> unidadesUtilizadas = new ArrayList<Unidade>();
-    // List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
-
-    Army army;
-    ArmyEditPanel armyEdit;
+	
+    private Army army;
+    private ArmyEditPanel armyEdit;
     
-    List<InformaçãoTropaPanel> panelTropaList = new ArrayList<InformaçãoTropaPanel>();
+    private List<InformaçãoTropaPanel> panelTropaList = new ArrayList<InformaçãoTropaPanel>();
 
-    InformaçãoTropaPanel armyInformationPanel;
+    private InformaçãoTropaPanel armyInformationPanel;
     
-    OnChange onChange;
+    private OnChange onChange;
     
     /**
      * Ferramenta com informações de unidades. Possui:
@@ -62,17 +57,14 @@ public class DadosDeUnidadePanel extends Ferramenta {
         onChange = new OnChange() {
 			public void run() {
 				armyEdit.saveValues();
-				System.out.println(army.getQuantidade(Unidade.LANCEIRO));
 				for (InformaçãoTropaPanel p : panelTropaList)
 					p.changeValues(army.getTropas().get(panelTropaList.indexOf(p)));
 				armyInformationPanel.changeValues(army);
 			}
 		};
 		
-		int levels = WorldManager.get().getSelectedWorld().getResearchSystem().getResearch();
-		
         army = new Army(Army.getAvailableUnits());
-        armyEdit = army.new ArmyEditPanel(onChange, true, true, true, levels == 3, levels == 10);
+        armyEdit = army.getEditPanelWorldLevels(onChange);
         
         makePanels();
         

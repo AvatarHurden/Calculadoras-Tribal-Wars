@@ -85,7 +85,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		};
 		
 		army = new Army(Army.getAttackingUnits());
-		armyEdit = army.new ArmyEditPanel(onChange, true, true, true, false, false);
+		armyEdit = army.getEditPanelNoLevels(onChange);
 				
 		makePanelRecomendado();
 		panelRecomendado.setVisible(false);

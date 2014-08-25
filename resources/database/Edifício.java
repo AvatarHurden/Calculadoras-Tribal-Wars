@@ -97,12 +97,18 @@ public enum Edifício {
 
 
 	public int getPontos(int nível) {
-		return (int) Math.round(pontosInicial 
+		if (nível == 0)
+			return 0;
+		else
+			return (int) Math.round(pontosInicial 
 				* Math.pow(razãoPontos, nível-1));
 	}
 
 	public int getPopulação(int nível) {
-		return (int) Math.round(populaçãoInicial 
+		if (nível == 0)
+			return 0;
+		else
+			return (int) Math.round(populaçãoInicial 
 				* Math.pow(razãoPopulação, nível-1));
 	}
 	

@@ -166,10 +166,7 @@ public class InformaçãoTropaPanel {
 	private JSeparator makeSeparator() {
 
 		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
-		if (cor == null)
-			separator.setForeground(Cores.SEPARAR_ESCURO);
-		else
-			separator.setForeground(Cores.SEPARAR_CLARO);
+		separator.setForeground(Cores.SEPARAR_CLARO);
 		
 		return separator;
 	}

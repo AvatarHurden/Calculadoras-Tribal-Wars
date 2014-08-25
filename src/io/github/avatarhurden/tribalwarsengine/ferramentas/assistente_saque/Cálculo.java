@@ -213,9 +213,9 @@ public class Cálculo {
 	protected void setProduçãoEArmazenamento(Buildings buildings) {
 		
 		armazenamento = buildings.getArmazenamento(true);
-		produção[0] = new BigDecimal(buildings.getWoodProduction());
-		produção[1] = new BigDecimal(buildings.getClayProduction());
-		produção[2] = new BigDecimal(buildings.getIronProduction());
+		produção[0] = new BigDecimal(buildings.getProduçãoMadeira());
+		produção[1] = new BigDecimal(buildings.getProduçãoArgila());
+		produção[2] = new BigDecimal(buildings.getProduçãoFerro());
 		
 		// Changes production from per hour to per millissecond
 		for (int i = 0; i < 3; i++) {
