@@ -61,7 +61,7 @@ public class InformaçõesEdifícioPanel {
 		GridBagLayout gbl = new GridBagLayout();
 
 		gbl.columnWidths = new int[] { 75, 1, 75 };
-		gbl.rowHeights = new int[] { 28 };
+		gbl.rowHeights = new int[] { 26 };
 		gbl.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		dadosPanel.setLayout(gbl);

@@ -320,7 +320,7 @@ public class Buildings {
 			
 			layout = new GridBagLayout();
 		    layout.columnWidths = new int[] {};
-		    layout.rowHeights = new int[]{ 28 };
+		    layout.rowHeights = new int[]{ 26 };
 		    layout.columnWeights = new double[]{1, Double.MIN_VALUE};
 		    layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 			
@@ -368,7 +368,7 @@ public class Buildings {
 				edPanel.setBackground(Cores.getAlternar(i+1));
 				
 				GridBagConstraints panelC = new GridBagConstraints();
-				panelC.insets = new Insets(4, 5, 4, 5);
+				panelC.insets = new Insets(3, 5, 3, 5);
 				panelC.gridx = 0;
 				panelC.gridy = 0;
 				panelC.fill = GridBagConstraints.BOTH;

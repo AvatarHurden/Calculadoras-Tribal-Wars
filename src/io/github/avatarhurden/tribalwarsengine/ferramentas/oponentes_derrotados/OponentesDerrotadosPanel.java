@@ -1,8 +1,11 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados;
 
-import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,34 +13,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Cores;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class OponentesDerrotadosPanel extends Ferramenta {
-
-	private List<PanelUnidade> panelUnidadeList = new ArrayList<PanelUnidade>();
-
-	private Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
 	
-	private final Map<Unidade, Integer> pontos_ODA = new HashMap<Unidade, Integer>();
-	private final Map<Unidade, Integer> pontos_ODD = new HashMap<Unidade, Integer>();
+	private Army army;
+	private ArmyEditPanel armyEdit;
+	
+	private OnChange onChange;
 
-	PanelSoma total = new PanelSoma();
+	private List<ODTropaPanel> panelUnidadeList = new ArrayList<ODTropaPanel>();
 
+	private ODTropaPanel armyInformationPanel;
+	
 	JPanel panelButtons;
 	JRadioButton buttonDefesa;
 	JRadioButton buttonAtaque;
@@ -45,12 +47,32 @@ public class OponentesDerrotadosPanel extends Ferramenta {
 	public OponentesDerrotadosPanel() {
 
 		super(Lang.FerramentaOD.toString());
+		
+		onChange = new OnChange() {
+			public void run() {
+				armyEdit.saveValues();
+				for (ODTropaPanel p : panelUnidadeList)
+					if (buttonDefesa.isSelected())
+						p.changeODDefesa(army.getTropas().get(panelUnidadeList.indexOf(p)));
+					else
+						p.changeODAtaque(army.getTropas().get(panelUnidadeList.indexOf(p)));
+				if (buttonDefesa.isSelected())
+					armyInformationPanel.changeODDefesa(army);
+				else
+					armyInformationPanel.changeODAtaque(army);
+			}
+		};
 
-		setUnidades();
-		setMaps();
+		army = new Army(Army.getAvailableUnits());
+		armyEdit = army.getEditPanelNoLevels(onChange);
 
-		total.setPanelListAndColor(panelUnidadeList, getNextColor());
-
+				
+		makePanels();
+		
+		makeGUI();
+	}
+	
+	private void makeGUI() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
@@ -62,48 +84,82 @@ public class OponentesDerrotadosPanel extends Ferramenta {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 5, 5, 5);
-
-		ActionListener reset = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				for (IntegerFormattedTextField t : mapQuantidades.values())
-					t.setText("");
-			}
-		};
 		
 		gbc.anchor = GridBagConstraints.WEST;
-		add(tools.addResetPanel(reset), gbc);
+		add(tools.addResetPanel(getResetButtonAction()), gbc);
 		
 		gbc.anchor = GridBagConstraints.EAST;
-		add(tools.addModelosTropasPanel(true, mapQuantidades), gbc);
+		add(tools.addModelosTropasPanel(true, armyEdit), gbc);
 		
-		gbc.anchor = GridBagConstraints.CENTER;
-		gbc.gridy++;
-		gbc.gridwidth = 1;
-		addHeader(true, gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
-		add(unitePanels("dados"), gbc);
-
-		gbc.gridx++;
-		add(unitePanels("od"), gbc);
-
+		gbc.anchor = GridBagConstraints.NORTH;
+        gbc.gridy++;
+        add(armyEdit, gbc);
+        
 		createPanelButtons();
 		gbc.gridy++;
-		gbc.gridx = 0;
-		gbc.gridheight = 2;
 		add(panelButtons, gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridheight = 1;
-		addHeader(false, gbc);
 
-		gbc.gridx = 0;
-		gbc.gridy++;
-		addPanelTotal(gbc);
-		
-
+		gbc.gridheight = 2;
+		gbc.gridy--;
+        gbc.gridx++;
+        add(dadosPrincipaisPanel(), gbc);
 	}
+	
+	private void makePanels() {
+		
+		for (int i = 0; i < army.getTropas().size(); i++) {
+			   ODTropaPanel panel = new ODTropaPanel(getNextColor());
+			   panel.setBorder(new MatteBorder(0, 1, 0, 1, Cores.SEPARAR_ESCURO));
+			   panelUnidadeList.add(panel);
+		   }
+		   
+		// Fixes the border of first and last panel
+		panelUnidadeList.get(0).setBorder(new MatteBorder(1, 1, 0, 1, Cores.SEPARAR_ESCURO));
+		panelUnidadeList.get(panelUnidadeList.size()-1).setBorder(new MatteBorder(0, 1, 1, 1, Cores.SEPARAR_ESCURO));
+		   
+		armyInformationPanel = new ODTropaPanel(getNextColor());
+		armyInformationPanel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+	}
+	
+	private JPanel dadosPrincipaisPanel() {
+	   
+	   JPanel panel = new JPanel();
+	   panel.setOpaque(false);
+	   panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	   
+	   panel.add(dadosPrincipaisHeader());
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+	   for (ODTropaPanel u : panelUnidadeList)
+		   panel.add(u);
+	   
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   panel.add(dadosPrincipaisHeader());
+	   panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	   
+	   panel.add(armyInformationPanel);
+	   
+	   return panel;
+    }
+	    
+    private JPanel dadosPrincipaisHeader() {
+	   
+    	JPanel header = new JPanel();
+    	header.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    	header.setBackground(Cores.FUNDO_ESCURO);
+    	header.setPreferredSize(new Dimension(100, 32));
+    	header.setLayout(new GridBagLayout());
+    	
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.insets = new Insets(5, 5, 5, 5);
+
+    	
+    	header.add(new JLabel("OD"), c);
+	   
+    	return header;	   
+	   
+    }
+
 	
 	// Cria um painel com os botões para selecionar se o OD mostrado é de ataque
 	// ou defesa
@@ -136,134 +192,22 @@ public class OponentesDerrotadosPanel extends Ferramenta {
 	// Classe para os botões de ataque e defesa
 	class buttonChangeListener implements ItemListener {
 		public void itemStateChanged(ItemEvent arg0) {
-
-			for (PanelUnidade i : panelUnidadeList)
-				if (!i.getQuantidade().equals(""))
-					i.changeOD();
-
-			total.setTotal();
+			onChange.run();
 		}
 	}
+	
+	private ActionListener getResetButtonAction() {
+    	
+    	ActionListener action = new ActionListener() {
+    		public void actionPerformed(ActionEvent arg0) {	
+            	armyEdit.resetComponents();
+            	for (ODTropaPanel p : panelUnidadeList)
+            		p.resetValues();
+            	armyInformationPanel.resetValues();
+            }
+        };
 
-	/**
-	 * Adiciona um cabeçalho com os nomes das informações de cada coluna
-	 * 
-	 * @param boolean com "nome" e "quantidade", para ser usável embaixo
-	 */
-	private void addHeader(boolean withIdentifiers, GridBagConstraints gbc) {
-
-		PanelUnidade header = new PanelUnidade(!withIdentifiers);
-
-		if (withIdentifiers) {
-			header.getPanelDados().setBorder(
-					new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-			add(header.getPanelDados(), gbc);
-		}
-
-		gbc.gridx++;
-		header.getPanelOD().setBorder(
-				new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-		add(header.getPanelOD(), gbc);
-
-	}
-
-	/**
-	 * Junta os panels de todas as unidades num único panel Para unir o panel
-	 * com o nome e quantidade da unidade, usar parameter "dados" Para unir o
-	 * panel com o OD da unidade, usar parameter "od"
-	 * 
-	 * @param String
-	 *            qual panel pegar
-	 */
-	private JPanel unitePanels(String s) {
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridBagLayout());
-
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridy = 0;
-
-		for (PanelUnidade i : panelUnidadeList) {
-
-			gbc.gridy++;
-			if (s.toLowerCase().equals("dados"))
-				panel.add(i.getPanelDados(), gbc);
-			else if (s.toLowerCase().equals("od"))
-				panel.add(i.getPanelOD(), gbc);
-
-		}
-
-		return panel;
-
-	}
-
-	/**
-	 * Adiciona o PanelTotal no gui
-	 */
-	private void addPanelTotal(GridBagConstraints gbc) {
-
-		gbc.gridx++;
-		total.getPanelOD().setBorder(
-				new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-		add(total.getPanelOD(), gbc);
-
-	}
-
-	/**
-	 * Define quais unidades serão utilizadas, com as configurações do mundo
-	 */
-	private void setUnidades() {
-		
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades())
-			if (i != null) {
-				panelUnidadeList.add(new PanelUnidade(getNextColor(), i, this));
-				mapQuantidades.put(i, panelUnidadeList.get(panelUnidadeList.size() - 1)
-						.getTextField());
-			}
-		
-	}
-
-	// Cria os mapas com os valores de OD
-	private void setMaps() {
-
-		pontos_ODA.put(Unidade.LANCEIRO, 4);
-		pontos_ODA.put(Unidade.ESPADACHIM, 5);
-		pontos_ODA.put(Unidade.BÁRBARO, 1);
-		pontos_ODA.put(Unidade.ARQUEIRO, 5);
-		pontos_ODA.put(Unidade.EXPLORADOR, 1);
-		pontos_ODA.put(Unidade.CAVALOLEVE, 5);
-		pontos_ODA.put(Unidade.ARCOCAVALO, 6);
-		pontos_ODA.put(Unidade.CAVALOPESADO, 23);
-		pontos_ODA.put(Unidade.ARÍETE, 4);
-		pontos_ODA.put(Unidade.CATAPULTA, 12);
-		pontos_ODA.put(Unidade.PALADINO, 40);
-		pontos_ODA.put(Unidade.MILÍCIA, 4);
-		pontos_ODA.put(Unidade.NOBRE, 200);
-
-		pontos_ODD.put(Unidade.LANCEIRO, 1);
-		pontos_ODD.put(Unidade.ESPADACHIM, 2);
-		pontos_ODD.put(Unidade.BÁRBARO, 4);
-		pontos_ODD.put(Unidade.ARQUEIRO, 2);
-		pontos_ODD.put(Unidade.EXPLORADOR, 2);
-		pontos_ODD.put(Unidade.CAVALOLEVE, 13);
-		pontos_ODD.put(Unidade.ARCOCAVALO, 12);
-		pontos_ODD.put(Unidade.CAVALOPESADO, 15);
-		pontos_ODD.put(Unidade.ARÍETE, 8);
-		pontos_ODD.put(Unidade.CATAPULTA, 10);
-		pontos_ODD.put(Unidade.PALADINO, 20);
-		pontos_ODD.put(Unidade.MILÍCIA, 0);
-		pontos_ODD.put(Unidade.NOBRE, 200);
-
-	}
-
-	public BigDecimal getODA(Unidade unidade) {
-		return new BigDecimal(pontos_ODA.get(unidade));
-	}
-
-	public BigDecimal getODD(Unidade unidade) {
-		return new BigDecimal(pontos_ODD.get(unidade));
-	}
+        return action;
+    }
 
 }

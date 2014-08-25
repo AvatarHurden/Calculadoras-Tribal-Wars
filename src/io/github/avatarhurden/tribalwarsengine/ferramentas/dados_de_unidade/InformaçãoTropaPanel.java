@@ -244,9 +244,7 @@ public class InformaçãoTropaPanel {
 	}
 
 	private String getFormattedNumber(int input) {
-		String formated = NumberFormat.getNumberInstance(Locale.GERMANY).format(input);
-
-		return formated;
+		return NumberFormat.getNumberInstance(Locale.GERMANY).format(input);
 	}
 
 	protected void setBorder(Border border) {

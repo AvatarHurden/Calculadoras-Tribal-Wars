@@ -275,6 +275,24 @@ public class Army {
 		return ferro;
 	}
 	
+	public int getODAtaque() {
+		int ODA = 0;
+		
+		for (Tropa t : tropas)
+			ODA += t.getODAtaque();
+		
+		return ODA;
+	}
+
+	public int getODDefesa() {
+		int ODD = 0;
+		
+		for (Tropa t : tropas)
+			ODD += t.getODDefesa();
+		
+		return ODD;
+	}
+	
 	/**
 	 * Retorna a "velocidade" da unidade mais lenta do exército, em milissegundos/campo.
 	 * São consideradas a velocidade e modificador de unidade do mundo.
@@ -403,6 +421,14 @@ public class Army {
 		
 		public int getTempoProdução() {
 			return unidade.getTempoDeProdução() * quantidade * 1000;
+		}
+		
+		public int getODAtaque() {
+			return unidade.getODA() * quantidade;
+		}
+		
+		public int getODDefesa() {
+			return unidade.getODD() * quantidade;
 		}
 		
 		public double getVelocidade() {
