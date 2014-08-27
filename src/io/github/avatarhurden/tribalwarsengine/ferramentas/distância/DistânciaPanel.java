@@ -182,9 +182,4 @@ public class DistânciaPanel extends Ferramenta {
 		
 		return action;
 	}
-	
-	protected long getTime() {
-		return time;
-	}
-
 }

@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.awt.Font;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,6 +53,7 @@ public class Main {
 
     public void init(String[] args) {
         lookForUpdate();
+        getServerLists();
                 
         Font oldLabelFont = UIManager.getFont("Label.font");
         UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
@@ -97,6 +100,20 @@ public class Main {
                 
             }
         }).start();
+    }
+    
+    public void getServerLists() {
+    	new Thread(new Runnable() {
+			@Override
+			public void run() {
+				JSONArray online = ServerLister.getServerJSON("br", "http://www.tribalwars.com.br");
+				ServerLister.saveServerJSON("br", online);
+				
+				for (int i = 0; i < online.length(); i++) {
+					ServerDownloader d = new ServerDownloader("br", online.getJSONObject(i));
+				}
+			}
+		}).start();
     }
 
 

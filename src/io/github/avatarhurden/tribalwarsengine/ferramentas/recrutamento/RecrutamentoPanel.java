@@ -51,6 +51,12 @@ public class RecrutamentoPanel extends Ferramenta {
 		
 		createRecruitmentPanels();
 		
+		makeGUI();
+		
+		onChange.run();
+	}
+	
+	private void makeGUI() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 125, 100, 100, 100 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 100, 100, 50, 0 };
@@ -76,11 +82,11 @@ public class RecrutamentoPanel extends Ferramenta {
 		c.gridy++;
 		add(makeHeader(), c);
 		
+		c.insets = new Insets(0, 5, 5, 5);
 		for (RecruitmentPanel panel : panels) {
 			c.gridy++;
 			add(panel, c);
 		}
-		
 	}
 	
 	private void createRecruitmentPanels() {

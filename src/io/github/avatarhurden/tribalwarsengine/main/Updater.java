@@ -33,7 +33,7 @@ public class Updater implements FileDownloaderDelegate {
      */
     public void start() {
 
-        if (!Configuration.get().getConfig("show_news_updates", true)) {
+        if (!Configuration.get().getConfig("show_new_updates", true)) {
             return;
         }
 
@@ -47,7 +47,7 @@ public class Updater implements FileDownloaderDelegate {
                 "Nova atualização!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (check.isSelected()) {
-            Configuration.get().setConfig("show_news_updates", false);
+            Configuration.get().setConfig("show_new_updates", false);
         }
 
         if (n == 0) {

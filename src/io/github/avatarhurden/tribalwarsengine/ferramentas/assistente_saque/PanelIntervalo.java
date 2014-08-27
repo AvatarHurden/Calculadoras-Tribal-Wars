@@ -39,7 +39,10 @@ public class PanelIntervalo extends JPanel{
 	private TimeFormattedJLabel respostaLabel;
 	private JLabel errorMessage;
 	
+	private OnChange onChange;
+	
 	protected PanelIntervalo(OnChange onChange) {
+		this.onChange = onChange;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0 };
@@ -68,7 +71,7 @@ public class PanelIntervalo extends JPanel{
 		// Adds the village coordinates
 		coordenadas = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
 			public void go() {
-				onChange.run();
+				PanelIntervalo.this.onChange.run();
 			}
 		};
 		
