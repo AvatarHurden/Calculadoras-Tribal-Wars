@@ -65,8 +65,7 @@ public class OponentesDerrotadosPanel extends Ferramenta {
 
 		army = new Army(Army.getAvailableUnits());
 		armyEdit = army.getEditPanelNoLevels(onChange);
-
-				
+		
 		makePanels();
 		
 		makeGUI();
@@ -143,7 +142,6 @@ public class OponentesDerrotadosPanel extends Ferramenta {
     }
 	    
     private JPanel dadosPrincipaisHeader() {
-	   
     	JPanel header = new JPanel();
     	header.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
     	header.setBackground(Cores.FUNDO_ESCURO);
@@ -153,11 +151,9 @@ public class OponentesDerrotadosPanel extends Ferramenta {
     	GridBagConstraints c = new GridBagConstraints();
     	c.insets = new Insets(5, 5, 5, 5);
 
-    	
     	header.add(new JLabel("OD"), c);
 	   
     	return header;	   
-	   
     }
 
 	

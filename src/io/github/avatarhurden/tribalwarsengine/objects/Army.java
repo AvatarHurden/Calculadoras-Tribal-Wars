@@ -83,6 +83,10 @@ public class Army {
 		this(Arrays.asList(Unidade.values()));
 	}
 	
+	public Army(Unidade... units) {
+		this(Arrays.asList(units));
+	}
+	
 	public Army(List<Unidade> units) {
 		
 		for (Unidade i : units)
@@ -313,6 +317,15 @@ public class Army {
 		return slowest*60000;
 	}
 	
+	public long getTempoProdução() {
+		long tempo = 0;
+		
+		for (Tropa t : tropas)
+			tempo += t.getTempoProdução();
+		
+		return tempo;
+	}
+	
 	public ArmyEditPanel getEditPanelFull(OnChange onChange) {
 		return new ArmyEditPanel(onChange, true, true, false, true, true, true);
 	}
@@ -440,7 +453,7 @@ public class Army {
 		}
 		
 		public int getTempoProdução() {
-			return unidade.getTempoDeProdução() * quantidade * 1000;
+			return unidade.getTempoProdução() * quantidade;
 		}
 		
 		public int getODAtaque() {

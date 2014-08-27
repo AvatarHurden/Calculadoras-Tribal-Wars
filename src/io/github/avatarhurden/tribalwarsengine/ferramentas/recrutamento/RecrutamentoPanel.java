@@ -1,7 +1,10 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento;
 
-import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,16 +12,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Cores;
 import database.Edifício;
 import database.Unidade;
@@ -26,11 +26,8 @@ import database.Unidade;
 @SuppressWarnings("serial")
 public class RecrutamentoPanel extends Ferramenta {
 	
-	private List<PanelEdifício> edifícioList = new ArrayList<PanelEdifício>();
-	
-	private Map<Unidade, PanelUnidade> panelUnidadeMap = new HashMap<Unidade, PanelUnidade>();
-	
-	private Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
+	private List<RecruitmentPanel> panels;
+	private OnChange onChange;
 	
 	/**
 	 * Ferramenta para calcular o tempo necessário de produção de unidades. 
@@ -44,201 +41,136 @@ public class RecrutamentoPanel extends Ferramenta {
 		super(Lang.FerramentaRecruta.toString());
 
 		setOpaque(true);
-
+		
+		onChange = new OnChange() {
+			public void run() {
+				for (RecruitmentPanel panel : panels)
+					panel.changeValues();
+			}
+		};
+		
+		createRecruitmentPanels();
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 200, 0 };
+		gridBagLayout.columnWidths = new int[] { 125, 100, 100, 100 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 100, 100, 50, 0 };
 		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		setLayout(gridBagLayout);
-
-		createPanelUnidadeList();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(5, 5, 5, 5);
 		c.gridy = 0;
 		c.gridx = 0;
-		
-		add(createToolPanel(), c);
-		
-		c.gridy++;
-		add(createHeader(), c);
-		
-		c.gridy++;
-		c.insets = new Insets(0, 5, 5, 5);
-		addPanelsToGUI(c);
-	
-	}
-
-	private void createPanelUnidadeList() {
-		
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades())
-			if (i != null && !i.equals(Unidade.MILÍCIA)) {
-				panelUnidadeMap.put(i, new PanelUnidade(getNextColor(), i));
-				mapQuantidades.put(i, panelUnidadeMap.get(i).getTextField());
-			}
-		
-		
-	}
-	
-	private void addPanelsToGUI(GridBagConstraints c) {
-		
-		PanelEdifício quartel = new PanelEdifício(Edifício.QUARTEL);
-		edifícioList.add(quartel);
-		
-		quartel.addPanel(panelUnidadeMap.get(Unidade.LANCEIRO));
-		quartel.addPanel(panelUnidadeMap.get(Unidade.ESPADACHIM));
-		quartel.addPanel(panelUnidadeMap.get(Unidade.BÁRBARO));
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-			quartel.addPanel(panelUnidadeMap.get(Unidade.ARQUEIRO));
-		quartel.finish();
-		
-		add(quartel, c);
-		
-		PanelEdifício estábulo = new PanelEdifício(Edifício.ESTÁBULO);
-		edifícioList.add(estábulo);
-		
-		estábulo.addPanel(panelUnidadeMap.get(Unidade.EXPLORADOR));
-		estábulo.addPanel(panelUnidadeMap.get(Unidade.CAVALOLEVE));
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
-			estábulo.addPanel(panelUnidadeMap.get(Unidade.ARCOCAVALO));
-		estábulo.addPanel(panelUnidadeMap.get(Unidade.CAVALOPESADO));
-		estábulo.finish();
-		
-		c.gridy++;
-		add(estábulo, c);
-		
-		PanelEdifício oficina = new PanelEdifício(Edifício.OFICINA);
-		edifícioList.add(oficina);
-		
-		oficina.addPanel(panelUnidadeMap.get(Unidade.ARÍETE));
-		oficina.addPanel(panelUnidadeMap.get(Unidade.CATAPULTA));
-		oficina.finish();
-		
-		c.gridy++;
-		add(oficina, c);
-		
-		if (Mundo_Reader.MundoSelecionado.isAcademiaDeNíveis()) {
-			
-			PanelEdifício academia = new PanelEdifício(Edifício.ACADEMIA_3NÍVEIS);
-			edifícioList.add(academia);
-			
-			academia.addPanel(panelUnidadeMap.get(Unidade.NOBRE));
-			academia.finish();
-			
-			c.gridy++;
-			add(academia, c);
-			
-		} else {
-			
-			panelUnidadeMap.get(Unidade.NOBRE).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-			
-			c.gridy++;
-			add(panelUnidadeMap.get(Unidade.NOBRE), c);
-			
-		}
-		
-		if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
-			
-			panelUnidadeMap.get(Unidade.PALADINO).setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-			
-			c.gridy++;
-			add(panelUnidadeMap.get(Unidade.PALADINO), c);
-			
-		}
-			
-		
-	}
-	
-	private JPanel createToolPanel() {
-		
-		JPanel toolPanel = new JPanel();
-		toolPanel.setOpaque(false);
-		
-		GridBagLayout gbl = new GridBagLayout();
-		gbl.columnWidths = new int[] { 125, 100, 100, 125 };
-		gbl.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl.columnWeights = new double[] { 0.0, 1.0, 0.0 };
-		gbl.rowWeights = new double[] { Double.MIN_VALUE };
-		toolPanel.setLayout(gbl);
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 0, 0);
-		c.gridy = 0;
-		c.gridx = 0;
-		
-		ActionListener reset = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				for (IntegerFormattedTextField i : mapQuantidades.values())
-					i.setText("");
-				
-				for (PanelEdifício i : edifícioList)
-					i.getComboBox().setText("1");
-				
-				mapQuantidades.get(Unidade.LANCEIRO).requestFocus();
-				
-			}
-		};
 		
 		c.anchor = GridBagConstraints.WEST;
-		toolPanel.add(tools.addResetPanel(reset), c);
+		add(tools.addResetPanel(getResetButtonAction()), c);
 		
+		c.anchor = GridBagConstraints.EAST;
 		c.gridx++;
-		c.anchor = GridBagConstraints.CENTER;
-		toolPanel.add(tools.addModelosTropasPanel(true, mapQuantidades), c);
-
-		return toolPanel;
+		add(getModeloTropasPanel(), c);
 		
-	}
-	
-	/**
-	 * Adiciona a barra com os nomes de cada coluna
-	 */
-	private JPanel createHeader() {
-
-		JPanel header = new JPanel();
-
-		header.setBackground(Cores.FUNDO_ESCURO);
-		header.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-
-		GridBagLayout gbl = new GridBagLayout();
-		gbl.columnWidths = new int[] { 125, 100, 100, 125 };
-		gbl.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl.columnWeights = new double[] { 0.0, 1.0, 0.0 };
-		gbl.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				Double.MIN_VALUE };
-		header.setLayout(gbl);
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
+		c.gridwidth = 4;
 		c.gridx = 0;
-		c.gridy = 0;
+		c.gridy++;
+		add(makeHeader(), c);
 		
-		JLabel lblUnidades = new JLabel(Lang.Unidade.toString());
-		header.add(lblUnidades, c);
-
-		JLabel lblQuantidade = new JLabel(Lang.Quantidade.toString());
-	
-		c.insets = new Insets(5, 0, 5, 5);
-		c.gridx++;
-		header.add(lblQuantidade, c);
-
-		JLabel lblTempoPorUnidade = new JLabel(Lang.TempoUnidade.toString());
-	
-		c.gridx++;	
-		header.add(lblTempoPorUnidade, c);
-
-		JLabel lblTempoTotal = new JLabel(Lang.TempoTotal.toString());
+		for (RecruitmentPanel panel : panels) {
+			c.gridy++;
+			add(panel, c);
+		}
 		
-		c.insets = new Insets(5, 0, 5, 0);
-		c.gridx++;
-		header.add(lblTempoTotal, c);
-
-		return header;
+	}
+	
+	private void createRecruitmentPanels() {
+		
+		panels = new ArrayList<RecruitmentPanel>();
+		
+		List<Unidade> barrackList = new ArrayList<Unidade>();
+		barrackList.add(Unidade.LANCEIRO);
+		barrackList.add(Unidade.ESPADACHIM);
+		barrackList.add(Unidade.BÁRBARO);
+		if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO))
+			barrackList.add(Unidade.ARQUEIRO);
+		
+		panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.QUARTEL), 
+				new Army(barrackList)));
+		
+		List<Unidade> stableList = new ArrayList<Unidade>();
+		stableList.add(Unidade.EXPLORADOR);
+		stableList.add(Unidade.CAVALOLEVE);
+		if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO))
+			stableList.add(Unidade.ARCOCAVALO);
+		stableList.add(Unidade.CAVALOPESADO);
+		
+		panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ESTÁBULO), 
+				new Army(stableList)));
+		
+		panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.OFICINA), 
+				new Army(Unidade.ARÍETE, Unidade.CATAPULTA)));
+		
+		if (Army.getAvailableUnits().contains(Unidade.PALADINO))
+			panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ESTÁTUA), 
+				new Army(Unidade.PALADINO)));
+		
+		if (Buildings.getAvailableBuildings().contains(Edifício.ACADEMIA_1NÍVEL))
+			panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ACADEMIA_1NÍVEL), 
+					new Army(Unidade.NOBRE)));
+		else
+			panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ACADEMIA_3NÍVEIS), 
+					new Army(Unidade.NOBRE)));
 		
 	}
 
+	private JPanel getModeloTropasPanel() {
+		
+		ArmyEditPanel[] editPanels = new ArmyEditPanel[panels.size()];
+		
+		for (int i = 0; i < editPanels.length; i++)
+			editPanels[i] = panels.get(i).getArmyEditPanel();
+				
+		return tools.addModelosTropasPanel(true, editPanels);
+
+	}
+	
+    private JPanel makeHeader() {
+    	JPanel header = new JPanel();
+    	header.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+    	header.setBackground(Cores.FUNDO_ESCURO);
+
+    	GridBagLayout layout = new GridBagLayout();
+		layout.columnWidths = new int[] { 125, 100, 100, 100 };
+		layout.rowHeights = new int[] { 30 };
+		header.setLayout(layout);
+		
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridx = 0;
+    	c.gridy = 0;
+    	
+    	header.add(new JLabel("Unidade"), c);
+    	
+    	c.gridx++;
+    	header.add(new JLabel("Quantidade"), c);
+    	
+    	c.gridx++;
+    	header.add(new JLabel("Tempo Unitário"), c);
+
+    	c.gridx++;
+    	header.add(new JLabel("Tempo Total"), c);
+	   
+    	return header;	   
+    }
+	
+	private ActionListener getResetButtonAction() {
+    	
+    	ActionListener action = new ActionListener() {
+    		public void actionPerformed(ActionEvent arg0) {
+    			for (RecruitmentPanel panel : panels)
+    				panel.getArmyEditPanel().resetComponents();
+            }
+        };
+
+        return action;
+    }
 }

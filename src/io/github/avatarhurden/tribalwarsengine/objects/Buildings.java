@@ -61,6 +61,10 @@ public class Buildings {
 	public Buildings() {
 		this(Arrays.asList(Edifício.values()));
 	}
+
+	public Buildings(Edifício... ed) {
+		this(Arrays.asList(ed));
+	}
 	
 	public Buildings(List<Edifício> list) {
 		
@@ -224,6 +228,16 @@ public class Buildings {
 		return armazenamento;
 	}
 	
+	public double getFatorProduçãoUnidade(Edifício ed) {
+		
+		if (!contains(ed))
+			return 1;
+		else
+			return 2.0/3.0*Math.pow(1.06, -getLevel(ed)) / 
+					WorldManager.get().getSelectedWorld().getWorldSpeed();
+		
+	}
+	
 	public BuildingsEditPanel getEditPanelFull(OnChange onChange) {
 		return new BuildingsEditPanel(onChange, true, true, true);
 	}
@@ -276,6 +290,7 @@ public class Buildings {
 	
 	public class BuildingsEditPanel extends JPanel {
 		
+		private List<JPanel> panels;
 		private HashMap<Edifício, EdifícioFormattedTextField> map;
 		private GridBagLayout layout;
 		
@@ -286,6 +301,7 @@ public class Buildings {
 				boolean hasNames, boolean hasLevels) {
 			
 			map = new HashMap<Edifício, EdifícioFormattedTextField>();
+			panels = new ArrayList<JPanel>();
 			
 			this.onChange = onChange;
 			this.hasHeader = hasHeader;
@@ -402,6 +418,7 @@ public class Buildings {
 				}
 				map.put(ed, txt);
 				
+				panels.add(edPanel);
 				panel.add(edPanel);
 			}
 		       
@@ -437,6 +454,11 @@ public class Buildings {
 		
 		public Buildings getBuildings() {
 			return Buildings.this;
+		}
+		
+		public void setOpaquePanels(boolean isOpaque) {
+			for (JPanel panel : panels)
+				panel.setOpaque(false);
 		}
 		
 	}

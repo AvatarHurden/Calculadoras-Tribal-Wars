@@ -53,9 +53,9 @@ public abstract class EdifícioFormattedComboBoxOld extends JTextField {
 						&& (Character.isDigit(str.charAt(0))))
 					super.insertString(offset, str, attr);
 				
-				if (Math.abs(Integer.parseInt(getText(0, getLength()))) > ed.nívelMáximo()) {
+				if (Math.abs(Integer.parseInt(getText(0, getLength()))) > ed.getNívelMáximo()) {
 					super.remove(0, getLength());
-					super.insertString(0, String.valueOf(ed.nívelMáximo()), attr);
+					super.insertString(0, String.valueOf(ed.getNívelMáximo()), attr);
 				}
 
 			}

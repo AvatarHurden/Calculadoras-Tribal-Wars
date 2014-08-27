@@ -91,9 +91,9 @@ public class ToolManager {
      * @param textFields Map com IntegerFormattedTextField ligados a unidades, para utilizar os Modelos
      * @return Um JPanel com as coisas faladas
      */
-    public JPanel addModelosTropasPanel(boolean edit, ArmyEditPanel armyPanel) {
+    public JPanel addModelosTropasPanel(boolean edit, ArmyEditPanel... armyPanel) {
 
-        ModeloTropasPanel panel = new ModeloTropasPanel(edit, armyPanel, this);
+        ModeloTropasPanel panel = new ModeloTropasPanel(edit, this, armyPanel);
 
         tropasPanelList.add(panel);
 

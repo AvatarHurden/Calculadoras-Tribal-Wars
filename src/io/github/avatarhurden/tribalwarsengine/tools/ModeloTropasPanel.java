@@ -27,11 +27,11 @@ import database.Cores;
 @SuppressWarnings("serial")
 public class ModeloTropasPanel extends JPanel {
 
-	private ArmyEditPanel armyEdit;
+	private ArmyEditPanel[] armyEdit;
     private JPopupMenu popup;
     private ToolManager manager;
 
-    public ModeloTropasPanel(boolean edit, ArmyEditPanel armyEdit, ToolManager manager) {
+    public ModeloTropasPanel(boolean edit, ToolManager manager, ArmyEditPanel... armyEdit) {
 
         this.armyEdit = armyEdit;
         this.manager = manager;
@@ -129,8 +129,9 @@ public class ModeloTropasPanel extends JPanel {
         item.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent a) {
-
-               armyEdit.setValues(i.getArmy());
+            	
+            	for (ArmyEditPanel p : armyEdit)
+            		p.setValues(i.getArmy());
             	
             }
         });
@@ -156,7 +157,8 @@ public class ModeloTropasPanel extends JPanel {
                 try {
                 	
                 	ArmyModel modelo = new ArmyModel();
-                    modelo.setArmy(armyEdit.getArmy());
+                	for (ArmyEditPanel p : armyEdit)
+                		modelo.setArmy(p.getArmy());
                     
                     new EditDialog(ArmyModelManager.get().getList(),
                     		ArmyModelManager.get().getFieldNames(),

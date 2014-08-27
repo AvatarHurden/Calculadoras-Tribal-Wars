@@ -5,18 +5,18 @@ import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 public enum Unidade {
 
 	//  			Nome				tipo            		  mad	 arg      fer    pop  atk   dg    dc    da    mov   saq  tempo	ODA 	ODD
-	LANCEIRO	  ("Lanceiro", 			UnidadeTipo.Geral,        50,    30,	  10,	 1,	  10,   15,   45,   20,	  18,   25,  680,	4,		1),
-	ESPADACHIM	  ("Espadachim",		UnidadeTipo.Geral,        30,    30,	  70,	 1,	  25,   50,   15,   40,	  22,   15,  1000,	5,		2),
-	BÁRBARO		  ("Bárbaro", 			UnidadeTipo.Geral,        60,    30,	  40,	 1,	  40,   10,   5,    10,	  18,   10,  880,	1,		4),
-	ARQUEIRO	  ("Arqueiro",			UnidadeTipo.Arqueiro,     100,   30,	  60,	 1,	  15,   50,   40,   5, 	  18,   10,  1200,	5,		2),	
-	EXPLORADOR	  ("Explorador",		UnidadeTipo.unspecified,  50,    50,	  20,	 2,	  0,	2,    1,    2,    9,    0,   600,	1,		2),
-	CAVALOLEVE	  ("Cavalaria Leve",	UnidadeTipo.Cavalo,       125,   100,	  250,	 4,	  130,  30,   40,   30,   10,   80,  1200,	5,		13),
-	ARCOCAVALO	  ("Arqueiro a Cavalo", UnidadeTipo.Arqueiro,     250,   100,	  150,	 5,	  120,  40,   30,   50,   10,   50,  1800,	6,		12),
-	CAVALOPESADO  ("Cavalaria Pesada",  UnidadeTipo.Cavalo,       200,   150,	  600,	 6,	  150,  200,  80,   180,  11,   50,  2400,	23,		15),
-	ARÍETE		  ("Aríete", 			UnidadeTipo.Geral,        300,   200,	  200,	 5,	  2,	20,   50,   20,   30,   0,   3200,	4,		8),
-	CATAPULTA	  ("Catapulta", 		UnidadeTipo.Geral,        320,   400,	  100,	 8,	  100,  100,  50,   100,  30,   0,   4800,	12,		10),
+	LANCEIRO	  ("Lanceiro", 			UnidadeTipo.Geral,        50,    30,	  10,	 1,	  10,   15,   45,   20,	  18,   25,  1020,	4,		1),
+	ESPADACHIM	  ("Espadachim",		UnidadeTipo.Geral,        30,    30,	  70,	 1,	  25,   50,   15,   40,	  22,   15,  1500,	5,		2),
+	BÁRBARO		  ("Bárbaro", 			UnidadeTipo.Geral,        60,    30,	  40,	 1,	  40,   10,   5,    10,	  18,   10,  1320,	1,		4),
+	ARQUEIRO	  ("Arqueiro",			UnidadeTipo.Arqueiro,     100,   30,	  60,	 1,	  15,   50,   40,   5, 	  18,   10,  1800,	5,		2),	
+	EXPLORADOR	  ("Explorador",		UnidadeTipo.unspecified,  50,    50,	  20,	 2,	  0,	2,    1,    2,    9,    0,   900,	1,		2),
+	CAVALOLEVE	  ("Cavalaria Leve",	UnidadeTipo.Cavalo,       125,   100,	  250,	 4,	  130,  30,   40,   30,   10,   80,  1800,	5,		13),
+	ARCOCAVALO	  ("Arqueiro a Cavalo", UnidadeTipo.Arqueiro,     250,   100,	  150,	 5,	  120,  40,   30,   50,   10,   50,  2700,	6,		12),
+	CAVALOPESADO  ("Cavalaria Pesada",  UnidadeTipo.Cavalo,       200,   150,	  600,	 6,	  150,  200,  80,   180,  11,   50,  3600,	23,		15),
+	ARÍETE		  ("Aríete", 			UnidadeTipo.Geral,        300,   200,	  200,	 5,	  2,	20,   50,   20,   30,   0,   4800,	4,		8),
+	CATAPULTA	  ("Catapulta", 		UnidadeTipo.Geral,        320,   400,	  100,	 8,	  100,  100,  50,   100,  30,   0,   7200,	12,		10),
 	PALADINO	  ("Paladino", 			UnidadeTipo.Cavalo,       20,    20,	  40,	 10,  150,  250,  400,  150,  10,   100, 21600,	40,		20),
-	NOBRE         ("Nobre", 		    UnidadeTipo.Geral,        40000, 50000,  50000, 100, 30,   100,  50,   100,  35,    0,   12000,	200,	200),
+	NOBRE         ("Nobre", 		    UnidadeTipo.Geral,        40000, 50000,  50000, 100, 30,   100,  50,   100,  35,    0,   18000,	200,	200),
 	MILÍCIA		  ("Milícia", 			UnidadeTipo.unspecified,  0,     0,		  0,	 0,	  0,	15,   45,   25,   0, 	0,   0,		4,		0);
 
 
@@ -215,10 +215,10 @@ public enum Unidade {
 	}
 
 	/**
-	 * @return tempo de produção da unidade em segundos (100%)
+	 * @return tempo de produção da unidade em millisegundos (100%)
 	 */
-	public int getTempoDeProdução() {
-		return tempoProdução;
+	public int getTempoProdução() {
+		return tempoProdução * 1000;
 	}
 
 	/**

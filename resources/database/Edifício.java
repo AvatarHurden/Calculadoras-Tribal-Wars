@@ -156,7 +156,7 @@ public enum Edifício {
 		return nome;
 	}
 
-	public int nívelMáximo() {
+	public int getNívelMáximo() {
 		return nívelMáximo;
 	}
 

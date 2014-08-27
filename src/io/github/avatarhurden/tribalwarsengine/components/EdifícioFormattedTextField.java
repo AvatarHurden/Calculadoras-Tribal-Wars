@@ -18,7 +18,7 @@ public abstract class EdifícioFormattedTextField extends IntegerFormattedTextFie
 	
 	public EdifícioFormattedTextField(final Edifício ed, int initial) {
 		
-		super(initial, 3, ed.nívelMáximo());
+		super(initial, 3, ed.getNívelMáximo());
 		
 		setHorizontalAlignment(SwingConstants.CENTER);
 		
