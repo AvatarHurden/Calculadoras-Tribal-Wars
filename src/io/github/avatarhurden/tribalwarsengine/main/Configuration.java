@@ -20,17 +20,15 @@ import org.json.JSONObject;
  */
 public class Configuration {
 	
-	private static final String worldString = "TWEconfig/worlds.json";
-    private static final String defaultString = "/config/default_worlds";
-	private static final String villageModelString = "TWEconfig/villageModels.json";
-	private static final String armyModelString = "TWEconfig/armyModels.json";
+	private static final String villageModelString = "villageModels.json";
+	private static final String armyModelString = "armyModels.json";
 	
-    private static final String configString = "TWEconfig/config.json";
+    private static final String configString = "config.json";
 
     private static Configuration instance;
     //Armazena as configurações
-    private JSONObject config, worldConfig, villageConfig, armyConfig;
-    private File configFile, worldFile, villageFile, armyFile;
+    private JSONObject config, villageConfig, armyConfig;
+    private File configFile, villageFile, armyFile;
     private JFrame frame = MainWindow.getInstance();
 
     /**
@@ -38,7 +36,6 @@ public class Configuration {
      */
     private Configuration() {
     	configFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), configString);
-    	worldFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), worldString);
     	villageFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), villageModelString);
     	armyFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), armyModelString);
         
@@ -72,7 +69,6 @@ public class Configuration {
     public void salvaConfigJSON() {
         try {
             JSON.createJSONFile(config, configFile);
-            JSON.createJSONFile(worldConfig, worldFile);
             JSON.createJSONFile(villageConfig, villageFile);
             JSON.createJSONFile(armyConfig, armyFile);
         } catch (IOException e) {
@@ -82,11 +78,7 @@ public class Configuration {
 
     private void loadConfigJSON() {
         try {
-        	if (!new File("TWEConfig").exists())
-        		new File("TWEConfig").mkdir();
         	
-            if (!worldFile.exists())
-                JSON.createJSONFile(JSON.getJSON(Configuration.class.getResourceAsStream(defaultString)), worldFile);
             if (!configFile.exists())
             	JSON.createJSONFile(new JSONObject("{}"), configFile);
             if (!villageFile.exists())
@@ -95,14 +87,12 @@ public class Configuration {
             	JSON.createJSONFile(new JSONObject().put("armyModels", new JSONArray()), armyFile);
             
             config = JSON.getJSON(configFile);
-            worldConfig = JSON.getJSON(worldFile);
             armyConfig = JSON.getJSON(armyFile);
             villageConfig = JSON.getJSON(villageFile);
             
             } catch (IOException e) {
             JOptionPane.showMessageDialog( frame, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             config = new JSONObject("{}");
-            worldConfig = new JSONObject("{}");
             armyConfig = new JSONObject("{}");
             villageConfig = new JSONObject("{}");
             return;
@@ -183,10 +173,7 @@ public class Configuration {
     		return def;
     	}
     }
-    
-    public JSONArray getWorldConfig() {
-    	return worldConfig.getJSONArray("worlds");
-    }
+
     
     public JSONArray getVillageModelConfig() {
     	return villageConfig.getJSONArray("villageModels");
@@ -204,9 +191,7 @@ public class Configuration {
      */
     public void setConfig(String chave, Object valor) {
         try {
-        	if (chave.equals("worlds"))
-        		worldConfig.put(chave, valor);
-        	else if (chave.equals("villageModels"))
+        	if (chave.equals("villageModels"))
         		villageConfig.put(chave, valor);
         	else if (chave.equals("armyModels"))
         		armyConfig.put(chave, valor);

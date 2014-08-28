@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.awt.Font;
@@ -106,12 +107,7 @@ public class Main {
     	new Thread(new Runnable() {
 			@Override
 			public void run() {
-				JSONArray online = ServerLister.getServerJSON("br", "http://www.tribalwars.com.br");
-				ServerLister.saveServerJSON("br", online);
-				
-				for (int i = 0; i < online.length(); i++) {
-					ServerDownloader d = new ServerDownloader("br", online.getJSONObject(i));
-				}
+				ServerManager.get();
 			}
 		}).start();
     }

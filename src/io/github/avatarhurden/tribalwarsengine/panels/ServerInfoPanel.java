@@ -1,16 +1,23 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
-import database.Cores;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
-import io.github.avatarhurden.tribalwarsengine.objects.World;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import java.awt.*;
+import org.json.JSONObject;
+
+import database.Cores;
 
 @SuppressWarnings("serial")
-public class WorldInfoPanel extends JPanel {
+public class ServerInfoPanel extends JPanel {
     private GridBagConstraints gbc;
 
     /**
@@ -18,7 +25,8 @@ public class WorldInfoPanel extends JPanel {
      * As propriedades mostradas são escolinhas dinamicamente de acordo com o mundo!
      */
     public void changeProperties() {
-        World world = WorldManager.get().getSelectedWorld();
+    	TWServer server = ServerManager.get().getSelectedServer();
+        JSONObject json = server.getBasicConfig();
 
         removeAll();
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -35,19 +43,18 @@ public class WorldInfoPanel extends JPanel {
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
 
-        addProp("Nome", world.getName());
-        addProp("Velocidade", world.getWorldSpeed());
-        addProp("Velocidade das unidades", world.getUnitModifier());
-        addProp("Moral", world.isMoralWorld());
-        addProp("Sistema de pesquisa", world.getResearchSystem().getName());
-        addProp("Igreja", world.isChurchWorld());
-        addProp("Bonus Noturno", world.isNightBonusWorld());
-        addProp("Bandeiras", world.isFlagWorld());
-        addProp("Archeiros", world.isArcherWorld());
-        addProp("Paladino", world.isPaladinWorld());
-        addProp("Itens Aprimorados", world.isBetterItemsWorld());
-        addProp("Milícia", world.isMilitiaWorld());
-        addProp("Cunhagem de moedas", world.isCoiningWorld());
+        addProp("Nome", server.getName());
+        addProp("Velocidade", json.get("speed"));
+        addProp("Velocidade das unidades", json.get("unit_speed"));
+        addProp("Moral", json.get("moral"));
+        addProp("Sistema de pesquisa", json.get("tech"));
+        addProp("Igreja", json.get("church"));
+        addProp("Bonus Noturno", json.get("night"));
+        addProp("Archeiros", json.get("archer"));
+        addProp("Paladino", json.get("knight"));
+        addProp("Itens Aprimorados", json.get("better_items"));
+        addProp("Milícia", json.get("militia"));
+        addProp("Cunhagem de moedas", json.get("coins"));
 
         this.revalidate();
     }

@@ -5,9 +5,8 @@ import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
-import io.github.avatarhurden.tribalwarsengine.objects.World;
-import io.github.avatarhurden.tribalwarsengine.tools.EditDialog;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,9 +22,9 @@ import javax.swing.JPanel;
 import config.Lang;
 
 @SuppressWarnings("serial")
-public class SelectWorldPanel extends JPanel implements ActionListener {
+public class SelectServerPanel extends JPanel implements ActionListener {
 
-    private TWEComboBox selectionBox;
+    private TWEComboBox<TWServer> selectionBox;
     private TWButton startButton;
     private TWSimpleButton padrãoButton;
     private TWSimpleButton editButton;
@@ -37,7 +36,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
      *
      * @param selectWorldFrame Frame em que será inserido
      */
-    public SelectWorldPanel(SelectWorldFrame selectWorldFrame) {
+    public SelectServerPanel(SelectWorldFrame selectWorldFrame) {
 
         this.selectWorldFrame = selectWorldFrame;
 
@@ -57,7 +56,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-        selectionBox = new TWEComboBox();
+        selectionBox = new TWEComboBox<TWServer>();
 
         setSelectionBox();
 
@@ -81,7 +80,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
 
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.NORTHEAST;
-        add(editButton, constraints);
+        //add(editButton, constraints);
 
         startButton = new TWButton(Lang.BtnIniciar.toString());
 
@@ -101,14 +100,17 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
     }
 
     private void setSelectionBox() {
-        WorldManager worldManager = WorldManager.get();
-        worldManager.setAddItens(selectionBox);
+        ServerManager manager = ServerManager.get();
+        for (TWServer s : manager.getList())
+        	selectionBox.addItem(s);
+        
+        selectionBox.setSelectedItem(manager.getDefaultServer());
         
         selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {
 				if (event.getStateChange() == ItemEvent.SELECTED && event.getItem() != null) {
-					WorldManager worldManager = WorldManager.get();
-					worldManager.setSelectedWorld((World) event.getItem());
+					ServerManager.get().setSelectedServer((TWServer)event.getItem());
+					selectWorldFrame.updateWorldInfoPanel();
 					changePadrãoButton();
 				}
 			}
@@ -116,9 +118,8 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
     }
 
     private void changePadrãoButton() {
-        WorldManager worldManager = WorldManager.get();
-        
-        if (worldManager.getDefaultWorld().equals(worldManager.getSelectedWorld()))
+    	ServerManager manager = ServerManager.get();
+        if (manager.getDefaultServer().equals(manager.getSelectedServer()))
         	padrãoButton.setEnabled(false);
         else {
             padrãoButton.setEnabled(true);
@@ -135,25 +136,26 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         switch (action) {
             case "edit_button":
             	
-            	try {
-                    new EditDialog(WorldManager.get().getGenericList(), WorldManager.get().getFieldNames(),
-                    		selectionBox.getSelectedIndex(), new World());
-                } catch (NoSuchFieldException e1) {
-                    e1.printStackTrace();
-                } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
-                } catch (InstantiationException e1) {
-                    e1.printStackTrace();
-                }
-
-                setSelectionBox();
-                selectWorldFrame.updateWorldInfoPanel();
-                break;
+//            	try {
+//                    new EditDialog(WorldManager.get().getGenericList(), WorldManager.get().getFieldNames(),
+//                    		selectionBox.getSelectedIndex(), new World());
+//                } catch (NoSuchFieldException e1) {
+//                    e1.printStackTrace();
+//                } catch (IllegalAccessException e1) {
+//                    e1.printStackTrace();
+//                } catch (InstantiationException e1) {
+//                    e1.printStackTrace();
+//                }
+//
+//                setSelectionBox();
+//                selectWorldFrame.updateWorldInfoPanel();
+//                break;
             case "start_button":
+            	ServerManager.get().getSelectedServer().setInfo();
                 Main.openMainFrame();
                 break;
             case "default_button":
-                WorldManager.get().setDefaultWorldSelected();
+                ServerManager.get().setDefaultServer(ServerManager.get().getSelectedServer());
                 changePadrãoButton();
                 break;
         }

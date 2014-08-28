@@ -1,7 +1,5 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import io.github.avatarhurden.tribalwarsengine.objects.World;
-
 import java.awt.Color;
 import java.awt.Component;
 
@@ -15,7 +13,7 @@ import database.Cores;
 /**
  * @author Wesley Nascimento
  */
-public class TWEComboBox extends JComboBox{
+public class TWEComboBox<K> extends JComboBox<K>{
 
     public TWEComboBox() {
         this.setRenderer(new TWEComboBoxRenderer());
@@ -24,7 +22,7 @@ public class TWEComboBox extends JComboBox{
     }
 
     //Render desse combo!
-    private class TWEComboBoxRenderer extends JLabel implements ListCellRenderer {
+    private class TWEComboBoxRenderer extends JLabel implements ListCellRenderer<K> {
 
         public TWEComboBoxRenderer() {
             setOpaque(true);
@@ -33,8 +31,7 @@ public class TWEComboBox extends JComboBox{
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
-            World world = (World) value;
-            setText(world.getName());
+            setText(value.toString());
             setForeground(Color.DARK_GRAY);
             
             if (index % 2 == 0)

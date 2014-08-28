@@ -78,24 +78,24 @@ public class World implements EditableObject {
     /* METODOS DE RETORNO DE PROPRIEDADOS DO OBJETO */
 
     public boolean isMilitiaWorld() {
-        return (boolean) get("militia", false); //Esse cast pode causar uma exceptions caso alguem modifique as configurações manualmente.
+    	 return (json.getJSONObject("game").getString("church").equals("0")) ? false : true;
     }
 
     /* GETTERS */
     public boolean isArcherWorld() {
-        return (boolean) get("archer", false);
+    	 return (json.getJSONObject("game").getString("archer").equals("0")) ? false : true;
     }
 
     public boolean isPaladinWorld() {
-        return (boolean) get("paladin", false);
+    	 return (json.getJSONObject("game").getString("knight").equals("0")) ? false : true;
     }
 
     public boolean isChurchWorld() {
-        return (boolean) get("church", false);
+        return (json.getJSONObject("game").getString("church").equals("0")) ? false : true;
     }
 
     public boolean isMoralWorld() {
-        return (boolean) get("moral", false);
+        return ((String) get("moral", "0")).equals("0") ? false : true;
     }
 
     public boolean isFlagWorld() {
@@ -103,27 +103,36 @@ public class World implements EditableObject {
     }
 
     public boolean isNightBonusWorld() {
-        return (boolean) get("nightbonus", false);
+    	 return (json.getJSONObject("night").getString("active").equals("0")) ? false : true;
     }
 
     public boolean isBetterItemsWorld() {
-        return (boolean) get("betteritems", false);
+    	 return (json.getJSONObject("game").getString("knight_new_items").equals("0")) ? false : true;
     }
 
     public boolean isCoiningWorld() {
-        return (boolean) get("coining", false);
+    	 return (json.getJSONObject("snob").getString("gold").equals("0")) ? false : true;
     }
 
     public double getWorldSpeed() {
-        return (Double) get("speed", 1.0);
+        return Double.parseDouble((String) get("speed", "1.0"));
     }
 
     public double getUnitModifier() {
-        return (Double) get("unit_modifier", 1.0);
+        return Double.parseDouble((String) get("unit_speed", "1.0"));
     }
 
     public ResearchSystem getResearchSystem() {
-        return ResearchSystem.ConvertInteger((Integer) get("researchsystem", 0));
+    	switch (Integer.parseInt(json.getJSONObject("game").getString("tech"))) {
+		case 0:
+			return ResearchSystem.TEN_LEVELS;
+		case 1:
+			return ResearchSystem.THREE_LEVELS;
+		case 2:
+			return ResearchSystem.SIMPLE;
+		default:
+			return ResearchSystem.SIMPLE;
+		}
     }
 
     public String getName() {
