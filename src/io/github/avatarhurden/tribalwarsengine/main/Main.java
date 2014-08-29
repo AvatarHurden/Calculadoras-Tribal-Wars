@@ -4,6 +4,7 @@ import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.awt.Font;
@@ -108,6 +109,9 @@ public class Main {
 			@Override
 			public void run() {
 				ServerManager.get();
+				
+				while (selectWorldFrame == null);
+				selectWorldFrame.addWorldPanel();
 			}
 		}).start();
     }

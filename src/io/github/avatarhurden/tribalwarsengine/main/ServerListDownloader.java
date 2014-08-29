@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.swing.JOptionPane;
 
@@ -19,15 +20,23 @@ public class ServerListDownloader {
 	
 	public JSONArray getServerJSON(String folder, String url) {
 		try {
-			return getServerOnline(url);
+			return getServerOnline(folder, url);
 		} catch (Exception e) {
 			return tryGetServerLocal(folder);
 		}
 	}
 	
-	private JSONArray getServerOnline(String url) throws Exception{
+	private JSONArray getServerOnline(String folder, String url) throws Exception{
+		
+		URLConnection conn = new URL(url+phpFunction).openConnection();
+		
+		if (new File(folder+fileName).exists()) {
+			conn.setConnectTimeout(2 * 1000);
+			conn.setReadTimeout(10 * 1000);
+		}
+		
 		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(new URL(url+phpFunction).openStream()));
+				new InputStreamReader(conn.getInputStream()));
 		StringBuilder builder = new StringBuilder();
 		
 		int next;

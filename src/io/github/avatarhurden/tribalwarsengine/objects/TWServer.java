@@ -61,6 +61,7 @@ public class TWServer {
 		setInfo();
 		
 		JSONObject json = new JSONObject();
+		json.put("name", getPrettyName());
 		json.put("speed", world.getWorldSpeed());
 		json.put("unit_speed", world.getUnitModifier());
 		json.put("moral", world.isMoralWorld());
@@ -86,6 +87,23 @@ public class TWServer {
 		return serverInfo.getString("name");
 	}
 	
+	public String getPrettyName() {
+		if (basicInfo != null)
+			return basicInfo.getString("name");
+		else {
+			String name = serverInfo.getString("name").substring(2);
+			if (name.indexOf("c") != -1)
+				return "Clássico " + name.substring(1);
+			else if (name.indexOf("s") != -1)
+				return "Speed " + name.substring(1);
+			else if (name.indexOf("p") != -1)
+				return "Casual " + name.substring(1);
+			else
+				return "Mundo " + name;
+		}
+		
+	}
+	
 	public World getWorld() {
 		return world;
 	}
@@ -107,7 +125,7 @@ public class TWServer {
 	}
 	
 	public String toString() {
-		return getName();
+		return getPrettyName();
 	}
 	
 }

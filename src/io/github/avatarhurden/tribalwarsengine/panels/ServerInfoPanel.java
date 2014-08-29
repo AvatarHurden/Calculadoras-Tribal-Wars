@@ -3,7 +3,6 @@ package io.github.avatarhurden.tribalwarsengine.panels;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -16,7 +15,6 @@ import org.json.JSONObject;
 
 import database.Cores;
 
-@SuppressWarnings("serial")
 public class ServerInfoPanel extends JPanel {
     private GridBagConstraints gbc;
 
@@ -43,7 +41,7 @@ public class ServerInfoPanel extends JPanel {
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
 
-        addProp("Nome", server.getName());
+        addProp("Nome", server.getPrettyName());
         addProp("Velocidade", json.get("speed"));
         addProp("Velocidade das unidades", json.get("unit_speed"));
         addProp("Moral", json.get("moral"));
@@ -88,14 +86,8 @@ public class ServerInfoPanel extends JPanel {
 
     public JPanel createPropPanel(String propName, String propValue) {
         JPanel panel = new JPanel();
-        Color bg = Cores.ALTERNAR_ESCURO;
-
-        //Se for uma linha par, cor clara!
-        if (gbc.gridy % 2 == 0) {
-            bg = Cores.ALTERNAR_CLARO;
-        }
-
-        panel.setBackground(bg);
+        
+        panel.setBackground(Cores.getAlternar(gbc.gridy));
 
         GridBagLayout gbl_panel = new GridBagLayout();
         gbl_panel.columnWidths = new int[]{150, 20, 140};

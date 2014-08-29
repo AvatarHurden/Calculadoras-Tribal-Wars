@@ -4,6 +4,7 @@ import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.panels.SelectServerPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.ServerInfoPanel;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -27,7 +28,7 @@ public class SelectWorldFrame extends JFrame {
     public ServerInfoPanel informationTable;
     private SelectServerPanel selectionPanel;
 
-    private JPanel panelMundo;
+    private JPanel loadingPanel;
     private static final SelectWorldFrame instance = new SelectWorldFrame();
 
     /**
@@ -46,50 +47,44 @@ public class SelectWorldFrame extends JFrame {
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(
                 SelectWorldFrame.class.getResource("/images/Icon.png")));
+        
+        setGUI();
 
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[]{546, 1, 350};
-        gridBagLayout.rowHeights = new int[]{0, 0};
-        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0,
-                Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-        setLayout(gridBagLayout);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-
-        constraints.gridwidth = 3;
-        constraints.insets = new Insets(10, 5, 10, 5);
-        addImage(constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(0, 5, 20, 5);
-        addWorldPanel(constraints);
-
-        JTextPane lblAuthor = new JTextPane();
-        lblAuthor.setContentType("text/html");
-        lblAuthor.setText(Lang.Criador.toString());
-        lblAuthor.setEditable(false);
-        lblAuthor.setOpaque(false);
-        constraints.gridy = 2;
-        constraints.anchor = GridBagConstraints.EAST;
-        constraints.insets = new Insets(0, 5, 5, 5);
-        add(lblAuthor, constraints);
-
-        updateWorldInfoPanel();
-
-        getRootPane().setDefaultButton(selectionPanel.getStartButton());
-
-        pack();
-        setResizable(false);
-        setLocationRelativeTo(null);
     }
 
     public static SelectWorldFrame getInstance() {
         return instance;
+    }
+    
+    private void setGUI() {
+    	GridBagLayout layou = new GridBagLayout();
+        layou.columnWidths = new int[]{546, 1, 350};
+        layou.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+        setLayout(layou);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.NORTH;
+        c.gridx = 0;
+        c.gridy = 0;
+
+        c.gridwidth = 3;
+        c.insets = new Insets(10, 5, 10, 5);
+        add(makeLogoLabel(), c);
+
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(0, 5, 20, 5);
+        add(makeLoadingPanel(), c);
+
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.EAST;
+        c.insets = new Insets(0, 5, 5, 5);
+        add(makeAuthorPane(), c);
+
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
+
     }
 
     /**
@@ -97,12 +92,9 @@ public class SelectWorldFrame extends JFrame {
      *
      * @param c GridBagConstraints para adicionar
      */
-    private void addImage(GridBagConstraints c) {
+    private JLabel makeLogoLabel() {
 
         JLabel lblTítulo = new JLabel("");
-
-        // No ideia how or why this works, but do not remove "resources" folder
-        // from src
 
         /*
         * Irei criar um classe só pra carregar os recursos de forma estatica,
@@ -111,67 +103,100 @@ public class SelectWorldFrame extends JFrame {
         lblTítulo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 SelectWorldFrame.class.getResource("/images/logo_engine_centralized.png"))));
 
-        add(lblTítulo, c);
+       return lblTítulo;
+    }
+    
+    private JPanel makeLoadingPanel() {
+    	loadingPanel = new JPanel(new GridBagLayout());
+    	loadingPanel.setPreferredSize(new Dimension(824, 370));
+    	
+    	loadingPanel.setBackground(Cores.FUNDO_CLARO);
+        loadingPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
 
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.CENTER;
+        
+    	loadingPanel.add(new JLabel("Carregando Mundos..."), c);
+    	
+    	return loadingPanel;
     }
 
+    private JTextPane makeAuthorPane() {
+    	JTextPane lblAuthor = new JTextPane();
+    	lblAuthor.setEditable(false);
+        lblAuthor.setOpaque(false);
+        
+        lblAuthor.setContentType("text/html");
+        lblAuthor.setText(Lang.Criador.toString());
+        
+        return lblAuthor;
+    }
+    
+    private JPanel makeSelectionPanel() {
+    	JPanel panel = new JPanel();
+        panel.setBackground(Cores.FUNDO_CLARO);
+        panel.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
+
+        GridBagLayout layout = new GridBagLayout();
+        layout.columnWidths = new int[]{506, 1, 310};
+        panel.setLayout(layout);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        
+        // Tabela de informações
+        informationTable = new ServerInfoPanel();
+        informationTable.changeProperties();
+        
+        c.gridy = 1;
+        c.insets = new Insets(25, 5, 25, 5);
+        panel.add(informationTable, c);
+
+        c.gridx = 1;
+        c.insets = new Insets(25, 0, 25, 0);
+
+        JSeparator test = new JSeparator(SwingConstants.VERTICAL);
+        test.setForeground(Cores.SEPARAR_ESCURO);
+        c.fill = GridBagConstraints.VERTICAL;
+        panel.add(test, c);
+
+        c.gridx = 2;
+        c.insets = new Insets(25, 5, 25, 5);
+
+        // Lista dos mundos com o botão para inciar
+        selectionPanel = new SelectServerPanel(this);
+        
+        panel.add(selectionPanel, c);
+        
+        System.out.println("made");
+        return panel;
+    }
+    
     /**
      * Cria um JPanel com a tabela de informações do mundo, lista de mundos e
      * botão para iniciar e o adiciona no frame
      *
      * @param c GridBagConstraints para adicionar
      */
-    private void addWorldPanel(GridBagConstraints c) {
+    public void addWorldPanel() {
+    	
+    	JPanel worldPanel = makeSelectionPanel();
+    	
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridwidth = 3;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(0, 5, 20, 5);
+        remove(loadingPanel);
+        add(worldPanel, c);
+        
+        updateWorldInfoPanel();
 
-        panelMundo = new JPanel();
-
-        panelMundo.setBackground(Cores.FUNDO_CLARO);
-
-        panelMundo.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
-
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[]{506, 1, 310};
-        gridBagLayout.rowHeights = new int[]{};
-        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0,
-                Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-        panelMundo.setLayout(gridBagLayout);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-
-        constraints.gridwidth = 1;
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(25, 5, 25, 5);
-
-        // Tabela de informações
-        informationTable = new ServerInfoPanel();
-        informationTable.changeProperties();
-
-        panelMundo.add(informationTable, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(25, 0, 25, 0);
-
-        JSeparator test = new JSeparator(SwingConstants.VERTICAL);
-        test.setForeground(Cores.SEPARAR_ESCURO);
-        constraints.fill = GridBagConstraints.VERTICAL;
-        panelMundo.add(test, constraints);
-
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(25, 5, 25, 5);
-
-        // Lista dos mundos com o botão para inciar
-        selectionPanel = new SelectServerPanel(this);
-
-        panelMundo.add(selectionPanel, constraints);
-
-        add(panelMundo, c);
-
+        getRootPane().setDefaultButton(selectionPanel.getStartButton());
+        repaint();
     }
 
     /**

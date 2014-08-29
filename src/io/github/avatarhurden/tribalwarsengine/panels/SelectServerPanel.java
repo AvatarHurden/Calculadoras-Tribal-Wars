@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 
 import config.Lang;
 
-@SuppressWarnings("serial")
 public class SelectServerPanel extends JPanel implements ActionListener {
 
     private TWEComboBox<TWServer> selectionBox;
