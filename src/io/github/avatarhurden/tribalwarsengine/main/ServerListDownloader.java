@@ -22,6 +22,7 @@ public class ServerListDownloader {
 		try {
 			return getServerOnline(folder, url);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return tryGetServerLocal(folder);
 		}
 	}
@@ -34,6 +35,7 @@ public class ServerListDownloader {
 			conn.setConnectTimeout(2 * 1000);
 			conn.setReadTimeout(10 * 1000);
 		}
+		conn.connect();
 		
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(conn.getInputStream()));

@@ -2,7 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
-import io.github.avatarhurden.tribalwarsengine.managers.VillageModelManager;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.VillageModel;
 
@@ -115,7 +115,7 @@ public class ModeloAldeiasPanel extends JPanel {
         popup = new JPopupMenu();
 
         // Adds all the models to the dropdown menu
-        for (final VillageModel i : VillageModelManager.get().getList())
+        for (VillageModel i : ServerManager.getSelectedServer().getVillageModelList())
             popup.add(makeMenuItem(i));
 
 
@@ -160,12 +160,10 @@ public class ModeloAldeiasPanel extends JPanel {
                     VillageModel modelo = new VillageModel();
                     modelo.setBuildings(buildingsEdit.getBuildings());
                     
-                    new EditDialog(VillageModelManager.get().getList(),
-                    		VillageModelManager.get().getFieldNames(),
-                            0, modelo);
+                    new EditDialog(ServerManager.getSelectedServer().getVillageModelList(),
+                    		modelo.getFieldNames(), 0, modelo);
                     
-                    VillageModelManager.get().setActives();
-
+                    ServerManager.getSelectedServer().saveVillageModels();
                     makePopupMenu();
 
                     manager.refresh();

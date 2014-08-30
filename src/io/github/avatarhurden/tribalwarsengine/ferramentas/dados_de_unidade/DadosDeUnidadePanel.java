@@ -64,7 +64,7 @@ public class DadosDeUnidadePanel extends Ferramenta {
 		};
 		
         army = new Army(Army.getAvailableUnits());
-        armyEdit = army.getEditPanelWorldLevels(onChange);
+        armyEdit = army.getEditPanelFull(onChange);
         
         makePanels();
         

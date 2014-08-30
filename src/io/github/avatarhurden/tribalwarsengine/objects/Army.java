@@ -2,7 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.objects;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.GridBagConstraints;
@@ -44,7 +44,7 @@ public class Army {
 
 	private List<Tropa> tropas = new ArrayList<Tropa>();
 	
-	private transient ItemPaladino item;
+	private transient ItemPaladino item = ItemPaladino.NULL;
 	
 	public static boolean isArmyJson(JSONObject json) {
 		return json.has("tropas");
@@ -52,21 +52,8 @@ public class Army {
 	}
 	
 	public static ArrayList<Unidade> getAvailableUnits() {
-		ArrayList<Unidade> list = new ArrayList<Unidade>();
 		
-    	for (Unidade u : Unidade.values())
-    		list.add(u);
-    	
-    	if (!WorldManager.get().getSelectedWorld().isArcherWorld()) {
-    		list.remove(Unidade.ARQUEIRO);
-    		list.remove(Unidade.ARCOCAVALO);
-    	}
-    	if (!WorldManager.get().getSelectedWorld().isPaladinWorld())
-    		list.remove(Unidade.PALADINO);
-    	if (!WorldManager.get().getSelectedWorld().isMilitiaWorld())
-    		list.remove(Unidade.MILÍCIA);
-    	
-    	return list;
+    	return new ArrayList<Unidade>(Arrays.asList(Unidade.values()));
 	}
 	
 	public static ArrayList<Unidade> getAttackingUnits() {
@@ -92,7 +79,6 @@ public class Army {
 		for (Unidade i : units)
 			tropas.add(new Tropa(i, 0));
 		
-		item = ItemPaladino.NULL;
 	}
 	
 	/**
@@ -110,21 +96,8 @@ public class Army {
 			if (iter.next().unidade.equals(unidade))
 				iter.remove();
 		
-		tropas.add(new Tropa(unidade, quantidade, nivel, nivel));
+		tropas.add(new Tropa(unidade, quantidade, nivel));
 		
-	}
-	
-	/**
-	 * Adiciona uma nova tropa ao exército. Se já existe uma tropa com a
-	 * unidade especificada, ela será removida
-	 * 
-	 * @param unidade
-	 * @param quantidade
-	 * @param nivel3 - Nível da Unidade em um mundo com pesquisa de 3 níveis
-	 * @param nivel10 - Nível da Unidade em um mundo com pesquisa clássica
-	 */
-	public void addTropa(Unidade unidade, int quantidade, int nivel3, int nivel10) {
-		addTropa(new Tropa(unidade, quantidade, nivel3, nivel10));
 	}
 	
 	public void addTropa(Tropa tropa) {
@@ -327,45 +300,37 @@ public class Army {
 	}
 	
 	public ArmyEditPanel getEditPanelFull(OnChange onChange) {
-		return new ArmyEditPanel(onChange, true, true, false, true, true, true);
+		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		return new ArmyEditPanel(onChange, true, true, false, true, levels > 1);
 	}
 	
 	public ArmyEditPanel getEditPanelFullNoHeader(OnChange onChange) {
-		return new ArmyEditPanel(onChange, false, true, false, true, true, true);
-	}
-	
-	public ArmyEditPanel getEditPanelWorldLevels(OnChange onChange) {
-		int levels = WorldManager.get().getSelectedWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, true, true, false, true, levels == 3, levels == 10);
-	}
-	
-	public ArmyEditPanel getEditPanelWorldLevelsNoHeader(OnChange onChange) {
-		int levels = WorldManager.get().getSelectedWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, false, true, false, true, levels == 3, levels == 10);
+		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		return new ArmyEditPanel(onChange, false, true, false, true, levels > 1);
 	}
 	
 	public ArmyEditPanel getEditPanelNoLevels(OnChange onChange) {
-		return new ArmyEditPanel(onChange, true, true, false, true, false, false);
+		return new ArmyEditPanel(onChange, true, true, false, true, false);
 	}
 	
 	public ArmyEditPanel getEditPanelNoLevelsNoHeader(OnChange onChange) {
-		return new ArmyEditPanel(onChange, false, true, false, true, false, false);
+		return new ArmyEditPanel(onChange, false, true, false, true, false);
 	}
 	
 	public ArmyEditPanel getEditPanelSelectetion(OnChange onChange) {
-		return new ArmyEditPanel(onChange, true, true, true, false, false, false);
+		return new ArmyEditPanel(onChange, true, true, true, false, false);
 	}
 	
 	public ArmyEditPanel getEditPanelSelectionNoHeader(OnChange onChange) {
-		return new ArmyEditPanel(onChange, false, true, true, false, false, false);
+		return new ArmyEditPanel(onChange, false, true, true, false, false);
 	}
 	
 	public ArmyEditPanel getEditPanelNoInputs() {
-		return new ArmyEditPanel(null, true, true, false, false, false, false);
+		return new ArmyEditPanel(null, true, true, false, false, false);
 	}
 	
 	public ArmyEditPanel getEditPanelNoInputsNoHeader() {
-		return new ArmyEditPanel(null, false, true, false, false, false, false);
+		return new ArmyEditPanel(null, false, true, false, false, false);
 	}
 	
 	/**
@@ -377,27 +342,16 @@ public class Army {
 		
 		private Unidade unidade;
 		private int quantidade;
-		private int nivel3;
-		private int nivel10;
+		private int nivel;
 		
-		private transient int nivel;
-		
-		private Tropa(Unidade unidade, int quantidade, int nivel3, int nivel10) {
+		private Tropa(Unidade unidade, int quantidade, int nivel) {
 			this.unidade = unidade;
 			this.quantidade = quantidade;
-			this.nivel3 = nivel3;
-			this.nivel10 = nivel10;
-			
-			if (WorldManager.get().getSelectedWorld().getResearchSystem().getResearch() == 10)
-				nivel = nivel10;
-			else if (WorldManager.get().getSelectedWorld().getResearchSystem().getResearch() == 3)
-				nivel = nivel3;
-			else
-				nivel = 1;
+			this.nivel = nivel;
 		}
 		
 		private Tropa(Unidade unidade, int quantidade) {
-			this(unidade, quantidade, 1, 1);
+			this(unidade, quantidade, 1);
 		}
 		
 		public int getAtaque() {
@@ -468,9 +422,7 @@ public class Army {
 			if (quantidade == 0)
 				return 0;
 			else
-				return unidade.getVelocidade()
-						* WorldManager.get().getSelectedWorld().getWorldSpeed()
-						* WorldManager.get().getSelectedWorld().getUnitModifier();
+				return unidade.getVelocidade();
 		}
 		
 		public UnidadeTipo getTipo() {
@@ -492,12 +444,11 @@ public class Army {
 		
 		private HashMap<Unidade, JCheckBox> selected;
 		private HashMap<Unidade, IntegerFormattedTextField> quantities;
-		private HashMap<Unidade, TroopLevelComboBox> level3;
-		private HashMap<Unidade, TroopLevelComboBox> level10;
+		private HashMap<Unidade, TroopLevelComboBox> level;
 		
 		private GridBagLayout layout;
 		
-		private boolean hasHeader, hasNames, hasSelected, hasAmount, hasNivel3, hasNivel10;
+		private boolean hasHeader, hasNames, hasSelected, hasAmount, hasNivel;
 		private OnChange onChange;
 		
 		/**
@@ -518,19 +469,17 @@ public class Army {
 		 */
 		private ArmyEditPanel(OnChange onChange, boolean hasHeader, 
 				boolean hasNames, boolean hasSelected, boolean hasAmount,
-				boolean hasNivel3, boolean hasNivel10) {
+				boolean hasNivel) {
 			
 			selected = new HashMap<Unidade, JCheckBox>();
 			quantities = new HashMap<Unidade, IntegerFormattedTextField>();
-			level3 = new HashMap<Unidade, TroopLevelComboBox>();
-			level10 = new HashMap<Unidade, TroopLevelComboBox>();
+			level = new HashMap<Unidade, TroopLevelComboBox>();
 			
 			this.hasHeader = hasHeader;
 			this.hasNames = hasNames;
 			this.hasSelected = hasSelected;
 			this.hasAmount = hasAmount;
-			this.hasNivel3 = hasNivel3;
-			this.hasNivel10 = hasNivel10;
+			this.hasNivel = hasNivel;
 			this.onChange = onChange;
 			
 			setLayout();
@@ -565,9 +514,7 @@ public class Army {
 				widths.add(30);
 			if (hasAmount)
 				widths.add(100);
-			if (hasNivel3)
-				widths.add(40);
-			if (hasNivel10)
+			if (hasNivel)
 				widths.add(40);
 			
 			int[] widthsArray = new int[widths.size()];
@@ -607,23 +554,11 @@ public class Army {
 				c.gridx++;
 			}
 			
-			if (hasNivel3 && hasNivel10) {
+			if (hasNivel) {
 				c.gridx++;
-				panel.add(new JLabel("<html><center>Nível<br>(3)</center></html>"), c);
-				c.gridx++;
-				panel.add(new JLabel("<html><center>Nível<br>(10)</center></html>"), c);
-			} else {
-				if (hasNivel3) {
-					c.gridx++;
-					panel.add(new JLabel("Nível"), c);
-				}
-			
-				if (hasNivel10) {
-					c.gridx++;
-					panel.add(new JLabel("Nível"), c);
-				}
+				panel.add(new JLabel("Nível"), c);
 			}
-			
+		
 			return panel;
 		}
 		
@@ -682,35 +617,23 @@ public class Army {
 					panelC.gridx++;
 				}
 				
-				TroopLevelComboBox combo3 = new TroopLevelComboBox(3, unitPanel.getBackground());
-				combo3.setSelectedItem(Army.this.getTropa(u).nivel3);
-				level3.put(u, combo3);
+				int niveis = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+				
+				TroopLevelComboBox combo = new TroopLevelComboBox(niveis, unitPanel.getBackground());
+				combo.setSelectedItem(Army.this.getTropa(u).nivel);
+				level.put(u, combo);
 					
-				combo3.addItemListener(new ItemListener() {
+				combo.addItemListener(new ItemListener() {
 					public void itemStateChanged(ItemEvent e) {
 						onChange.run();
 					}
 				});
 				
-				if (hasNivel3) {
-					unitPanel.add(combo3, panelC);
+				if (hasNivel) {
+					unitPanel.add(combo, panelC);
 					panelC.gridx++;
 				}
 				
-				TroopLevelComboBox combo10 = new TroopLevelComboBox(10, unitPanel.getBackground());
-				combo10.setSelectedItem(Army.this.getTropa(u).nivel10);
-				level10.put(u, combo10);
-					
-				combo10.addItemListener(new ItemListener() {
-					public void itemStateChanged(ItemEvent e) {
-						onChange.run();
-					}
-				});
-				
-				if (hasNivel10){
-					unitPanel.add(combo10, panelC);
-					panelC.gridx++;
-				}
 				
 				panel.add(unitPanel);
 			}
@@ -724,12 +647,10 @@ public class Army {
 			for (Unidade i : quantities.keySet())
 				if (hasSelected)
 					Army.this.addTropa(i, selected.get(i).isSelected() ? 1 : 0, 
-							(int) level3.get(i).getSelectedItem(),
-							(int) level10.get(i).getSelectedItem());
+							(int) level.get(i).getSelectedItem());
 				else
 					Army.this.addTropa(i, quantities.get(i).getValue().intValue(),
-						(int) level3.get(i).getSelectedItem(),
-						(int) level10.get(i).getSelectedItem());
+						(int) level.get(i).getSelectedItem());
 		}
 		
 		public void resetComponents() {
@@ -738,9 +659,7 @@ public class Army {
 				t.setText("");
 			for (JCheckBox c : selected.values())
 				c.setSelected(false);
-			for (TroopLevelComboBox t : level3.values())
-				t.setSelectedIndex(0);
-			for (TroopLevelComboBox t : level10.values())
+			for (TroopLevelComboBox t : level.values())
 				t.setSelectedIndex(0);
 			
 		}
@@ -753,8 +672,7 @@ public class Army {
 				if (getUnidades().contains(t.unidade)) {
 					if (t.quantidade > 0)
 						quantities.get(t.unidade).setText(String.valueOf(t.quantidade));	
-					level3.get(t.unidade).setSelectedItem(t.nivel3);
-					level10.get(t.unidade).setSelectedItem(t.nivel10);
+					level.get(t.unidade).setSelectedItem(t.nivel);
 			}
 			
 			saveValues();

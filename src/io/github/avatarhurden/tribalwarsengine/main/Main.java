@@ -4,8 +4,6 @@ import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
-import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
-import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.awt.Font;
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,7 +52,6 @@ public class Main {
 
     public void init(String[] args) {
         lookForUpdate();
-        getServerLists();
                 
         Font oldLabelFont = UIManager.getFont("Label.font");
         UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
@@ -73,6 +69,10 @@ public class Main {
         mainFrame.dispose();
         selectWorldFrame.setVisible(true);
         currentFrame = selectWorldFrame;
+        
+        ServerManager.get();
+        selectWorldFrame.addWorldPanel();
+        
     }
 
     /**
@@ -103,18 +103,5 @@ public class Main {
             }
         }).start();
     }
-    
-    public void getServerLists() {
-    	new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ServerManager.get();
-				
-				while (selectWorldFrame == null);
-				selectWorldFrame.addWorldPanel();
-			}
-		}).start();
-    }
-
 
 }

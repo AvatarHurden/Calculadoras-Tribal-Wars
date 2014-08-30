@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
+import java.util.LinkedHashMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +41,6 @@ public class ArmyModel implements EditableObject {
 		
 		setName("Novo Modelo");
 		setArmy(new Army());
-		setScope(new Scope());
 		
 	}
 	
@@ -73,10 +74,6 @@ public class ArmyModel implements EditableObject {
     	return gson.fromJson(get("army", "").toString(), Army.class);
     }
     
-    public Scope getScope() {
-    	return gson.fromJson(get("scope", "").toString(), Scope.class);
-    }
-    
     // Setters
     
     public ArmyModel setName(String name) {
@@ -96,11 +93,13 @@ public class ArmyModel implements EditableObject {
     	return this;
     }
     
-    public ArmyModel setScope(Scope scope) {
-    	set("scope", new JSONObject(gson.toJson(scope)));
-    	return this;
+    public LinkedHashMap<String, String> getFieldNames() {
+    	LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+    	
+        map.put("name", "Nome");
+        map.put("army", "");
+        
+        return map;
     }
-    
-    
 	
 }

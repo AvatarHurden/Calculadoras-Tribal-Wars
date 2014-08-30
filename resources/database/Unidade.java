@@ -1,6 +1,5 @@
 package database;
 
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 public enum Unidade {
 
@@ -66,11 +65,11 @@ public enum Unidade {
 		// As características flutuantes são adicionadas depois, visto que são
 		// final
 
-		if (!WorldManager.get().getSelectedWorld().isArcherWorld()
-				&& nome.equals("Espadachim"))
+//		if (!WorldManager.get().getSelectedWorld().isArcherWorld()
+//				&& nome.equals("Espadachim"))
 			this.defCav = 25;
-		else
-			this.defCav = defCav;
+//		else
+//			this.defCav = defCav;
 	}
 	
 	public String toString() {

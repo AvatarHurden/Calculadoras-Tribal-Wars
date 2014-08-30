@@ -5,7 +5,6 @@ import io.github.avatarhurden.tribalwarsengine.main.ServerListDownloader;
 import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -30,7 +29,8 @@ public class ServerManager {
 	}
 	
 	private void loadConfigs() {
-		JSONArray json = downloader.getServerJSON("br", "http://tribalwars.com.br");
+		JSONArray json = downloader.getServerJSON("br", "http://www.tribalwars.com.br");
+		
 		servers = new ArrayList<TWServer>();
 		for (int i = 0; i < json.length(); i++)
 			servers.add(new TWServer(json.getJSONObject(i)));
@@ -65,10 +65,10 @@ public class ServerManager {
     	setSelectedServer(getServerByName(server));
     }
     
-    public TWServer getSelectedServer() {
-    	if (selectedServer == null)
-    		selectedServer = getDefaultServer();
-    	return selectedServer;
+    public static TWServer getSelectedServer() {
+    	if (get().selectedServer == null)
+    		get().selectedServer = get().getDefaultServer();
+    	return get().selectedServer;
     }
     
     public List<TWServer> getList() {

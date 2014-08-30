@@ -15,6 +15,8 @@ public class TWServer {
 	private World world;
 	private List<Unit> units;
 	private List<Building> buildings;
+	private List<VillageModel> villageModels;
+	private List<ArmyModel> armyModels;
 	
 	// JSONObject with the information to be displayed in the selectionPanel
 	private JSONObject basicInfo;
@@ -34,6 +36,10 @@ public class TWServer {
 			setUnits(downloader.getServerUnitConfig());
 		if (buildings == null)
 			setBuildings(downloader.getServerBuildingConfig());
+		if (villageModels == null)
+			setVillageModels(downloader.getServerVillageModels());
+		if (armyModels == null)
+			setArmyModels(downloader.getServerArmyModels());
 	}
 
 	private void setUnits(JSONArray array) {
@@ -48,6 +54,17 @@ public class TWServer {
 			buildings.add(new Building(array.getJSONObject(i)));
 	}
 	
+	private void setVillageModels(JSONArray array) {
+		villageModels = new ArrayList<VillageModel>();
+		for (int i = 0; i < array.length(); i++)
+			villageModels.add(new VillageModel(array.getJSONObject(i)));
+	}
+	
+	private void setArmyModels(JSONArray array) {
+		armyModels = new ArrayList<ArmyModel>();
+		for (int i = 0; i < array.length(); i++)
+			armyModels.add(new ArmyModel(array.getJSONObject(i)));
+	}
 	
 	private JSONObject setBasicInfo() {
 		try {
@@ -83,6 +100,14 @@ public class TWServer {
 		return json;
 	}
 	
+	public void addVillageModel(VillageModel model) {
+		villageModels.add(model);
+	}
+	
+	public void addArmyModel(ArmyModel model) {
+		armyModels.add(model);
+	}
+	
 	public String getName() {
 		return serverInfo.getString("name");
 	}
@@ -116,6 +141,14 @@ public class TWServer {
 		return buildings;
 	}
 	
+	public List<ArmyModel> getArmyModelList() {
+		return armyModels;
+	}
+	
+	public List<VillageModel> getVillageModelList() {
+		return villageModels;
+	}
+	
 	public JSONObject getBasicConfig() {
 		return basicInfo;
 	}
@@ -126,6 +159,22 @@ public class TWServer {
 	
 	public String toString() {
 		return getPrettyName();
+	}
+	
+	public void saveArmyModels() {
+		JSONArray array = new JSONArray();
+		for (ArmyModel model : armyModels)
+			array.put(model.getJson());
+		
+		downloader.saveArmyModelConfig(array);
+	}
+	
+	public void saveVillageModels() {
+		JSONArray array = new JSONArray();
+		for (VillageModel model : villageModels)
+			array.put(model.getJson());
+		
+		downloader.saveVillageModelConfig(array);
 	}
 	
 }

@@ -1,7 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.GridBagConstraints;
@@ -42,19 +41,19 @@ public class Buildings {
 		
     	for (Edifício ed : Edifício.values())
     		list.add(ed);
-    	
-    	if (!WorldManager.get().getSelectedWorld().isChurchWorld()) {
-    		list.remove(Edifício.IGREJA);
-    		list.remove(Edifício.PRIMEIRA_IGREJA);
-    	}
-    	if (WorldManager.get().getSelectedWorld().isCoiningWorld())
-    		list.remove(Edifício.ACADEMIA_3NÍVEIS);
-    	else
-    		list.remove(Edifício.ACADEMIA_1NÍVEL);
-    	
-    	if (!WorldManager.get().getSelectedWorld().isPaladinWorld())
-    		list.remove(Edifício.ESTÁTUA);
-    	
+//    	
+//    	if (!WorldManager.get().getSelectedWorld().isChurchWorld()) {
+//    		list.remove(Edifício.IGREJA);
+//    		list.remove(Edifício.PRIMEIRA_IGREJA);
+//    	}
+//    	if (WorldManager.get().getSelectedWorld().isCoiningWorld())
+//    		list.remove(Edifício.ACADEMIA_3NÍVEIS);
+//    	else
+//    		list.remove(Edifício.ACADEMIA_1NÍVEL);
+//    	
+//    	if (!WorldManager.get().getSelectedWorld().isPaladinWorld())
+//    		list.remove(Edifício.ESTÁTUA);
+//    	
     	return list;
 	}
 	
@@ -233,8 +232,8 @@ public class Buildings {
 		if (!contains(ed))
 			return 1;
 		else
-			return 2.0/3.0*Math.pow(1.06, -getLevel(ed)) / 
-					WorldManager.get().getSelectedWorld().getWorldSpeed();
+			return 2.0/3.0*Math.pow(1.06, -getLevel(ed)); 
+//					WorldManager.get().getSelectedWorld().getWorldSpeed();
 		
 	}
 	

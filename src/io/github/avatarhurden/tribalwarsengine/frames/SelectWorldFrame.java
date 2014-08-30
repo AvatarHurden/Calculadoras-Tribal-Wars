@@ -46,7 +46,7 @@ public class SelectWorldFrame extends JFrame {
         addWindowListener(new TWEWindowListener());
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/Icon.png")));
+                SelectWorldFrame.class.getResource("/images/icon.png")));
         
         setGUI();
 
@@ -84,7 +84,6 @@ public class SelectWorldFrame extends JFrame {
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
-
     }
 
     /**
@@ -114,9 +113,15 @@ public class SelectWorldFrame extends JFrame {
         loadingPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
 
         GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.gridx = 0;
+        c.gridy = 0;
         
+        loadingPanel.add(new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+                SelectWorldFrame.class.getResource("/images/loading.gif")))), c);
+        
+        c.gridy++;
     	loadingPanel.add(new JLabel("Carregando Mundos..."), c);
     	
     	return loadingPanel;
@@ -171,7 +176,6 @@ public class SelectWorldFrame extends JFrame {
         
         panel.add(selectionPanel, c);
         
-        System.out.println("made");
         return panel;
     }
     
@@ -182,9 +186,8 @@ public class SelectWorldFrame extends JFrame {
      * @param c GridBagConstraints para adicionar
      */
     public void addWorldPanel() {
-    	
     	JPanel worldPanel = makeSelectionPanel();
-    	
+
         GridBagConstraints c = new GridBagConstraints();
         c.gridwidth = 3;
         c.gridx = 0;

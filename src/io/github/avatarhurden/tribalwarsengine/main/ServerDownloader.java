@@ -26,6 +26,9 @@ public class ServerDownloader {
 	private final String unitFile = "/unit_info.json";
 	private final String buildingFile = "/building_info.json";
 	
+	private final String villageModelFile = "/villageModels.json";
+	private final String armyModelFile = "/armyModels.json";
+	
 	private String folder;
 	private JSONObject json;
 	
@@ -182,6 +185,32 @@ public class ServerDownloader {
 		return array;
 	}
 	
+	// Village model section
+	
+	public JSONArray getServerVillageModels() {
+		try {
+		File file = new File(folder+villageModelFile);
+		if (!file.exists())
+			saveVillageModelConfig(new JSONArray());
+			
+		return JSON.getJSON(file).getJSONArray("villageModels");
+		} catch (Exception e) {
+			return new JSONArray();
+		}
+	}
+	
+	public JSONArray getServerArmyModels() {
+		try {
+		File file = new File(folder+armyModelFile);
+		if (!file.exists())
+			saveArmyModelConfig(new JSONArray());
+			
+		return JSON.getJSON(file).getJSONArray("armyModels");
+		} catch (Exception e) {
+			return new JSONArray();
+		}
+	}
+	
 	private void displayErrorMessageAndExit() {
 
 		String dialogText = "Não foi possível obter informações dos servidores.\n\nPor favor verifique sua conexão com a Internet e tente novamente.";
@@ -220,6 +249,24 @@ public class ServerDownloader {
 			buildingObject.put("buildings", building);	
 			File buildingConfig = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), folder+buildingFile);
 			JSON.createJSONFile(buildingObject, buildingConfig);
+		} catch (Exception e) {}
+	}
+	
+	public void saveArmyModelConfig(JSONArray json) {
+		JSONObject obj = new JSONObject();
+		obj.put("armyModels", json);
+		
+		try {
+			JSON.createJSONFile(obj, new File(folder+armyModelFile));
+		} catch (Exception e) {}
+	}
+	
+	public void saveVillageModelConfig(JSONArray json) {
+		JSONObject obj = new JSONObject();
+		obj.put("villageModels", json);
+		
+		try {
+			JSON.createJSONFile(obj, new File(folder+villageModelFile));
 		} catch (Exception e) {}
 	}
 	
