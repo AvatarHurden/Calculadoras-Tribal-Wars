@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.pontos;
 
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings.Building;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+import io.github.avatarhurden.tribalwarsengine.objects.building.Construction;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -17,7 +17,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import database.Cores;
-import database.Edifício;
 
 public class InformaçõesEdifícioPanel {
 
@@ -97,26 +96,24 @@ public class InformaçõesEdifícioPanel {
 	// unidades
 	protected void changeValues(Object obj) {
 
-		if (obj instanceof Building)
-			changeValuesBuilding((Building) obj);
+		if (obj instanceof Construction)
+			changeValuesBuilding((Construction) obj);
 		else 
-			changeValuesBuildings((Buildings) obj);
+			changeValuesBuildings((BuildingBlock) obj);
 		
 	}
 	
-	private void changeValuesBuilding(Building building) {
+	private void changeValuesBuilding(Construction building) {
 		if (building.getNível() == 0) {
 			resetValues();
 			return;
 		}
 		
 		pontos.setText(getFormattedNumber(building.getPontos()));
-		
-		if (!building.getEdifício().equals(Edifício.FAZENDA))
-			população.setText(getFormattedNumber(building.getPopulação()));	
+		população.setText(getFormattedNumber(building.getPopulação()));	
 	}
 	
-	private void changeValuesBuildings(Buildings buildings) {
+	private void changeValuesBuildings(BuildingBlock buildings) {
 		if (buildings.getPopulaçãoUsada() == 0) {
 			resetValues();
 			return;

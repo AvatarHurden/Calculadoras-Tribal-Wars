@@ -3,8 +3,8 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -92,22 +92,22 @@ public class Cálculo {
 		for (Unidade i : preferência) {
 			
 			if (army.contains(i))
-				if (army.getQuantidade(i) * i.getSaque() >= saqueRecomendado) {
+				if (army.getQuantidade(i) * i.getHaul() >= saqueRecomendado) {
 					
 					// Puts the maximum number of troops the warehouse holds
 					tropasRecomendadas.addTropa(i, 
-							(int) Math.ceil(saqueRecomendado / (double) i.getSaque()), 1);
+							(int) Math.ceil(saqueRecomendado / (double) i.getHaul()), 1);
 					break;
 					
 				} else {
 					tropasRecomendadas.addTropa(i, army.getQuantidade(i), 1);
 					// Prepares the remaining available loot for other troops
-					saqueRecomendado -= army.getQuantidade(i) * i.getSaque();
+					saqueRecomendado -= army.getQuantidade(i) * i.getHaul();
 				}
 				
 		}
 		
-		for (Unidade i : army.getUnidades()) {
+		for (Unidade i : army.getUnits()) {
 			if (!preferência.contains(i))
 				tropasRecomendadas.addTropa(i, army.getQuantidade(i), 1);
 			// If the 'preferência' broke, puts the remaining things with zero
@@ -210,7 +210,7 @@ public class Cálculo {
 	 * e a produção por segundo dos recursos.
 	 * @param Mapa relacionando edifícios aos seus níveis
 	 */
-	protected void setProduçãoEArmazenamento(Buildings buildings) {
+	protected void setProduçãoEArmazenamento(BuildingBlock buildings) {
 		
 		armazenamento = buildings.getArmazenamento(true);
 		produção[0] = new BigDecimal(buildings.getProduçãoMadeira());

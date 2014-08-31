@@ -179,7 +179,7 @@ public class SimuladorPanel extends Ferramenta {
 
 		int loop = 1;
 
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
 
 			if (i != null) {
 

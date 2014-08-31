@@ -3,8 +3,8 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.VillageModel;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.BuildingBlockModel;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -115,13 +115,13 @@ public class ModeloAldeiasPanel extends JPanel {
         popup = new JPopupMenu();
 
         // Adds all the models to the dropdown menu
-        for (VillageModel i : ServerManager.getSelectedServer().getVillageModelList())
+        for (BuildingBlockModel i : ServerManager.getSelectedServer().getBuildingModelList())
             popup.add(makeMenuItem(i));
 
 
     }
 
-    private JMenuItem makeMenuItem(final VillageModel i) {
+    private JMenuItem makeMenuItem(final BuildingBlockModel i) {
 
         JMenuItem item = new JMenuItem(i.getName());
 
@@ -157,13 +157,13 @@ public class ModeloAldeiasPanel extends JPanel {
 
                 try {
                 	
-                    VillageModel modelo = new VillageModel();
+                    BuildingBlockModel modelo = new BuildingBlockModel();
                     modelo.setBuildings(buildingsEdit.getBuildings());
                     
-                    new EditDialog(ServerManager.getSelectedServer().getVillageModelList(),
+                    new EditDialog(ServerManager.getSelectedServer().getBuildingModelList(),
                     		modelo.getFieldNames(), 0, modelo);
                     
-                    ServerManager.getSelectedServer().saveVillageModels();
+                    ServerManager.getSelectedServer().saveBuildingModels();
                     makePopupMenu();
 
                     manager.refresh();

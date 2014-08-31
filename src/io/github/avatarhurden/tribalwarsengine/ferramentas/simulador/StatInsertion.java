@@ -242,7 +242,7 @@ public class StatInsertion extends JPanel {
 		c.gridwidth = 2;
 		c.gridx = 0;
 
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
 
 			if (i != null
 					&& (!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {

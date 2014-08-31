@@ -1,4 +1,4 @@
-package io.github.avatarhurden.tribalwarsengine.objects;
+package io.github.avatarhurden.tribalwarsengine.objects.building;
 
 import org.json.JSONObject;
 
@@ -62,7 +62,7 @@ public class Building {
 		return json.getDouble("build_time_factor");
 	}
 	
-	public String getName() {
+	public String getPrettyName() {
 		switch (json.getString("name")) {
 		case "main":
 			return "Edifício Principal";
@@ -72,6 +72,10 @@ public class Building {
 			return "Estábulo";
 		case "garage":
 			return "Oficina";
+		case "church":
+			return "Igreja";
+		case "church_f":
+			return "Primeira Igreja";
 		case "snob":
 			return "Academia";
 		case "smith":
@@ -101,4 +105,11 @@ public class Building {
 		}
 	}
 	
+	public String getName() {
+		return json.getString("name");
+	}
+	
+	public String toString() {
+		return getPrettyName();
+	}
 }

@@ -2,8 +2,8 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.distância;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -120,8 +120,8 @@ public class DistânciaPanel extends Ferramenta {
 		add(planejadorHorárioPanel = new PlanejadorHorárioPanel(onChange), c);
 		
 		c.gridx += 2;
-		add(tools.addAlertCreatorPanel(planejadorHorárioPanel.getDateLabel(), aldeiaOrigem, 
-				aldeiaDestino, null), c);
+		//add(tools.addAlertCreatorPanel(planejadorHorárioPanel.getDateLabel(), aldeiaOrigem, 
+		//		aldeiaDestino, null), c);
 	}
 
 	protected void calculateDistanceAndTimes() {
@@ -136,7 +136,8 @@ public class DistânciaPanel extends Ferramenta {
 
 			BigDecimal distância = BigOperation.sqrt(xSquared.add(ySquared), 30);
 			
-			time = distância.multiply(new BigDecimal(army.getVelocidade())).longValue();
+			time = distância.multiply(new BigDecimal(
+					Math.round(army.getVelocidade()))).longValue();
 			
 			timeLabel.setTime(time);
 			

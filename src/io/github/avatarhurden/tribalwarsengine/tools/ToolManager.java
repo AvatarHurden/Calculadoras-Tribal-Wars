@@ -4,8 +4,9 @@ import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import config.Lang;
-import database.Unidade;
 
 /**
  * Panel on top of every ferramenta with the following functionality:
@@ -74,7 +74,7 @@ public class ToolManager {
      * @return Um JPanel com o botão
      */
     public JPanel addAlertCreatorPanel(TimeFormattedJLabel datelbl, CoordenadaPanel origem,
-    		CoordenadaPanel destino, Map<Unidade, IntegerFormattedTextField> tropas) {
+    		CoordenadaPanel destino, Map<Unit, IntegerFormattedTextField> tropas) {
     	
     	JPanel panel = new JPanel();
     	panel.setOpaque(false);

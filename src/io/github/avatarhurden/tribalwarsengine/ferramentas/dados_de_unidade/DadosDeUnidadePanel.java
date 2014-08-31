@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade;
 
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -25,7 +25,6 @@ import javax.swing.border.MatteBorder;
 
 import config.Lang;
 import database.Cores;
-import database.Unidade;
 
 public class DadosDeUnidadePanel extends Ferramenta {
 	
@@ -57,8 +56,9 @@ public class DadosDeUnidadePanel extends Ferramenta {
         onChange = new OnChange() {
 			public void run() {
 				armyEdit.saveValues();
-				for (InformaçãoTropaPanel p : panelTropaList)
-					p.changeValues(army.getTropas().get(panelTropaList.indexOf(p)));
+				for (int i = 0; i < panelTropaList.size(); i++)
+					panelTropaList.get(i).changeValues(army.getTropas().get(i));
+
 				armyInformationPanel.changeValues(army);
 			}
 		};
@@ -167,13 +167,11 @@ public class DadosDeUnidadePanel extends Ferramenta {
     	c.gridx++;
     	header.add(makeSeparator(), c);
 	   
-    	if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO)) {
-    		c.gridx++;
-    		header.add(new JLabel("Def. Arq."), c);
+    	c.gridx++;
+    	header.add(new JLabel("Def. Arq."), c);
 		   
-    		c.gridx++;
-    		header.add(makeSeparator(), c);
-    	}
+    	c.gridx++;
+    	header.add(makeSeparator(), c);
     	
     	c.gridx++;
     	header.add(new JLabel("Saque"), c);

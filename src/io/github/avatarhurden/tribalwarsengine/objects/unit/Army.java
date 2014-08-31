@@ -1,8 +1,9 @@
-package io.github.avatarhurden.tribalwarsengine.objects;
+package io.github.avatarhurden.tribalwarsengine.objects.unit;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.GridBagConstraints;
@@ -29,8 +30,6 @@ import org.json.JSONObject;
 
 import database.Cores;
 import database.ItemPaladino;
-import database.Unidade;
-import database.Unidade.UnidadeTipo;
 
 /**
  * Essa classe guarda informações relativas a um exército. Ela contém
@@ -42,7 +41,7 @@ import database.Unidade.UnidadeTipo;
 public class Army {
 	
 
-	private List<Tropa> tropas = new ArrayList<Tropa>();
+	private ArrayList<Troop> tropas = new ArrayList<Troop>();
 	
 	private transient ItemPaladino item = ItemPaladino.NULL;
 	
@@ -51,33 +50,34 @@ public class Army {
 		
 	}
 	
-	public static ArrayList<Unidade> getAvailableUnits() {
-		
-    	return new ArrayList<Unidade>(Arrays.asList(Unidade.values()));
+	public static List<Unit> getAvailableUnits() {
+    	return ServerManager.getSelectedServer().getUnits();
 	}
 	
-	public static ArrayList<Unidade> getAttackingUnits() {
-		
-		ArrayList<Unidade> list = getAvailableUnits();
+	public static List<Unit> getAttackingUnits() {
+		ArrayList<Unit> list = new ArrayList<Unit>(getAvailableUnits());
     	
-    	list.remove(Unidade.MILÍCIA);
+		Iterator<Unit> iter = list.iterator();
+		while (iter.hasNext())
+			if (iter.next().getName().equals("militia"))
+				iter.remove();
     	
     	return list;
 		
 	}
 	
 	public Army() {
-		this(Arrays.asList(Unidade.values()));
+		this(getAvailableUnits());
 	}
 	
-	public Army(Unidade... units) {
+	public Army(Unit... units) {
 		this(Arrays.asList(units));
 	}
 	
-	public Army(List<Unidade> units) {
+	public Army(List<Unit> units) {
 		
-		for (Unidade i : units)
-			tropas.add(new Tropa(i, 0));
+		for (Unit i : units)
+			tropas.add(new Troop(i, 0));
 		
 	}
 	
@@ -89,57 +89,50 @@ public class Army {
 	 * @param quantidade
 	 * @param nivel
 	 */
-	public void addTropa(Unidade unidade, int quantidade, int nivel) {
-		
-		Iterator<Tropa> iter = tropas.iterator();
-		while (iter.hasNext())
-			if (iter.next().unidade.equals(unidade))
-				iter.remove();
-		
-		tropas.add(new Tropa(unidade, quantidade, nivel));
-		
+	public void addTropa(Unit unidade, int quantidade, int nivel) {
+		addTropa(new Troop(unidade, quantidade, nivel));
 	}
 	
-	public void addTropa(Tropa tropa) {
+	public void addTropa(Troop tropa) {
 		int position = tropas.size()-1;
 		
-		Iterator<Tropa> iter = tropas.iterator();
+		Iterator<Troop> iter = tropas.iterator();
 		while (iter.hasNext())
-			if (iter.next().unidade.equals(tropa.unidade)) {
-				position = tropas.indexOf(getTropa(tropa.unidade));
+			if (iter.next().getUnit().equals(tropa.getUnit())) {
+				position = tropas.indexOf(getTropa(tropa.getUnit()));
 				iter.remove();
 			}
 		
 		tropas.add(position, tropa);
 	}
 	
-	public List<Tropa> getTropas() {
+	public ArrayList<Troop> getTropas() {
 		return tropas;
 	}
 	
-	public List<Unidade> getUnidades() {
-		List<Unidade> list = new ArrayList<>();
-		for (Tropa t : tropas)
-			list.add(t.unidade);
+	public List<Unit> getUnits() {
+		List<Unit> list = new ArrayList<Unit>();
+		for (Troop t : tropas)
+			list.add(t.getUnit());
 		
 		return list;
 	}
 
-	public int getQuantidade(Unidade i) {
-		return getTropa(i).quantidade;
+	public int getQuantidade(Unit unidade) {
+		return getTropa(unidade).getQuantity();
 	}
 	
-	public Tropa getTropa(Unidade u) {
-		for (Tropa t : tropas)
-			if (t.unidade.equals(u))
+	public Troop getTropa(Unit unidade) {
+		for (Troop t : tropas)
+			if (t.getUnit().equals(unidade)) 
 				return t;
 		
 		return null;
 	}
 	
-	public boolean contains(Unidade u) {
-		for (Tropa t : tropas)
-			if (t.unidade.equals(u))
+	public boolean contains(String name) {
+		for (Troop t : tropas)
+			if (t.getName().equals(name))
 				return true;
 		
 		return false;
@@ -148,8 +141,8 @@ public class Army {
 	public int getAtaque() {
 		int ataque = 0;
 		
-		for (Tropa t : tropas)
-			ataque += t.getAtaque(item);
+		for (Troop t : tropas)
+			ataque += t.getAttack(item);
 		
 		return ataque;
 	}
@@ -157,9 +150,9 @@ public class Army {
 	public int getAtaqueGeral() {
 		int ataque = 0;
 		
-		for (Tropa t : tropas)
-			if (t.getTipo().equals(UnidadeTipo.Geral))
-				ataque += t.getAtaque(item);
+		for (Troop t : tropas)
+			if (t.getType().equals(UnitType.General))
+				ataque += t.getAttack(item);
 		
 		return ataque;
 	}
@@ -167,9 +160,9 @@ public class Army {
 	public int getAtaqueCavalaria() {
 		int ataque = 0;
 		
-		for (Tropa t : tropas)
-			if (t.getTipo().equals(UnidadeTipo.Cavalo))
-				ataque += t.getAtaque(item);
+		for (Troop t : tropas)
+			if (t.getType().equals(UnitType.Cavalry))
+				ataque += t.getAttack(item);
 			
 		return ataque;
 	}
@@ -177,9 +170,9 @@ public class Army {
 	public int getAtaqueArqueiro() {
 		int ataque = 0;
 		
-		for (Tropa t : tropas)
-			if (t.getTipo().equals(UnidadeTipo.Arqueiro))
-				ataque += t.getAtaque(item);
+		for (Troop t : tropas)
+			if (t.getType().equals(UnitType.Archer))
+				ataque += t.getAttack(item);
 	
 		return ataque;
 	}
@@ -187,8 +180,8 @@ public class Army {
 	public int getDefesaGeral() {
 		int defesa = 0;
 		
-		for (Tropa t : tropas)
-			defesa += t.getDefesaGeral(item);
+		for (Troop t : tropas)
+			defesa += t.getDefense(item);
 	
 		return defesa;
 	}
@@ -196,8 +189,8 @@ public class Army {
 	public int getDefesaCavalaria() {
 		int defesa = 0;
 		
-		for (Tropa t : tropas)
-			defesa += t.getDefesaCavalaria(item);
+		for (Troop t : tropas)
+			defesa += t.getDefenseCavalry(item);
 		
 		return defesa;
 	}
@@ -205,8 +198,8 @@ public class Army {
 	public int getDefesaArqueiro() {
 		int defesa = 0;
 		
-		for (Tropa t : tropas)
-			defesa += t.getDefesaArqueiro(item);
+		for (Troop t : tropas)
+			defesa += t.getDefenseArcher(item);
 	
 		return defesa;
 	}
@@ -214,8 +207,8 @@ public class Army {
 	public int getSaque() {
 		int saque = 0;
 		
-		for (Tropa t : tropas)
-			saque += t.getSaque();
+		for (Troop t : tropas)
+			saque += t.getHaul();
 		
 		return saque;
 	}
@@ -223,8 +216,8 @@ public class Army {
 	public int getPopulação() {
 		int população = 0;
 		
-		for (Tropa t : tropas)
-			população += t.getPopulação();
+		for (Troop t : tropas)
+			população += t.getPopulation();
 		
 		return população;
 	}
@@ -232,8 +225,8 @@ public class Army {
 	public int getCustoMadeira() {
 		int madeira = 0;
 		
-		for (Tropa t : tropas)
-			madeira += t.getCustoMadeira();
+		for (Troop t : tropas)
+			madeira += t.getCostWood();
 	
 		return madeira;
 	}
@@ -241,8 +234,8 @@ public class Army {
 	public int getCustoArgila() {
 		int argila = 0;
 		
-		for (Tropa t : tropas)
-			argila += t.getCustoArgila();
+		for (Troop t : tropas)
+			argila += t.getCostClay();
 	
 		return argila;
 	}
@@ -250,8 +243,8 @@ public class Army {
 	public int getCustoFerro() {
 		int ferro = 0;
 		
-		for (Tropa t : tropas)
-			ferro += t.getCustoFerro();
+		for (Troop t : tropas)
+			ferro += t.getCostIron();
 		
 		return ferro;
 	}
@@ -259,8 +252,8 @@ public class Army {
 	public int getODAtaque() {
 		int ODA = 0;
 		
-		for (Tropa t : tropas)
-			ODA += t.getODAtaque();
+		for (Troop t : tropas)
+			ODA += t.getODAttacker();
 		
 		return ODA;
 	}
@@ -268,8 +261,8 @@ public class Army {
 	public int getODDefesa() {
 		int ODD = 0;
 		
-		for (Tropa t : tropas)
-			ODD += t.getODDefesa();
+		for (Troop t : tropas)
+			ODD += t.getODDefender();
 		
 		return ODD;
 	}
@@ -282,9 +275,9 @@ public class Army {
 		
 		double slowest = 0;
 		
-		for (Tropa t : tropas)
-			if (t.getVelocidade() > slowest)
-				slowest = t.getVelocidade();
+		for (Troop t : tropas)
+			if (t.getSpeed() > slowest)
+				slowest = t.getSpeed();
 	
 		// Transforma de minutos/campo para milissegundos/campo
 		return slowest*60000;
@@ -293,8 +286,8 @@ public class Army {
 	public long getTempoProdução() {
 		long tempo = 0;
 		
-		for (Tropa t : tropas)
-			tempo += t.getTempoProdução();
+		for (Troop t : tropas)
+			tempo += t.getProductionTime();
 		
 		return tempo;
 	}
@@ -333,118 +326,11 @@ public class Army {
 		return new ArmyEditPanel(null, false, true, false, false, false);
 	}
 	
-	/**
-	 * Classe que representa uma tropa específica, com a unidade, nível e quantidade
-	 * @author Arthur
-	 *
-	 */
-	public class Tropa {
-		
-		private Unidade unidade;
-		private int quantidade;
-		private int nivel;
-		
-		private Tropa(Unidade unidade, int quantidade, int nivel) {
-			this.unidade = unidade;
-			this.quantidade = quantidade;
-			this.nivel = nivel;
-		}
-		
-		private Tropa(Unidade unidade, int quantidade) {
-			this(unidade, quantidade, 1);
-		}
-		
-		public int getAtaque() {
-			return getAtaque(ItemPaladino.NULL);
-		}
-		
-		public int getAtaque(ItemPaladino item) {
-			return unidade.getAtaque(nivel, item) * quantidade;
-		}
-		
-		public int getDefesaGeral() {
-			return getDefesaGeral(ItemPaladino.NULL);
-		}
-	
-		public int getDefesaGeral(ItemPaladino item) {
-			return unidade.getDefGeral(nivel, item) * quantidade;
-		}
-		
-		public int getDefesaCavalaria() {
-			return getDefesaCavalaria(ItemPaladino.NULL);
-		}
-		
-		public int getDefesaCavalaria(ItemPaladino item) {
-			return unidade.getDefCav(nivel, item) * quantidade;
-		}
-		
-		public int getDefesaArqueiro() {
-			return getDefesaArqueiro(ItemPaladino.NULL);
-		}
-		
-		public int getDefesaArqueiro(ItemPaladino item) {
-			return unidade.getDefArq(nivel, item) * quantidade;
-		}
-		
-		public int getCustoMadeira() {
-			return unidade.getMadeira() * quantidade;
-		}
-		
-		public int getCustoArgila() {
-			return unidade.getArgila() * quantidade;
-		}
-		
-		public int getCustoFerro() {
-			return unidade.getFerro() * quantidade;
-		}
-		
-		public int getPopulação() {
-			return unidade.getPopulação() * quantidade;
-		}
-		
-		public int getSaque() {
-			return unidade.getSaque() * quantidade;
-		}
-		
-		public int getTempoProdução() {
-			return unidade.getTempoProdução() * quantidade;
-		}
-		
-		public int getODAtaque() {
-			return unidade.getODA() * quantidade;
-		}
-		
-		public int getODDefesa() {
-			return unidade.getODD() * quantidade;
-		}
-		
-		public double getVelocidade() {
-			if (quantidade == 0)
-				return 0;
-			else
-				return unidade.getVelocidade();
-		}
-		
-		public UnidadeTipo getTipo() {
-			return unidade.getType();
-		}
-		
-		public Unidade getUnidade() {
-			return unidade;
-		}
-		
-		public int getQuantidade() {
-			return quantidade;
-		}
-
-	}
-	
-	@SuppressWarnings("serial")
 	public class ArmyEditPanel extends JPanel {
 		
-		private HashMap<Unidade, JCheckBox> selected;
-		private HashMap<Unidade, IntegerFormattedTextField> quantities;
-		private HashMap<Unidade, TroopLevelComboBox> level;
+		private HashMap<Unit, JCheckBox> selected;
+		private HashMap<Unit, IntegerFormattedTextField> quantities;
+		private HashMap<Unit, TroopLevelComboBox> level;
 		
 		private GridBagLayout layout;
 		
@@ -471,9 +357,9 @@ public class Army {
 				boolean hasNames, boolean hasSelected, boolean hasAmount,
 				boolean hasNivel) {
 			
-			selected = new HashMap<Unidade, JCheckBox>();
-			quantities = new HashMap<Unidade, IntegerFormattedTextField>();
-			level = new HashMap<Unidade, TroopLevelComboBox>();
+			selected = new HashMap<Unit, JCheckBox>();
+			quantities = new HashMap<Unit, IntegerFormattedTextField>();
+			level = new HashMap<Unit, TroopLevelComboBox>();
 			
 			this.hasHeader = hasHeader;
 			this.hasNames = hasNames;
@@ -572,7 +458,7 @@ public class Army {
 			
 			for (int i = 0; i < tropas.size(); i++) {
 				
-				Unidade u = tropas.get(i).unidade;
+				Unit u = tropas.get(i).getUnit();
 				
 				JPanel unitPanel = new JPanel(layout);
 				unitPanel.setBackground(Cores.getAlternar(i+1));
@@ -620,7 +506,7 @@ public class Army {
 				int niveis = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
 				
 				TroopLevelComboBox combo = new TroopLevelComboBox(niveis, unitPanel.getBackground());
-				combo.setSelectedItem(Army.this.getTropa(u).nivel);
+				combo.setSelectedItem(Army.this.getTropa(u).getLevel());
 				level.put(u, combo);
 					
 				combo.addItemListener(new ItemListener() {
@@ -644,7 +530,7 @@ public class Army {
 		
 		public void saveValues() {
 			
-			for (Unidade i : quantities.keySet())
+			for (Unit i : quantities.keySet())
 				if (hasSelected)
 					Army.this.addTropa(i, selected.get(i).isSelected() ? 1 : 0, 
 							(int) level.get(i).getSelectedItem());
@@ -668,11 +554,11 @@ public class Army {
 			
 			resetComponents();
 			
-			for (Tropa t : army.tropas)
-				if (getUnidades().contains(t.unidade)) {
-					if (t.quantidade > 0)
-						quantities.get(t.unidade).setText(String.valueOf(t.quantidade));	
-					level.get(t.unidade).setSelectedItem(t.nivel);
+			for (Troop t : army.getTropas())
+				if (getTropa(t.getUnit()) != null) {
+					if (t.getQuantity() > 0)
+						quantities.get(t.getUnit()).setText(String.valueOf(t.getQuantity()));	
+					level.get(t.getUnit()).setSelectedItem(t.getLevel());
 			}
 			
 			saveValues();

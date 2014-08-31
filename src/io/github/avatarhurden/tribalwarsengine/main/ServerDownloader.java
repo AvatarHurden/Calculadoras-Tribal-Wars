@@ -26,7 +26,7 @@ public class ServerDownloader {
 	private final String unitFile = "/unit_info.json";
 	private final String buildingFile = "/building_info.json";
 	
-	private final String villageModelFile = "/villageModels.json";
+	private final String buildingModelFile = "/buildingModels.json";
 	private final String armyModelFile = "/armyModels.json";
 	
 	private String folder;
@@ -185,15 +185,15 @@ public class ServerDownloader {
 		return array;
 	}
 	
-	// Village model section
+	// Building model section
 	
-	public JSONArray getServerVillageModels() {
+	public JSONArray getServerBuildingModels() {
 		try {
-		File file = new File(folder+villageModelFile);
+		File file = new File(folder+buildingModelFile);
 		if (!file.exists())
-			saveVillageModelConfig(new JSONArray());
+			saveBuildingModelConfig(new JSONArray());
 			
-		return JSON.getJSON(file).getJSONArray("villageModels");
+		return JSON.getJSON(file).getJSONArray("buildingModels");
 		} catch (Exception e) {
 			return new JSONArray();
 		}
@@ -261,12 +261,12 @@ public class ServerDownloader {
 		} catch (Exception e) {}
 	}
 	
-	public void saveVillageModelConfig(JSONArray json) {
+	public void saveBuildingModelConfig(JSONArray json) {
 		JSONObject obj = new JSONObject();
-		obj.put("villageModels", json);
+		obj.put("buildingModels", json);
 		
 		try {
-			JSON.createJSONFile(obj, new File(folder+villageModelFile));
+			JSON.createJSONFile(obj, new File(folder+buildingModelFile));
 		} catch (Exception e) {}
 	}
 	

@@ -31,6 +31,8 @@ public class SelectWorldFrame extends JFrame {
     private JPanel loadingPanel;
     private static final SelectWorldFrame instance = new SelectWorldFrame();
 
+    private final int MAX_WIDTH = 1000;
+    private final int MAX_HEIGHT = 700;
     /**
      * Frame inicial, no qual ocorre a escolha do mundo. Ele possui:
      * - Logo do programa
@@ -39,8 +41,10 @@ public class SelectWorldFrame extends JFrame {
      * - Botão para abrir o "MainWindow"
      */
     public SelectWorldFrame() {
+    	
+    	setPreferredSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
+    	
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
-
         setTitle(Lang.Titulo.toString());
 
         addWindowListener(new TWEWindowListener());
@@ -57,10 +61,10 @@ public class SelectWorldFrame extends JFrame {
     }
     
     private void setGUI() {
-    	GridBagLayout layou = new GridBagLayout();
-        layou.columnWidths = new int[]{546, 1, 350};
-        layou.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-        setLayout(layou);
+    	GridBagLayout layout = new GridBagLayout();
+        layout.columnWidths = new int[]{600, 1, 393};
+        layout.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+        setLayout(layout);
 
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTH;
@@ -200,6 +204,7 @@ public class SelectWorldFrame extends JFrame {
 
         getRootPane().setDefaultButton(selectionPanel.getStartButton());
         repaint();
+        requestFocus();
     }
 
     /**

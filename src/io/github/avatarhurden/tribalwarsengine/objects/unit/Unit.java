@@ -1,8 +1,10 @@
-package io.github.avatarhurden.tribalwarsengine.objects;
+package io.github.avatarhurden.tribalwarsengine.objects.unit;
 
 import org.json.JSONObject;
 
 public class Unit {
+	
+	public enum UnitType { General, Cavalry, Archer, unspecified };
 	
 	private JSONObject json;
 
@@ -58,7 +60,7 @@ public class Unit {
 		return json.getDouble("build_time");
 	}
 	
-	public String getName() {
+	public String getPrettyName() {
 		switch (json.getString("name")) {
 		case "spear":
 			return "Lanceiro";
@@ -91,6 +93,14 @@ public class Unit {
 		}
 	}
 	
+	public String toString() {
+		return getPrettyName();
+	}
+	
+	public String getName() {
+		return json.getString("name");
+	}
+	
 	public UnitType getType() {
 		switch (json.getString("name")) {
 		case "spear":
@@ -111,9 +121,5 @@ public class Unit {
 			return UnitType.unspecified;
 		}
 	}
-	
-	public enum UnitType {
-		General, Cavalry, Archer, unspecified;
-	}
-	
+		
 }

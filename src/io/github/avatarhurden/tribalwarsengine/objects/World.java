@@ -134,6 +134,14 @@ public class World implements EditableObject {
 			return ResearchSystem.SIMPLE;
 		}
     }
+    
+    public int getResearchSystemLevels() {
+    	return getResearchSystem().getResearch();
+    }
+    
+    public int getBaseProduction() {
+    	return json.getJSONObject("game").getInt("base_production");
+    }
 
     public String getName() {
         return (String) get("name", "BRXX");

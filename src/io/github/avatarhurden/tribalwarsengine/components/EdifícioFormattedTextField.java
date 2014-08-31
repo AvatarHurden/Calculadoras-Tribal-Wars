@@ -1,8 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import javax.swing.SwingConstants;
+import io.github.avatarhurden.tribalwarsengine.objects.building.Building;
 
-import database.Edifício;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 /**
@@ -16,9 +16,9 @@ import database.Edifício;
 public abstract class EdifícioFormattedTextField extends IntegerFormattedTextField {
 	
 	
-	public EdifícioFormattedTextField(final Edifício ed, int initial) {
+	public EdifícioFormattedTextField(final Building ed, int initial) {
 		
-		super(initial, 3, ed.getNívelMáximo());
+		super(initial, 3, ed.getMaxLevel());
 		
 		setHorizontalAlignment(SwingConstants.CENTER);
 		

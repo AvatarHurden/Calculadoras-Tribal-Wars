@@ -20,15 +20,12 @@ import org.json.JSONObject;
  */
 public class Configuration {
 	
-	private static final String villageModelString = "villageModels.json";
-	private static final String armyModelString = "armyModels.json";
-	
     private static final String configString = "config.json";
 
     private static Configuration instance;
     //Armazena as configurações
-    private JSONObject config, villageConfig, armyConfig;
-    private File configFile, villageFile, armyFile;
+    private JSONObject config;
+    private File configFile;
     private JFrame frame = MainWindow.getInstance();
 
     /**
@@ -36,9 +33,7 @@ public class Configuration {
      */
     private Configuration() {
     	configFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), configString);
-    	villageFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), villageModelString);
-    	armyFile = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), armyModelString);
-        
+    	
         loadConfigJSON();
     }
 
@@ -69,8 +64,6 @@ public class Configuration {
     public void salvaConfigJSON() {
         try {
             JSON.createJSONFile(config, configFile);
-            JSON.createJSONFile(villageConfig, villageFile);
-            JSON.createJSONFile(armyConfig, armyFile);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Não foi possivel salvar o arquivo de configuração.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -78,23 +71,14 @@ public class Configuration {
 
     private void loadConfigJSON() {
         try {
-        	
             if (!configFile.exists())
             	JSON.createJSONFile(new JSONObject("{}"), configFile);
-            if (!villageFile.exists())
-            	JSON.createJSONFile(new JSONObject().put("villageModels", new JSONArray()), villageFile);
-            if (!armyFile.exists())
-            	JSON.createJSONFile(new JSONObject().put("armyModels", new JSONArray()), armyFile);
             
             config = JSON.getJSON(configFile);
-            armyConfig = JSON.getJSON(armyFile);
-            villageConfig = JSON.getJSON(villageFile);
-            
-            } catch (IOException e) {
+           
+        } catch (IOException e) {
             JOptionPane.showMessageDialog( frame, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             config = new JSONObject("{}");
-            armyConfig = new JSONObject("{}");
-            villageConfig = new JSONObject("{}");
             return;
         }
     }
@@ -174,15 +158,6 @@ public class Configuration {
     	}
     }
 
-    
-    public JSONArray getVillageModelConfig() {
-    	return villageConfig.getJSONArray("villageModels");
-    }
-    
-    public JSONArray getArmyModelConfig() {
-    	return armyConfig.getJSONArray("armyModels");
-    }
-
     /**
      * Setter unico para valores
      *
@@ -191,11 +166,6 @@ public class Configuration {
      */
     public void setConfig(String chave, Object valor) {
         try {
-        	if (chave.equals("villageModels"))
-        		villageConfig.put(chave, valor);
-        	else if (chave.equals("armyModels"))
-        		armyConfig.put(chave, valor);
-        	else
             config.put(chave, valor);
         }
         //Faz nada se der erro :(

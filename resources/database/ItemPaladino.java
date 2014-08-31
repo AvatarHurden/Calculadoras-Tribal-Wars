@@ -1,36 +1,38 @@
 package database;
 
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
+
 
 public enum ItemPaladino {
 
-	NULL			("Nenhum item",					  "", 																   null,				 1.0, 1.0, 1.0, 1.0),
-	ALABARDA		("Alabarda de Guan Yu", 		  "Aumenta ataque de lanceiros em %.0f%% e defesa em %.0f%%",		   Unidade.LANCEIRO,     1.3, 1.2, 1.3, 1.2),
-	ESPADA			("Espada Longa de Ullrich", 	  "Aumenta ataque de espadachins em %.0f%% e defesa em %.0f%%", 	   Unidade.ESPADACHIM,   1.3, 1.2, 1.4, 1.3),
-	MACHADO			("Machado de Guerra de Thogard",  "Aumenta ataque de bárbaros em %.0f%% e defesa em %.0f%%",   		   Unidade.BÁRBARO,      1.3, 1.2, 1.4, 1.3),
-	ARCO			("Arco Longo de Nimrod", 		  "Aumenta ataque de arqueiros em %.0f%% e defesa em %.0f%%", 		   Unidade.ARQUEIRO,     1.3, 1.2, 1.3, 1.2),
-	TELESCÓPIO		("Telescópio de Kalid", 	 	  "Exploradores sempre veem as tropas de uma aldeia",			       Unidade.EXPLORADOR,   1.0, 1.0, 1.0, 1.0),
-	LANÇA			("Lança de Miesko", 			  "Aumenta ataque de cavalaria leve em %.0f%% e defesa em %.0f%%", 	   Unidade.CAVALOLEVE,   1.3, 1.2, 1.3, 1.2),
-	ESTANDARTE		("Estandarte de Baptiste", 		  "Aumenta ataque de cavalaria pesada em %.0f%% e defesa em %.0f%%",   Unidade.CAVALOPESADO, 1.3, 1.2, 1.3, 1.2),
-	ARCO_COMPOSTO	("Arco Composto de Nimrod", 	  "Aumenta ataque de arqueiro a cavalo em %.0f%% e defesa em %.0f%%",  Unidade.ARCOCAVALO,   1.3, 1.2, 1.3, 1.2),
-	ESTRELA			("Estrela de Manhã de Carol", 	  "Aumenta ataque de aríetes em %.0f%%", 							   Unidade.ARÍETE,       2.0, 1.0, 2.0, 1.0),
-	FOGUEIRA		("Fogueira de Aletheia", 		  "Aumenta ataque de catapultas em %.0f%% e defesa em %.0f%%", 	 	   Unidade.CATAPULTA,    2.0, 1.0, 2.0, 11.0),
-	CETRO			("Cetro de Vasco", 				  "Nobres reduzem a lealdade por, no mínimo, 30", 		 	   		   Unidade.NOBRE,        1.0, 1.0, 1.0, 1.0);
+	NULL			("Nenhum item",					  "", 																   "",			1.0, 1.0, 1.0, 1.0),
+	ALABARDA		("Alabarda de Guan Yu", 		  "Aumenta ataque de lanceiros em %.0f%% e defesa em %.0f%%",		   "spear",     1.3, 1.2, 1.3, 1.2),
+	ESPADA			("Espada Longa de Ullrich", 	  "Aumenta ataque de espadachins em %.0f%% e defesa em %.0f%%", 	   "sword",   	1.3, 1.2, 1.4, 1.3),
+	MACHADO			("Machado de Guerra de Thogard",  "Aumenta ataque de bárbaros em %.0f%% e defesa em %.0f%%",   		   "axe",     	1.3, 1.2, 1.4, 1.3),
+	ARCO			("Arco Longo de Nimrod", 		  "Aumenta ataque de arqueiros em %.0f%% e defesa em %.0f%%", 		   "archer",    1.3, 1.2, 1.3, 1.2),
+	TELESCÓPIO		("Telescópio de Kalid", 	 	  "Exploradores sempre veem as tropas de uma aldeia",			       "spy",   	1.0, 1.0, 1.0, 1.0),
+	LANÇA			("Lança de Miesko", 			  "Aumenta ataque de cavalaria leve em %.0f%% e defesa em %.0f%%", 	   "light",   	1.3, 1.2, 1.3, 1.2),
+	ESTANDARTE		("Estandarte de Baptiste", 		  "Aumenta ataque de cavalaria pesada em %.0f%% e defesa em %.0f%%",   "heavy",		1.3, 1.2, 1.3, 1.2),
+	ARCO_COMPOSTO	("Arco Composto de Nimrod", 	  "Aumenta ataque de arqueiro a cavalo em %.0f%% e defesa em %.0f%%",  "marcher",   1.3, 1.2, 1.3, 1.2),
+	ESTRELA			("Estrela de Manhã de Carol", 	  "Aumenta ataque de aríetes em %.0f%%", 							   "ram",       2.0, 1.0, 2.0, 1.0),
+	FOGUEIRA		("Fogueira de Aletheia", 		  "Aumenta ataque de catapultas em %.0f%% e defesa em %.0f%%", 	 	   "catapult",  2.0, 1.0, 2.0, 11.0),
+	CETRO			("Cetro de Vasco", 				  "Nobres reduzem a lealdade por, no mínimo, 30", 		 	   		   "snob",      1.0, 1.0, 1.0, 1.0);
 	;	
 
 	private final String name;
 	private final String description;
-	private final Unidade unit;
+	private final String unitName;
 	private final double modifierAtk;
 	private final double modifierDef;
 
-	private ItemPaladino(String nome, String descrição, Unidade unidade,
+	private ItemPaladino(String nome, String descrição, String unitName,
 			double modificadorAtk, double modificadorDef, double advancedAtk,
 			double advancedDef) {
 
 		this.name = nome;
-		this.unit = unidade;
-		if (WorldManager.get().getSelectedWorld().isBetterItemsWorld()) {
+		this.unitName = unitName;
+		if (ServerManager.getSelectedServer().getWorld().isBetterItemsWorld()) {
 			this.modifierAtk = advancedAtk;
 			this.modifierDef = advancedDef;
 		} else {
@@ -65,8 +67,8 @@ public enum ItemPaladino {
 	/**
 	 * @return the unit
 	 */
-	public Unidade getUnit() {
-		return unit;
+	public boolean isUnit(Unit unit) {
+		return unit.getName().equals(unitName);
 	}
 
 	/**

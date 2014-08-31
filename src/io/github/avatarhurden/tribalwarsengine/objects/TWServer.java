@@ -1,6 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
 import io.github.avatarhurden.tribalwarsengine.main.ServerDownloader;
+import io.github.avatarhurden.tribalwarsengine.objects.building.Building;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ public class TWServer {
 	private World world;
 	private List<Unit> units;
 	private List<Building> buildings;
-	private List<VillageModel> villageModels;
+	private List<BuildingBlockModel> buildingModels;
 	private List<ArmyModel> armyModels;
 	
 	// JSONObject with the information to be displayed in the selectionPanel
@@ -36,8 +38,8 @@ public class TWServer {
 			setUnits(downloader.getServerUnitConfig());
 		if (buildings == null)
 			setBuildings(downloader.getServerBuildingConfig());
-		if (villageModels == null)
-			setVillageModels(downloader.getServerVillageModels());
+		if (buildingModels == null)
+			setBuildingModels(downloader.getServerBuildingModels());
 		if (armyModels == null)
 			setArmyModels(downloader.getServerArmyModels());
 	}
@@ -54,10 +56,10 @@ public class TWServer {
 			buildings.add(new Building(array.getJSONObject(i)));
 	}
 	
-	private void setVillageModels(JSONArray array) {
-		villageModels = new ArrayList<VillageModel>();
+	private void setBuildingModels(JSONArray array) {
+		buildingModels = new ArrayList<BuildingBlockModel>();
 		for (int i = 0; i < array.length(); i++)
-			villageModels.add(new VillageModel(array.getJSONObject(i)));
+			buildingModels.add(new BuildingBlockModel(array.getJSONObject(i)));
 	}
 	
 	private void setArmyModels(JSONArray array) {
@@ -100,8 +102,8 @@ public class TWServer {
 		return json;
 	}
 	
-	public void addVillageModel(VillageModel model) {
-		villageModels.add(model);
+	public void addBuildingModel(BuildingBlockModel model) {
+		buildingModels.add(model);
 	}
 	
 	public void addArmyModel(ArmyModel model) {
@@ -145,8 +147,8 @@ public class TWServer {
 		return armyModels;
 	}
 	
-	public List<VillageModel> getVillageModelList() {
-		return villageModels;
+	public List<BuildingBlockModel> getBuildingModelList() {
+		return buildingModels;
 	}
 	
 	public JSONObject getBasicConfig() {
@@ -169,12 +171,12 @@ public class TWServer {
 		downloader.saveArmyModelConfig(array);
 	}
 	
-	public void saveVillageModels() {
+	public void saveBuildingModels() {
 		JSONArray array = new JSONArray();
-		for (VillageModel model : villageModels)
+		for (BuildingBlockModel model : buildingModels)
 			array.put(model.getJson());
 		
-		downloader.saveVillageModelConfig(array);
+		downloader.saveBuildingModelConfig(array);
 	}
 	
 }

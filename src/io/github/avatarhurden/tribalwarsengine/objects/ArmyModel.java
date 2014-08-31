@@ -1,5 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
+
 import java.util.LinkedHashMap;
 
 import org.json.JSONException;
@@ -7,8 +10,6 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import database.Unidade;
 
 /**
  * Classe que representa modelos de exércitos
@@ -84,12 +85,12 @@ public class ArmyModel implements EditableObject {
     public ArmyModel setArmy(Army army) {
     	
     	Army toSave = new Army();
-    	for (Unidade u : toSave.getUnidades()) {
-    		if (army.contains(u))
+    	for (Unit u : toSave.getUnits()) {
+    		if (army.contains(u.getName()))
     			toSave.addTropa(army.getTropa(u));
     	}
     	
-    	set("army", new JSONObject(gson.toJson(toSave	)));
+    	set("army", new JSONObject(gson.toJson(toSave)));
     	return this;
     }
     

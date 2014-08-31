@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados;
 
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.Tropa;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
 import java.awt.Color;
 import java.awt.GridBagLayout;
@@ -42,7 +42,7 @@ public class ODTropaPanel extends JPanel {
 		if (obj instanceof Army)
 			changeODAtaqueArmy((Army) obj);
 		else
-			changeODAtaqueTropa((Tropa) obj);
+			changeODAtaqueTropa((Troop) obj);
 	}
 	
 	protected void changeODDefesa(Object obj) {
@@ -50,7 +50,7 @@ public class ODTropaPanel extends JPanel {
 		if (obj instanceof Army)
 			changeODDefesaArmy((Army) obj);
 		else
-			changeODDefesaTropa((Tropa) obj);
+			changeODDefesaTropa((Troop) obj);
 
 	}
 	
@@ -64,14 +64,14 @@ public class ODTropaPanel extends JPanel {
 		lblOD.setText(getFormattedNumber(army.getODAtaque()));
 	}
 	
-	private void changeODAtaqueTropa(Tropa tropa) {
+	private void changeODAtaqueTropa(Troop tropa) {
 		
-		if (tropa.getQuantidade() == 0) {
+		if (tropa.getQuantity() == 0) {
 			resetValues();
 			return;
 		}
 		
-		lblOD.setText(getFormattedNumber(tropa.getODAtaque()));
+		lblOD.setText(getFormattedNumber(tropa.getODAttacker()));
 	}
 	
 	private void changeODDefesaArmy(Army army) {
@@ -84,14 +84,14 @@ public class ODTropaPanel extends JPanel {
 		lblOD.setText(getFormattedNumber(army.getODDefesa()));
 	}
 	
-	private void changeODDefesaTropa(Tropa tropa) {
+	private void changeODDefesaTropa(Troop tropa) {
 		
-		if (tropa.getQuantidade() == 0) {
+		if (tropa.getQuantity() == 0) {
 			resetValues();
 			return;
 		}
 		
-		lblOD.setText(getFormattedNumber(tropa.getODDefesa()));
+		lblOD.setText(getFormattedNumber(tropa.getODDefender()));
 	}
 	
 	protected void resetValues() {

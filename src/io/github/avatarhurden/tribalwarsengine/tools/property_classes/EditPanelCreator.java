@@ -1,12 +1,10 @@
 package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
 
 import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.Scope;
-import io.github.avatarhurden.tribalwarsengine.objects.Scope.ScopeSelectionPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,8 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -30,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
@@ -92,10 +87,8 @@ public class EditPanelCreator extends JPanel {
 				// É um dos objetos compostos
 				if (Army.isArmyJson(json.getJSONObject(key)))
 					panels.add(new ArmyPanel(key));
-				else if (Buildings.isBuildingJson(json.getJSONObject(key)))
+				else if (BuildingBlock.isBuildingJson(json.getJSONObject(key)))
 					panels.add(new BuildingsPanel(key));
-				else if (Scope.isScopeJson(json.getJSONObject(key)))
-					panels.add(new ScopePanel(key));
 				
 			}
 		}
@@ -366,13 +359,13 @@ public class EditPanelCreator extends JPanel {
 	}
 	
 	private class BuildingsPanel extends DefaultPanel {
-		private Buildings builds;
+		private BuildingBlock builds;
 		private BuildingsEditPanel panel;
 		
 		private BuildingsPanel(String key) {
 			super(key);
 			
-			builds = gson.fromJson(json.get(key).toString(), Buildings.class);
+			builds = gson.fromJson(json.get(key).toString(), BuildingBlock.class);
 			panel = builds.new BuildingsEditPanel(onChange, false, true, true);
 			
 			add(panel);
@@ -386,99 +379,6 @@ public class EditPanelCreator extends JPanel {
 		}
 			
 	}
-	
-	private class ScopePanel extends DefaultPanel{
-		
-		private Scope escopo;
-		private JPanel[] panels;
-		
-		private ScopePanel(String key) {
-			super(key);
-			
-			escopo = gson.fromJson(json.get(key).toString(), Scope.class);
-			
-			c.fill = GridBagConstraints.HORIZONTAL;
-			
-			panels = new JPanel[2];
-			
-			final ScopeSelectionPanel selection = 
-					escopo.new ScopeSelectionPanel(onChange);
-			
-			panels[0] = new JPanel();
-			panels[0].add(new JLabel("Todos"));
-			
-			panels[1] = new JPanel();
-			panels[1].add(new JLabel("Escolher Mundos"));
-			
-			for (JPanel l : panels) {
-				l.setBackground(Cores.FUNDO_CLARO);
-				l.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
-				l.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent e) {
-						for (JPanel p : panels) {
-							p.setBackground(Cores.FUNDO_CLARO);
-							p.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
-						}
-							
-						((JPanel) e.getSource()).setBackground(Cores.FUNDO_ESCURO);
-						((JPanel) e.getSource()).setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
-						
-						if (((JPanel) e.getSource()).equals(panels[0])) {
-							escopo.setGlobal(true);
-							selection.setVisible(false);
-						} else {
-							escopo.setGlobal(false);
-							selection.setVisible(true);
-						}
-						onChange.run();
-					}
-				});
-			}
-			
-			int width = selection.getPreferredSize().width;
-			((GridBagLayout) getLayout()).columnWidths = new int[] {width/2+5, width/2+5};
-			
-			// Add "escopo" label
-			JLabel label = new JLabel("Mundos em que é visível");
-
-			c.anchor = GridBagConstraints.WEST;
-			c.gridwidth = 2;
-			c.insets = new Insets(5, 5, 5, 0);
-			add(label, c);
-			
-			c.insets = new Insets(0, 0, 0, 0);
-			c.gridy++;
-			c.anchor = GridBagConstraints.CENTER;
-			c.gridwidth = 1;
-			add(panels[0], c);
-			
-			c.gridx++;
-			add(panels[1], c);
-			
-			// Add selectionList
-			c.gridwidth = 2;
-			c.gridx = 0;
-			c.gridy++;
-			add(selection, c);
-			
-			// Initial formatting
-			if (escopo.isGlobal()) {
-				selection.setVisible(false);
-				panels[0].setBackground(Cores.FUNDO_ESCURO);
-				panels[0].setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
-			} else {
-				panels[1].setBackground(Cores.FUNDO_ESCURO);
-				panels[1].setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
-			}
-			
-		}
-		
-		protected void setValue() {
-			json.put(key, new JSONObject(gson.toJson(escopo)));
-		}
-		
-	}
-	
 	
 	private abstract class DefaultPanel extends JPanel {
 		

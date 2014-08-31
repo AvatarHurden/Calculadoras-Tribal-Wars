@@ -1,8 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento;
 
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -100,7 +100,7 @@ public class RecrutamentoPanel extends Ferramenta {
 		if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO))
 			barrackList.add(Unidade.ARQUEIRO);
 		
-		panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.QUARTEL), 
+		panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.QUARTEL), 
 				new Army(barrackList)));
 		
 		List<Unidade> stableList = new ArrayList<Unidade>();
@@ -110,21 +110,21 @@ public class RecrutamentoPanel extends Ferramenta {
 			stableList.add(Unidade.ARCOCAVALO);
 		stableList.add(Unidade.CAVALOPESADO);
 		
-		panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ESTÁBULO), 
+		panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ESTÁBULO), 
 				new Army(stableList)));
 		
-		panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.OFICINA), 
+		panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.OFICINA), 
 				new Army(Unidade.ARÍETE, Unidade.CATAPULTA)));
 		
 		if (Army.getAvailableUnits().contains(Unidade.PALADINO))
-			panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ESTÁTUA), 
+			panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ESTÁTUA), 
 				new Army(Unidade.PALADINO)));
 		
-		if (Buildings.getAvailableBuildings().contains(Edifício.ACADEMIA_1NÍVEL))
-			panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ACADEMIA_1NÍVEL), 
+		if (BuildingBlock.getAvailableBuildings().contains(Edifício.ACADEMIA_1NÍVEL))
+			panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ACADEMIA_1NÍVEL), 
 					new Army(Unidade.NOBRE)));
 		else
-			panels.add(new RecruitmentPanel(onChange, new Buildings(Edifício.ACADEMIA_3NÍVEIS), 
+			panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ACADEMIA_3NÍVEIS), 
 					new Army(Unidade.NOBRE)));
 		
 	}

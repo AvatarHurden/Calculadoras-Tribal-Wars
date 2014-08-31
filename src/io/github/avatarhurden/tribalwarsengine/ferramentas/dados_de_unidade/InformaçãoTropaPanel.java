@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade;
 
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.Tropa;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -19,7 +19,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import database.Cores;
-import database.Unidade;
 
 public class InformaçãoTropaPanel {
 
@@ -80,8 +79,7 @@ public class InformaçãoTropaPanel {
 		labelsDados.add(danoLabel);
 		labelsDados.add(defGeralLabel);
 		labelsDados.add(defCavaloLabel);
-		if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO))
-			labelsDados.add(defArqueiroLabel);
+		labelsDados.add(defArqueiroLabel);
 		labelsDados.add(saqueLabel);
 		
 		labelsCusto = new ArrayList<JLabel>();
@@ -100,11 +98,7 @@ public class InformaçãoTropaPanel {
 
 		GridBagLayout gbl = new GridBagLayout();
 
-		// Caso o mundo tenha arqueiros, coloca lugar para a defesa de arqueiro
-		if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO))
-			gbl.columnWidths = new int[] { 70, 1, 70, 1, 70, 1, 70, 1, 70 };
-		else
-			gbl.columnWidths = new int[] { 70, 1, 70, 1, 70, 1, 70 };
+		gbl.columnWidths = new int[] { 70, 1, 70, 1, 70, 1, 70, 1, 70 };
 		gbl.rowHeights = new int[] { 30 };
 		gbl.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -177,8 +171,8 @@ public class InformaçãoTropaPanel {
 	// (valor unitário * quantidade)
 	protected void changeValues(Object obj) {
 		
-		if (obj instanceof Tropa)
-			changeValuesTropa((Tropa) obj);
+		if (obj instanceof Troop)
+			changeValuesTropa((Troop) obj);
 		else 
 			changeValuesArmy((Army) obj);
 		
@@ -206,24 +200,24 @@ public class InformaçãoTropaPanel {
 
 	}
 	
-	private void changeValuesTropa(Tropa tropa) {
+	private void changeValuesTropa(Troop tropa) {
 		
-		if (tropa.getQuantidade() == 0) {
+		if (tropa.getQuantity() == 0) {
 			resetValues();
 			return;
 		}
 		
-		danoLabel.setText(getFormattedNumber(tropa.getAtaque()));
-		defGeralLabel.setText(getFormattedNumber(tropa.getDefesaGeral()));
-		defCavaloLabel.setText(getFormattedNumber(tropa.getDefesaCavalaria()));
-		defArqueiroLabel.setText(getFormattedNumber(tropa.getDefesaArqueiro()));
+		danoLabel.setText(getFormattedNumber(tropa.getAttack()));
+		defGeralLabel.setText(getFormattedNumber(tropa.getDefense()));
+		defCavaloLabel.setText(getFormattedNumber(tropa.getDefenseCavalry()));
+		defArqueiroLabel.setText(getFormattedNumber(tropa.getDefenseArcher()));
 
-		saqueLabel.setText(getFormattedNumber(tropa.getSaque()));
+		saqueLabel.setText(getFormattedNumber(tropa.getHaul()));
 
-		madeiraLabel.setText(getFormattedNumber(tropa.getCustoMadeira()));
-		argilaLabel.setText(getFormattedNumber(tropa.getCustoArgila()));
-		ferroLabel.setText(getFormattedNumber(tropa.getCustoFerro()));
-		populaçãoLabel.setText(getFormattedNumber(tropa.getPopulação()));
+		madeiraLabel.setText(getFormattedNumber(tropa.getCostWood()));
+		argilaLabel.setText(getFormattedNumber(tropa.getCostClay()));
+		ferroLabel.setText(getFormattedNumber(tropa.getCostIron()));
+		populaçãoLabel.setText(getFormattedNumber(tropa.getPopulation()));
 
 	}
 	

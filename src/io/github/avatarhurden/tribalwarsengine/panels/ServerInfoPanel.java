@@ -23,7 +23,7 @@ public class ServerInfoPanel extends JPanel {
      * As propriedades mostradas são escolinhas dinamicamente de acordo com o mundo!
      */
     public void changeProperties() {
-    	TWServer server = ServerManager.get().getSelectedServer();
+    	TWServer server = ServerManager.getSelectedServer();
         JSONObject json = server.getBasicConfig();
 
         removeAll();

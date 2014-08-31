@@ -139,7 +139,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		int loop = 1;
 
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
 
 			if (i != null) {
 
@@ -200,7 +200,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		int loop = 1;
 
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
 
 			if (i != null && !i.equals(Unidade.MILÍCIA)) {
 
@@ -268,7 +268,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		int loop = 1;
 
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnidades()) {
+		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
 
 			if (i != null) {
 

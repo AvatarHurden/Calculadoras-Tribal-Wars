@@ -5,7 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextFi
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 
 import java.awt.Component;
 import java.awt.Dimension;

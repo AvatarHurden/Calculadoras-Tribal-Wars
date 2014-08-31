@@ -1,5 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
+import io.github.avatarhurden.tribalwarsengine.objects.building.Building;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+
 import java.util.LinkedHashMap;
 
 import org.json.JSONException;
@@ -8,9 +11,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import database.Edifício;
-
-public class VillageModel implements EditableObject {
+public class BuildingBlockModel implements EditableObject {
 	
 	private JSONObject json;
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -21,11 +22,11 @@ public class VillageModel implements EditableObject {
 	 * 
 	 * @param json com as informações do modelo
 	 */
-	public VillageModel(JSONObject json) {
+	public BuildingBlockModel(JSONObject json) {
 		this.json = json;
 	}
 	
-	public VillageModel() {
+	public BuildingBlockModel() {
 		this(new JSONObject());
 	
 		setStartingValues();
@@ -34,7 +35,7 @@ public class VillageModel implements EditableObject {
 	private void setStartingValues() {
 		
 		setName("Novo Modelo");
-		setBuildings(new Buildings());
+		setBuildings(new BuildingBlock());
 		
 	}
 	
@@ -64,21 +65,21 @@ public class VillageModel implements EditableObject {
     	return (String) get("name", "");
     }
     
-    public Buildings getBuildings() {
-    	return gson.fromJson(get("buildings", "").toString(), Buildings.class);
+    public BuildingBlock getBuildings() {
+    	return gson.fromJson(get("buildings", "").toString(), BuildingBlock.class);
     }
     
     // Setters
     
-    public VillageModel setName(String name) {
+    public BuildingBlockModel setName(String name) {
     	set("name", name);
     	return this;
     }
     
-    public VillageModel setBuildings(Buildings buildings) {
+    public BuildingBlockModel setBuildings(BuildingBlock buildings) {
     	
-    	Buildings toSave = new Buildings();
-    	for (Edifício u : toSave.getEdifícios()) {
+    	BuildingBlock toSave = new BuildingBlock();
+    	for (Building u : toSave.getEdifícios()) {
     		if (buildings.contains(u))
     			toSave.addBuilding(buildings.getBuilding(u));
     	}

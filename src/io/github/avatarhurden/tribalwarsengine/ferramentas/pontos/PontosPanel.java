@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.pontos;
 
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -30,7 +30,7 @@ import database.Cores;
 
 public class PontosPanel extends Ferramenta {
 
-    private Buildings buildings;
+    private BuildingBlock buildings;
     private BuildingsEditPanel buildingsEdit;
     
     private List<InformaçõesEdifícioPanel> panelEdifícioList = new ArrayList<InformaçõesEdifícioPanel>();
@@ -66,12 +66,14 @@ public class PontosPanel extends Ferramenta {
 			}
 		};
 		
-        buildings = new Buildings(Buildings.getAvailableBuildings());
+        buildings = new BuildingBlock(BuildingBlock.getAvailableBuildings());
         buildingsEdit = buildings.getEditPanelFull(onChange);
         
         makePanels();
         
         setGUI();
+        
+        onChange.run();
     }
     
     private void setGUI() {
@@ -114,7 +116,6 @@ public class PontosPanel extends Ferramenta {
     private void makePanels() {
 	   
 	   for (int i = 0; i < buildings.getEdifícios().size(); i++) {
-		   System.out.println(buildings.getEdifícios().get(i).toString());
 		   InformaçõesEdifícioPanel panel = new InformaçõesEdifícioPanel(getNextColor());
 		   panel.setBorder(new MatteBorder(0, 1, 0, 1, Cores.SEPARAR_ESCURO));
 		   panelEdifícioList.add(panel);
@@ -238,7 +239,7 @@ public class PontosPanel extends Ferramenta {
     	if (buildings.getPopulaçãoUsada() == 0)
     		populaçãoRestanteLabel.setText("");
     	else {
-    		int text = buildings.getPopulaçãoDisponível();
+    		int text = buildings.getPopulaçãoRestante();
     		populaçãoRestanteLabel.setText(
     				NumberFormat.getNumberInstance(Locale.GERMANY).format(text));
     	}

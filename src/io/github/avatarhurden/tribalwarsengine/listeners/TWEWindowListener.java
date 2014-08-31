@@ -37,9 +37,6 @@ public class TWEWindowListener implements WindowListener {
 
     public void windowClosing(WindowEvent e) {
     	
-//    	VillageModelManager.get().save();
-//    	ArmyModelManager.get().save();
-
         Configuration config = Configuration.get();
 
         Window window = e.getWindow();

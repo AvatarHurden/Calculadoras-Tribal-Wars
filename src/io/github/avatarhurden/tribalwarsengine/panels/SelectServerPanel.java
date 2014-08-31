@@ -94,8 +94,7 @@ public class SelectServerPanel extends JPanel implements ActionListener {
 
         editButton.setFocusable(false);
 
-        startButton.requestFocusInWindow();
-
+        selectWorldFrame.getRootPane().setDefaultButton(startButton);
     }
 
     private void setSelectionBox() {
@@ -117,8 +116,7 @@ public class SelectServerPanel extends JPanel implements ActionListener {
     }
 
     private void changePadrãoButton() {
-    	ServerManager manager = ServerManager.get();
-        if (manager.getDefaultServer().equals(manager.getSelectedServer()))
+        if (ServerManager.get().getDefaultServer().equals(ServerManager.getSelectedServer()))
         	padrãoButton.setEnabled(false);
         else {
             padrãoButton.setEnabled(true);
@@ -150,11 +148,11 @@ public class SelectServerPanel extends JPanel implements ActionListener {
 //                selectWorldFrame.updateWorldInfoPanel();
 //                break;
             case "start_button":
-            	ServerManager.get().getSelectedServer().setInfo();
+            	ServerManager.getSelectedServer().setInfo();
                 Main.openMainFrame();
                 break;
             case "default_button":
-                ServerManager.get().setDefaultServer(ServerManager.get().getSelectedServer());
+                ServerManager.get().setDefaultServer(ServerManager.getSelectedServer());
                 changePadrãoButton();
                 break;
         }

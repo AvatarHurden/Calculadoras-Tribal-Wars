@@ -8,6 +8,7 @@ import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertManager;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,8 +17,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import database.Unidade;
 
 /**
  * Painel para criar novos alertas. Deve ser adicionado em ferramentas que possuem horário, como
@@ -29,10 +28,10 @@ public class AlertCreatorPanel extends TWSimpleButton implements ActionListener 
 	
 	private TimeFormattedJLabel datelbl;
 	private CoordenadaPanel origem, destino;
-	private Map<Unidade, IntegerFormattedTextField> tropas;
+	private Map<Unit, IntegerFormattedTextField> tropas;
 	
 	public AlertCreatorPanel(TimeFormattedJLabel datelbl, CoordenadaPanel origem, CoordenadaPanel destino,
-			Map<Unidade, IntegerFormattedTextField> tropas) {
+			Map<Unit, IntegerFormattedTextField> tropas) {
 		
 		super("Marcar Alerta");
 		

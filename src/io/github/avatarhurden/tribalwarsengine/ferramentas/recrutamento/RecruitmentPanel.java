@@ -1,11 +1,11 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento;
 
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.Tropa;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.Troop;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Color;
@@ -28,7 +28,7 @@ public class RecruitmentPanel extends JPanel {
 
 	private Army army;
 	private ArmyEditPanel armyEdit;
-	private Buildings buildings;
+	private BuildingBlock buildings;
 	private BuildingsEditPanel buildingsEdit;
 	
 	private Map<Unidade, TimeFormattedJLabel> temposUnitarios;
@@ -38,7 +38,7 @@ public class RecruitmentPanel extends JPanel {
 	
 	private OnChange onChange;
 	
-	protected RecruitmentPanel(OnChange onChange, Buildings builds, Army army) {
+	protected RecruitmentPanel(OnChange onChange, BuildingBlock builds, Army army) {
 		this.onChange = onChange;
 		this.army = army;
 		this.buildings = builds;
@@ -75,7 +75,7 @@ public class RecruitmentPanel extends JPanel {
 		c.gridheight = 1;
 		c.gridx += 2;
 		for (int i = 0; i < army.getTropas().size(); i++) {
-			add(makeUnitTimePanel(army.getTropas().get(i).getUnidade(), Cores.getAlternar(i+1)), c);
+			add(makeUnitTimePanel(army.getTropas().get(i).getUnit(), Cores.getAlternar(i+1)), c);
 			c.gridy++;
 		}
 		
@@ -84,8 +84,6 @@ public class RecruitmentPanel extends JPanel {
 			c.gridx = 0;
 			add(makeBuildingPanel(), c);
 		}
-		
-		System.out.println(getPreferredSize());
 	}
 	
 	private JPanel makeBuildingPanel() {
@@ -152,10 +150,10 @@ public class RecruitmentPanel extends JPanel {
 		
 		double fator = buildings.getFatorProduçãoUnidade(buildings.getEdifícios().get(0));
 		
-		for (Tropa t : army.getTropas()) {
-			temposUnitarios.get(t.getUnidade()).setTime((long) (
-					t.getUnidade().getTempoProdução()*fator));
-			temposTotais.get(t.getUnidade()).setTime((long) (t.getTempoProdução()*fator));
+		for (Troop t : army.getTropas()) {
+			temposUnitarios.get(t.getUnit()).setTime((long) (
+					t.getUnit().getProductionTime()*fator));
+			temposTotais.get(t.getUnit()).setTime((long) (t.getProductionTime()*fator));
 		}
 		
 		tempoTotal.setTime((long) (army.getTempoProdução()*fator));

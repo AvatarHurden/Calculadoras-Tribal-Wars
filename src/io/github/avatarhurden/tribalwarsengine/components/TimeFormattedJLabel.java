@@ -19,12 +19,6 @@ public class TimeFormattedJLabel extends JLabel {
 	private long time;
 	private Date date;
 	
-//	// This code for the Spinner
-//	SpinnerDateModel model = new SpinnerDateModel();
-//			
-//	JSpinner date = new JSpinner(model);
-//	date.setEditor(new JSpinner.DateEditor(date, "dd/MM/yyyy"));
-	
 	public TimeFormattedJLabel(boolean showMillis) {
 		
 		this.showMillis = showMillis;

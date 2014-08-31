@@ -3,9 +3,9 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.NoIntervalException;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.SameDateException;
-import io.github.avatarhurden.tribalwarsengine.objects.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.ArmyEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.Army.Tropa;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.Troop;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -205,7 +205,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridy++;
 		panelRecomendado.add(buttonPanel, c);
 		
-		for (Unidade i : army.getUnidades()) {
+		for (Unidade i : army.getUnits()) {
 			
 			// Adds the JLabel
 			JPanel unitQuantity = new JPanel();
@@ -247,8 +247,8 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		if (army != null) {
 			panelRecomendado.setVisible(true);
-			for (Tropa t : army.getTropas())
-				mapRecomendado.get(t.getUnidade()).setText(String.valueOf(t.getQuantidade()));	
+			for (Troop t : army.getTropas())
+				mapRecomendado.get(t.getUnit()).setText(String.valueOf(t.getQuantity()));	
 	
 		} else {
 			panelRecomendado.setVisible(false);

@@ -2,8 +2,8 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings;
-import io.github.avatarhurden.tribalwarsengine.objects.Buildings.BuildingsEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Color;
@@ -33,7 +33,7 @@ import database.Edifício;
 public class PanelIntervalo extends JPanel{
 
 	private CoordenadaPanel coordenadas;
-	private Buildings buildings;
+	private BuildingBlock buildings;
 	private BuildingsEditPanel buildingsEdit;
 	
 	private TimeFormattedJLabel respostaLabel;
@@ -65,7 +65,7 @@ public class PanelIntervalo extends JPanel{
 		edifícioList.add(Edifício.ARMAZÉM);
 		edifícioList.add(Edifício.ESCONDERIJO);
 		
-		buildings = new Buildings(edifícioList);
+		buildings = new BuildingBlock(edifícioList);
 		buildingsEdit = buildings.new BuildingsEditPanel(onChange, true, true, true);
 		
 		// Adds the village coordinates
@@ -130,7 +130,7 @@ public class PanelIntervalo extends JPanel{
 		return panel;
 	}
 	
-	protected Buildings getBuildings() {
+	protected BuildingBlock getBuildings() {
 		return buildings;
 	}	
 	
