@@ -40,14 +40,12 @@ import database.ItemPaladino;
  */
 public class Army {
 	
-
 	private ArrayList<Troop> tropas = new ArrayList<Troop>();
 	
 	private transient ItemPaladino item = ItemPaladino.NULL;
 	
 	public static boolean isArmyJson(JSONObject json) {
 		return json.has("tropas");
-		
 	}
 	
 	public static List<Unit> getAvailableUnits() {
@@ -66,6 +64,14 @@ public class Army {
 		
 	}
 	
+	public static boolean containsUnit(String name) {
+		for (Unit u : getAvailableUnits())
+			if (u.getName().equals(name))
+				return true;
+		
+		return false;
+	}
+	
 	public Army() {
 		this(getAvailableUnits());
 	}
@@ -78,6 +84,16 @@ public class Army {
 		
 		for (Unit i : units)
 			tropas.add(new Troop(i, 0));
+		
+	}
+	
+	public Army(String... names) {
+		
+		List<String> namesList = new ArrayList<String>(Arrays.asList(names));
+		
+		for (Unit u : getAvailableUnits())
+			if (namesList.contains(u.getName()))
+				tropas.add(new Troop(u, 0));
 		
 	}
 	
@@ -126,6 +142,14 @@ public class Army {
 		for (Troop t : tropas)
 			if (t.getUnit().equals(unidade)) 
 				return t;
+		
+		return null;
+	}
+	
+	public Unit getUnit(String name) {
+		for (Troop t : tropas)
+			if (t.getName().equals(name)) 
+				return t.getUnit();
 		
 		return null;
 	}

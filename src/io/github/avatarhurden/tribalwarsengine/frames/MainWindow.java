@@ -1,9 +1,11 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
+import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.AssistenteSaquePanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade.DadosDeUnidadePanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.distância.DistânciaPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados.OponentesDerrotadosPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.pontos.PontosPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento.RecrutamentoPanel;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
@@ -146,13 +148,13 @@ public class MainWindow extends JFrame {
         if (getComponents().length > 1) {
             return;
         }
-//        addPanel(new RecrutamentoPanel());
+        addPanel(new RecrutamentoPanel());
         addPanel(new DadosDeUnidadePanel());
         addPanel(new PontosPanel());
         addPanel(new DistânciaPanel());
         addPanel(new OponentesDerrotadosPanel());
 //        addPanel(new SimuladorPanel());
-//        addPanel(new AssistenteSaquePanel());
+        addPanel(new AssistenteSaquePanel());
 //        addPanel(new AlertasPanel());
         selectFirst();
         pack();

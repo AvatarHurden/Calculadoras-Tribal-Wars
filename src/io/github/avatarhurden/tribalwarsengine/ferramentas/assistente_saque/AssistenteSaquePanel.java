@@ -5,7 +5,8 @@ import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálc
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.SameDateException;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.Troop;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -27,7 +28,6 @@ import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
 
 import database.Cores;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class AssistenteSaquePanel extends Ferramenta{
@@ -42,7 +42,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 	// Panels para mostrar as respostas
 	private JPanel panelRecomendado;
 	
-	private Map<Unidade, JLabel> mapRecomendado = new HashMap<Unidade, JLabel>();
+	private Map<Unit, JLabel> mapRecomendado = new HashMap<Unit, JLabel>();
 	
 	private Army army;
 	private ArmyEditPanel armyEdit;
@@ -77,12 +77,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		panelIntervalo = new PanelIntervalo(onChange);
 		
-		panelHorário = new PanelHorário() {
-			protected void doAction() {
-				editIntervalObject();
-				editHorárioObject();
-			}
-		};
+		panelHorário = new PanelHorário(onChange);
 		
 		army = new Army(Army.getAttackingUnits());
 		armyEdit = army.getEditPanelNoLevels(onChange);
@@ -205,7 +200,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridy++;
 		panelRecomendado.add(buttonPanel, c);
 		
-		for (Unidade i : army.getUnits()) {
+		for (Unit i : army.getUnits()) {
 			
 			// Adds the JLabel
 			JPanel unitQuantity = new JPanel();
@@ -252,7 +247,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 	
 		} else {
 			panelRecomendado.setVisible(false);
-			for (Unidade i : mapRecomendado.keySet())
+			for (Unit i : mapRecomendado.keySet())
 				mapRecomendado.get(i).setText(" ");
 		}
 		
@@ -262,7 +257,6 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		cálculo.setProduçãoEArmazenamento(panelIntervalo.getBuildings());
 		cálculo.setArmy(army);
-		
 		cálculo.setIntervalo();
 		try {
 			panelIntervalo.setDisplayIntervalo(cálculo.getIntervalo());

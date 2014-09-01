@@ -20,8 +20,6 @@ import javax.swing.border.LineBorder;
 
 import config.Lang;
 import database.Cores;
-import database.Edifício;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class RecrutamentoPanel extends Ferramenta {
@@ -93,39 +91,21 @@ public class RecrutamentoPanel extends Ferramenta {
 		
 		panels = new ArrayList<RecruitmentPanel>();
 		
-		List<Unidade> barrackList = new ArrayList<Unidade>();
-		barrackList.add(Unidade.LANCEIRO);
-		barrackList.add(Unidade.ESPADACHIM);
-		barrackList.add(Unidade.BÁRBARO);
-		if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO))
-			barrackList.add(Unidade.ARQUEIRO);
+		panels.add(new RecruitmentPanel(onChange, new BuildingBlock("barracks"), 
+				new Army("spear", "sword", "axe", "archer")));
 		
-		panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.QUARTEL), 
-				new Army(barrackList)));
+		panels.add(new RecruitmentPanel(onChange, new BuildingBlock("stable"), 
+				new Army("spy", "light", "marcher", "heavy")));
 		
-		List<Unidade> stableList = new ArrayList<Unidade>();
-		stableList.add(Unidade.EXPLORADOR);
-		stableList.add(Unidade.CAVALOLEVE);
-		if (Army.getAvailableUnits().contains(Unidade.ARQUEIRO))
-			stableList.add(Unidade.ARCOCAVALO);
-		stableList.add(Unidade.CAVALOPESADO);
+		panels.add(new RecruitmentPanel(onChange, new BuildingBlock("garage"), 
+				new Army("ram", "catapult")));
 		
-		panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ESTÁBULO), 
-				new Army(stableList)));
+		if (Army.containsUnit("knight"))
+			panels.add(new RecruitmentPanel(onChange, new BuildingBlock("statue"), 
+				new Army("knight")));
 		
-		panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.OFICINA), 
-				new Army(Unidade.ARÍETE, Unidade.CATAPULTA)));
-		
-		if (Army.getAvailableUnits().contains(Unidade.PALADINO))
-			panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ESTÁTUA), 
-				new Army(Unidade.PALADINO)));
-		
-		if (BuildingBlock.getAvailableBuildings().contains(Edifício.ACADEMIA_1NÍVEL))
-			panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ACADEMIA_1NÍVEL), 
-					new Army(Unidade.NOBRE)));
-		else
-			panels.add(new RecruitmentPanel(onChange, new BuildingBlock(Edifício.ACADEMIA_3NÍVEIS), 
-					new Army(Unidade.NOBRE)));
+		panels.add(new RecruitmentPanel(onChange, new BuildingBlock("snob"), 
+					new Army("snob")));
 		
 	}
 

@@ -56,8 +56,11 @@ public class Unit {
 		return json.getDouble("speed");
 	}
 	
+	/**
+	 * Returns the base production time, in milliseconds
+	 */
 	public double getProductionTime() {
-		return json.getDouble("build_time");
+		return json.getDouble("build_time") * 1000;
 	}
 	
 	public String getPrettyName() {

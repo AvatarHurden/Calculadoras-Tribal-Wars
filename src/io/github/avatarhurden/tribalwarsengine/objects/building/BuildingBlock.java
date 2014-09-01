@@ -55,6 +55,16 @@ public class BuildingBlock {
 		
 	}
 	
+	public BuildingBlock(String... names) {
+		
+		List<String> namesList = new ArrayList<String>(Arrays.asList(names));
+		
+		for (Building u : getAvailableBuildings())
+			if (namesList.contains(u.getName()))
+				buildings.add(new Construction(u, u.getMinLevel()));
+		
+	}
+	
 	public void addBuilding(Building ed, int nível) {
 		addBuilding(new Construction(ed, nível));
 	}

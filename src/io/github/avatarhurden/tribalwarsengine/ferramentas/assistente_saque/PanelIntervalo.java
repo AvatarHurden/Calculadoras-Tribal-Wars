@@ -11,8 +11,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,7 +19,6 @@ import javax.swing.border.MatteBorder;
 
 import config.Lang;
 import database.Cores;
-import database.Edifício;
 
 /**
  * Panel para inserção e output dos dados relativo ao cálculo do intervalo de tempo
@@ -58,14 +55,7 @@ public class PanelIntervalo extends JPanel{
 		c.gridy = 0;
 		c.gridx = 0;
 		
-		List<Edifício> edifícioList = new ArrayList<Edifício>();
-		edifícioList.add(Edifício.BOSQUE);
-		edifícioList.add(Edifício.POÇO_DE_ARGILA);
-		edifícioList.add(Edifício.MINA_DE_FERRO);
-		edifícioList.add(Edifício.ARMAZÉM);
-		edifícioList.add(Edifício.ESCONDERIJO);
-		
-		buildings = new BuildingBlock(edifícioList);
+		buildings = new BuildingBlock("wood", "stone", "iron", "storage", "hide");
 		buildingsEdit = buildings.new BuildingsEditPanel(onChange, true, true, true);
 		
 		// Adds the village coordinates

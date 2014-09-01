@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -23,7 +24,6 @@ import javax.swing.event.DocumentListener;
 
 import config.Lang;
 import database.Cores;
-import database.Edifício;
 
 /**
  * Panel para inserção dos dados relativos ao cálculo do horário específico
@@ -33,7 +33,7 @@ import database.Edifício;
  *
  */
 @SuppressWarnings("serial")
-public abstract class PanelHorário extends JPanel{
+public class PanelHorário extends JPanel{
 
 	private CoordenadaPanel coordenadas;
 	
@@ -44,7 +44,10 @@ public abstract class PanelHorário extends JPanel{
 	private TimeFormattedJLabel respostaLabel;
 	private JLabel errorMessage;
 	
-	protected PanelHorário() {
+	private OnChange onChange;
+	
+	protected PanelHorário(OnChange onChange) {
+		this.onChange = onChange;
 		
 		setOpaque(false);
 		
@@ -63,7 +66,7 @@ public abstract class PanelHorário extends JPanel{
 		// Add panel de aldeia
 		coordenadas = new CoordenadaPanel(Lang.AldeiaOrigem.toString()) {
 			public void go() {
-				doAction();
+				PanelHorário.this.onChange.run();
 			}
 		};
 		c.gridwidth = 3;
@@ -113,13 +116,13 @@ public abstract class PanelHorário extends JPanel{
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridwidth = 1;
 		c.gridy++;
-		addRecursoPanel(Edifício.POÇO_DE_ARGILA, c);
+		addRecursoPanel("stone", c);
 		
 		c.gridx++;
-		addRecursoPanel(Edifício.BOSQUE, c);
+		addRecursoPanel("wood", c);
 		
 		c.gridx++;
-		addRecursoPanel(Edifício.MINA_DE_FERRO, c);
+		addRecursoPanel("iron", c);
 		
 		// Adding respostaPanel
 		c.gridy += 2;
@@ -148,7 +151,7 @@ public abstract class PanelHorário extends JPanel{
 	 * @param produtor - O edifício que produz o recurso em questão
 	 */
 	// Se descobrir um jeito melhor de determinar qual recurso, usar
-	private void addRecursoPanel(Edifício produtor, GridBagConstraints c) {
+	private void addRecursoPanel(String produtor, GridBagConstraints c) {
 		
 		JPanel recursoNome = new JPanel();
 		
@@ -157,13 +160,13 @@ public abstract class PanelHorário extends JPanel{
 					(1, 1, 1, 0, Cores.SEPARAR_ESCURO));
 		
 		switch(produtor) {
-		case POÇO_DE_ARGILA:
+		case "stone":
 			recursoNome.add(new JLabel("Argila"));
 			break;
-		case BOSQUE:
+		case "wood":
 			recursoNome.add(new JLabel("Madeira"));
 			break;
-		case MINA_DE_FERRO:
+		case "iron":
 			recursoNome.add(new JLabel("Ferro"));
 			// Since iron is the last one, a full border is required
 			recursoNome.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
@@ -180,26 +183,26 @@ public abstract class PanelHorário extends JPanel{
 				new MatteBorder(0, 1, 1, 0,Cores.SEPARAR_ESCURO));
 		
 		switch(produtor) {
-		case POÇO_DE_ARGILA:
+		case "stone":
 			recursosRestantes[0] = new IntegerFormattedTextField() {
 				public void go() {
-					doAction();
+					onChange.run();
 				}
 			};
 			recursoQuantidade.add(recursosRestantes[0]);
 			break;
-		case BOSQUE:
+		case "wood":
 			recursosRestantes[1] = new IntegerFormattedTextField() {
 				public void go() {
-					doAction();
+					onChange.run();
 				}
 			};
 			recursoQuantidade.add(recursosRestantes[1]);
 			break;
-		case MINA_DE_FERRO:
+		case "iron":
 			recursosRestantes[2] = new IntegerFormattedTextField() {
 				public void go() {
-					doAction();
+					onChange.run();
 				}
 			};
 			recursoQuantidade.add(recursosRestantes[2]);
@@ -228,11 +231,11 @@ public abstract class PanelHorário extends JPanel{
 		((JSpinner.DateEditor) spinner.getEditor()).getTextField().getDocument().addDocumentListener(new DocumentListener() {
 
 			public void removeUpdate(DocumentEvent arg0) {
-				doAction();
+				onChange.run();
 			}
 
 			public void insertUpdate(DocumentEvent arg0) {
-				doAction();
+				onChange.run();
 			}
 
 			public void changedUpdate(DocumentEvent arg0) {}
@@ -327,10 +330,4 @@ public abstract class PanelHorário extends JPanel{
 		respostaLabel.setText(" ");
 		errorMessage.setText(" ");
 	}
-	
-	/**
-	 * Method that is called whenever any component is edited
-	 */
-	protected abstract void doAction();
-	
 }

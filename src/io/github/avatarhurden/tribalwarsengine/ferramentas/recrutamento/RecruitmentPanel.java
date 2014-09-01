@@ -5,7 +5,8 @@ import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.Troop;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Color;
@@ -22,7 +23,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import database.Cores;
-import database.Unidade;
 
 public class RecruitmentPanel extends JPanel {
 
@@ -31,8 +31,8 @@ public class RecruitmentPanel extends JPanel {
 	private BuildingBlock buildings;
 	private BuildingsEditPanel buildingsEdit;
 	
-	private Map<Unidade, TimeFormattedJLabel> temposUnitarios;
-	private Map<Unidade, TimeFormattedJLabel> temposTotais;
+	private Map<Unit, TimeFormattedJLabel> temposUnitarios;
+	private Map<Unit, TimeFormattedJLabel> temposTotais;
 	
 	private TimeFormattedJLabel tempoTotal;
 	
@@ -52,8 +52,8 @@ public class RecruitmentPanel extends JPanel {
 		armyEdit = army.getEditPanelNoLevelsNoHeader(onChange);
 		buildingsEdit = buildings.getEditPanelFullNoHeader(onChange);
 		
-		temposUnitarios = new HashMap<Unidade, TimeFormattedJLabel>();
-		temposTotais = new HashMap<Unidade, TimeFormattedJLabel>();
+		temposUnitarios = new HashMap<Unit, TimeFormattedJLabel>();
+		temposTotais = new HashMap<Unit, TimeFormattedJLabel>();
 		
 		
 		tempoTotal = new TimeFormattedJLabel(false);
@@ -79,7 +79,7 @@ public class RecruitmentPanel extends JPanel {
 			c.gridy++;
 		}
 		
-		if (buildings.getEdifícios().get(0).getNívelMáximo() > 1) {
+		if (buildings.getEdifícios().get(0).getMaxLevel() > 1) {
 			c.gridwidth = 4;
 			c.gridx = 0;
 			add(makeBuildingPanel(), c);
@@ -114,7 +114,7 @@ public class RecruitmentPanel extends JPanel {
 		return panel;
 	}
 	
-	private JPanel makeUnitTimePanel(Unidade u, Color cor) {
+	private JPanel makeUnitTimePanel(Unit u, Color cor) {
 		JPanel panel = new JPanel();
 		panel.setBackground(cor);
 		panel.setPreferredSize(new Dimension(200, 30));
@@ -136,7 +136,6 @@ public class RecruitmentPanel extends JPanel {
 		TimeFormattedJLabel totalTime = new TimeFormattedJLabel(false);
 		temposTotais.put(u, totalTime);
 		
-		c.insets = new Insets(0, 0, 5, 0);
 		c.gridx++;
 		panel.add(totalTime, c);
 		

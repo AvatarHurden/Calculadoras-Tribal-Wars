@@ -2,17 +2,17 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import database.Unidade;
 
 public class Cálculo {
 	
@@ -77,41 +77,43 @@ public class Cálculo {
 		tropasRecomendadas = new Army(Army.getAttackingUnits());
 		
 		// Cria a lista de ordem das unidades para preencher 
-		List<Unidade> preferência = new ArrayList<Unidade>();
-		preferência.add(Unidade.PALADINO);
-		preferência.add(Unidade.CAVALOLEVE);
-		preferência.add(Unidade.ARCOCAVALO);
-		preferência.add(Unidade.CAVALOPESADO);
-		preferência.add(Unidade.LANCEIRO);
-		preferência.add(Unidade.ARQUEIRO);
-		preferência.add(Unidade.BÁRBARO);
-		preferência.add(Unidade.ESPADACHIM);
+		List<String> preferência = new ArrayList<String>();
+		preferência.add("knight");
+		preferência.add("light");
+		preferência.add("marcher");
+		preferência.add("heavy");
+		preferência.add("spear");
+		preferência.add("archer");
+		preferência.add("axe");
+		preferência.add("sword");
 		
 		int saqueRecomendado = armazenamento * 3;
 		
-		for (Unidade i : preferência) {
+		for (String i : preferência) {
 			
-			if (army.contains(i))
-				if (army.getQuantidade(i) * i.getHaul() >= saqueRecomendado) {
+			if (army.contains(i)) {
+				Unit t = army.getUnit(i);
+				if (army.getTropa(t).getHaul() >= saqueRecomendado) {
 					
 					// Puts the maximum number of troops the warehouse holds
-					tropasRecomendadas.addTropa(i, 
-							(int) Math.ceil(saqueRecomendado / (double) i.getHaul()), 1);
+					tropasRecomendadas.addTropa(t, 
+							(int) Math.ceil(saqueRecomendado / (double) t.getHaul()), 1);
 					break;
 					
 				} else {
-					tropasRecomendadas.addTropa(i, army.getQuantidade(i), 1);
+					tropasRecomendadas.addTropa(t, army.getQuantidade(t), 1);
 					// Prepares the remaining available loot for other troops
-					saqueRecomendado -= army.getQuantidade(i) * i.getHaul();
+					saqueRecomendado -= t.getHaul();
 				}
+			}
 				
 		}
 		
-		for (Unidade i : army.getUnits()) {
+		for (Unit i : army.getUnits()) {
 			if (!preferência.contains(i))
 				tropasRecomendadas.addTropa(i, army.getQuantidade(i), 1);
 			// If the 'preferência' broke, puts the remaining things with zero
-			if (!tropasRecomendadas.contains(i))
+			if (!tropasRecomendadas.contains(i.getName()))
 				tropasRecomendadas.addTropa(i, 0, 1);
 		}
 		
@@ -222,7 +224,7 @@ public class Cálculo {
 			produção[i] = produção[i].divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_EVEN);
 			// Arruma para a velocidade do mundo
 			produção[i] = produção[i].multiply(new BigDecimal(
-					WorldManager.get().getSelectedWorld().getWorldSpeed()));
+					ServerManager.getSelectedServer().getWorld().getWorldSpeed()));
 		}
 			
 		
