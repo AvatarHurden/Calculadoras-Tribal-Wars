@@ -1,7 +1,5 @@
 package io.github.avatarhurden.tribalwarsengine.objects.building;
 
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 public class Construction {
 	

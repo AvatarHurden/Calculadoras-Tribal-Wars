@@ -11,10 +11,6 @@ import database.Unidade;
 
 public class ResultDataDisplay extends JPanel {
 
-	private Map<Unidade, JTextField> tropasAtacantes = new HashMap<Unidade, JTextField>();
-
-	private Map<Unidade, JTextField> tropasDefensoras = new HashMap<Unidade, JTextField>();
-
 	private JLabel muralha, edifício;
 
 	public ResultDataDisplay() {

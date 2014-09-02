@@ -3,8 +3,8 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.ArmyModel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -21,8 +21,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
-
-import com.google.gson.GsonBuilder;
 
 import database.Cores;
 
@@ -131,8 +129,6 @@ public class ModeloTropasPanel extends JPanel {
         item.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent a) {
-            	
-            	System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(i.getArmy()));
             	
             	for (ArmyEditPanel p : armyEdit)
             		p.setValues(i.getArmy());

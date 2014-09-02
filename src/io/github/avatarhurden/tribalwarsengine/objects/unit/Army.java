@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.objects.unit;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -43,6 +44,13 @@ public class Army {
 	private ArrayList<Troop> tropas = new ArrayList<Troop>();
 	
 	private transient ItemPaladino item = ItemPaladino.NULL;
+	private transient boolean religious = true;
+	
+	private transient double moral = 1;
+	private transient double luck = 0;
+	
+	private transient int wall = 0;
+	private transient boolean night = false;
 	
 	public static boolean isArmyJson(JSONObject json) {
 		return json.has("tropas");
@@ -122,6 +130,30 @@ public class Army {
 		tropas.add(position, tropa);
 	}
 	
+	public void setItem(ItemPaladino item) {
+		this.item = item;
+	}
+	
+	public void setReligious(boolean religious) {
+		this.religious = religious;
+	}
+
+	public void setMoral(double moral) {
+		this.moral = moral;
+	}
+
+	public void setLuck(double luck) {
+		this.luck = luck;
+	}
+
+	public void setWall(int wall) {
+		this.wall = wall;
+	}
+
+	public void setNight(boolean night) {
+		this.night = night;
+	}
+
 	public ArrayList<Troop> getTropas() {
 		return tropas;
 	}
@@ -133,6 +165,10 @@ public class Army {
 		
 		return list;
 	}
+	
+	public int getQuantidade(String name) {
+		return getTropa(name).getQuantity();
+	}
 
 	public int getQuantidade(Unit unidade) {
 		return getTropa(unidade).getQuantity();
@@ -141,6 +177,14 @@ public class Army {
 	public Troop getTropa(Unit unidade) {
 		for (Troop t : tropas)
 			if (t.getUnit().equals(unidade)) 
+				return t;
+		
+		return null;
+	}
+	
+	public Troop getTropa(String name) {
+		for (Troop t : tropas)
+			if (t.getName().equals(name)) 
 				return t;
 		
 		return null;
@@ -168,7 +212,7 @@ public class Army {
 		for (Troop t : tropas)
 			ataque += t.getAttack(item);
 		
-		return ataque;
+		return (int) applyModifiers(ataque);
 	}
 	
 	public int getAtaqueGeral() {
@@ -178,7 +222,7 @@ public class Army {
 			if (t.getType().equals(UnitType.General))
 				ataque += t.getAttack(item);
 		
-		return ataque;
+		return (int) applyModifiers(ataque);
 	}
 	
 	public int getAtaqueCavalaria() {
@@ -188,7 +232,7 @@ public class Army {
 			if (t.getType().equals(UnitType.Cavalry))
 				ataque += t.getAttack(item);
 			
-		return ataque;
+		return (int) applyModifiers(ataque);
 	}
 	
 	public int getAtaqueArqueiro() {
@@ -198,7 +242,7 @@ public class Army {
 			if (t.getType().equals(UnitType.Archer))
 				ataque += t.getAttack(item);
 	
-		return ataque;
+		return (int) applyModifiers(ataque);
 	}
 	
 	public int getDefesaGeral() {
@@ -207,7 +251,7 @@ public class Army {
 		for (Troop t : tropas)
 			defesa += t.getDefense(item);
 	
-		return defesa;
+		return (int) applyModifiers(defesa);
 	}
 	
 	public int getDefesaCavalaria() {
@@ -216,7 +260,7 @@ public class Army {
 		for (Troop t : tropas)
 			defesa += t.getDefenseCavalry(item);
 		
-		return defesa;
+		return (int) applyModifiers(defesa);
 	}
 	
 	public int getDefesaArqueiro() {
@@ -225,7 +269,7 @@ public class Army {
 		for (Troop t : tropas)
 			defesa += t.getDefenseArcher(item);
 	
-		return defesa;
+		return (int) applyModifiers(defesa);
 	}
 	
 	public int getSaque() {
@@ -316,6 +360,28 @@ public class Army {
 		return tempo;
 	}
 	
+	public double applyModifiers(double value) {
+		
+		value *= moral;
+		value *= (1 + luck);
+		
+		if (religious)
+			value /= 2;
+		
+		if (night)
+			value *= 2;
+		
+		if (wall > 0) {
+			BuildingBlock wallBlock = new BuildingBlock("wall");
+			wallBlock.addConstruction(wallBlock.getBuilding("wall"), wall);
+		
+			value *= wallBlock.getWallBonusPercent();
+			value += wallBlock.getWallBonusFlat();
+		}
+		
+		return value;
+	}
+	
 	public ArmyEditPanel getEditPanelFull(OnChange onChange) {
 		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
 		return new ArmyEditPanel(onChange, true, true, false, true, levels > 1);
@@ -334,7 +400,17 @@ public class Army {
 		return new ArmyEditPanel(onChange, false, true, false, true, false);
 	}
 	
-	public ArmyEditPanel getEditPanelSelectetion(OnChange onChange) {
+	public ArmyEditPanel getEditPanelNoNames(OnChange onChange) {
+		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		return new ArmyEditPanel(onChange, true, false, false, true, levels > 1);
+	}
+	
+	public ArmyEditPanel getEditPanelNoNamesNoHeader(OnChange onChange) {
+		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		return new ArmyEditPanel(onChange, false, false, false, true, levels > 1);
+	}
+	
+	public ArmyEditPanel getEditPanelSelection(OnChange onChange) {
 		return new ArmyEditPanel(onChange, true, true, true, false, false);
 	}
 	
@@ -452,12 +528,13 @@ public class Army {
 			c.gridy = 0;
 			c.anchor = GridBagConstraints.CENTER;
 			
-			if (hasNames)
+			if (hasNames) {
 				panel.add(new JLabel("Unidade"), c);
-			
-			if (hasAmount) {
 				c.gridx++;
+			}
+			if (hasAmount) {
 				panel.add(new JLabel("Quantidade"), c);
+				c.gridx++;
 			}
 			
 			if (hasSelected) {
@@ -465,8 +542,8 @@ public class Army {
 			}
 			
 			if (hasNivel) {
-				c.gridx++;
 				panel.add(new JLabel("Nível"), c);
+				c.gridx++;
 			}
 		
 			return panel;

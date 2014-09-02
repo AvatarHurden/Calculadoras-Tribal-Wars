@@ -1,6 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.OutputInfo;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,18 +22,16 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Cores;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class ResultTroopDisplay extends JPanel {
 
 	private OutputInfo output;
 
-	private Map<Unidade, JLabel> tropasAtacantesPerdidas = new HashMap<Unidade, JLabel>();
+	private Map<Unit, JLabel> tropasAtacantesPerdidas = new HashMap<Unit, JLabel>();
 
-	private Map<Unidade, JLabel> tropasDefensorasPerdidas = new HashMap<Unidade, JLabel>();
+	private Map<Unit, JLabel> tropasDefensorasPerdidas = new HashMap<Unit, JLabel>();
 
 	private JLabel muralha, edifício;
 
@@ -109,62 +109,59 @@ public class ResultTroopDisplay extends JPanel {
 
 	public JPanel addUnitNames() {
 
-		JPanel panel = new JPanel();
-		// panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
+//		JPanel panel = new JPanel();
+//		// panel.setBackground(Cores.FUNDO_ESCURO);
+//		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
+//
+//		panel.setLayout(new GridBagLayout());
+//
+//		GridBagConstraints c = new GridBagConstraints();
+//		c.insets = new Insets(0, 0, 0, 0);
+//		c.fill = GridBagConstraints.BOTH;
+//		c.gridx = 0;
+//		c.gridy = 0;
+//		c.gridwidth = 1;
+//
+//		// Adding the headers
+//
+//		JLabel lblNome = new JLabel(Lang.Unidade.toString());
+//		lblNome.setPreferredSize(new Dimension(
+//				lblNome.getPreferredSize().width + 12, 26));
+//		lblNome.setBackground(Cores.FUNDO_ESCURO);
+//		lblNome.setOpaque(true);
+//		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
+//
+//		panel.add(lblNome, c);
+//
+//		// Setting the constraints for the unit panels
+//		c.fill = GridBagConstraints.HORIZONTAL;
+//		c.gridx = 0;
+//
+//		int loop = 1;
+//
+//		for (Unit i : Army.getAvailableUnits()) {
+//
+//			JPanel tropaPanel = new JPanel();
+//			tropaPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+//			tropaPanel.setBackground(Cores.getAlternar(loop));
+//
+//			// Separação entre a parte de nomenclatura e as unidades
+//			if (i.equals(Unidade.LANCEIRO))
+//				tropaPanel.setBorder(new
+//						MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
+//
+//			// Creating the TextField for the quantity of troops
+//			JLabel lbl = new JLabel(i.getNome());
+//
+//			tropaPanel.add(lbl);
+//
+//			loop++;
+//			c.gridy++;
+//			panel.add(tropaPanel, c);
+//
+//		}
 
-		panel.setLayout(new GridBagLayout());
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 0, 0);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-
-		// Adding the headers
-
-		JLabel lblNome = new JLabel(Lang.Unidade.toString());
-		lblNome.setPreferredSize(new Dimension(
-				lblNome.getPreferredSize().width + 12, 26));
-		lblNome.setBackground(Cores.FUNDO_ESCURO);
-		lblNome.setOpaque(true);
-		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-
-		panel.add(lblNome, c);
-
-		// Setting the constraints for the unit panels
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-
-		int loop = 1;
-
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
-
-			if (i != null) {
-
-				JPanel tropaPanel = new JPanel();
-				tropaPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-				tropaPanel.setBackground(Cores.getAlternar(loop));
-
-				// Separação entre a parte de nomenclatura e as unidades
-				if (i.equals(Unidade.LANCEIRO))
-					tropaPanel.setBorder(new
-							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
-
-				// Creating the TextField for the quantity of troops
-				JLabel lbl = new JLabel(i.getNome());
-
-				tropaPanel.add(lbl);
-
-				loop++;
-				c.gridy++;
-				panel.add(tropaPanel, c);
-
-			}
-		}
-
-		return panel;
+		return new Army().getEditPanelNoInputs();
 
 	}
 
@@ -187,7 +184,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		JLabel lblNome = new JLabel(Lang.Atacante.toString());
 		lblNome.setPreferredSize(new Dimension(
-				lblNome.getPreferredSize().width + 10, 26));
+				lblNome.getPreferredSize().width + 30, 30));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
@@ -200,36 +197,34 @@ public class ResultTroopDisplay extends JPanel {
 
 		int loop = 1;
 
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
+		for (Unit i : Army.getAttackingUnits()) {
 
-			if (i != null && !i.equals(Unidade.MILÍCIA)) {
+			JPanel tropaPanel = new JPanel();
+			tropaPanel.setPreferredSize(new Dimension(0, 30));
+			tropaPanel.setLayout(new GridBagLayout());
+			tropaPanel.setBackground(Cores.getAlternar(loop));
 
-				JPanel tropaPanel = new JPanel();
-				tropaPanel.setLayout(new GridBagLayout());
-				tropaPanel.setBackground(Cores.getAlternar(loop));
+			// Separação entre a parte de nomenclatura e as unidades
+			if (i.getName().equals("spear"))
+				tropaPanel.setBorder(new
+						MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
-				// Separação entre a parte de nomenclatura e as unidades
-				if (i.equals(Unidade.LANCEIRO))
-					tropaPanel.setBorder(new
-							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
+			GridBagConstraints tropaC = new GridBagConstraints();
+			tropaC.insets = new Insets(5, 5, 5, 5);
+			tropaC.gridx = 0;
+			tropaC.gridy = 0;
 
-				GridBagConstraints tropaC = new GridBagConstraints();
-				tropaC.insets = new Insets(5, 5, 5, 5);
-				tropaC.gridx = 0;
-				tropaC.gridy = 0;
+			// Creating the TextField for the quantity of troops
+			JLabel lbl = new JLabel(" ");
+			// Adding the text to a map with the units
+			tropasAtacantesPerdidas.put(i, lbl);
 
-				// Creating the TextField for the quantity of troops
-				JLabel lbl = new JLabel(" ");
-				// Adding the text to a map with the units
-				tropasAtacantesPerdidas.put(i, lbl);
+			tropaPanel.add(lbl, tropaC);
 
-				tropaPanel.add(lbl, tropaC);
+			loop++;
+			c.gridy++;
+			panel.add(tropaPanel, c);
 
-				loop++;
-				c.gridy++;
-				panel.add(tropaPanel, c);
-
-			}
 		}
 
 		return panel;
@@ -254,7 +249,7 @@ public class ResultTroopDisplay extends JPanel {
 
 		JLabel lblNome = new JLabel(Lang.Defensor.toString());
 		lblNome.setPreferredSize(new Dimension(
-				lblNome.getPreferredSize().width + 10, 26));
+				lblNome.getPreferredSize().width + 30, 30));
 		lblNome.setBackground(Cores.FUNDO_ESCURO);
 		lblNome.setOpaque(true);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
@@ -268,36 +263,34 @@ public class ResultTroopDisplay extends JPanel {
 
 		int loop = 1;
 
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
+		for (Unit i : Army.getAvailableUnits()) {
 
-			if (i != null) {
+			JPanel tropaPanel = new JPanel();
+			tropaPanel.setPreferredSize(new Dimension(0, 30));
+			tropaPanel.setLayout(new GridBagLayout());
+			tropaPanel.setBackground(Cores.getAlternar(loop));
 
-				JPanel tropaPanel = new JPanel();
-				tropaPanel.setLayout(new GridBagLayout());
-				tropaPanel.setBackground(Cores.getAlternar(loop));
+			// Separação entre a parte de nomenclatura e as unidades
+			if (i.getName().equals("spear"))
+				tropaPanel.setBorder(new
+						MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
 
-				// Separação entre a parte de nomenclatura e as unidades
-				if (i.equals(Unidade.LANCEIRO))
-					tropaPanel.setBorder(new
-							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
+			GridBagConstraints tropaC = new GridBagConstraints();
+			tropaC.insets = new Insets(5, 5, 5, 5);
+			tropaC.gridx = 0;
+			tropaC.gridy = 0;
 
-				GridBagConstraints tropaC = new GridBagConstraints();
-				tropaC.insets = new Insets(5, 5, 5, 5);
-				tropaC.gridx = 0;
-				tropaC.gridy = 0;
+			// Creating the TextField for the quantity of troops
+			JLabel lbl = new JLabel(" ");
+			// Adding the text to a map with the units
+			tropasDefensorasPerdidas.put(i, lbl);
 
-				// Creating the TextField for the quantity of troops
-				JLabel lbl = new JLabel(" ");
-				// Adding the text to a map with the units
-				tropasDefensorasPerdidas.put(i, lbl);
+			tropaPanel.add(lbl, tropaC);
 
-				tropaPanel.add(lbl, tropaC);
+			loop++;
+			c.gridy++;
+			panel.add(tropaPanel, c);
 
-				loop++;
-				c.gridy++;
-				panel.add(tropaPanel, c);
-
-			}
 		}
 
 		return panel;
@@ -309,8 +302,7 @@ public class ResultTroopDisplay extends JPanel {
 		// Setting the background and borders for the panel
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
-		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado
-				.getNúmeroDeTropas()+1));
+		panel.setBackground(Cores.getAlternar(1));
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
 
 		GridBagLayout layout = new GridBagLayout();
@@ -341,8 +333,7 @@ public class ResultTroopDisplay extends JPanel {
 		// Setting the background and borders for the panel
 		JPanel panel = new JPanel();
 		// Define a cor do panel com base no número de tropas do mundo
-		panel.setBackground(Cores.getAlternar(Mundo_Reader.MundoSelecionado
-				.getNúmeroDeTropas()+1));
+		panel.setBackground(Cores.getAlternar(1));
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
 
 		GridBagLayout layout = new GridBagLayout();
@@ -373,13 +364,13 @@ public class ResultTroopDisplay extends JPanel {
 		NumberFormat numberFormat = NumberFormat
 				.getNumberInstance(Locale.GERMANY);
 		
-		for (Entry<Unidade, JLabel> i : tropasAtacantesPerdidas.entrySet())
+		for (Entry<Unit, JLabel> i : tropasAtacantesPerdidas.entrySet())
 			i.getValue().setText(numberFormat.format(
-					output.getTropasAtacantesPerdidas().get(i.getKey())));
+					output.getLostAttacker().getQuantidade(i.getKey())));
 
-		for (Entry<Unidade, JLabel> i : tropasDefensorasPerdidas.entrySet())
+		for (Entry<Unit, JLabel> i : tropasDefensorasPerdidas.entrySet())
 			i.getValue().setText(numberFormat.format(
-					output.getTropasDefensorasPerdidas().get(i.getKey())));
+					output.getLostDefender().getQuantidade(i.getKey())));
 
 		muralha.setText(String.valueOf(output.getMuralha()));
 
@@ -389,10 +380,10 @@ public class ResultTroopDisplay extends JPanel {
 	
 	public void resetValues() {
 		
-		for (Entry<Unidade, JLabel> i : tropasAtacantesPerdidas.entrySet())
+		for (Entry<Unit, JLabel> i : tropasAtacantesPerdidas.entrySet())
 			i.getValue().setText(" ");
 
-		for (Entry<Unidade, JLabel> i : tropasDefensorasPerdidas.entrySet())
+		for (Entry<Unit, JLabel> i : tropasDefensorasPerdidas.entrySet())
 			i.getValue().setText(" ");
 
 		muralha.setText(" ");

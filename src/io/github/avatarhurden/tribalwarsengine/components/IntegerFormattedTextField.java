@@ -72,7 +72,7 @@ public abstract class IntegerFormattedTextField extends JTextField {
 		        
 		        int amount;
 		        
-		        if (string.length() < maxLength){
+		        if (string.length() <= maxLength){
 		        	try {
 		        		amount = Integer.parseInt(getUnformattedNumber(string));
 		        	} catch (NumberFormatException e) {

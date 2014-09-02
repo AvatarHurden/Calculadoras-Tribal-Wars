@@ -92,25 +92,24 @@ public class Cálculo {
 		for (String i : preferência) {
 			
 			if (army.contains(i)) {
-				Unit t = army.getUnit(i);
-				if (army.getTropa(t).getHaul() >= saqueRecomendado) {
-					
+				Troop t = army.getTropa(army.getUnit(i));
+				if (t.getHaul() >= saqueRecomendado) {
 					// Puts the maximum number of troops the warehouse holds
-					tropasRecomendadas.addTropa(t, 
-							(int) Math.ceil(saqueRecomendado / (double) t.getHaul()), 1);
+					tropasRecomendadas.addTropa(t.getUnit(), 
+							(int) Math.ceil(saqueRecomendado / (double) t.getUnit().getHaul()), 1);
 					break;
 					
 				} else {
-					tropasRecomendadas.addTropa(t, army.getQuantidade(t), 1);
+					tropasRecomendadas.addTropa(t.getUnit(), t.getQuantity(), 1);
 					// Prepares the remaining available loot for other troops
 					saqueRecomendado -= t.getHaul();
 				}
 			}
 				
 		}
-		
+
 		for (Unit i : army.getUnits()) {
-			if (!preferência.contains(i))
+			if (!preferência.contains(i.getName()))
 				tropasRecomendadas.addTropa(i, army.getQuantidade(i), 1);
 			// If the 'preferência' broke, puts the remaining things with zero
 			if (!tropasRecomendadas.contains(i.getName()))

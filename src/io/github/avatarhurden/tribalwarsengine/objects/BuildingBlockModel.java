@@ -81,7 +81,7 @@ public class BuildingBlockModel implements EditableObject {
     	BuildingBlock toSave = new BuildingBlock();
     	for (Building u : toSave.getEdifícios()) {
     		if (buildings.contains(u))
-    			toSave.addBuilding(buildings.getBuilding(u));
+    			toSave.addConstruction(buildings.getConstruction(u));
     	}
     	
     	set("buildings", new JSONObject(gson.toJson(toSave)));

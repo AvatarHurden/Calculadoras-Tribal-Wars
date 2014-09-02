@@ -2,7 +2,11 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.InputInfo;
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.tools.ToolManager;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -13,12 +17,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -26,23 +26,19 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Bandeira;
 import database.Bandeira.CategoriaBandeira;
 import database.Cores;
 import database.ItemPaladino;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class StatInsertion extends JPanel {
@@ -58,9 +54,9 @@ public class StatInsertion extends JPanel {
 
 	private InputInfo info;
 
-	private Map<Unidade, IntegerFormattedTextField> mapQuantidades = new HashMap<Unidade, IntegerFormattedTextField>();
-	private Map<Unidade, JComboBox<Integer>> mapNiveis = new HashMap<Unidade, JComboBox<Integer>>();
-
+	private Army army;
+	private ArmyEditPanel armyEdit;
+	
 	private JCheckBox religião, noite;
 
 	private JTextField sorte, moral, muralha, edifício;
@@ -76,17 +72,28 @@ public class StatInsertion extends JPanel {
 	 *            Se o panel é de atacante ou defensor
 	 */
 	public StatInsertion(Tipo tipo, InputInfo info, ToolManager tool) {
-
+		
 		this.tipo = tipo;
-
 		this.info = info;
 		
-		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] { 110 };
-		layout.rowHeights = new int[] { 0 };
-		layout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-		setLayout(layout);
+		if (tipo.equals(Tipo.Atacante))
+			army = new Army(Army.getAttackingUnits());
+		else
+			army = new Army(Army.getAvailableUnits());
+		
+		if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels()> 1)
+			armyEdit = army.getEditPanelNoNames(new OnChange() {
+				public void run() {
+				}
+			});
+		else {
+			armyEdit = army.getEditPanelNoNamesNoHeader(new OnChange() {
+				public void run() {
+				}
+			});
+			armyEdit.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		}
+		setLayout(new GridBagLayout());
 
 		setOpaque(false);
 
@@ -94,51 +101,50 @@ public class StatInsertion extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		
-		c.insets = new Insets(6, 0, 6, 0);
-		c.fill = GridBagConstraints.NONE;
-		add(tool.addModelosTropasPanel(true, mapQuantidades), c);
+		c.insets = new Insets(5, 0, 5, 0);
+		
+		add(tool.addModelosTropasPanel(true, armyEdit), c);
 
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.NORTH;
+		
+		c.insets = new Insets(5, 0, 5, 0);
+		c.gridy++;
+		add(addTipoPanel(), c);
 		
 		// Adding the space to allow for militia on defensive side
-		if (tipo == Tipo.Atacante && Mundo_Reader.MundoSelecionado.hasMilícia())
-			c.insets = new Insets(5, 0, 30, 0);
+		if (tipo == Tipo.Atacante && Army.containsUnit("militia"))
+			c.insets = new Insets(0, 0, 35, 0);
 		else
-			c.insets = new Insets(5, 0, 5, 0);
+			c.insets = new Insets(0, 0, 5, 0);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridy++;
 		add(addUnitPanel(), c);
-
-		c.insets = new Insets(5, 0, 0, 0);
 		
-		// If militia is active, ensures that the right colors are given to all
-		loop = Mundo_Reader.MundoSelecionado.getNúmeroDeTropas()+1;
-
+		c.insets = new Insets(5, 0, 0, 0);
 		// Diferenciando os diferentes tipos de inserção
 
+		if (ServerManager.getSelectedServer().getWorld().isChurchWorld()) {
+			c.gridy++;
+			add(addReligião(), c);
+			c.insets = new Insets(0, 0, 0, 0);
+		}
+		
+		if (ServerManager.getSelectedServer().getWorld().isPaladinWorld()) {
+			c.gridy++;
+			add(addItemPaladino(), c);
+			c.insets = new Insets(0, 0, 0, 0);
+		}
+		
+//		if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
+//			c.gridy++;
+//			add(addBandeira(), c);
+//			c.insets = new Insets(0, 0, 0, 0);
+//		}
+		
 		if (tipo == Tipo.Atacante) {
 
-			// Todos possuem a mudança dos insets para garantir que seja mudado,
-			// não importando a configuração do mundo em questão
-			if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
-				c.gridy++;
-				add(addReligião(), c);
-				c.insets = new Insets(0, 0, 0, 0);
-			}
-
-			if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
-				c.gridy++;
-				add(addItemPaladino(), c);
-				c.insets = new Insets(0, 0, 0, 0);
-			}
-
-			if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
-				c.gridy++;
-				add(addBandeira(), c);
-				c.insets = new Insets(0, 0, 0, 0);
-			}
-
-			if (Mundo_Reader.MundoSelecionado.hasMoral()) {
+			if (ServerManager.getSelectedServer().getWorld().isMoralWorld()) {
 				c.gridy++;
 				add(addMoral(), c);
 				c.insets = new Insets(0, 0, 0, 0);
@@ -149,24 +155,6 @@ public class StatInsertion extends JPanel {
 
 		} else {
 
-			if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
-				c.gridy++;
-				add(addReligião(), c);
-				c.insets = new Insets(0, 0, 0, 0);
-			}
-
-			if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
-				c.gridy++;
-				add(addItemPaladino(), c);
-				c.insets = new Insets(0, 0, 0, 0);
-			}
-
-			if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
-				c.gridy++;
-				add(addBandeira(), c);
-				c.insets = new Insets(0, 0, 0, 0);
-			}
-
 			c.gridy++;
 			add(addMuralha(), c);
 			c.insets = new Insets(0, 0, 0, 0);
@@ -174,7 +162,7 @@ public class StatInsertion extends JPanel {
 			c.gridy++;
 			add(addEdifício(), c);
 
-			if (Mundo_Reader.MundoSelecionado.hasBonusNoturno()) {
+			if (ServerManager.getSelectedServer().getWorld().isNightBonusWorld()) {
 				c.gridy++;
 				add(addNoite(), c);
 			}
@@ -183,160 +171,37 @@ public class StatInsertion extends JPanel {
 
 	}
 
+	private JPanel addTipoPanel() {
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.FUNDO_ESCURO);
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		
+		panel.add(new JLabel(tipo.toString()));
+		
+		panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 30));
+		
+		return panel;
+	}
+	
 	private JPanel addUnitPanel() {
 
 		JPanel panel = new JPanel();
-		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-
+		panel.setOpaque(false);
+		
 		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] { 80, 30 };
+		layout.columnWidths = new int[] { };
 		layout.rowHeights = new int[] { 0 };
 		layout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		panel.setLayout(layout);
 
 		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
 		
-		// Adding the headers
-
-		JLabel lblTipo = new JLabel(tipo.toString());
-		lblTipo.setPreferredSize(new Dimension(
-				lblTipo.getPreferredSize().width, 26));
-		lblTipo.setBackground(Cores.FUNDO_ESCURO);
-		lblTipo.setOpaque(true);
-		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
-
-		// Caso o mundo possua nível de tropas, coloca uma borda mais grossa para
-		// facilitar a visualização da separação.
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1)
-			lblTipo.setBorder(new MatteBorder(0, 0, 2, 0, Cores.SEPARAR_ESCURO));
-//		else
-//			lblTipo.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_ESCURO));
+		panel.add(armyEdit, c);
 		
-		c.fill = GridBagConstraints.BOTH;
-		c.gridwidth = 2;
-		c.insets = new Insets(0, 0, 0, 0);
-		c.gridy++;
-		panel.add(lblTipo, c);
-		
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
-
-			c.fill = GridBagConstraints.NONE;
-			c.insets = new Insets(5, 5, 5, 5);
-			c.gridwidth = 1;
-			c.gridy++;
-			panel.add(new JLabel(Lang.Quantidade.toString()), c);
-
-			c.gridx = 1;
-			panel.add(new JLabel(Lang.Nivel.toString()), c);
-
-		}
-
-		// Setting the constraints for the unit panels
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, 0, 0);
-		c.gridwidth = 2;
-		c.gridx = 0;
-
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
-
-			if (i != null
-					&& (!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
-
-				JPanel tropaPanel = new JPanel();
-				tropaPanel.setLayout(layout);
-				tropaPanel.setBackground(Cores.getAlternar(loop));
-				
-				// Separação entre a parte de nomenclatura e as unidades
-				if (i.equals(Unidade.LANCEIRO))
-					tropaPanel.setBorder(new
-							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
-
-				GridBagConstraints tropaC = new GridBagConstraints();
-				tropaC.insets = new Insets(3, 5, 3, 5);
-				tropaC.gridx = 0;
-				tropaC.gridy = 0;
-				if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1)
-					tropaC.gridwidth = 1;
-				else
-					tropaC.gridwidth = 2;
-
-				// Creating the TextField for the quantity of troops
-				IntegerFormattedTextField txt = new IntegerFormattedTextField(9, Integer.MAX_VALUE) {
-					public void go() {}
-				};
-				// Adding the text to a map with the units
-				mapQuantidades.put(i, txt);
-
-				tropaPanel.add(txt, tropaC);
-
-				if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
-
-					// Coloca a cor padrão para os comboBox
-					UIManager.put("ComboBox.selectionBackground",
-							Cores.FUNDO_ESCURO);
-					UIManager.put("ComboBox.background",
-							Cores.getAlternar(loop));
-
-					JComboBox<Integer> nível = new JComboBox<Integer>();
-					for (int x = 1; x <= Mundo_Reader.MundoSelecionado.getQuanNíveis(); x++) nível.addItem(x);
-
-					nível.setOpaque(false);
-
-					// Cria um renderer para set usado no combox, centralizando
-					// o texto
-					ListCellRenderer<Object> renderer = new DefaultListCellRenderer();
-					((JLabel) renderer)
-							.setHorizontalAlignment(SwingConstants.CENTER);
-					((JLabel) renderer).setOpaque(true);
-
-					nível.setRenderer(renderer);
-
-					// Zera a largura do botão
-					nível.setUI(new BasicComboBoxUI() {
-						@Override
-						protected JButton createArrowButton() {
-							return new JButton() {
-								@Override
-								public int getWidth() {
-									return 0;
-								}
-							};
-						}
-					});
-					
-					mapNiveis.put(i, nível);
-					tropaC.gridx = 1;
-					
-					// Adding the comboBox to the map with units
-					if (i.equals(Unidade.PALADINO)
-							|| i.equals(Unidade.NOBRE)
-							|| i.equals(Unidade.MILÍCIA)
-							// Explorador só tem 1 nível no mundo com 10 níveis
-							|| (i.equals(Unidade.EXPLORADOR) && Mundo_Reader.MundoSelecionado.getQuanNíveis() == 10)) {
-						JLabel holder = new JLabel();
-						holder.setPreferredSize(nível.getPreferredSize());
-						tropaPanel.add(holder, tropaC);
-					}else
-						tropaPanel.add(nível, tropaC);
-
-				}
-
-				loop++;
-
-				c.gridy++;
-				panel.add(tropaPanel, c);
-
-			}
-
-		}
-
 		return panel;
-
 	}
 
 	private JPanel addReligião() {
@@ -500,27 +365,11 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Moral.toString()), c);
 
 		// Creating the checkbox to select option
-		moral = new JTextField(3);
+		moral = new IntegerFormattedTextField(0, 3, 100) {
+			public void go() {}
+		};
 		moral.setHorizontalAlignment(SwingConstants.CENTER);
-		moral.setDocument(new PlainDocument() {
-
-			@Override
-			public void insertString(int offset, String str, AttributeSet attr)
-					throws BadLocationException {
-				if (str == null)
-					return;
-
-				// Permite a entrada somente de números e no máximo 3 dígitos
-				if ((getLength() + str.length()) <= 3
-						&& (Character.isDigit(str.charAt(0)))) {
-					if (Math.abs(Integer
-							.parseInt(getText(0, getLength()) + str)) <= 100)
-						super.insertString(offset, str, attr);
-
-				}
-			}
-		});
-
+		
 		c.gridx++;
 		panel.add(moral, c);
 
@@ -553,29 +402,11 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Muralha.toString()), c);
 
 		// Creating the checkbox to select option
-		muralha = new JTextField(3);
+		muralha = new IntegerFormattedTextField(0, 2, 20) {
+			public void go() {}
+		};
 		muralha.setHorizontalAlignment(SwingConstants.CENTER);
-		muralha.setDocument(new PlainDocument() {
-
-			@Override
-			public void insertString(int offset, String str, AttributeSet attr)
-					throws BadLocationException {
-				if (str == null)
-					return;
-
-				// Permite a entrada somente de números e no máximo 3 dígitos
-				if ((getLength() + str.length()) <= 2
-						&& (Character.isDigit(str.charAt(0))))
-					super.insertString(offset, str, attr);
-				
-				if (Math.abs(Integer.parseInt(getText(0, getLength()))) > 20) {
-					super.remove(0, getLength());
-					super.insertString(0, "20", attr);
-				}
-
-			}
-		});
-
+		
 		c.gridx++;
 		panel.add(muralha, c);
 
@@ -609,24 +440,11 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Edificio.toString()), c);
 
 		// Creating the checkbox to select option
-		edifício = new JTextField(3);
+		edifício = new IntegerFormattedTextField(0, 2) {
+			public void go() {}
+		};
 		edifício.setHorizontalAlignment(SwingConstants.CENTER);
-		edifício.setDocument(new PlainDocument() {
-
-			@Override
-			public void insertString(int offset, String str, AttributeSet attr)
-					throws BadLocationException {
-				if (str == null)
-					return;
-
-				// Permite a entrada somente de números e no máximo 3 dígitos
-				if ((getLength() + str.length()) <= 2
-						&& (Character.isDigit(str.charAt(0))))
-					super.insertString(offset, str, attr);
-
-			}
-		});
-
+		
 		c.gridx++;
 		panel.add(edifício, c);
 
@@ -755,46 +573,16 @@ public class StatInsertion extends JPanel {
 	protected void setInputInfo() {
 
 		// Quantidade de tropas
-
-		Map<Unidade, BigDecimal> tropas = new HashMap<Unidade, BigDecimal>();
-
-		for (Unidade i : Unidade.values())
-			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
-				if (Mundo_Reader.MundoSelecionado.containsUnidade(i))
-					tropas.put(i, mapQuantidades.get(i).getValue());
-				else
-					tropas.put(i, BigDecimal.ZERO);
-			} else
-				tropas.put(i, BigDecimal.ZERO);
-
+		armyEdit.saveValues();
+		
 		if (tipo == Tipo.Atacante)
-			info.setTropasAtacantes(tropas);
+			info.setArmyAttacker(army);
 		else
-			info.setTropasDefensoras(tropas);
-
-		// Nivel de tropas
-
-		Map<Unidade, Integer> níveis = new HashMap<Unidade, Integer>();
-
-		for (Unidade i : Unidade.values()) {
-			if ((!i.equals(Unidade.MILÍCIA) || tipo == Tipo.Defensor)) {
-				if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1
-						&& Mundo_Reader.MundoSelecionado.containsUnidade(i))
-					níveis.put(i, ((int) mapNiveis.get(i).getSelectedItem()));
-				else
-					níveis.put(i, 1);
-			} else
-				níveis.put(i, 1);
-		}
-
-		if (tipo == Tipo.Atacante)
-			info.setNívelTropasAtaque(níveis);
-		else
-			info.setNívelTropasDefesa(níveis);
+			info.setArmyDefender(army);
 
 		// Religião
 
-		if (Mundo_Reader.MundoSelecionado.hasIgreja()) {
+		if (ServerManager.getSelectedServer().getWorld().isChurchWorld()) {
 
 			if (tipo == Tipo.Atacante)
 				info.setReligiãoAtacante(religião.isSelected());
@@ -812,7 +600,7 @@ public class StatInsertion extends JPanel {
 
 		// Item do Paladino
 
-		if (Mundo_Reader.MundoSelecionado.hasPaladino()) {
+		if (ServerManager.getSelectedServer().getWorld().isPaladinWorld()) {
 
 			if (tipo == Tipo.Atacante)
 				info.setItemAtacante((ItemPaladino) item.getSelectedItem());
@@ -830,27 +618,27 @@ public class StatInsertion extends JPanel {
 
 		// Bandeira
 
-		if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
-
-			if (tipo == Tipo.Atacante)
-				info.setBandeiraAtacante((Bandeira) bandeira.getSelectedItem());
-			else
-				info.setBandeiraDefensor((Bandeira) bandeira.getSelectedItem());
-
-		} else {
-
-			if (tipo == Tipo.Atacante)
-				info.setBandeiraAtacante(new Bandeira(CategoriaBandeira.NULL, 0));
-			else
-				info.setBandeiraDefensor(new Bandeira(CategoriaBandeira.NULL, 0));
-
-		}
+//		if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
+//
+//			if (tipo == Tipo.Atacante)
+//				info.setBandeiraAtacante((Bandeira) bandeira.getSelectedItem());
+//			else
+//				info.setBandeiraDefensor((Bandeira) bandeira.getSelectedItem());
+//
+//		} else {
+//
+//			if (tipo == Tipo.Atacante)
+//				info.setBandeiraAtacante(new Bandeira(CategoriaBandeira.NULL, 0));
+//			else
+//				info.setBandeiraDefensor(new Bandeira(CategoriaBandeira.NULL, 0));
+//
+//		}
 
 		// Moral e Sorte
 
 		if (tipo == Tipo.Atacante) {
 
-			if (Mundo_Reader.MundoSelecionado.hasMoral()
+			if (ServerManager.getSelectedServer().getWorld().isMoralWorld()
 					&& !moral.getText().equals(""))
 				info.setMoral(Integer.parseInt(moral.getText()));
 			else
@@ -877,7 +665,7 @@ public class StatInsertion extends JPanel {
 			else
 				info.setEdifício(0);
 
-			if (Mundo_Reader.MundoSelecionado.hasBonusNoturno())
+			if (ServerManager.getSelectedServer().getWorld().isNightBonusWorld())
 				info.setNoite(noite.isSelected());
 			else
 				info.setNoite(false);
@@ -887,12 +675,8 @@ public class StatInsertion extends JPanel {
 	}
 
 	public void resetValues() {
-		
-		for (IntegerFormattedTextField i : mapQuantidades.values())
-			i.setText("");
-		
-		for (JComboBox<Integer> i : mapNiveis.values())
-			i.setSelectedIndex(0);
+	
+		armyEdit.resetComponents();
 		
 		if (religião != null)
 			religião.setSelected(false);

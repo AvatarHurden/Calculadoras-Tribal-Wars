@@ -65,17 +65,17 @@ public class BuildingBlock {
 		
 	}
 	
-	public void addBuilding(Building ed, int nível) {
-		addBuilding(new Construction(ed, nível));
+	public void addConstruction(Building ed, int nível) {
+		addConstruction(new Construction(ed, nível));
 	}
 	
-	public void addBuilding(Construction b) {
+	public void addConstruction(Construction b) {
 		int position = buildings.size()-1;
 		
 		Iterator<Construction> iter = buildings.iterator();
 		while (iter.hasNext())
 			if (iter.next().getEdifício().equals(b.getEdifício())) {
-				position = buildings.indexOf(getBuilding(b.getEdifício()));
+				position = buildings.indexOf(getConstruction(b.getEdifício()));
 				iter.remove();
 			}
 		
@@ -99,9 +99,25 @@ public class BuildingBlock {
 		return false;
 	}
 	
-	public Construction getBuilding(Building ed) {
+	public Building getBuilding(String name) {
+		for (Construction b : buildings)
+			if (b.getName().equals(name))
+				return b.getEdifício();
+		
+		return null;
+	}
+	
+	public Construction getConstruction(Building ed) {
 		for (Construction b : buildings)
 			if (b.getEdifício().equals(ed))
+				return b;
+		
+		return null;
+	}
+	
+	public Construction getConstruction(String name) {
+		for (Construction b : buildings)
+			if (b.getName().equals(name))
 				return b;
 		
 		return null;
@@ -154,29 +170,14 @@ public class BuildingBlock {
 		return getPopulaçãoDisponível() - getPopulaçãoUsada();
 	}
 	
-	/**
-	 * Se o objeto possui Bosque, retorna a produção de madeira do mesmo, 
-	 * em recursos/hora.
-	 * <p> Caso não possua, retorna 0.
-	 */
 	public int getProduçãoMadeira() {
 		return getProduction("wood");
 	}
 	
-	/**
-	 * Se o objeto possui Poço de Argila, retorna a produção de argila do mesmo, 
-	 * em recursos/hora.
-	 * <p> Caso não possua, retorna 0.
-	 */
 	public int getProduçãoArgila() {
 		return getProduction("stone");
 	}
-	
-	/**
-	 * Se o objeto possui Mina de Ferro, retorna a produção de ferro do mesmo, 
-	 * em recursos/hora.
-	 * <p> Caso não possua, retorna 0.
-	 */
+
 	public int getProduçãoFerro() {
 		return getProduction("iron");
 	}
@@ -223,7 +224,25 @@ public class BuildingBlock {
 			return 1;
 		else
 			return 2.0/3.0*Math.pow(1.06, -getLevel(ed.getName())); 
-//					WorldManager.get().getSelectedWorld().getWorldSpeed();
+		
+	}
+	
+	public double getWallBonusFlat() {
+		
+		if (!contains("wall"))
+			return 0;
+		else {
+			return 1;
+		}
+	}
+	
+	public double getWallBonusPercent() {
+		
+		if (!contains("wall"))
+			return 1;
+		else {
+			return 2;
+		}
 		
 	}
 	
@@ -366,7 +385,7 @@ public class BuildingBlock {
 		public void saveValues() {
 			
 			for (Building i : map.keySet()) 
-				addBuilding(i, map.get(i).getValueInt());
+				addConstruction(i, map.get(i).getValueInt());
 			
 		}
 		

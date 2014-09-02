@@ -2,6 +2,10 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.InputInfo;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.OutputInfo;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,13 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import config.Mundo_Reader;
 import database.Bandeira;
 import database.BigOperation;
-import database.Edifício;
 import database.ItemPaladino;
-import database.Unidade;
-import database.Unidade.UnidadeTipo;
 
 /**
  * Classe que calcula a quantidade de tropas perdidas pelo atacante e defensor
@@ -42,12 +42,9 @@ public class Cálculo {
 
 	private OutputInfo output;
 
-	private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
-	private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
-
-	private Map<Unidade, Integer> nívelTropasAtaque = new HashMap<Unidade, Integer>();
-	private Map<Unidade, Integer> nívelTropasDefesa = new HashMap<Unidade, Integer>();
-
+	private Army atacante;
+	private Army defensor;
+	
 	private int muralhaInicial;
 
 	private int edifícioInicial;
@@ -66,16 +63,13 @@ public class Cálculo {
 
 	private boolean noite;
 
-	// Calculated Values that are maintaned during all combat
+	// Calculated Values that are maintained during all combat
 
 	private BigDecimal ataqueTotal;
 
-	private Map<Unidade.UnidadeTipo, BigDecimal> ataqueTipos = new HashMap<Unidade.UnidadeTipo, BigDecimal>();
-	private Map<Unidade.UnidadeTipo, BigDecimal> defesaTipos = new HashMap<Unidade.UnidadeTipo, BigDecimal>();
-
-	private Map<Unidade, BigDecimal> tropasPerdidasAtaque = new HashMap<Unidade, BigDecimal>();
-	private Map<Unidade, BigDecimal> tropasPerdidasDefesa = new HashMap<Unidade, BigDecimal>();
-
+	private Army perdidoAtacante;
+	private Army perdidoDefensor;
+	
 	// nível da muralha para adição de bônus (afetado por rams)
 
 	private int muralhaBônusFlat;
@@ -114,7 +108,7 @@ public class Cálculo {
 				|| itemAtacante == ItemPaladino.FOGUEIRA)
 			itemAtacante = ItemPaladino.NULL;
 
-		if (Mundo_Reader.MundoSelecionado.hasArqueiro())
+		if (Army.containsUnit("archer"))
 			BattleArcherWorld();
 		else
 			BattleNonArcherWorld();
@@ -131,11 +125,8 @@ public class Cálculo {
 
 	private void setInputVariables() {
 
-		tropasAtacantes = input.getTropasAtacantes();
-		tropasDefensoras = input.getTropasDefensoras();
-
-		nívelTropasAtaque = input.getNívelTropasAtaque();
-		nívelTropasDefesa = input.getNívelTropasDefesa();
+		atacante = input.getArmyAttacker();
+		defensor = input.getArmyDefender();
 
 		muralhaInicial = input.getMuralha();
 
@@ -150,33 +141,44 @@ public class Cálculo {
 		religiãoDefensor = input.getReligiãoDefensor();
 		
 		// Aceita o item do paladino apenas se houver paladino
-		if (tropasAtacantes.get(Unidade.PALADINO).compareTo(BigDecimal.ZERO) == 1)
+		if (atacante.getQuantidade("knight") > 0)
 			itemAtacante = input.getItemAtacante();
 		else
 			itemAtacante = ItemPaladino.NULL;
 
-		if (tropasDefensoras.get(Unidade.PALADINO).compareTo(BigDecimal.ZERO) == 1)
+		atacante.setItem(itemAtacante);
+		atacante.setLuck(sorte/100.0);
+		atacante.setMoral(moral/100.0);
+		atacante.setReligious(religiãoAtacante);
+		
+		if (defensor.getQuantidade("knight") > 0)
 			itemDefensor = input.getItemDefensor();
 		else
 			itemDefensor = ItemPaladino.NULL;
+
 		bandeiraAtacante = input.getBandeiraAtacante();
 
 		bandeiraDefensor = input.getBandeiraDefensor();
 
 		noite = input.getNoite();
+		
+		defensor.setItem(itemDefensor);
+		defensor.setReligious(religiãoDefensor);
+		defensor.setNight(noite);
+		defensor.setWall(muralhaInicial);
+		
+		for (Unit i : atacante.getUnits())
+			perdidoAtacante.addTropa(i, 0, 1);
 
-		for (Unidade i : tropasAtacantes.keySet())
-			tropasPerdidasAtaque.put(i, BigDecimal.ZERO);
-
-		for (Unidade i : tropasDefensoras.keySet())
-			tropasPerdidasDefesa.put(i, BigDecimal.ZERO);
+		for (Unit i : defensor.getUnits())
+			perdidoAtacante.addTropa(i, 0, 1);
 
 	}
 
 	private void setOutputVariables() {
 
-		output.setTropasAtacantesPerdidas(tropasPerdidasAtaque);
-		output.setTropasDefensorasPerdidas(tropasPerdidasDefesa);
+		output.setLostAttacker(perdidoAtacante);
+		output.setLostDefender(perdidoDefensor);
 
 		output.setMuralha(muralhaFinal);
 		output.setEdifício(edifícioFinal);
@@ -187,11 +189,10 @@ public class Cálculo {
 
 		// max = #rams*religion*attackOfRams / (8* 1.09^wallLevel)
 
-		BigDecimal attack = Unidade.ARÍETE.getAtaque(
-				nívelTropasAtaque.get(Unidade.ARÍETE), itemAtacante);
+		BigDecimal attack = new BigDecimal(atacante.getTropa("ram").getAttack()).
+				divide(new BigDecimal(atacante.getQuantidade("ram")));
 
-		BigDecimal levelsLowered = tropasAtacantes.get(Unidade.ARÍETE)
-				.multiply(attack);
+		BigDecimal levelsLowered = new BigDecimal(atacante.getTropa("ram").getAttack());
 
 		if (religiãoAtacante == false)
 			levelsLowered = levelsLowered.divide(new BigDecimal("2"));
@@ -218,19 +219,20 @@ public class Cálculo {
 		muralhaBônusPercentual = muralhaBônusFlat;
 
 		muralhaFinal = muralhaInicial;
+		defensor.setWall(muralhaBônusFlat);
 
 	}
 
 	private void scoutBattle() {
 
-		BigDecimal atacantes = tropasAtacantes.get(Unidade.EXPLORADOR);
-		BigDecimal defensores = tropasDefensoras.get(Unidade.EXPLORADOR);
+		BigDecimal atacantes = new BigDecimal(atacante.getQuantidade("spy"));
+		BigDecimal defensores = new BigDecimal(defensor.getQuantidade("spy"));
 
 		if (atacantes.compareTo(BigDecimal.ZERO) > 0) {
 
 			if (defensores.divide(atacantes, rounding, RoundingMode.HALF_EVEN)
 					.compareTo(new BigDecimal("2")) > 0)
-				tropasAtacantes.put(Unidade.EXPLORADOR, BigDecimal.ZERO);
+				atacante.addTropa(atacante.getUnit("spy"), 0, 1);
 			else {
 				// remaining = initial - round (initial * (defenders /
 				// 2*initial)^1.5 )
@@ -244,9 +246,9 @@ public class Cálculo {
 				remaining = atacantes.subtract(remaining.setScale(0,
 						RoundingMode.HALF_EVEN));
 
-				tropasAtacantes.put(Unidade.EXPLORADOR, remaining);
-				tropasPerdidasAtaque.put(Unidade.EXPLORADOR,
-						atacantes.subtract(remaining));
+				atacante.addTropa(atacante.getUnit("spy"), remaining.intValue(), 1);
+				perdidoAtacante.addTropa(atacante.getUnit("spy"),
+						atacantes.subtract(remaining).intValue(), 1);
 
 			}
 
@@ -369,39 +371,35 @@ public class Cálculo {
 		// iguais às enviadas, depois são diminuídas
 		// conforme cada rodada de batalhas
 
-		Map<Unidade, BigDecimal> atacantesSobrando = new HashMap<Unidade, BigDecimal>();
+		Army restanteAtacante = new Army();
+		
+		for (Troop i : atacante.getTropas())
+			restanteAtacante.addTropa(i);
 
-		for (Entry<Unidade, BigDecimal> i : tropasAtacantes.entrySet())
-			atacantesSobrando.put(i.getKey(), i.getValue());
-
-		Map<Unidade, BigDecimal> defensoresSobrando = new HashMap<Unidade, BigDecimal>();
-
-		for (Entry<Unidade, BigDecimal> i : tropasDefensoras.entrySet())
-			defensoresSobrando.put(i.getKey(), i.getValue());
+		Army restanteDefensor = new Army();
+		
+		for (Troop i : defensor.getTropas())
+			restanteDefensor.addTropa(i);
 		
 		// Only does the calculation if there are attacking units
-		if (hasUnits(atacantesSobrando))
+		if (restanteAtacante.getAtaque() > 0)
 		do {
-
-			// Define o valor do ataque de cada tipo presente no exército, além
-			// do ataque total (soma dos 3 tipos)
-			setAtaques(atacantesSobrando);
 			
-			// Define o valor de defesa para cada tipo de tropa
-			setDefesas(defensoresSobrando);
+			setAtaques();
+			setDefesas();
 
 			// Porcentagem de tropas perdidas para cada tipo de unidade
 			// No ataque, as perdas são apenas para o tipo de tropa representado
-			Map<UnidadeTipo, BigDecimal> ataqueRatioLoss = new HashMap<UnidadeTipo, BigDecimal>();
+			Map<UnitType, BigDecimal> ataqueRatioLoss = new HashMap<UnitType, BigDecimal>();
 			// Na defesa, é feita uma média ponderada das razões, e todas as
 			// tropas perdidas são nessa razão
-			Map<UnidadeTipo, BigDecimal> defenseRatioLoss = new HashMap<UnidadeTipo, BigDecimal>();
+			Map<UnitType, BigDecimal> defenseRatioLoss = new HashMap<UnitType, BigDecimal>();
 
-			for (UnidadeTipo i : UnidadeTipo.values()) {
+			for (UnitType i : UnitType.values()) {
 
 				// Adiciona o bônus de muralha na defesa
 				defesaTipos.put(i,
-								defesaTipos.get(i).multiply(
+								restanteDefensor.getD.multiply(
 									Edifício.MURALHA.bônusPercentual(muralhaBônusPercentual)));
 
 				defesaTipos.put(i,
@@ -412,13 +410,13 @@ public class Cálculo {
 
 				// ratio loss ataque = 1 / ratio loss defesa
 
-				if (ataqueTotal.compareTo(BigDecimal.ZERO) == 0
-						&& defesaTipos.get(i).compareTo(BigDecimal.ZERO) == 0) {
+				if (restanteAtacante.getAtaque() == 0
+						&& restanteDefensor.getDefesaGeral() == 0) {
 					
 					ataqueRatioLoss.put(i, BigDecimal.ZERO);
 					defenseRatioLoss.put(i, BigDecimal.ZERO);
 					
-				} else if (ataqueTotal.compareTo(defesaTipos.get(i)) == 1) {
+				} else if (restanteAtacante.getAtaque() > restanteDefensor.getDefesaGeral()) {
 					
 					ataqueRatioLoss.put(i, BigOperation.pow(
 							defesaTipos.get(i).divide(ataqueTotal, rounding,

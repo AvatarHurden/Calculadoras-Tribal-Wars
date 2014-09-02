@@ -238,11 +238,11 @@ public class AssistenteSaquePanel extends Ferramenta{
 		return button;
 	}
 	
-	protected void setRecomendadoPanel(Army army) {
+	protected void setRecomendadoPanel(Army recommendedArmy) {
 		
-		if (army != null) {
+		if (recommendedArmy != null) {
 			panelRecomendado.setVisible(true);
-			for (Troop t : army.getTropas())
+			for (Troop t : recommendedArmy.getTropas())
 				mapRecomendado.get(t.getUnit()).setText(String.valueOf(t.getQuantity()));	
 	
 		} else {

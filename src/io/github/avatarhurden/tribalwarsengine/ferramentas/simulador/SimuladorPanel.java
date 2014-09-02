@@ -1,31 +1,23 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
+import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import config.Mundo_Reader;
 import database.Bandeira;
-import database.Cores;
 import database.ItemPaladino;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 public class SimuladorPanel extends Ferramenta {
@@ -33,7 +25,7 @@ public class SimuladorPanel extends Ferramenta {
 	InputInfo input;
 	OutputInfo output;
 
-	Cálculo cálculo;
+//	Cálculo cálculo;
 
 	StatInsertion statAtacante;
 	StatInsertion statDefensor;
@@ -48,14 +40,13 @@ public class SimuladorPanel extends Ferramenta {
 		
 		output = new OutputInfo();
 		
-		cálculo = new Cálculo(input, output);
+//		cálculo = new Cálculo(input, output);
 		
 		statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante, input, tools);
 		
 		statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor, input, tools);
 		
 		display = new ResultTroopDisplay(output);
-		
 		
 		setLayout(new GridBagLayout());
 
@@ -86,7 +77,7 @@ public class SimuladorPanel extends Ferramenta {
 		c.gridheight = 1;
 		c.gridy += 2;
 		
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() > 1) {
+		if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels() > 1) {
 			addEmptySpace(c);
 			
 			c.gridy++;
@@ -108,7 +99,7 @@ public class SimuladorPanel extends Ferramenta {
 		c.gridy = 0;
 		c.gridx++;	
 		
-		if (Mundo_Reader.MundoSelecionado.getQuanNíveis() == 1) {
+		if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels() == 1) {
 			
 			c.insets = new Insets(0, 5, 4, 5);
 			c.gridheight = 1;
@@ -135,7 +126,7 @@ public class SimuladorPanel extends Ferramenta {
 
 				statDefensor.setInputInfo();
 
-				cálculo.calculate();
+//				cálculo.calculate();
 
 				display.setValues();
 
@@ -149,64 +140,66 @@ public class SimuladorPanel extends Ferramenta {
 
 	public JPanel addUnitNames() {
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-
-		panel.setLayout(new GridBagLayout());
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 0, 0);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-
-		// Adding the headers
-
-		JLabel lblNome = new JLabel(Lang.Unidade.toString());
-		lblNome.setPreferredSize(new Dimension(
-				lblNome.getPreferredSize().width + 10, 26));
-		lblNome.setBackground(Cores.FUNDO_ESCURO);
-		lblNome.setOpaque(true);
-		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-
-		c.gridy++;
-		panel.add(lblNome, c);
-
-		// Setting the constraints for the unit panels
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-
-		int loop = 1;
-
-		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
-
-			if (i != null) {
-
-				JPanel tropaPanel = new JPanel();
-				tropaPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-				
-				tropaPanel.setBackground(Cores.getAlternar(loop));
-
-				// Separação entre a parte de nomenclatura e as unidades
-				if (i.equals(Unidade.LANCEIRO))
-					tropaPanel.setBorder(new
-							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
-
-				// Creating label for the unit name
-				JLabel lbl = new JLabel(i.toString());
-				
-				tropaPanel.add(lbl);
-
-				loop++;
-				c.gridy++;
-				panel.add(tropaPanel, c);
-
-			}
-		}
-
-		return panel;
-
+//		JPanel panel = new JPanel();
+//		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
+//
+//		panel.setLayout(new GridBagLayout());
+//
+//		GridBagConstraints c = new GridBagConstraints();
+//		c.insets = new Insets(0, 0, 0, 0);
+//		c.fill = GridBagConstraints.BOTH;
+//		c.gridx = 0;
+//		c.gridy = 0;
+//		c.gridwidth = 1;
+//
+//		// Adding the headers
+//
+//		JLabel lblNome = new JLabel(Lang.Unidade.toString());
+//		lblNome.setPreferredSize(new Dimension(
+//				lblNome.getPreferredSize().width + 10, 26));
+//		lblNome.setBackground(Cores.FUNDO_ESCURO);
+//		lblNome.setOpaque(true);
+//		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
+//
+//		c.gridy++;
+//		panel.add(lblNome, c);
+//
+//		// Setting the constraints for the unit panels
+//		c.fill = GridBagConstraints.HORIZONTAL;
+//		c.gridx = 0;
+//
+//		int loop = 1;
+//
+//		for (Unidade i : Mundo_Reader.MundoSelecionado.getUnits()) {
+//
+//			if (i != null) {
+//
+//				JPanel tropaPanel = new JPanel();
+//				tropaPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+//				
+//				tropaPanel.setBackground(Cores.getAlternar(loop));
+//
+//				// Separação entre a parte de nomenclatura e as unidades
+//				if (i.equals(Unidade.LANCEIRO))
+//					tropaPanel.setBorder(new
+//							MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
+//
+//				// Creating label for the unit name
+//				JLabel lbl = new JLabel(i.toString());
+//				
+//				tropaPanel.add(lbl);
+//
+//				loop++;
+//				c.gridy++;
+//				panel.add(tropaPanel, c);
+//
+//			}
+//		}
+//
+//		return panel;
+		
+		return new Army().getEditPanelNoInputs();
+		
 	}
 
 	private void addEmptySpace(GridBagConstraints c) {
@@ -216,7 +209,7 @@ public class SimuladorPanel extends Ferramenta {
 		// If mundo has levels, adds extra space so that the units align with the
 		// input panels
 		space.setPreferredSize(new Dimension(
-				space.getPreferredSize().width, 16));
+				space.getPreferredSize().width, 24));
 		
 		add(space, c);
 
@@ -224,12 +217,9 @@ public class SimuladorPanel extends Ferramenta {
 
 	protected class InputInfo {
 
-		private Map<Unidade, BigDecimal> tropasAtacantes = new HashMap<Unidade, BigDecimal>();
-		private Map<Unidade, BigDecimal> tropasDefensoras = new HashMap<Unidade, BigDecimal>();
-
-		private Map<Unidade, Integer> nívelTropasAtaque = new HashMap<Unidade, Integer>();
-		private Map<Unidade, Integer> nívelTropasDefesa = new HashMap<Unidade, Integer>();
-
+		private Army attacker;
+		private Army defender;
+		
 		private int muralha;
 
 		private int edifício;
@@ -252,49 +242,23 @@ public class SimuladorPanel extends Ferramenta {
 		/**
 		 * @return Map com tropas atacantes
 		 */
-		protected Map<Unidade, BigDecimal> getTropasAtacantes() {
-			return tropasAtacantes;
+		protected Army getArmyAttacker() {
+			return attacker;
 		}
 
-		protected void setTropasAtacantes(
-				Map<Unidade, BigDecimal> tropasAtacantes) {
-			this.tropasAtacantes = tropasAtacantes;
+		protected void setArmyAttacker(Army attacker) {
+			this.attacker = attacker;
 		}
 
 		/**
 		 * @return Map com tropas defensoras
 		 */
-		protected Map<Unidade, BigDecimal> getTropasDefensoras() {
-			return tropasDefensoras;
+		protected Army getArmyDefender() {
+			return defender;
 		}
 
-		protected void setTropasDefensoras(
-				Map<Unidade, BigDecimal> tropasDefensoras) {
-			this.tropasDefensoras = tropasDefensoras;
-		}
-
-		/**
-		 * @return Map com nível das tropas atacantes
-		 */
-		protected Map<Unidade, Integer> getNívelTropasAtaque() {
-			return nívelTropasAtaque;
-		}
-
-		protected void setNívelTropasAtaque(
-				Map<Unidade, Integer> nívelTropasAtaque) {
-			this.nívelTropasAtaque = nívelTropasAtaque;
-		}
-
-		/**
-		 * @return Map com nível das tropas defensoras
-		 */
-		protected Map<Unidade, Integer> getNívelTropasDefesa() {
-			return nívelTropasDefesa;
-		}
-
-		protected void setNívelTropasDefesa(
-				Map<Unidade, Integer> nívelTropasDefesa) {
-			this.nívelTropasDefesa = nívelTropasDefesa;
+		protected void setArmyDefender(Army defender) {
+			this.defender = defender;
 		}
 
 		/**
@@ -481,35 +445,28 @@ public class SimuladorPanel extends Ferramenta {
 
 	protected class OutputInfo {
 
-		private Map<Unidade, BigDecimal> tropasAtacantesPerdidas = new HashMap<Unidade, BigDecimal>();
-		private Map<Unidade, BigDecimal> tropasDefensorasPerdidas = new HashMap<Unidade, BigDecimal>();
-
+		private Army lostAttacker;
+		private Army lostDefender;
+		
 		private int muralha;
 
 		private int edifício;
+		
 
-		/**
-		 * @return Map com tropas atacantes perdidas
-		 */
-		protected Map<Unidade, BigDecimal> getTropasAtacantesPerdidas() {
-			return tropasAtacantesPerdidas;
+		public Army getLostAttacker() {
+			return lostAttacker;
 		}
 
-		protected void setTropasAtacantesPerdidas(
-				Map<Unidade, BigDecimal> tropasAtacantesPerdidas) {
-			this.tropasAtacantesPerdidas = tropasAtacantesPerdidas;
+		public void setLostAttacker(Army lostAttacker) {
+			this.lostAttacker = lostAttacker;
 		}
 
-		/**
-		 * @return Map com tropas defensoras perdidas
-		 */
-		protected Map<Unidade, BigDecimal> getTropasDefensorasPerdidas() {
-			return tropasDefensorasPerdidas;
+		public Army getLostDefender() {
+			return lostDefender;
 		}
 
-		protected void setTropasDefensorasPerdidas(
-				Map<Unidade, BigDecimal> tropasDefensorasPerdidas) {
-			this.tropasDefensorasPerdidas = tropasDefensorasPerdidas;
+		public void setLostDefender(Army lostDefender) {
+			this.lostDefender = lostDefender;
 		}
 
 		/**

@@ -6,6 +6,7 @@ import io.github.avatarhurden.tribalwarsengine.ferramentas.distância.DistânciaPa
 import io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados.OponentesDerrotadosPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.pontos.PontosPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento.RecrutamentoPanel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
@@ -153,7 +154,7 @@ public class MainWindow extends JFrame {
         addPanel(new PontosPanel());
         addPanel(new DistânciaPanel());
         addPanel(new OponentesDerrotadosPanel());
-//        addPanel(new SimuladorPanel());
+        addPanel(new SimuladorPanel());
         addPanel(new AssistenteSaquePanel());
 //        addPanel(new AlertasPanel());
         selectFirst();
