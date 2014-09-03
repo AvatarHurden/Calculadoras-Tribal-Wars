@@ -230,9 +230,9 @@ public class BuildingBlock {
 	public double getWallBonusFlat() {
 		
 		if (!contains("wall"))
-			return 0;
+			return 20;
 		else {
-			return 1;
+			return 20 + 50 * getLevel("wall");
 		}
 	}
 	
@@ -241,7 +241,7 @@ public class BuildingBlock {
 		if (!contains("wall"))
 			return 1;
 		else {
-			return 2;
+			return Math.pow(1.037, getLevel("wall"));
 		}
 		
 	}

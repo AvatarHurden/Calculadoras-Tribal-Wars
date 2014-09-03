@@ -78,7 +78,7 @@ public class Unit {
 		case "light":
 			return "Cavalaria Leve";
 		case "marcher":
-			return "Arqueiro a Cavalor";
+			return "Arqueiro a Cavalo";
 		case "heavy":
 			return "Cavalaria Pesada";
 		case "ram":

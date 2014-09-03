@@ -49,7 +49,7 @@ public class Army {
 	private transient double moral = 1;
 	private transient double luck = 0;
 	
-	private transient int wall = 0;
+	private transient int wall = -1;
 	private transient boolean night = false;
 	
 	public static boolean isArmyJson(JSONObject json) {
@@ -245,31 +245,31 @@ public class Army {
 		return (int) applyModifiers(ataque);
 	}
 	
-	public int getDefesaGeral() {
+	public double getDefesaGeral() {
 		int defesa = 0;
 		
 		for (Troop t : tropas)
 			defesa += t.getDefense(item);
 	
-		return (int) applyModifiers(defesa);
+		return applyModifiers(defesa);
 	}
 	
-	public int getDefesaCavalaria() {
+	public double getDefesaCavalaria() {
 		int defesa = 0;
 		
 		for (Troop t : tropas)
 			defesa += t.getDefenseCavalry(item);
 		
-		return (int) applyModifiers(defesa);
+		return applyModifiers(defesa);
 	}
 	
-	public int getDefesaArqueiro() {
+	public double getDefesaArqueiro() {
 		int defesa = 0;
 		
 		for (Troop t : tropas)
 			defesa += t.getDefenseArcher(item);
 	
-		return (int) applyModifiers(defesa);
+		return applyModifiers(defesa);
 	}
 	
 	public int getSaque() {
@@ -365,16 +365,16 @@ public class Army {
 		value *= moral;
 		value *= (1 + luck);
 		
-		if (religious)
+		if (!religious)
 			value /= 2;
 		
 		if (night)
 			value *= 2;
 		
-		if (wall > 0) {
+		if (wall > -1) {
 			BuildingBlock wallBlock = new BuildingBlock("wall");
 			wallBlock.addConstruction(wallBlock.getBuilding("wall"), wall);
-		
+			
 			value *= wallBlock.getWallBonusPercent();
 			value += wallBlock.getWallBonusFlat();
 		}

@@ -25,7 +25,7 @@ public class SimuladorPanel extends Ferramenta {
 	InputInfo input;
 	OutputInfo output;
 
-//	Cálculo cálculo;
+	Cálculo cálculo;
 
 	StatInsertion statAtacante;
 	StatInsertion statDefensor;
@@ -40,7 +40,7 @@ public class SimuladorPanel extends Ferramenta {
 		
 		output = new OutputInfo();
 		
-//		cálculo = new Cálculo(input, output);
+		cálculo = new Cálculo(input, output);
 		
 		statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante, input, tools);
 		
@@ -126,7 +126,7 @@ public class SimuladorPanel extends Ferramenta {
 
 				statDefensor.setInputInfo();
 
-//				cálculo.calculate();
+				cálculo.calculate();
 
 				display.setValues();
 
