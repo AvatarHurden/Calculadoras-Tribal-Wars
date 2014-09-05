@@ -9,6 +9,7 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,7 +82,7 @@ public class AlertEditor extends JDialog{
 	private LinkedHashMap<IntegerFormattedTextField, JComboBox<String>> avisos;
 	
 	// Componentes desativados quando o aviso é do tipo geral
-	private List<Component> villageComponents = new ArrayList<Component>();
+	private List<Container> villageComponents = new ArrayList<Container>();
 	
 	// Scrollpane
 	private JScrollPane scroll;
@@ -152,8 +152,8 @@ public class AlertEditor extends JDialog{
 		add(makeButtons(), c);
 
 		// Como o tipo selecionado é geral, desativa as coisas adequadas.
-		for (Component t : villageComponents)
-			t.setEnabled(false);
+		for (Container t : villageComponents)
+			enableComponents(t, false);
 
 		pack();
 		setLocationRelativeTo(null);
@@ -357,11 +357,11 @@ public class AlertEditor extends JDialog{
 				((JPanel) e.getSource()).setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
 				
 				if (((JPanel) e.getSource()).equals(tipos[0]))
-					for (Component c : villageComponents)
-						c.setEnabled(false);
+					for (Container c : villageComponents)
+						enableComponents(c, false);
 				else
-					for (Component c : villageComponents)
-						c.setEnabled(true);
+					for (Container c : villageComponents)
+						enableComponents(c, true);
 				
 			}
 		};
@@ -410,7 +410,6 @@ public class AlertEditor extends JDialog{
 	}
 	
 	private JPanel makeRepetePanel() {
-		
 		JPanel panel = new JPanel();
 		
 		
@@ -448,7 +447,7 @@ public class AlertEditor extends JDialog{
 		c.gridx++;
 		panel.add(origemNome, c);
 		
-		villageComponents.addAll(Arrays.asList(panel.getComponents()));
+		villageComponents.add(panel);
 		
 		return panel;
 	}
@@ -482,8 +481,8 @@ public class AlertEditor extends JDialog{
 		
 		c.gridx++;
 		panel.add(destinoNome, c);
-		
-		villageComponents.addAll(Arrays.asList(panel.getComponents()));
+
+		villageComponents.add(panel);
 		
 		return panel;
 	}
@@ -497,13 +496,13 @@ public class AlertEditor extends JDialog{
 		panel.setOpaque(false);
 		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Tropas"));
 		
-		if (armyEdit == null)
-			armyEdit = new Army(Army.getAttackingUnits())
-				.getEditPanelNoLevelsNoHeader(null, 30);
+		armyEdit = new Army(Army.getAttackingUnits())
+			.getEditPanelNoLevelsNoHeader(null, 30);
 		
+		armyEdit.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		panel.add(armyEdit);
 		
-		villageComponents.addAll(Arrays.asList(armyEdit.getComponents()));
+		villageComponents.add(armyEdit);
 		
 		return panel;
 	}
@@ -624,6 +623,15 @@ public class AlertEditor extends JDialog{
 	 */
 	public Alert getAlerta() {
 		return alerta;
+	}
+	
+	public void enableComponents(Container container, boolean isEnabled) {
+		 Component[] components = container.getComponents();
+	        for (Component component : components) {
+	            component.setEnabled(isEnabled);
+	            if (component instanceof Container)
+	                enableComponents((Container)component, isEnabled);
+	        }
 	}
 	
 }

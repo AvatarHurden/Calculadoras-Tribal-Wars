@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.listeners;
 
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
+import io.github.avatarhurden.tribalwarsengine.main.Main;
 
 import java.awt.Component;
 import java.awt.Window;
@@ -38,11 +39,10 @@ public class TWEWindowListener implements WindowListener {
     public void windowClosing(WindowEvent e) {
     	
         Configuration config = Configuration.get();
-
         Window window = e.getWindow();
         
         if (config.getConfig("always_close", false)) {
-            System.exit(-1);
+            Main.exitProgram();
         } else if (config.getConfig("always_dispose", false)) {
             window.dispose();
         }
@@ -66,7 +66,7 @@ public class TWEWindowListener implements WindowListener {
             }
 
             if (choose == 0) {
-                System.exit(-1);
+            	Main.exitProgram();
             } else {
                 window.dispose();
             }

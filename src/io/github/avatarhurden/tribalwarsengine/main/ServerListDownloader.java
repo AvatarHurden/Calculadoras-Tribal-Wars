@@ -74,7 +74,7 @@ public class ServerListDownloader {
 		String dialogName = "Erro de Conexão";
 		
         JOptionPane.showMessageDialog(MainWindow.getInstance(), dialogText, dialogName, JOptionPane.ERROR_MESSAGE);
-		System.exit(-1);
+		Main.exitProgram();;
 	}
 	
 	private JSONArray decodeOnlineText(String content) {

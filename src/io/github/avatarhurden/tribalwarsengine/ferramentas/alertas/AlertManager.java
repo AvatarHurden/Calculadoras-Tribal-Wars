@@ -85,18 +85,18 @@ public class AlertManager {
 	 * @param alerta pré-feito
 	 * @param existente, se ele já está estava incluído na lista ou não.
 	 */
-	public void createAlert(Alert alerta, boolean existente) {
+	public void createAlert(Alert oldAlerta, boolean existente) {
 		
-		AlertEditor editor = new AlertEditor(alerta);
+		AlertEditor editor = new AlertEditor(oldAlerta);
 		
 		editor.setModal(true);
 		editor.setVisible(true);
 		
-		alerta = editor.getAlerta();
+		Alert alerta = editor.getAlerta();
 		
 		if (alerta != null)
 			if (existente)
-				editAlert(alerta);
+				editAlert(oldAlerta, alerta);
 			else
 				addAlert(alerta);
 		
@@ -119,15 +119,15 @@ public class AlertManager {
 	 * Edita um Alert que está na lista dos existentes
 	 * @param alerta a ser modificado
 	 */
-	public void editAlert(Alert alerta) {
+	public void editAlert(Alert alerta, Alert oldAlerta) {
 		
-		int position = alerts.indexOf(alerta);
+		int position = alerts.indexOf(oldAlerta);
 		
 		alerts.remove(position);
 		alerts.add(position, alerta);
 		
 		getTable().changedAlert();
-		removeFromSchedule(alerta);
+		removeFromSchedule(oldAlerta);
 		addToSchedule(alerta);
 	}
 	

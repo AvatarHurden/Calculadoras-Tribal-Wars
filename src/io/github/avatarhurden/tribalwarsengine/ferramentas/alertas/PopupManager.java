@@ -377,6 +377,8 @@ public class PopupManager {
 			panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), titulo));
 			
 			panel.add(new JLabel(aldeia));
+
+			panel.setPreferredSize(new Dimension(66, panel.getPreferredSize().height));
 			
 			return panel;
 			
@@ -430,6 +432,8 @@ public class PopupManager {
 			
 			panel.setPreferredSize(new Dimension(
 					label.getFontMetrics(label.getFont()).stringWidth(maxLine) + 25, panel.getPreferredSize().height));			
+			if (panel.getPreferredSize().width < 115)
+				panel.setPreferredSize(new Dimension(115, panel.getPreferredSize().height));
 			
 			return panel;
 			
@@ -519,6 +523,7 @@ public class PopupManager {
 				
 				@Override
 				public void windowLostFocus(WindowEvent arg0) {
+					System.out.println("lost");
 					setCloseTime();
 				}
 				
@@ -530,7 +535,6 @@ public class PopupManager {
 				
 				@Override
 				public void mouseEntered(MouseEvent arg0) {
-					System.out.println("entered");
 					if (closeThread != null) {
 						closeThread.interrupt();
 					}

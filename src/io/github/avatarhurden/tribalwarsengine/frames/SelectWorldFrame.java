@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
+import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.panels.SelectServerPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.ServerInfoPanel;
 
@@ -19,6 +20,8 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+
+import org.json.JSONObject;
 
 import config.Lang;
 import database.Cores;
@@ -87,7 +90,9 @@ public class SelectWorldFrame extends JFrame {
 
         pack();
         setResizable(false);
-        setLocationRelativeTo(null);
+
+        JSONObject location = Configuration.get().getConfig("location", new JSONObject());
+        setLocation(location.optInt("x", 0), location.optInt("y", 0));
     }
 
     /**

@@ -485,6 +485,7 @@ public class AlertTable extends JTable{
 			
 			if (army == null) {
 				setHorizontalAlignment(JLabel.CENTER);
+				setToolTipText(null);
 				return super.getTableCellRendererComponent(
 						   table, obj, isSelected, hasFocus, row, column);
 			}
@@ -509,9 +510,7 @@ public class AlertTable extends JTable{
 					   table, escrita, isSelected, hasFocus, row, column);
 			
 			if (lines > 3)
-				((JComponent) cell).setToolTipText(tooltip);
-			else
-				((JComponent) cell).setToolTipText(null);
+				setToolTipText(tooltip);
 			
 			return cell;
 			

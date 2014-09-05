@@ -80,7 +80,7 @@ public class SystemIcon implements ActionListener {
                 main.lookForUpdate();
                 break;
             case "exit":
-                System.exit(-1);
+               Main.exitProgram();
         }
     }
 

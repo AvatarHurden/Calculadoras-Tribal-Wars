@@ -103,5 +103,18 @@ public class Main {
             }
         }).start();
     }
+    
+    public static void exitProgram() {
+    	
+    	Configuration config = Configuration.get();
+    	
+    	JSONObject location = new JSONObject();
+    	location.put("x", currentFrame.getLocationOnScreen().x);
+    	location.put("y", currentFrame.getLocationOnScreen().y);
+    	
+    	config.setConfig("location", location);
+    	
+    	System.exit(-1);
+    }
 
 }
