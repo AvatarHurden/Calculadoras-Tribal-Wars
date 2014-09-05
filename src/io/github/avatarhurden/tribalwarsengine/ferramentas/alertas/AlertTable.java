@@ -4,6 +4,8 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -21,9 +23,7 @@ import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
@@ -55,7 +55,6 @@ import org.json.JSONArray;
 
 import sun.swing.table.DefaultTableCellHeaderRenderer;
 import database.Cores;
-import database.Unidade;
 
 @SuppressWarnings("serial")
 /**
@@ -98,7 +97,7 @@ public class AlertTable extends JTable{
 		// This is the default, used by String and Tipo
 		setDefaultRenderer(Object.class, new CustomCellRenderer());
 		setDefaultRenderer(Date.class, new DateCellRenderer());
-		setDefaultRenderer(HashMap.class, new TropaCellRenderer());
+		setDefaultRenderer(Army.class, new TropaCellRenderer());
 		setDefaultRenderer(Long.class, new TimeCellRenderer());
 		getColumnModel().getColumn(7).setCellRenderer(new NotaCellRenderer());
 		
@@ -190,17 +189,17 @@ public class AlertTable extends JTable{
 		sorter.setSortable(7, false);
 		
 		// Changes the sorter for units sent
-		sorter.setComparator(4, new Comparator<HashMap<Unidade, Integer>>() {
+		sorter.setComparator(4, new Comparator<Army>() {
 			
-			public int compare(HashMap<Unidade, Integer> o1, HashMap<Unidade, Integer> o2) {
+			public int compare(Army a1, Army a2) {
 				
 				int amount1 = 0, amount2 = 0;
 				
-				for (Entry<Unidade, Integer> e : o1.entrySet())
-					if (e.getValue() > 0) amount1++;
+				for (Troop t : a1.getTropas())
+					if (t.getQuantity() > 0) amount1++;
 				
-				for (Entry<Unidade, Integer> e : o2.entrySet())
-					if (e.getValue() > 0) amount2++;
+				for (Troop t : a2.getTropas())
+					if (t.getQuantity() > 0) amount2++;
 				
 				// The smallest are the ones with least different units
 				if (amount1 > amount2)  return 1;
@@ -208,11 +207,13 @@ public class AlertTable extends JTable{
 				else {
 					
 					// For alerts with same different units, we compare the amount of every individual unit
-					for (Unidade u : Unidade.values())
+					for (Troop t : a1.getTropas())
 						// O segundo mapa tem a unidade, com menos quantidade
-						if (o1.containsKey(u) && o2.containsKey(u) && o2.get(u) < o1.get(u)) return 1;
+						if (a2.contains(t.getName()) && a2.getQuantidade(t.getUnit()) < t.getQuantity()) 
+							return 1;
 						// Tem, com mais quantidade
-						else if (o1.containsKey(u) && o2.containsKey(u) && o2.get(u) > o1.get(u)) return -1;
+						else if (a2.contains(t.getName()) && a2.getQuantidade(t.getUnit()) > t.getQuantity()) 
+							return -1;
 					
 				}
 						
@@ -476,22 +477,21 @@ public class AlertTable extends JTable{
 		public Component getTableCellRendererComponent (JTable table, 
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
-			@SuppressWarnings("unchecked")
-			HashMap<Unidade, Integer> map = (HashMap<Unidade, Integer>) obj;
+			Army army = (Army) obj;
 			
 			String escrita = "<html>";
 			String tooltip = "<html>";
 			int lines = 0;
 			
-			if (map == null) {
+			if (army == null) {
 				setHorizontalAlignment(JLabel.CENTER);
 				return super.getTableCellRendererComponent(
 						   table, obj, isSelected, hasFocus, row, column);
 			}
 				
-			for (Unidade i : Unidade.values())
-				if (map.containsKey(i) && map.get(i) > 0) {
-					tooltip += i + ": " + map.get(i)+"<br>";
+			for (Troop t : army.getTropas())
+				if (t.getQuantity() > 0) {
+					tooltip += t.getUnit().getPrettyName() + ": " + t.getQuantity() +"<br>";
 					lines++;
 					if (lines <= 3)
 						escrita = tooltip;
@@ -570,7 +570,7 @@ public class AlertTable extends JTable{
 			case 1: return Alert.Tipo.class;
 			case 2: return Alert.Aldeia.class;
 			case 3: return Alert.Aldeia.class;
-			case 4: return HashMap.class;
+			case 4: return Army.class;
 			case 5: return alerts.get(0).getHorário().getClass();
 			case 6: return alerts.get(0).getRepete().getClass();
 			case 7: return alerts.get(0).getNotas().getClass();
@@ -618,7 +618,7 @@ public class AlertTable extends JTable{
 				case 1: return (alerts.get(row).getTipo() != null) ? alerts.get(row).getTipo() : Tipo.Geral;
 				case 2: return alerts.get(row).getOrigem();
 				case 3: return alerts.get(row).getDestino();
-				case 4: return alerts.get(row).getTropas();
+				case 4: return alerts.get(row).getArmy();
 				case 5: return alerts.get(row).getHorário();
 				case 6: return (alerts.get(row).getRepete() != null) ? alerts.get(row).getRepete() : 0;
 				case 7: return (alerts.get(row).getNotas() != null) ? alerts.get(row).getNotas() : "";

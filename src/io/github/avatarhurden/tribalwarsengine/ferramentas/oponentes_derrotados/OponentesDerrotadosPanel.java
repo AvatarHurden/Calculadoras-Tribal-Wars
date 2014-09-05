@@ -64,7 +64,7 @@ public class OponentesDerrotadosPanel extends Ferramenta {
 		};
 
 		army = new Army(Army.getAvailableUnits());
-		armyEdit = army.getEditPanelNoLevels(onChange);
+		armyEdit = army.getEditPanelNoLevels(onChange, 30);
 		
 		makePanels();
 		

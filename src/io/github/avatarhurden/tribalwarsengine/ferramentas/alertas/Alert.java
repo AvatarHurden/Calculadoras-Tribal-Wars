@@ -1,13 +1,13 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
-import database.Unidade;
 
 /**
  * Contém informações sobre um alerta criado pelo usuário. Este alerta possui várias configurações, e
@@ -46,7 +46,7 @@ public class Alert {
     // Decidir se manter isso ou mudar a maneira
     private Long repete;
     
-    private Map<Unidade, Integer> tropas;
+    private Army army;
     private Aldeia origem;
     private Aldeia destino;
     private List<Date> avisos;
@@ -76,8 +76,8 @@ public class Alert {
         this.repete = repete;
     }
 
-    public void setTropas(Map<Unidade, Integer> tropas) {
-        this.tropas = tropas;
+    public void setArmy(Army army) {
+        this.army = army;
     }
 
     public void setOrigem(Aldeia origem) {
@@ -122,9 +122,9 @@ public class Alert {
         return repete;
     }
 
-    public Map<Unidade, Integer> getTropas() {
+    public Army getArmy() {
     	if (!tipo.equals(Tipo.Geral))
-    		return tropas;
+    		return army;
     	else
     		return null;
     }

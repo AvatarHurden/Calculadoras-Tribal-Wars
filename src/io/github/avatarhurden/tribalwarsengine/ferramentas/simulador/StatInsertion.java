@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.InputInfo;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
@@ -38,7 +39,6 @@ import config.Lang;
 import database.Bandeira;
 import database.Bandeira.CategoriaBandeira;
 import database.Cores;
-import database.ItemPaladino;
 
 @SuppressWarnings("serial")
 public class StatInsertion extends JPanel {
@@ -82,15 +82,15 @@ public class StatInsertion extends JPanel {
 			army = new Army(Army.getAvailableUnits());
 		
 		if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels()> 1)
-			armyEdit = army.getEditPanelNoNames(new OnChange() {
+			armyEdit = army.getEditPanelFull(new OnChange() {
 				public void run() {
 				}
-			});
+			}, 26);
 		else {
-			armyEdit = army.getEditPanelNoNamesNoHeader(new OnChange() {
+			armyEdit = army.getEditPanelFullNoHeader(new OnChange() {
 				public void run() {
 				}
-			});
+			}, 26);
 			armyEdit.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		}
 		setLayout(new GridBagLayout());
@@ -102,7 +102,7 @@ public class StatInsertion extends JPanel {
 		c.gridy = 0;
 		
 		c.insets = new Insets(5, 0, 5, 0);
-		
+		c.anchor = GridBagConstraints.EAST;
 		add(tool.addModelosTropasPanel(true, armyEdit), c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -114,7 +114,7 @@ public class StatInsertion extends JPanel {
 		
 		// Adding the space to allow for militia on defensive side
 		if (tipo == Tipo.Atacante && Army.containsUnit("militia"))
-			c.insets = new Insets(0, 0, 35, 0);
+			c.insets = new Insets(0, 0, 31, 0);
 		else
 			c.insets = new Insets(0, 0, 5, 0);
 		

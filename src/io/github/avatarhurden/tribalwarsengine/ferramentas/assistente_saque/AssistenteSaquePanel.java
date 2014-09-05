@@ -80,7 +80,7 @@ public class AssistenteSaquePanel extends Ferramenta{
 		panelHorário = new PanelHorário(onChange);
 		
 		army = new Army(Army.getAttackingUnits());
-		armyEdit = army.getEditPanelNoLevels(onChange);
+		armyEdit = army.getEditPanelNoLevels(onChange, 30);
 				
 		makePanelRecomendado();
 		panelRecomendado.setVisible(false);

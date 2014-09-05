@@ -1,6 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,7 +18,6 @@ import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -33,7 +34,6 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
 import database.Cores;
-import database.Unidade;
 
 
 /**
@@ -334,7 +334,7 @@ public class PopupManager {
 			c.gridx++;
 			panel.add(destino, c);
 			
-			tropas = makeTropasPanel(alerta.getTropas());
+			tropas = makeTropasPanel(alerta.getArmy());
 			
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridheight = 2;
@@ -385,10 +385,10 @@ public class PopupManager {
 		/**
 		 * Cria um JPanel com as tropas enviadas no alerta
 		 * 
-		 * @param map das unidades enviadas
+		 * @param army das unidades enviadas
 		 * @return JPanel
 		 */
-		private JPanel makeTropasPanel(Map<Unidade, Integer> map) {
+		private JPanel makeTropasPanel(Army army) {
 			
 			JPanel panel = new JPanel();
 			panel.setOpaque(false);
@@ -401,9 +401,9 @@ public class PopupManager {
 			String s = "<html>";
 			String maxLine = "";
 			
-			for (Unidade i : Unidade.values())
-				if (map.containsKey(i) && map.get(i) > 0 ) {
-					String temp = i + ": " + map.get(i);
+			for (Troop t : army.getTropas())
+				if (t.getQuantity() > 0 ) {
+					String temp = t.getUnit().getPrettyName() + ": " + t.getQuantity();
 					s += temp + "<br>";
 					if (temp.length() > maxLine.length())
 						maxLine = temp;

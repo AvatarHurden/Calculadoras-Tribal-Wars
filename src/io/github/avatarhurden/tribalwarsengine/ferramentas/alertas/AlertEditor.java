@@ -6,6 +6,7 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -16,14 +17,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
@@ -45,9 +43,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 
 import database.Cores;
-import database.Unidade;
 
-@SuppressWarnings("serial")
 /**
  * Classe para criar ou editar objetos da classe Alert
  * 
@@ -76,7 +72,7 @@ public class AlertEditor extends JDialog{
 	private JTextField destinoNome;
 	
 	// Tropas enviadas
-	private Map<Unidade, IntegerFormattedTextField> tropas;
+	private ArmyEditPanel armyEdit;
 	
 	// Notas relacionadas ao alerta
 	private JTextArea notas;
@@ -214,11 +210,9 @@ public class AlertEditor extends JDialog{
 			destinoNome.setText(destino.nome);
 		}
 		
-		Map<Unidade, Integer> mapTropas = alerta.getTropas();
-		if (mapTropas != null)
-			for (Entry<Unidade, IntegerFormattedTextField> e : tropas.entrySet())
-				if (mapTropas.containsKey(e.getKey()))
-					e.getValue().setText(String.valueOf(mapTropas.get(e.getKey())));
+		Army army = alerta.getArmy();
+		if (army != null)
+			armyEdit.setValues(army);
 		
 		String stringNotas = alerta.getNotas();
 		if (stringNotas != null) 
@@ -275,13 +269,8 @@ public class AlertEditor extends JDialog{
 		
 		alerta.setDestino(new Aldeia(destinoNome.getText(), destinoCoord.getCoordenadaX(), destinoCoord.getCoordenadaY()));
 		
-		Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
-		
-		for (Entry<Unidade, IntegerFormattedTextField> e : tropas.entrySet())
-			if (!e.getValue().getValue().equals(BigDecimal.ZERO))
-				map.put(e.getKey(), e.getValue().getValue().intValue());
-		
-		alerta.setTropas(map);
+		armyEdit.saveValues();
+		alerta.setArmy(armyEdit.getArmy());
 		
 		alerta.setNotas(notas.getText());
 		
@@ -506,38 +495,15 @@ public class AlertEditor extends JDialog{
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		panel.setLayout(new GridBagLayout());
 		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Tropas"));
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = -1;
-		c.gridx = 0;
-		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		if (armyEdit == null)
+			armyEdit = new Army(Army.getAttackingUnits())
+				.getEditPanelNoLevelsNoHeader(null, 30);
 		
-		tropas = new HashMap<Unidade, IntegerFormattedTextField>();
+		panel.add(armyEdit);
 		
-		for (Unidade i : Army.getAttackingUnits()) {
-			if (i != null && !i.equals(Unidade.MILÍCIA)) {
-				
-				c.gridx = 0;
-				c.gridy++;
-				panel.add(new JLabel(i.getNome()), c);
-
-				IntegerFormattedTextField txt = new IntegerFormattedTextField() {
-					public void go() {}
-				};
-			
-				c.gridx = 1;
-				panel.add(txt, c);
-			
-				tropas.put(i, txt);
-
-			}
-		}
-		
-		villageComponents.addAll(Arrays.asList(panel.getComponents()));
+		villageComponents.addAll(Arrays.asList(armyEdit.getComponents()));
 		
 		return panel;
 	}

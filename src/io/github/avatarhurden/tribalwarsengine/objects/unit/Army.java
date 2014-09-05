@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.objects.unit;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
+import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
@@ -30,7 +31,6 @@ import javax.swing.border.LineBorder;
 import org.json.JSONObject;
 
 import database.Cores;
-import database.ItemPaladino;
 
 /**
  * Essa classe guarda informações relativas a um exército. Ela contém
@@ -382,48 +382,48 @@ public class Army {
 		return value;
 	}
 	
-	public ArmyEditPanel getEditPanelFull(OnChange onChange) {
+	public ArmyEditPanel getEditPanelFull(OnChange onChange, int height) {
 		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, true, true, false, true, levels > 1);
+		return new ArmyEditPanel(onChange, height, true, true, false, true, levels > 1);
 	}
 	
-	public ArmyEditPanel getEditPanelFullNoHeader(OnChange onChange) {
+	public ArmyEditPanel getEditPanelFullNoHeader(OnChange onChange, int height) {
 		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, false, true, false, true, levels > 1);
+		return new ArmyEditPanel(onChange, height, false, true, false, true, levels > 1);
 	}
 	
-	public ArmyEditPanel getEditPanelNoLevels(OnChange onChange) {
-		return new ArmyEditPanel(onChange, true, true, false, true, false);
+	public ArmyEditPanel getEditPanelNoLevels(OnChange onChange, int height) {
+		return new ArmyEditPanel(onChange, height, true, true, false, true, false);
 	}
 	
-	public ArmyEditPanel getEditPanelNoLevelsNoHeader(OnChange onChange) {
-		return new ArmyEditPanel(onChange, false, true, false, true, false);
+	public ArmyEditPanel getEditPanelNoLevelsNoHeader(OnChange onChange, int height) {
+		return new ArmyEditPanel(onChange, height, false, true, false, true, false);
 	}
 	
-	public ArmyEditPanel getEditPanelNoNames(OnChange onChange) {
+	public ArmyEditPanel getEditPanelNoNames(OnChange onChange, int height) {
 		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, true, false, false, true, levels > 1);
+		return new ArmyEditPanel(onChange, height, true, false, false, true, levels > 1);
 	}
 	
-	public ArmyEditPanel getEditPanelNoNamesNoHeader(OnChange onChange) {
+	public ArmyEditPanel getEditPanelNoNamesNoHeader(OnChange onChange, int height) {
 		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
-		return new ArmyEditPanel(onChange, false, false, false, true, levels > 1);
+		return new ArmyEditPanel(onChange, height, false, false, false, true, levels > 1);
 	}
 	
-	public ArmyEditPanel getEditPanelSelection(OnChange onChange) {
-		return new ArmyEditPanel(onChange, true, true, true, false, false);
+	public ArmyEditPanel getEditPanelSelection(OnChange onChange, int height) {
+		return new ArmyEditPanel(onChange, height, true, true, true, false, false);
 	}
 	
-	public ArmyEditPanel getEditPanelSelectionNoHeader(OnChange onChange) {
-		return new ArmyEditPanel(onChange, false, true, true, false, false);
+	public ArmyEditPanel getEditPanelSelectionNoHeader(OnChange onChange, int height) {
+		return new ArmyEditPanel(onChange, height, false, true, true, false, false);
 	}
 	
-	public ArmyEditPanel getEditPanelNoInputs() {
-		return new ArmyEditPanel(null, true, true, false, false, false);
+	public ArmyEditPanel getEditPanelNoInputs(int height) {
+		return new ArmyEditPanel(null, height, true, true, false, false, false);
 	}
 	
-	public ArmyEditPanel getEditPanelNoInputsNoHeader() {
-		return new ArmyEditPanel(null, false, true, false, false, false);
+	public ArmyEditPanel getEditPanelNoInputsNoHeader(int height) {
+		return new ArmyEditPanel(null, height, false, true, false, false, false);
 	}
 	
 	public class ArmyEditPanel extends JPanel {
@@ -433,6 +433,7 @@ public class Army {
 		private HashMap<Unit, TroopLevelComboBox> level;
 		
 		private GridBagLayout layout;
+		private int height;
 		
 		private boolean hasHeader, hasNames, hasSelected, hasAmount, hasNivel;
 		private OnChange onChange;
@@ -453,7 +454,7 @@ public class Army {
 		 * @param hasNivel10
 		 * @param unidades
 		 */
-		private ArmyEditPanel(OnChange onChange, boolean hasHeader, 
+		private ArmyEditPanel(OnChange onChange, int height, boolean hasHeader, 
 				boolean hasNames, boolean hasSelected, boolean hasAmount,
 				boolean hasNivel) {
 			
@@ -461,13 +462,18 @@ public class Army {
 			quantities = new HashMap<Unit, IntegerFormattedTextField>();
 			level = new HashMap<Unit, TroopLevelComboBox>();
 			
+			this.height = height;
 			this.hasHeader = hasHeader;
 			this.hasNames = hasNames;
 			this.hasSelected = hasSelected;
 			this.hasAmount = hasAmount;
 			this.hasNivel = hasNivel;
-			this.onChange = onChange;
 			
+			if (onChange == null)
+				this.onChange = new OnChange() { public void run() {}};
+			else
+				this.onChange = onChange;
+				
 			setLayout();
 			
 			setOpaque(false);
@@ -510,7 +516,7 @@ public class Army {
 			
 			layout = new GridBagLayout();
 		    layout.columnWidths = widthsArray;
-		    layout.rowHeights = new int[]{ 30 };
+		    layout.rowHeights = new int[]{ height };
 		    layout.columnWeights = new double[]{1, Double.MIN_VALUE};
 		    layout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 			
@@ -565,7 +571,7 @@ public class Army {
 				unitPanel.setBackground(Cores.getAlternar(i+1));
 				
 				GridBagConstraints panelC = new GridBagConstraints();
-				panelC.insets = new Insets(5, 5, 5, 5);
+				panelC.insets = new Insets((height - 20) / 2, 5, (height - 20) / 2, 5);
 				panelC.gridx = 0;
 				panelC.gridy = 0;
 				panelC.fill = GridBagConstraints.BOTH;
@@ -620,7 +626,6 @@ public class Army {
 					unitPanel.add(combo, panelC);
 					panelC.gridx++;
 				}
-				
 				
 				panel.add(unitPanel);
 			}

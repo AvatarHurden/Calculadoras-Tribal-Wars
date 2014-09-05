@@ -31,7 +31,7 @@ public class SelectWorldFrame extends JFrame {
     private JPanel loadingPanel;
     private static final SelectWorldFrame instance = new SelectWorldFrame();
 
-    private final int MAX_WIDTH = 1000;
+    private final int MAX_WIDTH = 1024;
     private final int MAX_HEIGHT = 700;
     /**
      * Frame inicial, no qual ocorre a escolha do mundo. Ele possui:

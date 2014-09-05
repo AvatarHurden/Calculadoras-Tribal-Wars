@@ -49,7 +49,7 @@ public class RecruitmentPanel extends JPanel {
 	}
 	
 	private void makePanels() {
-		armyEdit = army.getEditPanelNoLevelsNoHeader(onChange);
+		armyEdit = army.getEditPanelNoLevelsNoHeader(onChange, 30);
 		buildingsEdit = buildings.getEditPanelFullNoHeader(onChange);
 		
 		temposUnitarios = new HashMap<Unit, TimeFormattedJLabel>();

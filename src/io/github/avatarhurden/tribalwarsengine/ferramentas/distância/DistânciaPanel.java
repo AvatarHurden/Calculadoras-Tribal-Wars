@@ -54,7 +54,7 @@ public class DistânciaPanel extends Ferramenta {
 		};
 		
 		army = new Army(Army.getAttackingUnits());
-		armyEdit = army.getEditPanelSelection(onChange);
+		armyEdit = army.getEditPanelSelection(onChange, 30);
 		
 		aldeiaDestino = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
 			public void go() {

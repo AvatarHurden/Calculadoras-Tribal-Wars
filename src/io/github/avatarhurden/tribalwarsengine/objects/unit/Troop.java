@@ -1,8 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.objects.unit;
 
+import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
 import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
-import database.ItemPaladino;
 
 /**
 	 * Classe que representa uma tropa específica, com a unidade, nível e quantidade

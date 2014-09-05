@@ -5,21 +5,20 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
 
 import config.Lang;
 import database.Cores;
@@ -64,34 +63,21 @@ public class ResultTroopDisplay extends JPanel {
 		
 		c.insets = new Insets(0, 5, 1, 0);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		add(identificationPanel, c);
 		
 		c.gridwidth = 1;
 		c.gridy++;
-		c.insets = new Insets(0, 5, 5, 6);
+		c.insets = new Insets(2, 5, 5, 5);
 		add(addUnitNames(), c);
 		
-		// Panel to store both attack and defense unit panels
-		JPanel unitPanels = new JPanel(new GridBagLayout());
-		// unitPanels.setBorder(new MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
-		unitPanels.setOpaque(false);
-
-		GridBagConstraints unitC = new GridBagConstraints();
-		unitC.insets = new Insets(0, 0, 0, 0);
-		unitC.anchor = GridBagConstraints.NORTH;
-
-		unitPanels.add(addAttackUnitPanel(), unitC);
-		unitC.gridy++;
-		unitPanels.add(addDefenseUnitPanel(), unitC);
+		c.gridx++;
+		c.anchor = GridBagConstraints.NORTH;
+		c.insets = new Insets(5, 5, 5, 0);
+		add(addAttackUnitPanel(), c);
 
 		c.gridx++;
-		c.insets = new Insets(0, 0, 5, 0);
-		c.gridwidth = 2;
-		add(unitPanels, c);
-
-		// c.gridx++;
-		// add(addDefenseUnitPanel(), c);
+		add(addDefenseUnitPanel(), c);
 
 		// Panel to store the wall and building panels, so they center nicely
 		JPanel bottomPanels = new JPanel();
@@ -108,193 +94,89 @@ public class ResultTroopDisplay extends JPanel {
 	}
 
 	public JPanel addUnitNames() {
-
-//		JPanel panel = new JPanel();
-//		// panel.setBackground(Cores.FUNDO_ESCURO);
-//		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
-//
-//		panel.setLayout(new GridBagLayout());
-//
-//		GridBagConstraints c = new GridBagConstraints();
-//		c.insets = new Insets(0, 0, 0, 0);
-//		c.fill = GridBagConstraints.BOTH;
-//		c.gridx = 0;
-//		c.gridy = 0;
-//		c.gridwidth = 1;
-//
-//		// Adding the headers
-//
-//		JLabel lblNome = new JLabel(Lang.Unidade.toString());
-//		lblNome.setPreferredSize(new Dimension(
-//				lblNome.getPreferredSize().width + 12, 26));
-//		lblNome.setBackground(Cores.FUNDO_ESCURO);
-//		lblNome.setOpaque(true);
-//		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-//
-//		panel.add(lblNome, c);
-//
-//		// Setting the constraints for the unit panels
-//		c.fill = GridBagConstraints.HORIZONTAL;
-//		c.gridx = 0;
-//
-//		int loop = 1;
-//
-//		for (Unit i : Army.getAvailableUnits()) {
-//
-//			JPanel tropaPanel = new JPanel();
-//			tropaPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//			tropaPanel.setBackground(Cores.getAlternar(loop));
-//
-//			// Separação entre a parte de nomenclatura e as unidades
-//			if (i.equals(Unidade.LANCEIRO))
-//				tropaPanel.setBorder(new
-//						MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
-//
-//			// Creating the TextField for the quantity of troops
-//			JLabel lbl = new JLabel(i.getNome());
-//
-//			tropaPanel.add(lbl);
-//
-//			loop++;
-//			c.gridy++;
-//			panel.add(tropaPanel, c);
-//
-//		}
-
-		return new Army().getEditPanelNoInputs();
-
+		return new Army().getEditPanelNoInputs(26);
+	}
+	
+	private JPanel addHeaderPanel(String name) {
+		JPanel panel = new JPanel();
+		panel.setBackground(Cores.FUNDO_ESCURO);
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		
+		panel.add(new JLabel(name));
+		
+		panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 28));
+		
+		return panel;
 	}
 
 	public JPanel addAttackUnitPanel() {
-
 		JPanel panel = new JPanel();
-		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new MatteBorder(1, 1, 1, 0, Cores.SEPARAR_ESCURO));
-		// panel.setOpaque(false);
+		panel.setOpaque(false);
 
 		panel.setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 0, 0);
+		c.insets = new Insets(0, 0, 5, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 1;
 
-		// Adding the headers
-
-		JLabel lblNome = new JLabel(Lang.Atacante.toString());
-		lblNome.setPreferredSize(new Dimension(
-				lblNome.getPreferredSize().width + 30, 30));
-		lblNome.setBackground(Cores.FUNDO_ESCURO);
-		lblNome.setOpaque(true);
-		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-
-		panel.add(lblNome, c);
-
-		// Setting the constraints for the unit panels
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-
-		int loop = 1;
-
-		for (Unit i : Army.getAttackingUnits()) {
-
-			JPanel tropaPanel = new JPanel();
-			tropaPanel.setPreferredSize(new Dimension(0, 30));
-			tropaPanel.setLayout(new GridBagLayout());
-			tropaPanel.setBackground(Cores.getAlternar(loop));
-
-			// Separação entre a parte de nomenclatura e as unidades
-			if (i.getName().equals("spear"))
-				tropaPanel.setBorder(new
-						MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
-
-			GridBagConstraints tropaC = new GridBagConstraints();
-			tropaC.insets = new Insets(5, 5, 5, 5);
-			tropaC.gridx = 0;
-			tropaC.gridy = 0;
-
-			// Creating the TextField for the quantity of troops
-			JLabel lbl = new JLabel(" ");
-			// Adding the text to a map with the units
-			tropasAtacantesPerdidas.put(i, lbl);
-
-			tropaPanel.add(lbl, tropaC);
-
-			loop++;
-			c.gridy++;
-			panel.add(tropaPanel, c);
-
-		}
-
+		panel.add(addHeaderPanel("Atacante"), c);
+		
+		c.gridy++;
+		panel.add(makeUnitPanel(Army.getAttackingUnits(), tropasAtacantesPerdidas), c);
+		
 		return panel;
-
 	}
 
 	public JPanel addDefenseUnitPanel() {
-
 		JPanel panel = new JPanel();
-		panel.setBackground(Cores.FUNDO_ESCURO);
-		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO, 1, false));
+		panel.setOpaque(false);
 
 		panel.setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 0, 0);
+		c.insets = new Insets(0, 0, 5, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 1;
 
-		// Adding the headers
-
-		JLabel lblNome = new JLabel(Lang.Defensor.toString());
-		lblNome.setPreferredSize(new Dimension(
-				lblNome.getPreferredSize().width + 30, 30));
-		lblNome.setBackground(Cores.FUNDO_ESCURO);
-		lblNome.setOpaque(true);
-		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-
-		panel.add(lblNome, c);
-
-		// Setting the constraints for the unit panels
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, 0, 0);
-		c.gridx = 0;
-
+		panel.add(addHeaderPanel("Defensor"), c);
+		
+		c.gridy++;
+		panel.add(makeUnitPanel(Army.getAvailableUnits(), tropasDefensorasPerdidas), c);
+		
+		return panel;
+	}
+	
+	private JPanel makeUnitPanel(List<Unit> list, Map<Unit, JLabel> map) {
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setOpaque(false);
+		
 		int loop = 1;
-
-		for (Unit i : Army.getAvailableUnits()) {
+		for (Unit i : list) {
 
 			JPanel tropaPanel = new JPanel();
-			tropaPanel.setPreferredSize(new Dimension(0, 30));
-			tropaPanel.setLayout(new GridBagLayout());
+			tropaPanel.setPreferredSize(new Dimension(60, 26));
 			tropaPanel.setBackground(Cores.getAlternar(loop));
-
-			// Separação entre a parte de nomenclatura e as unidades
-			if (i.getName().equals("spear"))
-				tropaPanel.setBorder(new
-						MatteBorder(1,0,0,0,Cores.SEPARAR_ESCURO));
-
-			GridBagConstraints tropaC = new GridBagConstraints();
-			tropaC.insets = new Insets(5, 5, 5, 5);
-			tropaC.gridx = 0;
-			tropaC.gridy = 0;
 
 			// Creating the TextField for the quantity of troops
 			JLabel lbl = new JLabel(" ");
 			// Adding the text to a map with the units
-			tropasDefensorasPerdidas.put(i, lbl);
+			map.put(i, lbl);
 
-			tropaPanel.add(lbl, tropaC);
+			tropaPanel.add(lbl);
 
 			loop++;
-			c.gridy++;
-			panel.add(tropaPanel, c);
+			panel.add(tropaPanel);
 
 		}
-
+		
 		return panel;
-
 	}
 
 	public JPanel addWall() {

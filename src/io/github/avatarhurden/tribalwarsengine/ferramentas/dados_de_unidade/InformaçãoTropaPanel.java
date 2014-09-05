@@ -187,9 +187,9 @@ public class InformaçãoTropaPanel {
 		}
 		
 		danoLabel.setText(getFormattedNumber(army.getAtaque()));
-		defGeralLabel.setText(getFormattedNumber(army.getDefesaGeral()));
-		defCavaloLabel.setText(getFormattedNumber(army.getDefesaCavalaria()));
-		defArqueiroLabel.setText(getFormattedNumber(army.getDefesaArqueiro()));
+		defGeralLabel.setText(getFormattedNumber((int) army.getDefesaGeral()));
+		defCavaloLabel.setText(getFormattedNumber((int) army.getDefesaCavalaria()));
+		defArqueiroLabel.setText(getFormattedNumber((int) army.getDefesaArqueiro()));
 
 		saqueLabel.setText(getFormattedNumber(army.getSaque()));
 

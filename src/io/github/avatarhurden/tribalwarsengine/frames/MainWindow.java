@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.AssistenteSaquePanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade.DadosDeUnidadePanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.distância.DistânciaPanel;
@@ -39,7 +40,7 @@ public class MainWindow extends JFrame {
     private JPanel body;
     //Configura tamanho fixo para todos os io.github.avatarhurden.tribalwarsengine.frames do APP
     //as dimensoes abaixo são as mesmas da GUI do selecionar_mundo
-    private final int MAX_WIDTH = 1000;
+    private final int MAX_WIDTH = 1024;
     private final int MAX_HEIGHT = 700;
     ;
 
@@ -156,7 +157,7 @@ public class MainWindow extends JFrame {
         addPanel(new OponentesDerrotadosPanel());
         addPanel(new SimuladorPanel());
         addPanel(new AssistenteSaquePanel());
-//        addPanel(new AlertasPanel());
+        addPanel(new AlertasPanel());
         selectFirst();
         pack();
         setLocationRelativeTo(parent);

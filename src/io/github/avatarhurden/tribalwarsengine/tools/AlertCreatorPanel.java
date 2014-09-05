@@ -65,7 +65,7 @@ public class AlertCreatorPanel extends TWSimpleButton implements ActionListener 
 			for (Entry<Unidade, IntegerFormattedTextField> e : tropas.entrySet())
 				map.put(e.getKey(), e.getValue().getValue().intValue());
 	
-			alert.setTropas(map);
+			alert.setArmy(map);
 		}
 		
 		if (origem == null && destino == null && tropas == null)

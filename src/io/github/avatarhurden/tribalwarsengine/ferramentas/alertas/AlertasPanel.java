@@ -5,6 +5,8 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
 import java.awt.Dimension;
@@ -14,14 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import database.Unidade;
 
 public class AlertasPanel extends Ferramenta {
 
@@ -39,7 +37,7 @@ public class AlertasPanel extends Ferramenta {
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         setLayout(gridBagLayout);
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
 
             Alert alerta = new Alert();
 
@@ -51,16 +49,16 @@ public class AlertasPanel extends Ferramenta {
             alerta.setDestino(new Aldeia("Destino" + i, i * 11, i * 555));
 
             if (i > 0) {
-                Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
-                for (Unidade u : Unidade.values())
-                    map.put(u, (int) (Math.random() * 100 + 1));
-                alerta.setTropas(map);
+                Army map = new Army();
+                for (Unit u : Army.getAttackingUnits())
+                    map.addTropa(u, (int) (Math.random() * 100 + 1), 1);
+                alerta.setArmy(map);
             } else {
-                Map<Unidade, Integer> map = new HashMap<Unidade, Integer>();
-                map.put(Unidade.LANCEIRO, 34);
-                map.put(Unidade.ESPADACHIM, 342);
-                map.put(Unidade.ARCOCAVALO, 32);
-                alerta.setTropas(map);
+                Army map = new Army();
+                map.addTropa(map.getUnit("spear"), 100, 1);
+                map.addTropa(map.getUnit("sword"), 100, 1);
+                map.addTropa(map.getUnit("axe"), 100, 1);
+                alerta.setArmy(map);
 
             }
 
