@@ -479,7 +479,6 @@ public class PopupManager {
 			panel.setPreferredSize(new Dimension(width, panel.getPreferredSize().height));
 			
 			return panel;
-			
 		}
 		
 		/**
@@ -523,7 +522,6 @@ public class PopupManager {
 				
 				@Override
 				public void windowLostFocus(WindowEvent arg0) {
-					System.out.println("lost");
 					setCloseTime();
 				}
 				

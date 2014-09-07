@@ -1,6 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.enums;
 
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 
@@ -32,7 +32,7 @@ public enum ItemPaladino {
 
 		this.name = nome;
 		this.unitName = unitName;
-		if (ServerManager.getSelectedServer().getWorld().isBetterItemsWorld()) {
+		if (WorldManager.getSelectedWorld().getWorld().isBetterItemsWorld()) {
 			this.modifierAtk = advancedAtk;
 			this.modifierDef = advancedDef;
 		} else {

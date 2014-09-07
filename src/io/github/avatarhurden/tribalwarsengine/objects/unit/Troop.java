@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.objects.unit;
 
 import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
 
 /**
@@ -236,12 +236,12 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
 		private int upgradeValue(int level, int value) {
 			double total = value;
 			
-			if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels() == 3) {
+			if (WorldManager.getSelectedWorld().getWorld().getResearchSystemLevels() == 3) {
 				if (level == 2)
 					total = total * 1.25;
 				else if (level == 3)
 					total = total * 1.4;
-			} else if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels() == 10)
+			} else if (WorldManager.getSelectedWorld().getWorld().getResearchSystemLevels() == 10)
 				total = total * Math.pow(1.04605, level-1);
 
 			return (int) Math.round(total);

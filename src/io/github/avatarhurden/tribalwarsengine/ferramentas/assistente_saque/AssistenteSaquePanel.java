@@ -52,18 +52,6 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		super("Assistente de Saque");
 		
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0 };
-		gridBagLayout.rowHeights = new int[] { 0 };
-		gridBagLayout.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-		setLayout(gridBagLayout);
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		c.gridy = 0;
-		c.gridx = 0;
-		
 		onChange = new OnChange() {
 			public void run() {
 				armyEdit.saveValues();
@@ -84,6 +72,23 @@ public class AssistenteSaquePanel extends Ferramenta{
 				
 		makePanelRecomendado();
 		panelRecomendado.setVisible(false);
+		
+	}
+	
+	protected void makeGUI() {
+
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] { 0 };
+		gridBagLayout.rowHeights = new int[] { 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+		setLayout(gridBagLayout);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5, 5, 5, 5);
+		c.gridy = 0;
+		c.gridx = 0;
+		
 		
 		// Add reset button
 		c.anchor = GridBagConstraints.WEST;
@@ -124,10 +129,6 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridy++;
 		c.gridx++;
 		add(panelIntervalo, c);
-		
-//		// Adds the panel that displays the interval in which to attack
-//		c.gridy++;
-//		add(respostaIntervalo, c);
 		
 		// Separar as duas funções
 		

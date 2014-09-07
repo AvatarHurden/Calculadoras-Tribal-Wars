@@ -1,224 +1,182 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
-import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldFileManager;
+import io.github.avatarhurden.tribalwarsengine.objects.building.Building;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
-import org.json.JSONException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- * Classe que representa as configurações de um mundo.
- */
-public class World implements EditableObject {
+public class World {
 
-    private JSONObject json;
+	private WorldFileManager downloader;
+	
+	private WorldInfo world;
+	private List<Unit> units;
+	private List<Building> buildings;
+	private List<BuildingBlockModel> buildingModels;
+	private List<ArmyModel> armyModels;
+	
+	// JSONObject with the information to be displayed in the selectionPanel
+	private JSONObject basicInfo;
+	
+	private JSONObject worldInfo;
+	
+	public World(JSONObject worldInfo) {
+		this.worldInfo = worldInfo;
+		downloader = new WorldFileManager("br", worldInfo);
+		basicInfo = setBasicInfo();
+	}
 
-    /**
-     * @param json - Quando cria um objeto World, atribui a ele as propriedades de um objeto World que estavam salvo
-     *             em consigurações. Quando estiver criando um World do zero, basta enviar Null como argumento, que ira "gerar" um
-     *             mundo com as configuções padroes.
-     */
-    public World(JSONObject json) {
-        this.json = json;
-    }
+	public void setInfo() {
+		if (world == null)
+			world = new WorldInfo(downloader.getWorldConfig());
+		if (units == null)
+			setUnits(downloader.getUnitConfig());
+		if (buildings == null)
+			setBuildings(downloader.getBuildingConfig());
+		if (buildingModels == null)
+			setBuildingModels(downloader.getBuildingModels());
+		if (armyModels == null)
+			setArmyModels(downloader.getArmyModels());
+	}
 
-    /**
-     * Construtor que gera o mundo com todos os padroes
-     */
-    public World() {
-        this(new JSONObject("{}"));
-        
-        setStartingValues();
-    }
-    
-    private void setStartingValues() {
-    	
-    	setName("Novo Mundo");
-    	setWorldSpeed(1.0);
-    	setUnitModifier(1.0);
-    	setArcherWorld(false);
-    	setFlagWorld(false);
-    	setMoralWorld(false);
-    	setChurchWorld(false);
-    	setPaladinWorld(false);
-    	setCoiningWorld(false);
-    	setMilitiaWorld(false);
-    	setBetterItemsWorld(false);
-    	setNightBonusWorld(false);
-    	setResearchSystem(ResearchSystem.SIMPLE);
-    	
-    }
-
-    /**
-     * Retorna uma informação especifica sobre o mundo
-     *
-     * @param chave - Nome da informação
-     * @return
-     */
-    private Object get(String chave, Object def) {
-        try {
-            return json.get(chave);
-        } catch (JSONException e) {
-            return def;
-        }
-    }
-
-    private void set(String chave, Object valor) {
-        json.put(chave, valor);
-    }
-
-    /**
-     * Retorna o JSON referente a este mundo!
-     *
-     * @return json
-     */
-    public JSONObject getJson() {
-        return json;
-    }
-
-    /* METODOS DE RETORNO DE PROPRIEDADOS DO OBJETO */
-
-    public boolean isMilitiaWorld() {
-    	 return (json.getJSONObject("game").getString("church").equals("0")) ? false : true;
-    }
-
-    /* GETTERS */
-    public boolean isArcherWorld() {
-    	 return (json.getJSONObject("game").getString("archer").equals("0")) ? false : true;
-    }
-
-    public boolean isPaladinWorld() {
-    	 return (json.getJSONObject("game").getString("knight").equals("0")) ? false : true;
-    }
-
-    public boolean isChurchWorld() {
-        return (json.getJSONObject("game").getString("church").equals("0")) ? false : true;
-    }
-
-    public boolean isMoralWorld() {
-        return ((String) get("moral", "0")).equals("0") ? false : true;
-    }
-
-    public boolean isFlagWorld() {
-        return (boolean) get("flag", false);
-    }
-
-    public boolean isNightBonusWorld() {
-    	 return (json.getJSONObject("night").getString("active").equals("0")) ? false : true;
-    }
-
-    public boolean isBetterItemsWorld() {
-    	 return (json.getJSONObject("game").getString("knight_new_items").equals("0")) ? false : true;
-    }
-
-    public boolean isCoiningWorld() {
-    	 return (json.getJSONObject("snob").getString("gold").equals("0")) ? false : true;
-    }
-
-    public double getWorldSpeed() {
-        return Double.parseDouble((String) get("speed", "1.0"));
-    }
-
-    public double getUnitModifier() {
-        return Double.parseDouble((String) get("unit_speed", "1.0"));
-    }
-
-    public ResearchSystem getResearchSystem() {
-    	switch (Integer.parseInt(json.getJSONObject("game").getString("tech"))) {
-		case 0:
-			return ResearchSystem.TEN_LEVELS;
-		case 1:
-			return ResearchSystem.THREE_LEVELS;
-		case 2:
-			return ResearchSystem.SIMPLE;
-		default:
-			return ResearchSystem.SIMPLE;
+	private void setUnits(JSONArray array) {
+		units = new ArrayList<Unit>();
+		for (int i = 0; i < array.length(); i++)
+			units.add(new Unit(array.getJSONObject(i)));
+	}
+	
+	private void setBuildings(JSONArray array) {
+		buildings = new ArrayList<Building>();
+		for (int i = 0; i < array.length(); i++)
+			buildings.add(new Building(array.getJSONObject(i)));
+	}
+	
+	private void setBuildingModels(JSONArray array) {
+		buildingModels = new ArrayList<BuildingBlockModel>();
+		for (int i = 0; i < array.length(); i++)
+			buildingModels.add(new BuildingBlockModel(array.getJSONObject(i)));
+	}
+	
+	private void setArmyModels(JSONArray array) {
+		armyModels = new ArrayList<ArmyModel>();
+		for (int i = 0; i < array.length(); i++)
+			armyModels.add(new ArmyModel(array.getJSONObject(i)));
+	}
+	
+	private JSONObject setBasicInfo() {
+		try {
+			return downloader.getBasicConfig();
+		} catch (Exception e) {
+			return makeBasicInfo();
 		}
-    }
-    
-    public int getResearchSystemLevels() {
-    	return getResearchSystem().getResearch();
-    }
-    
-    public int getBaseProduction() {
-    	return json.getJSONObject("game").getInt("base_production");
-    }
-
-    public String getName() {
-        return (String) get("name", "BRXX");
-    }
-
-    public Object getCustomProp(String chave, Object def) {
-        return get(chave, def);
-    }
-    
-    public String toString() {
-    	return getName();
-    }
-
-    /* SETTERS com self return*/
-    public World setMilitiaWorld(boolean boo) {
-    	this.set("militia", boo);
-    	return this;
-    }
-    
-    public World setArcherWorld(boolean boo) {
-        this.set("archer", boo);
-        return this;
-    }
-
-    public World setPaladinWorld(boolean boo) {
-        this.set("paladin", boo);
-        return this;
-    }
-
-    public World setChurchWorld(boolean boo) {
-        this.set("church", boo);
-        return this;
-    }
-
-    public World setMoralWorld(boolean boo) {
-        this.set("moral", boo);
-        return this;
-    }
-
-    public World setFlagWorld(boolean boo) {
-        this.set("flag", boo);
-        return this;
-    }
-
-    // MADI BOO
-    public World setNightBonusWorld(boolean boo) {
-        this.set("nightbonus", boo);
-        return this;
-    }
-
-    public World setBetterItemsWorld(boolean boo) {
-        this.set("betteritems", boo);
-        return this;
-    }
-
-    public World setCoiningWorld(boolean boo) {
-        this.set("coining", boo);
-        return this;
-    }
-
-    public World setWorldSpeed(double speed) {
-        this.set("speed", speed);
-        return this;
-    }
-
-    public World setUnitModifier(double unitModifier) {
-        this.set("unit_modifier", unitModifier);
-        return this;
-    }
-
-    public World setResearchSystem(ResearchSystem ss) {
-        this.set("researchsystem", ss.getResearch());
-        return this;
-    }
-
-    public World setName(String name) {
-        this.set("name", name);
-        return this;
-    }
+	}
+	
+	private JSONObject makeBasicInfo() {
+		setInfo();
+		
+		JSONObject json = new JSONObject();
+		json.put("name", getPrettyName());
+		json.put("speed", world.getWorldSpeed());
+		json.put("unit_speed", world.getUnitModifier());
+		json.put("moral", world.isMoralWorld());
+		json.put("tech", world.getResearchSystem().getName());
+		json.put("church", world.isChurchWorld());
+		json.put("night", world.isNightBonusWorld());
+		json.put("archer", world.isArcherWorld());
+		json.put("knight", world.isPaladinWorld());
+		json.put("better_items", world.isBetterItemsWorld());
+		json.put("coins", world.isCoiningWorld());
+		json.put("militia", false);
+		
+		for (Unit i : units)
+			if (i.getJSON().getString("name").equals("militia"))
+				json.put("militia", true);
+		
+		downloader.saveBasicConfig(json);
+		
+		return json;
+	}
+	
+	public void addBuildingModel(BuildingBlockModel model) {
+		buildingModels.add(model);
+	}
+	
+	public void addArmyModel(ArmyModel model) {
+		armyModels.add(model);
+	}
+	
+	public String getName() {
+		return worldInfo.getString("name");
+	}
+	
+	public String getPrettyName() {
+		if (basicInfo != null)
+			return basicInfo.getString("name");
+		else {
+			String name = worldInfo.getString("name").substring(2);
+			if (name.indexOf("c") != -1)
+				return "Clássico " + name.substring(1);
+			else if (name.indexOf("s") != -1)
+				return "Speed " + name.substring(1);
+			else if (name.indexOf("p") != -1)
+				return "Casual " + name.substring(1);
+			else
+				return "Mundo " + name;
+		}
+		
+	}
+	
+	public WorldInfo getWorld() {
+		return world;
+	}
+	
+	public List<Unit> getUnits() {
+		return units;
+	}
+	
+	public List<Building> getBuildings() {
+		return buildings;
+	}
+	
+	public List<ArmyModel> getArmyModelList() {
+		return armyModels;
+	}
+	
+	public List<BuildingBlockModel> getBuildingModelList() {
+		return buildingModels;
+	}
+	
+	public JSONObject getBasicConfig() {
+		return basicInfo;
+	}
+	
+	public JSONObject getWorldInfo() {
+		return worldInfo;
+	}
+	
+	public String toString() {
+		return getPrettyName();
+	}
+	
+	public void saveArmyModels() {
+		JSONArray array = new JSONArray();
+		for (ArmyModel model : armyModels)
+			array.put(model.getJson());
+		
+		downloader.saveArmyModelConfig(array);
+	}
+	
+	public void saveBuildingModels() {
+		JSONArray array = new JSONArray();
+		for (BuildingBlockModel model : buildingModels)
+			array.put(model.getJson());
+		
+		downloader.saveBuildingModelConfig(array);
+	}
+	
 }

@@ -3,7 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 import java.awt.Font;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class Main {
      * mundo e salvando todas as configurações de mundo na pasta de
      * configurações
      */
-    public static void openMainFrame() {
+    public void openMainFrame() {
     	
         mainFrame.packPanels(selectWorldFrame);
         selectWorldFrame.dispose();
@@ -70,7 +70,7 @@ public class Main {
         selectWorldFrame.setVisible(true);
         currentFrame = selectWorldFrame;
         
-        ServerManager.get();
+        WorldManager.get();
         selectWorldFrame.addWorldPanel();
         
     }

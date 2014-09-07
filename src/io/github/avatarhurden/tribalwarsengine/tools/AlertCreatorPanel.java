@@ -5,9 +5,9 @@ import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextFi
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 
 import java.awt.event.ActionEvent;

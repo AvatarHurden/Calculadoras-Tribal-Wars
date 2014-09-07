@@ -1,6 +1,8 @@
-package io.github.avatarhurden.tribalwarsengine.main;
+package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
+import io.github.avatarhurden.tribalwarsengine.main.JSON;
+import io.github.avatarhurden.tribalwarsengine.main.Main;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,10 +15,10 @@ import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ServerListDownloader {
+public class ServerFileManager {
 
 	private final String phpFunction = "/backend/get_servers.php";
-	private final String fileName = "/servers.json";
+	private final String fileName = "/worlds.json";
 	
 	public JSONArray getServerJSON(String folder, String url) {
 		try {
@@ -65,7 +67,7 @@ public class ServerListDownloader {
 		
 		JSONObject object = JSON.getJSON(folder+fileName);
 		
-		return object.getJSONArray("servers");
+		return object.getJSONArray("worlds");
 	}
 	
 	private void displayErrorMessageAndExit() {
@@ -97,7 +99,7 @@ public class ServerListDownloader {
 	public void saveServerJSON(String folder, JSONArray json) {
 		
 		JSONObject object = new JSONObject();
-		object.put("servers", json);
+		object.put("worlds", json);
 		
 		if (!new File(folder).exists())
 			new File(folder).mkdir();

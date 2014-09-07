@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
 import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
@@ -47,13 +47,17 @@ public class SimuladorPanel extends Ferramenta {
 		
 		display = new ResultTroopDisplay(output);
 		
+	}
+	
+	protected void makeGUI() {
+
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 5, 5);
 		c.gridx = 0;
 		c.gridy = 0;
-
+		
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -76,7 +80,7 @@ public class SimuladorPanel extends Ferramenta {
 		c.gridheight = 1;
 		c.gridy += 2;
 		
-		if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels() > 1) {
+		if (WorldManager.getSelectedWorld().getWorld().getResearchSystemLevels() > 1) {
 			addEmptySpace(c);
 			
 			c.gridy++;
@@ -94,7 +98,7 @@ public class SimuladorPanel extends Ferramenta {
 		c.gridy = 0;
 		c.gridx++;	
 		
-		if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels() == 1) {
+		if (WorldManager.getSelectedWorld().getWorld().getResearchSystemLevels() == 1) {
 			
 			c.insets = new Insets(0, 5, 4, 5);
 			c.gridheight = 1;

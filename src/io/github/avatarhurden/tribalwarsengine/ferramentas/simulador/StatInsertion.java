@@ -3,7 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.InputInfo;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.tools.ToolManager;
@@ -81,7 +81,7 @@ public class StatInsertion extends JPanel {
 		else
 			army = new Army(Army.getAvailableUnits());
 		
-		if (ServerManager.getSelectedServer().getWorld().getResearchSystemLevels()> 1)
+		if (WorldManager.getSelectedWorld().getWorld().getResearchSystemLevels()> 1)
 			armyEdit = army.getEditPanelFull(new OnChange() {
 				public void run() {
 				}
@@ -124,13 +124,13 @@ public class StatInsertion extends JPanel {
 		c.insets = new Insets(5, 0, 0, 0);
 		// Diferenciando os diferentes tipos de inserção
 
-		if (ServerManager.getSelectedServer().getWorld().isChurchWorld()) {
+		if (WorldManager.getSelectedWorld().getWorld().isChurchWorld()) {
 			c.gridy++;
 			add(addReligião(), c);
 			c.insets = new Insets(0, 0, 0, 0);
 		}
 		
-		if (ServerManager.getSelectedServer().getWorld().isPaladinWorld()) {
+		if (WorldManager.getSelectedWorld().getWorld().isPaladinWorld()) {
 			c.gridy++;
 			add(addItemPaladino(), c);
 			c.insets = new Insets(0, 0, 0, 0);
@@ -144,7 +144,7 @@ public class StatInsertion extends JPanel {
 		
 		if (tipo == Tipo.Atacante) {
 
-			if (ServerManager.getSelectedServer().getWorld().isMoralWorld()) {
+			if (WorldManager.getSelectedWorld().getWorld().isMoralWorld()) {
 				c.gridy++;
 				add(addMoral(), c);
 				c.insets = new Insets(0, 0, 0, 0);
@@ -162,7 +162,7 @@ public class StatInsertion extends JPanel {
 			c.gridy++;
 			add(addEdifício(), c);
 
-			if (ServerManager.getSelectedServer().getWorld().isNightBonusWorld()) {
+			if (WorldManager.getSelectedWorld().getWorld().isNightBonusWorld()) {
 				c.gridy++;
 				add(addNoite(), c);
 			}
@@ -582,7 +582,7 @@ public class StatInsertion extends JPanel {
 
 		// Religião
 
-		if (ServerManager.getSelectedServer().getWorld().isChurchWorld()) {
+		if (WorldManager.getSelectedWorld().getWorld().isChurchWorld()) {
 
 			if (tipo == Tipo.Atacante)
 				info.setReligiãoAtacante(religião.isSelected());
@@ -600,7 +600,7 @@ public class StatInsertion extends JPanel {
 
 		// Item do Paladino
 
-		if (ServerManager.getSelectedServer().getWorld().isPaladinWorld()) {
+		if (WorldManager.getSelectedWorld().getWorld().isPaladinWorld()) {
 
 			if (tipo == Tipo.Atacante)
 				info.setItemAtacante((ItemPaladino) item.getSelectedItem());
@@ -638,7 +638,7 @@ public class StatInsertion extends JPanel {
 
 		if (tipo == Tipo.Atacante) {
 
-			if (ServerManager.getSelectedServer().getWorld().isMoralWorld()
+			if (WorldManager.getSelectedWorld().getWorld().isMoralWorld()
 					&& !moral.getText().equals(""))
 				info.setMoral(Integer.parseInt(moral.getText()));
 			else
@@ -665,7 +665,7 @@ public class StatInsertion extends JPanel {
 			else
 				info.setEdifício(0);
 
-			if (ServerManager.getSelectedServer().getWorld().isNightBonusWorld())
+			if (WorldManager.getSelectedWorld().getWorld().isNightBonusWorld())
 				info.setNoite(noite.isSelected());
 			else
 				info.setNoite(false);

@@ -68,10 +68,9 @@ public class DistânciaPanel extends Ferramenta {
 			}
 		};
 		
-		makeGUI();
 	}
 	
-	private void makeGUI() {
+	protected void makeGUI() {
 		GridBagLayout layout = new GridBagLayout();
 		layout.columnWidths = new int[] { 0, 0 };
 		layout.rowHeights = new int[] { 0 };

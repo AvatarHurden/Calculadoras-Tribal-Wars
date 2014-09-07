@@ -49,12 +49,10 @@ public class RecrutamentoPanel extends Ferramenta {
 		
 		createRecruitmentPanels();
 		
-		makeGUI();
-		
 		onChange.run();
 	}
 	
-	private void makeGUI() {
+	protected void makeGUI() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 125, 100, 100, 100 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 100, 100, 50, 0 };

@@ -75,6 +75,10 @@ public class AlertasPanel extends Ferramenta {
             AlertManager.getInstance().addAlert(alerta);
         }
 
+    }
+    
+    protected void makeGUI() {
+
         Dimension d = MainWindow.getInstance().getPreferredSize();
         d.setSize(d.getWidth() - 50, 570);
 

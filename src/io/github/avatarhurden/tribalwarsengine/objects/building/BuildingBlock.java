@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.objects.building;
 
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.GridBagConstraints;
@@ -37,7 +37,7 @@ public class BuildingBlock {
 	}
 	
 	public static List<Building> getAvailableBuildings() {
-    	return ServerManager.getSelectedServer().getBuildings();
+    	return WorldManager.getSelectedWorld().getBuildings();
 	}
 	
 	public BuildingBlock() {
@@ -188,7 +188,7 @@ public class BuildingBlock {
 				return 5;
 			else
 				return (int) Math.round(
-						ServerManager.getSelectedServer().getWorld().getBaseProduction() 
+						WorldManager.getSelectedWorld().getWorld().getBaseProduction() 
 						* Math.pow(1.163118, getLevel(name)-1));
 		} else
 			return 0;

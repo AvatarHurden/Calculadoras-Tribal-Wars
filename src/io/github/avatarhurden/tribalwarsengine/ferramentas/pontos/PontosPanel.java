@@ -70,13 +70,9 @@ public class PontosPanel extends Ferramenta {
         buildingsEdit = buildings.getEditPanelFull(onChange);
         
         makePanels();
-        
-        setGUI();
-        
-        onChange.run();
     }
     
-    private void setGUI() {
+    protected void makeGUI() {
     	GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{0, 0, 0};
         gridBagLayout.rowHeights = new int[]{0, 0, 0};

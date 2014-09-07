@@ -26,6 +26,8 @@ public class AlertManager {
 	
 	// Lista de alertas existentes
 	private List<Alert> alerts = new ArrayList<Alert>();
+	// Lista de alertas que foram exibidos durante a execução do programa
+	private List<Alert> pastAlerts = new ArrayList<Alert>();
 	
 	// Conjunto de objetos que ligam alertas a stacks de datas, com os horários ainda não mostrados
 	private TreeSet<AlertStack> dates;
@@ -225,6 +227,7 @@ public class AlertManager {
 
 					popups.showNewPopup(a.alert);
 					tasksRodando.remove(a.alert);
+					pastAlerts.add(a.alert);
 					cancel();
 					if (next != null)
 						schedule(next);

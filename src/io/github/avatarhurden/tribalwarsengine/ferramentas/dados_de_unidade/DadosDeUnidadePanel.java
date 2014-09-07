@@ -67,11 +67,9 @@ public class DadosDeUnidadePanel extends Ferramenta {
         armyEdit = army.getEditPanelFull(onChange, 30);
         
         makePanels();
-        
-        setGUI();
     }
     
-    private void setGUI() {
+    protected void makeGUI() {
     	GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{0, 0, 0};
         gridBagLayout.rowHeights = new int[]{0, 0, 0};

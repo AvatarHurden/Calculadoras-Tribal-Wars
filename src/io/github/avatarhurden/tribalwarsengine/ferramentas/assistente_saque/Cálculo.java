@@ -2,7 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
@@ -223,7 +223,7 @@ public class Cálculo {
 			produção[i] = produção[i].divide(new BigDecimal("3600000"), 30, RoundingMode.HALF_EVEN);
 			// Arruma para a velocidade do mundo
 			produção[i] = produção[i].multiply(new BigDecimal(
-					ServerManager.getSelectedServer().getWorld().getWorldSpeed()));
+					WorldManager.getSelectedWorld().getWorld().getWorldSpeed()));
 		}
 			
 		

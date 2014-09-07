@@ -2,7 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.ArmyModel;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
@@ -114,7 +114,7 @@ public class ModeloTropasPanel extends JPanel {
         popup = new JPopupMenu();
 
         // Adds all the models to the dropdown menu
-        for (ArmyModel i : ServerManager.getSelectedServer().getArmyModelList())
+        for (ArmyModel i : WorldManager.getSelectedWorld().getArmyModelList())
             popup.add(makeMenuItem(i));
         
 
@@ -160,10 +160,10 @@ public class ModeloTropasPanel extends JPanel {
                 	for (ArmyEditPanel p : armyEdit)
                 		modelo.setArmy(p.getArmy());
                     
-                    new EditDialog(ServerManager.getSelectedServer().getArmyModelList(),
+                    new EditDialog(WorldManager.getSelectedWorld().getArmyModelList(),
                     		modelo.getFieldNames(), 0, modelo);
                     
-                    ServerManager.getSelectedServer().saveArmyModels();
+                    WorldManager.getSelectedWorld().saveArmyModels();
                     makePopupMenu();
 
                     manager.refresh();

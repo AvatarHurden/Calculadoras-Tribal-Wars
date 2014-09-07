@@ -17,23 +17,21 @@ import database.Cores;
 /**
  * Adiciona a tab para a inserção na MainWindow
  */
-public class Ferramenta extends JPanel {
+public abstract class Ferramenta extends JPanel {
 
     protected ToolManager tools;
     private JPanel tab;
     private MainWindow frame = MainWindow.getInstance();
     private boolean corEscuraUsada;
+    private boolean isGUImade = false;
 
-    public Ferramenta() {
-    }
+    public Ferramenta() {}
 
     public Ferramenta(String nome) {
 
         setBackground(Cores.FUNDO_CLARO);
 
         tools = new ToolManager();
-
-//		setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 
         tab = new JPanel();
         tab.add(new JLabel(nome));
@@ -80,14 +78,16 @@ public class Ferramenta extends JPanel {
     }
 
     public boolean isSelected() {
-
         return isVisible();
-
     }
 
     public void setSelected(boolean isSelected) {
 
         if (isSelected) {
+        	if (!isGUImade) {
+        		makeGUI();
+        		isGUImade = true;
+        	}
             setVisible(true);
             tab.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
             tab.setBackground(Cores.FUNDO_ESCURO);
@@ -103,9 +103,7 @@ public class Ferramenta extends JPanel {
     }
 
     public void setFrame(MainWindow frame) {
-
         this.frame = frame;
-
     }
 
     // Methods to be used inside a "ferramenta"
@@ -125,5 +123,7 @@ public class Ferramenta extends JPanel {
             return Cores.ALTERNAR_ESCURO;
         }
     }
+    
+    protected abstract void makeGUI();
 
 }

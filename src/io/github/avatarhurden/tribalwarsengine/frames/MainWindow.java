@@ -42,7 +42,6 @@ public class MainWindow extends JFrame {
     //as dimensoes abaixo são as mesmas da GUI do selecionar_mundo
     private final int MAX_WIDTH = 1024;
     private final int MAX_HEIGHT = 700;
-    ;
 
     /**
      * Frame que contém todas as ferramentas

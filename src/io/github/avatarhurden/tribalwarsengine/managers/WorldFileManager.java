@@ -1,6 +1,8 @@
-package io.github.avatarhurden.tribalwarsengine.main;
+package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
+import io.github.avatarhurden.tribalwarsengine.main.JSON;
+import io.github.avatarhurden.tribalwarsengine.main.Main;
 
 import java.io.File;
 import java.net.URL;
@@ -15,7 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ServerDownloader {
+public class WorldFileManager {
 	
 	private final String configFunction = "/interface.php?func=get_config";
 	private final String unitFunction = "/interface.php?func=get_unit_info";
@@ -32,7 +34,7 @@ public class ServerDownloader {
 	private String folder;
 	private JSONObject json;
 	
-	public ServerDownloader(String parentFolder, JSONObject json) {
+	public WorldFileManager(String parentFolder, JSONObject json) {
 		this.json = json;
 	
 		folder = parentFolder + "/" + json.getString("name");
@@ -47,7 +49,7 @@ public class ServerDownloader {
 	
 	// World info section
 	
-	public JSONObject getServerWorldConfig() {
+	public JSONObject getWorldConfig() {
 		try {
 			return getConfigLocal();
 		} catch (Exception e) {
@@ -100,7 +102,7 @@ public class ServerDownloader {
 	
 	// Unit info section
 	
-	public JSONArray getServerUnitConfig() {
+	public JSONArray getUnitConfig() {
 		try {
 			return getLocalUnitConfig();
 		} catch (Exception e) {
@@ -151,7 +153,7 @@ public class ServerDownloader {
 	
 	// Building info section
 	
-	public JSONArray getServerBuildingConfig() {
+	public JSONArray getBuildingConfig() {
 		try {
 			return getLocalBuildingConfig();
 		} catch (Exception e) {
@@ -187,7 +189,7 @@ public class ServerDownloader {
 	
 	// Building model section
 	
-	public JSONArray getServerBuildingModels() {
+	public JSONArray getBuildingModels() {
 		try {
 		File file = new File(folder+buildingModelFile);
 		if (!file.exists())
@@ -199,7 +201,7 @@ public class ServerDownloader {
 		}
 	}
 	
-	public JSONArray getServerArmyModels() {
+	public JSONArray getArmyModels() {
 		try {
 		File file = new File(folder+armyModelFile);
 		if (!file.exists())

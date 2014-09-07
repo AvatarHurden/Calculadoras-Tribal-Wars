@@ -5,8 +5,8 @@ import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
-import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,9 +21,9 @@ import javax.swing.JPanel;
 
 import config.Lang;
 
-public class SelectServerPanel extends JPanel implements ActionListener {
+public class SelectWorldPanel extends JPanel implements ActionListener {
 
-    private TWEComboBox<TWServer> selectionBox;
+    private TWEComboBox<World> selectionBox;
     private TWButton startButton;
     private TWSimpleButton padrãoButton;
     private TWSimpleButton editButton;
@@ -35,7 +35,7 @@ public class SelectServerPanel extends JPanel implements ActionListener {
      *
      * @param selectWorldFrame Frame em que será inserido
      */
-    public SelectServerPanel(SelectWorldFrame selectWorldFrame) {
+    public SelectWorldPanel(SelectWorldFrame selectWorldFrame) {
 
         this.selectWorldFrame = selectWorldFrame;
 
@@ -55,7 +55,7 @@ public class SelectServerPanel extends JPanel implements ActionListener {
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-        selectionBox = new TWEComboBox<TWServer>();
+        selectionBox = new TWEComboBox<World>();
 
         setSelectionBox();
 
@@ -98,16 +98,16 @@ public class SelectServerPanel extends JPanel implements ActionListener {
     }
 
     private void setSelectionBox() {
-        ServerManager manager = ServerManager.get();
-        for (TWServer s : manager.getList())
+        WorldManager manager = WorldManager.get();
+        for (World s : manager.getList())
         	selectionBox.addItem(s);
         
-        selectionBox.setSelectedItem(manager.getDefaultServer());
+        selectionBox.setSelectedItem(manager.getDefaultWorld());
         
         selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {
 				if (event.getStateChange() == ItemEvent.SELECTED && event.getItem() != null) {
-					ServerManager.get().setSelectedServer((TWServer)event.getItem());
+					WorldManager.get().setSelectedWorld((World)event.getItem());
 					selectWorldFrame.updateWorldInfoPanel();
 					changePadrãoButton();
 				}
@@ -116,7 +116,7 @@ public class SelectServerPanel extends JPanel implements ActionListener {
     }
 
     private void changePadrãoButton() {
-        if (ServerManager.get().getDefaultServer().equals(ServerManager.getSelectedServer()))
+        if (WorldManager.get().getDefaultWorld().equals(WorldManager.getSelectedWorld()))
         	padrãoButton.setEnabled(false);
         else {
             padrãoButton.setEnabled(true);
@@ -148,11 +148,11 @@ public class SelectServerPanel extends JPanel implements ActionListener {
 //                selectWorldFrame.updateWorldInfoPanel();
 //                break;
             case "start_button":
-            	ServerManager.getSelectedServer().setInfo();
+            	WorldManager.getSelectedWorld().setInfo();
                 Main.openMainFrame();
                 break;
             case "default_button":
-                ServerManager.get().setDefaultServer(ServerManager.getSelectedServer());
+                WorldManager.get().setDefaultWorld(WorldManager.getSelectedWorld());
                 changePadrãoButton();
                 break;
         }

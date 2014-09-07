@@ -2,8 +2,8 @@ package io.github.avatarhurden.tribalwarsengine.frames;
 
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
-import io.github.avatarhurden.tribalwarsengine.panels.SelectServerPanel;
-import io.github.avatarhurden.tribalwarsengine.panels.ServerInfoPanel;
+import io.github.avatarhurden.tribalwarsengine.panels.SelectWorldPanel;
+import io.github.avatarhurden.tribalwarsengine.panels.WorldInfoPanel;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -28,8 +28,8 @@ import database.Cores;
 
 public class SelectWorldFrame extends JFrame {
 
-    public ServerInfoPanel informationTable;
-    private SelectServerPanel selectionPanel;
+    public WorldInfoPanel informationTable;
+    private SelectWorldPanel selectionPanel;
 
     private JPanel loadingPanel;
     private static final SelectWorldFrame instance = new SelectWorldFrame();
@@ -162,7 +162,7 @@ public class SelectWorldFrame extends JFrame {
         c.gridwidth = 1;
         
         // Tabela de informações
-        informationTable = new ServerInfoPanel();
+        informationTable = new WorldInfoPanel();
         informationTable.changeProperties();
         
         c.gridy = 1;
@@ -181,7 +181,7 @@ public class SelectWorldFrame extends JFrame {
         c.insets = new Insets(25, 5, 25, 5);
 
         // Lista dos mundos com o botão para inciar
-        selectionPanel = new SelectServerPanel(this);
+        selectionPanel = new SelectWorldPanel(this);
         
         panel.add(selectionPanel, c);
         

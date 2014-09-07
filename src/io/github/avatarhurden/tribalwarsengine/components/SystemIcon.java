@@ -29,7 +29,7 @@ public class SystemIcon implements ActionListener {
         item.addActionListener(this);
         // popup.add(item);
 
-        item = new MenuItem("Procurar por atualizações.");
+        item = new MenuItem("Procurar por atualizações");
         item.setActionCommand("look_for_updates");
         item.addActionListener(this);
         popup.add(item);

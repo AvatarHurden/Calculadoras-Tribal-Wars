@@ -3,7 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.objects.unit;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
 import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
@@ -57,7 +57,7 @@ public class Army {
 	}
 	
 	public static List<Unit> getAvailableUnits() {
-    	return ServerManager.getSelectedServer().getUnits();
+    	return WorldManager.getSelectedWorld().getUnits();
 	}
 	
 	public static List<Unit> getAttackingUnits() {
@@ -383,12 +383,12 @@ public class Army {
 	}
 	
 	public ArmyEditPanel getEditPanelFull(OnChange onChange, int height) {
-		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		int levels = WorldManager.getSelectedWorld().getWorld().getResearchSystem().getResearch();
 		return new ArmyEditPanel(onChange, height, true, true, false, true, levels > 1);
 	}
 	
 	public ArmyEditPanel getEditPanelFullNoHeader(OnChange onChange, int height) {
-		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		int levels = WorldManager.getSelectedWorld().getWorld().getResearchSystem().getResearch();
 		return new ArmyEditPanel(onChange, height, false, true, false, true, levels > 1);
 	}
 	
@@ -401,12 +401,12 @@ public class Army {
 	}
 	
 	public ArmyEditPanel getEditPanelNoNames(OnChange onChange, int height) {
-		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		int levels = WorldManager.getSelectedWorld().getWorld().getResearchSystem().getResearch();
 		return new ArmyEditPanel(onChange, height, true, false, false, true, levels > 1);
 	}
 	
 	public ArmyEditPanel getEditPanelNoNamesNoHeader(OnChange onChange, int height) {
-		int levels = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+		int levels = WorldManager.getSelectedWorld().getWorld().getResearchSystem().getResearch();
 		return new ArmyEditPanel(onChange, height, false, false, false, true, levels > 1);
 	}
 	
@@ -610,7 +610,7 @@ public class Army {
 					panelC.gridx++;
 				}
 				
-				int niveis = ServerManager.getSelectedServer().getWorld().getResearchSystem().getResearch();
+				int niveis = WorldManager.getSelectedWorld().getWorld().getResearchSystem().getResearch();
 				
 				TroopLevelComboBox combo = new TroopLevelComboBox(niveis, unitPanel.getBackground());
 				combo.setSelectedItem(Army.this.getTropa(u).getLevel());

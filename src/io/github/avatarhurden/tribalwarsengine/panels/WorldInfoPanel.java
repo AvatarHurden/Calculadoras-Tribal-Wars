@@ -1,7 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
-import io.github.avatarhurden.tribalwarsengine.managers.ServerManager;
-import io.github.avatarhurden.tribalwarsengine.objects.TWServer;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import database.Cores;
 
-public class ServerInfoPanel extends JPanel {
+public class WorldInfoPanel extends JPanel {
     private GridBagConstraints gbc;
 
     /**
@@ -23,8 +23,8 @@ public class ServerInfoPanel extends JPanel {
      * As propriedades mostradas são escolinhas dinamicamente de acordo com o mundo!
      */
     public void changeProperties() {
-    	TWServer server = ServerManager.getSelectedServer();
-        JSONObject json = server.getBasicConfig();
+    	World world = WorldManager.getSelectedWorld();
+        JSONObject json = world.getBasicConfig();
 
         removeAll();
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -41,7 +41,7 @@ public class ServerInfoPanel extends JPanel {
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
 
-        addProp("Nome", server.getPrettyName());
+        addProp("Nome", world.getPrettyName());
         addProp("Velocidade", json.get("speed"));
         addProp("Velocidade das unidades", json.get("unit_speed"));
         addProp("Moral", json.get("moral"));

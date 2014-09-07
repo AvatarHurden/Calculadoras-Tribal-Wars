@@ -343,7 +343,7 @@ public class EditPanelCreator extends JPanel {
 			super(key);
 			
 			army = gson.fromJson(json.get(key).toString(), Army.class);
-			panel = army.getEditPanelFullNoHeader(onChange);
+			panel = army.getEditPanelFullNoHeader(onChange, 30);
 			
 			add(panel);
 			
