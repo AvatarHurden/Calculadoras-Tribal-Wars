@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+
 import java.awt.Color;
 import java.awt.Component;
 
@@ -11,8 +13,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboBoxUI;
-
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class TroopLevelComboBox extends JComboBox<Integer>{

@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.panels.SelectWorldPanel;
@@ -24,7 +25,6 @@ import javax.swing.border.SoftBevelBorder;
 import org.json.JSONObject;
 
 import config.Lang;
-import database.Cores;
 
 public class SelectWorldFrame extends JFrame {
 

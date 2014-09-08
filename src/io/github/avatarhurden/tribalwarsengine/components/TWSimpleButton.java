@@ -1,8 +1,9 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import database.Cores;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 

@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.objects.building;
 
 import io.github.avatarhurden.tribalwarsengine.components.EdifícioFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -19,8 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import org.json.JSONObject;
-
-import database.Cores;
 
 /**
  * Essa classe mantém tudo relacionado a um conjunto de edifícios
@@ -362,11 +361,7 @@ public class BuildingBlock {
 					panelC.gridx++;
 				}
 				
-				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(ed, getLevel(ed.getName())) {
-					public void go() {
-						onChange.run();
-					}
-				};
+				EdifícioFormattedTextField txt = new EdifícioFormattedTextField(ed, getLevel(ed.getName()), onChange);
 				
 				if (hasLevels) {
 					edPanel.add(txt, panelC);
@@ -385,7 +380,7 @@ public class BuildingBlock {
 		public void saveValues() {
 			
 			for (Building i : map.keySet()) 
-				addConstruction(i, map.get(i).getValueInt());
+				addConstruction(i, map.get(i).getValue());
 			
 		}
 		

@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -15,8 +17,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.border.Border;
-
-import database.Cores;
 
 /**
  *  Botão customizado com o estilo do jogo

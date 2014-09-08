@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
@@ -12,8 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import org.json.JSONObject;
-
-import database.Cores;
 
 public class WorldInfoPanel extends JPanel {
     private GridBagConstraints gbc;

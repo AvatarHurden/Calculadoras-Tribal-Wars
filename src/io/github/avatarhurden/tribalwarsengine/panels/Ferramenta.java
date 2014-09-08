@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.tools.ToolManager;
 
@@ -10,8 +11,6 @@ import java.awt.event.MouseListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.SoftBevelBorder;
-
-import database.Cores;
 
 @SuppressWarnings("serial")
 /**

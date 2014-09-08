@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.distância;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
@@ -27,8 +28,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import database.Cores;
 
 public class PlanejadorHorárioPanel extends JPanel {
 

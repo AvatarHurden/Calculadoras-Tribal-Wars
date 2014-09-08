@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.NoIntervalException;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.SameDateException;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
@@ -26,8 +27,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
-
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class AssistenteSaquePanel extends Ferramenta{

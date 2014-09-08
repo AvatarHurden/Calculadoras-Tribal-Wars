@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
-import java.math.BigDecimal;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -30,14 +31,15 @@ import javax.swing.text.DocumentFilter;
  * @author Arthur
  * 
  */
-@SuppressWarnings("serial")
-public abstract class IntegerFormattedTextField extends JTextField {
+public class IntegerFormattedTextField extends JTextField {
 
 	// Location on format
 	// TODO make location changeable, depending on language;
 	private NumberFormat numberFormat = NumberFormat
 			.getNumberInstance(Locale.GERMANY);
 
+	private OnChange onChange;
+	
 	/**
 	 * @param startingValue
 	 * 			  Value that the textField starts with
@@ -46,7 +48,14 @@ public abstract class IntegerFormattedTextField extends JTextField {
 	 * @param upperLimit
 	 * 			  Maximum value of the textField
 	 */
-	public IntegerFormattedTextField(int startingValue, final int maxLength, final int upperLimit) {
+	public IntegerFormattedTextField(int startingValue, final int maxLength, final int upperLimit, OnChange onChange) {
+		
+		if (onChange == null)
+			this.onChange = new OnChange() {
+				public void run() {}
+			};
+		else
+			this.onChange = onChange;
 		
 		setColumns(3+(maxLength-2)/2);
 		
@@ -152,11 +161,11 @@ public abstract class IntegerFormattedTextField extends JTextField {
 		getDocument().addDocumentListener(new DocumentListener() {
 
 			public void removeUpdate(DocumentEvent arg0) {
-				go();
+				IntegerFormattedTextField.this.onChange.run();
 			}
 
 			public void insertUpdate(DocumentEvent arg0) {
-				go();
+				IntegerFormattedTextField.this.onChange.run();
 			}
 
 			public void changedUpdate(DocumentEvent arg0) {}
@@ -165,16 +174,16 @@ public abstract class IntegerFormattedTextField extends JTextField {
 		
 	}
 
-	public IntegerFormattedTextField(int startingValue, int maxLength) {
-		this(startingValue, maxLength, Integer.MAX_VALUE);
+	public IntegerFormattedTextField(int startingValue, int maxLength, OnChange onChange) {
+		this(startingValue, maxLength, Integer.MAX_VALUE, onChange);
 	}
 	
-	public IntegerFormattedTextField(int startingValue) {
-		this(startingValue, 9, Integer.MAX_VALUE);
+	public IntegerFormattedTextField(int startingValue, OnChange onChange) {
+		this(startingValue, 9, Integer.MAX_VALUE, onChange);
 	}
 	
-	public IntegerFormattedTextField() {
-		this(0, 9, Integer.MAX_VALUE);
+	public IntegerFormattedTextField(OnChange onChange) {
+		this(0, 9, Integer.MAX_VALUE, onChange);
 	}
 	
 	// Returns the unformatted value of a formatted string
@@ -201,16 +210,11 @@ public abstract class IntegerFormattedTextField extends JTextField {
 		}
 	}
 
-	public abstract void go();
-
-	/**
-	 * @return BigDecimal the value of the text
-	 */
-	public BigDecimal getValue() {
+	public int getValue() {
 		try {
-			return new BigDecimal(getUnformattedNumber(getText()));
+			return Integer.valueOf(getUnformattedNumber(getText()));
 		} catch (Exception e) {
-			return BigDecimal.ZERO;
+			return 0;
 		}
 	}
 

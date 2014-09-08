@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 
 import java.util.Collections;
@@ -37,7 +38,9 @@ public class Alert {
                 return "<html>" + nome + "<br>" + "(" + x + "|" + y + ")</html>";
         }
     }
-
+    
+    private String worldName;
+    
     private Tipo tipo;
     private String nome;
     private String notas;
@@ -53,7 +56,9 @@ public class Alert {
     /**
      * Cria um alerta vazio. Para definir as características, utilize os setters
      */
-    public Alert() {}
+    public Alert() {
+    	worldName = WorldManager.getSelectedWorld().getName();
+    }
 
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;

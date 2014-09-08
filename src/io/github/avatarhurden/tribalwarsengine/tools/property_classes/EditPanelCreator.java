@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.tools.property_classes;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.enums.ResearchSystem;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
@@ -36,8 +37,6 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class EditPanelCreator extends JPanel {

@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
@@ -17,8 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
-
-import database.Cores;
 
 public class InformaçãoTropaPanel {
 
@@ -190,7 +189,7 @@ public class InformaçãoTropaPanel {
 		defGeralLabel.setText(getFormattedNumber((int) army.getDefesaGeral()));
 		defCavaloLabel.setText(getFormattedNumber((int) army.getDefesaCavalaria()));
 		defArqueiroLabel.setText(getFormattedNumber((int) army.getDefesaArqueiro()));
-
+		
 		saqueLabel.setText(getFormattedNumber(army.getSaque()));
 
 		madeiraLabel.setText(getFormattedNumber(army.getCustoMadeira()));

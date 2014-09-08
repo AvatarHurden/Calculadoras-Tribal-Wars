@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento;
 
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
@@ -21,8 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
-
-import database.Cores;
 
 public class RecruitmentPanel extends JPanel {
 

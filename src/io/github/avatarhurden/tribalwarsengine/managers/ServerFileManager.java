@@ -58,6 +58,7 @@ public class ServerFileManager {
 		try {
 			return getServerLocal(folder);
 		} catch (Exception e) {
+			e.printStackTrace();
 			displayErrorMessageAndExit();
 			return new JSONArray();
 		}

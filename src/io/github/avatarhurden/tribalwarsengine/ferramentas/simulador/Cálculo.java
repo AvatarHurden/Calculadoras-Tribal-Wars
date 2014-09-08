@@ -218,7 +218,9 @@ public class Cálculo {
 		boolean isFirst = true;
 
 		// Only does the calculation if there are attacking units
-		if (hasUnits(atacante))
+		if (!hasUnits(atacante))
+			return;
+		
 		do {
 			
 			Map<UnitType, Double> attackLossRatio = new HashMap<UnitType, Double>();
@@ -233,10 +235,10 @@ public class Cálculo {
 			attackTypes.put(UnitType.unspecified, 0.0);
 			
 			Map<UnitType, Double> defenseTypes = new HashMap<UnitType, Double>();
-			defenseTypes.put(UnitType.General, (double) defensor.getDefesaGeral());
-			defenseTypes.put(UnitType.Cavalry, (double) defensor.getDefesaCavalaria());
-			defenseTypes.put(UnitType.Archer, (double) defensor.getDefesaArqueiro());
-			defenseTypes.put(UnitType.unspecified, (double) (20 + 50 * muralhaCombate));
+			defenseTypes.put(UnitType.General, defensor.getDefesaGeral());
+			defenseTypes.put(UnitType.Cavalry, defensor.getDefesaCavalaria());
+			defenseTypes.put(UnitType.Archer, defensor.getDefesaArqueiro());
+			defenseTypes.put(UnitType.unspecified, 20.0 + 50 * muralhaCombate);
 			
 			if (!isFirst)
 				for (Entry<UnitType, Double> entry : defenseTypes.entrySet())

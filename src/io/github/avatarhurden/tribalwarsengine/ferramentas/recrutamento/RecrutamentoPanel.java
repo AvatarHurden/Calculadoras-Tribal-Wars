@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.recrutamento;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
@@ -19,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import config.Lang;
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class RecrutamentoPanel extends Ferramenta {

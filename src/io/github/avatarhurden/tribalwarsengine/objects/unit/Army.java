@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.objects.unit;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TroopLevelComboBox;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
@@ -29,8 +30,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import org.json.JSONObject;
-
-import database.Cores;
 
 /**
  * Essa classe guarda informações relativas a um exército. Ela contém
@@ -598,11 +597,7 @@ public class Army {
 					panelC.gridx++;
 				}
 				
-				IntegerFormattedTextField txt = new IntegerFormattedTextField(getQuantidade(u)) {
-					public void go() {
-						onChange.run();
-					}
-				};
+				IntegerFormattedTextField txt = new IntegerFormattedTextField(getQuantidade(u), onChange);
 				quantities.put(u, txt);
 	
 				if (hasAmount) {
@@ -641,7 +636,7 @@ public class Army {
 					Army.this.addTropa(i, selected.get(i).isSelected() ? 1 : 0, 
 							(int) level.get(i).getSelectedItem());
 				else
-					Army.this.addTropa(i, quantities.get(i).getValue().intValue(),
+					Army.this.addTropa(i, quantities.get(i).getValue(),
 						(int) level.get(i).getSelectedItem());
 		}
 		

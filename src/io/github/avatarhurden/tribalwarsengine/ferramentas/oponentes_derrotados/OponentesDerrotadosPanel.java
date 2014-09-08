@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.oponentes_derrotados;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
@@ -26,7 +27,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class OponentesDerrotadosPanel extends Ferramenta {

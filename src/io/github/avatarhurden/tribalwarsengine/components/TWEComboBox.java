@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+
 import java.awt.Color;
 import java.awt.Component;
 
@@ -7,8 +9,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-
-import database.Cores;
 
 /**
  * @author Wesley Nascimento

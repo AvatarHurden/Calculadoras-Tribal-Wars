@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.distância;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
@@ -13,15 +14,12 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import database.BigOperation;
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class DistânciaPanel extends Ferramenta {
@@ -56,18 +54,9 @@ public class DistânciaPanel extends Ferramenta {
 		army = new Army(Army.getAttackingUnits());
 		armyEdit = army.getEditPanelSelection(onChange, 30);
 		
-		aldeiaDestino = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
-			public void go() {
-				calculateDistanceAndTimes();
-			}
-		};
+		aldeiaDestino = new CoordenadaPanel(Lang.AldeiaDestino.toString(), onChange);
 		
-		aldeiaOrigem = new CoordenadaPanel(Lang.AldeiaOrigem.toString()) {
-			public void go() {
-				calculateDistanceAndTimes();
-			}
-		};
-		
+		aldeiaOrigem = new CoordenadaPanel(Lang.AldeiaOrigem.toString(), onChange);		
 	}
 	
 	protected void makeGUI() {
@@ -130,13 +119,12 @@ public class DistânciaPanel extends Ferramenta {
 			int diferençaY = aldeiaOrigem.getCoordenadaY()
 					- aldeiaDestino.getCoordenadaY();
 
-			BigDecimal xSquared = new BigDecimal(diferençaX).pow(2);
-			BigDecimal ySquared = new BigDecimal(diferençaY).pow(2);
-
-			BigDecimal distância = BigOperation.sqrt(xSquared.add(ySquared), 30);
+			double xSquared = Math.pow(diferençaX, 2);
+			double ySquared = Math.pow(diferençaY, 2);
 			
-			time = distância.multiply(new BigDecimal(
-					Math.round(army.getVelocidade()))).longValue();
+			double distância = Math.sqrt(ySquared + xSquared);
+			
+			time = (long) Math.round(distância * army.getVelocidade());
 			
 			timeLabel.setTime(time);
 			

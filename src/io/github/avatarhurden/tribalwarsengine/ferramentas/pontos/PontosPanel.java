@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.pontos;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
@@ -26,7 +27,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import database.Cores;
 
 public class PontosPanel extends Ferramenta {
 

@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.OutputInfo;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
@@ -21,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import config.Lang;
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class ResultTroopDisplay extends JPanel {

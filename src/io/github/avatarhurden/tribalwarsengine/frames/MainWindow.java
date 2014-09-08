@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.AssistenteSaquePanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade.DadosDeUnidadePanel;
@@ -27,7 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import config.Lang;
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {

@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
@@ -41,8 +42,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
-
-import database.Cores;
 
 /**
  * Classe para criar ou editar objetos da classe Alert
@@ -278,7 +277,7 @@ public class AlertEditor extends JDialog{
 		
 		for (Entry<IntegerFormattedTextField, JComboBox<String>> e : avisos.entrySet()) {
 			
-			long entry = e.getKey().getValue().longValue();
+			long entry = e.getKey().getValue();
 			
 			entry *= 1000*(Math.pow(60,Math.abs(2-e.getValue().getSelectedIndex())));
 			
@@ -434,9 +433,7 @@ public class AlertEditor extends JDialog{
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
 	
-		origemCoord = new CoordenadaPanel(null) {
-			public void go() {}
-		};
+		origemCoord = new CoordenadaPanel(null, null);
 		origemCoord.setBorder(new EmptyBorder(0, 0, 0, 0));
 		origemCoord.setOpaque(false);
 		
@@ -469,9 +466,7 @@ public class AlertEditor extends JDialog{
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		destinoCoord = new CoordenadaPanel(null) {
-			public void go() {}
-		};
+		destinoCoord = new CoordenadaPanel(null, null);
 		destinoCoord.setBorder(new EmptyBorder(0, 0, 0, 0));
 		destinoCoord.setOpaque(false);
 		
@@ -551,9 +546,7 @@ public class AlertEditor extends JDialog{
 		addAviso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				IntegerFormattedTextField amount = new IntegerFormattedTextField(0, 4){
-					public void go() {}
-				};
+				IntegerFormattedTextField amount = new IntegerFormattedTextField(0, 4, null);
 				
 				JComboBox<String> unit = new JComboBox<String>(new String[] { "horas", "minutos", "segundos" });
 				

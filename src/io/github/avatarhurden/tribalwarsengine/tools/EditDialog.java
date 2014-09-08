@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.objects.EditableObject;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.EditPanelCreator;
@@ -37,7 +38,6 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import config.Lang;
-import database.Cores;
 
 /**
  * Creates a dialog that enables the user to edit a list of io.github.avatarhurden.tribalwarsengine.objects (that are compatible with the EditDialog)

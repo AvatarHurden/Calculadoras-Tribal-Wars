@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
@@ -18,7 +19,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 import config.Lang;
-import database.Cores;
 
 /**
  * Panel para inserção e output dos dados relativo ao cálculo do intervalo de tempo
@@ -36,10 +36,7 @@ public class PanelIntervalo extends JPanel{
 	private TimeFormattedJLabel respostaLabel;
 	private JLabel errorMessage;
 	
-	private OnChange onChange;
-	
 	protected PanelIntervalo(OnChange onChange) {
-		this.onChange = onChange;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0 };
@@ -59,11 +56,7 @@ public class PanelIntervalo extends JPanel{
 		buildingsEdit = buildings.new BuildingsEditPanel(onChange, true, true, true);
 		
 		// Adds the village coordinates
-		coordenadas = new CoordenadaPanel(Lang.AldeiaDestino.toString()) {
-			public void go() {
-				PanelIntervalo.this.onChange.run();
-			}
-		};
+		coordenadas = new CoordenadaPanel(Lang.AldeiaDestino.toString(), onChange);
 		
 		c.gridwidth = 2;
 		c.insets = new Insets(0, 0, 10, 0);

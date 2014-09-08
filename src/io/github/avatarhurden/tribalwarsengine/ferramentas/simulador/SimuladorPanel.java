@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Bandeira;
 import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
@@ -16,7 +17,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import config.Lang;
-import database.Bandeira;
 
 @SuppressWarnings("serial")
 public class SimuladorPanel extends Ferramenta {

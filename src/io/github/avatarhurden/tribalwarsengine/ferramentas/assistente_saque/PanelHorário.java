@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Color;
@@ -23,7 +24,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import config.Lang;
-import database.Cores;
 
 /**
  * Panel para inserção dos dados relativos ao cálculo do horário específico
@@ -32,7 +32,6 @@ import database.Cores;
  * @author Arthur
  *
  */
-@SuppressWarnings("serial")
 public class PanelHorário extends JPanel{
 
 	private CoordenadaPanel coordenadas;
@@ -64,11 +63,7 @@ public class PanelHorário extends JPanel{
 		c.gridx = 0;
 		
 		// Add panel de aldeia
-		coordenadas = new CoordenadaPanel(Lang.AldeiaOrigem.toString()) {
-			public void go() {
-				PanelHorário.this.onChange.run();
-			}
-		};
+		coordenadas = new CoordenadaPanel(Lang.AldeiaOrigem.toString(), onChange);
 		c.gridwidth = 3;
 		c.insets = new Insets(0, 0, 3, 0);
 		add(coordenadas, c);
@@ -184,27 +179,15 @@ public class PanelHorário extends JPanel{
 		
 		switch(produtor) {
 		case "stone":
-			recursosRestantes[0] = new IntegerFormattedTextField() {
-				public void go() {
-					onChange.run();
-				}
-			};
+			recursosRestantes[0] = new IntegerFormattedTextField(onChange);
 			recursoQuantidade.add(recursosRestantes[0]);
 			break;
 		case "wood":
-			recursosRestantes[1] = new IntegerFormattedTextField() {
-				public void go() {
-					onChange.run();
-				}
-			};
+			recursosRestantes[1] = new IntegerFormattedTextField(onChange);
 			recursoQuantidade.add(recursosRestantes[1]);
 			break;
 		case "iron":
-			recursosRestantes[2] = new IntegerFormattedTextField() {
-				public void go() {
-					onChange.run();
-				}
-			};
+			recursosRestantes[2] = new IntegerFormattedTextField(onChange);
 			recursoQuantidade.add(recursosRestantes[2]);
 			// Since iron is the last one, a full border is required
 			recursoQuantidade.setBorder(new MatteBorder(

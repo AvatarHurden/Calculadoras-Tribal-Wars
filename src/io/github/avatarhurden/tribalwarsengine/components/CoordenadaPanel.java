@@ -1,5 +1,8 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
+
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,17 +11,9 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
-
-import database.Cores;
 
 /**
  * A panel for village coordinates.
@@ -28,11 +23,12 @@ import database.Cores;
  * @author Arthur
  *
  */
-@SuppressWarnings("serial")
-public abstract class CoordenadaPanel extends JPanel{
+public class CoordenadaPanel extends JPanel{
 
 	// X and Y coordinates
-	private JTextField x, y;
+	private IntegerFormattedTextField x, y;
+	
+	private OnChange onChange;
 	
 	JSeparator separator;
 	
@@ -41,10 +37,15 @@ public abstract class CoordenadaPanel extends JPanel{
 	 * <br>Above these spaces there is a header with the name of choice
 	 * @param String Name of choice
 	 */
-	public CoordenadaPanel(String nome) {
+	public CoordenadaPanel(String nome, OnChange onChange) {
 		
 		this(nome, 0, 0);
-		
+		if (onChange == null)
+			this.onChange = new OnChange() {
+				public void run() {}
+			};
+		else
+			this.onChange = onChange;
 	}
 	
 	/**
@@ -129,45 +130,12 @@ public abstract class CoordenadaPanel extends JPanel{
 	 * are basically the same
 	 * @return JTextField with proper formatting
 	 */
-	private JTextField makeCoordinateTextField(int value) {
-		
-		JTextField coordinate = new JTextField(3);
+	private IntegerFormattedTextField makeCoordinateTextField(int value) {
+		IntegerFormattedTextField coordinate = new IntegerFormattedTextField(value, 3, onChange);
 		
 		coordinate.setHorizontalAlignment(SwingConstants.CENTER);
-		coordinate.setDocument(new PlainDocument() {
-
-			public void insertString(int offset, String str, AttributeSet attr)
-					throws BadLocationException {
-				if (str == null)
-					return;
-
-				// permite no máximo 3 dígitos
-
-				if ((getLength() + str.length()) <= 3
-						&& Character.isDigit(str.charAt(0)))
-					super.insertString(offset, str, attr);
-				
-			}
-		});
-		
-		if (value > 0)
-			coordinate.setText(String.valueOf(value));
-		
-		coordinate.getDocument().addDocumentListener(new DocumentListener() {
-			
-			public void removeUpdate(DocumentEvent arg0) {
-				go();
-			}
-			
-			public void insertUpdate(DocumentEvent arg0) {
-				go();
-			}
-			
-			public void changedUpdate(DocumentEvent arg0) {}
-		});
-		
-		return coordinate;
-		
+	
+		return coordinate;	
 	}
 	
 	public int getCoordenadaX() {
@@ -184,13 +152,6 @@ public abstract class CoordenadaPanel extends JPanel{
 			return Integer.parseInt(y.getText());
 	}
 	
-	public JTextField getXField() {
-		return x;
-	}
-	
-	public JTextField getYField() {
-		return y;
-	}
 	public void setCoordenadas(int x, int y) {
 		
 		this.x.setText(String.valueOf(x));
@@ -213,6 +174,4 @@ public abstract class CoordenadaPanel extends JPanel{
 		separator.setForeground(enabled ? Color.BLACK : Color.gray);
 		
 	}
-	
-	public abstract void go();
 }

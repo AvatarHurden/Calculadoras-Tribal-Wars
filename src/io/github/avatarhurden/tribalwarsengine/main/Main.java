@@ -42,7 +42,7 @@ public class Main {
      * mundo e salvando todas as configurações de mundo na pasta de
      * configurações
      */
-    public void openMainFrame() {
+    public static void openMainFrame() {
     	
         mainFrame.packPanels(selectWorldFrame);
         selectWorldFrame.dispose();
@@ -65,7 +65,7 @@ public class Main {
     /**
      * Cria e mostra o frame de seleção de mundo
      */
-    public void openWorldSelection() {
+    public static void openWorldSelection() {
         mainFrame.dispose();
         selectWorldFrame.setVisible(true);
         currentFrame = selectWorldFrame;

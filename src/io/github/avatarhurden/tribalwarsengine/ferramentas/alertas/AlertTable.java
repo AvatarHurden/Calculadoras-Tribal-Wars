@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
@@ -54,7 +55,6 @@ import javax.swing.table.TableRowSorter;
 import org.json.JSONArray;
 
 import sun.swing.table.DefaultTableCellHeaderRenderer;
-import database.Cores;
 
 @SuppressWarnings("serial")
 /**

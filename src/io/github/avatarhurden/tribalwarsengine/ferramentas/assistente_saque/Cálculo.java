@@ -258,7 +258,7 @@ public class Cálculo {
 	protected void setRestantes(IntegerFormattedTextField[] array) {
 		
 		for (int i = 0; i < array.length; i++) 
-			restantes[i] = array[i].getValue().intValue();
+			restantes[i] = array[i].getValue();
 		
 	}
 	

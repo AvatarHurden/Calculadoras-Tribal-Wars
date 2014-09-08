@@ -1,7 +1,10 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.simulador;
 
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.enums.Bandeira;
+import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
+import io.github.avatarhurden.tribalwarsengine.enums.Bandeira.CategoriaBandeira;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.simulador.SimuladorPanel.InputInfo;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
@@ -36,9 +39,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import config.Lang;
-import database.Bandeira;
-import database.Bandeira.CategoriaBandeira;
-import database.Cores;
 
 @SuppressWarnings("serial")
 public class StatInsertion extends JPanel {
@@ -365,9 +365,7 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Moral.toString()), c);
 
 		// Creating the checkbox to select option
-		moral = new IntegerFormattedTextField(0, 3, 100) {
-			public void go() {}
-		};
+		moral = new IntegerFormattedTextField(0, 3, 100, null);
 		moral.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		c.gridx++;
@@ -402,9 +400,7 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Muralha.toString()), c);
 
 		// Creating the checkbox to select option
-		muralha = new IntegerFormattedTextField(0, 2, 20) {
-			public void go() {}
-		};
+		muralha = new IntegerFormattedTextField(0, 2, 20, null);
 		muralha.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		c.gridx++;
@@ -440,9 +436,7 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Edificio.toString()), c);
 
 		// Creating the checkbox to select option
-		edifício = new IntegerFormattedTextField(0, 2) {
-			public void go() {}
-		};
+		edifício = new IntegerFormattedTextField(0, 2, null);
 		edifício.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		c.gridx++;
