@@ -35,7 +35,7 @@ public class ServerFileManager {
 		
 		if (new File(folder+fileName).exists()) {
 			conn.setConnectTimeout(2 * 1000);
-			conn.setReadTimeout(10 * 1000);
+			conn.setReadTimeout(5 * 1000);
 		}
 		conn.connect();
 		
@@ -49,7 +49,7 @@ public class ServerFileManager {
 		
 		JSONArray array = decodeOnlineText(builder.toString());
 		
-		saveServerJSON("br", array);
+		saveServerJSON(folder, array);
 		
 		return array;
 	}

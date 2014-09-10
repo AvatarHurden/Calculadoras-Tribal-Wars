@@ -16,7 +16,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import config.Lang;
@@ -123,8 +122,12 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         }
     }
 
-    public JButton getStartButton() {
+    public TWButton getStartButton() {
         return startButton;
+    }
+    
+    public TWEComboBox<World> getComboBox() {
+    	return selectionBox;
     }
 
     public void actionPerformed(ActionEvent e) {

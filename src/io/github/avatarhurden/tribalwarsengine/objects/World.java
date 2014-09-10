@@ -27,14 +27,14 @@ public class World {
 	
 	public World(JSONObject worldInfo) {
 		this.worldInfo = worldInfo;
-		downloader = new WorldFileManager("br", worldInfo);
+		downloader = new WorldFileManager("config/servers/br", worldInfo);
 		
 		// Caso o mundo seja speed, carrega todas as informações para atualização,
 		// devido à curta duração de cada mundo
 		if (worldInfo.getString("name").substring(2).contains("s"))
 			setInfo();
 		
-		basicInfo = setBasicInfo();
+		setBasicInfo();
 	}
 
 	public void setInfo() {
@@ -49,7 +49,7 @@ public class World {
 		if (armyModels == null)
 			setArmyModels(downloader.getArmyModels());
 		
-		basicInfo = makeBasicInfo();
+		makeBasicInfo();
 	}
 
 	private void setUnits(JSONArray array) {
@@ -76,15 +76,15 @@ public class World {
 			armyModels.add(new ArmyModel(array.getJSONObject(i)));
 	}
 	
-	private JSONObject setBasicInfo() {
+	private void setBasicInfo() {
 		try {
-			return downloader.getBasicConfig();
+			basicInfo = downloader.getBasicConfig();
 		} catch (Exception e) {
-			return makeBasicInfo();
+			setInfo();
 		}
 	}
 	
-	private JSONObject makeBasicInfo() {
+	private void makeBasicInfo() {
 		
 		JSONObject json = new JSONObject();
 		json.put("name", getPrettyName());
@@ -106,7 +106,7 @@ public class World {
 		
 		downloader.saveBasicConfig(json);
 		
-		return json;
+		basicInfo = json;
 	}
 	
 	public void addBuildingModel(BuildingBlockModel model) {

@@ -146,9 +146,9 @@ public class MainWindow extends JFrame {
      * mas somente se não tiver nenhum panel!
      */
     public void packPanels(Component parent) {
-        if (getComponents().length > 1) {
+    	if (body.getComponents().length > 1)
             return;
-        }
+        
         addPanel(new RecrutamentoPanel());
         addPanel(new DadosDeUnidadePanel());
         addPanel(new PontosPanel());

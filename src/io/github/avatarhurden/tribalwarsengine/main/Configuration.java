@@ -20,7 +20,11 @@ import org.json.JSONObject;
  */
 public class Configuration {
 	
-    private static final String configString = "config.json";
+	private static final String folder = "config";
+    private static final String worldFolder = "config/servers";
+    private static final String alertFolder = "config/alerts";
+	private static final String configString = "config/config.json";
+    
 
     private static Configuration instance;
     //Armazena as configurações
@@ -63,6 +67,9 @@ public class Configuration {
      */
     public void salvaConfigJSON() {
         try {
+        	
+        	createFolders();
+        	
             JSON.createJSONFile(config, configFile);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Não foi possivel salvar o arquivo de configuração.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -71,6 +78,9 @@ public class Configuration {
 
     private void loadConfigJSON() {
         try {
+        	
+        	createFolders();
+        	
             if (!configFile.exists())
             	JSON.createJSONFile(new JSONObject("{}"), configFile);
             
@@ -176,5 +186,16 @@ public class Configuration {
         finally {
             salvaConfigJSON();
         }
+    }
+    
+    private void createFolders() {
+    	if (!new File(folder).exists())
+    		new File(folder).mkdir();
+    	
+    	if (!new File(worldFolder).exists())
+    		new File(worldFolder).mkdir();
+    	
+    	if (!new File(alertFolder).exists())
+    		new File(alertFolder).mkdir();
     }
 }

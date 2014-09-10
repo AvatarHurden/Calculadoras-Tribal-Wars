@@ -10,7 +10,10 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -207,11 +210,27 @@ public class SelectWorldFrame extends JFrame {
         
         updateWorldInfoPanel();
 
-        getRootPane().setDefaultButton(selectionPanel.getStartButton());
+        addKeyListener();
         repaint();
-        requestFocus();
+        selectionPanel.getComboBox().requestFocus();
     }
-
+    
+    private void addKeyListener() {
+    	
+    	KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+    	
+    	manager.addKeyEventDispatcher(new KeyEventDispatcher() {
+			
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getID() == KeyEvent.KEY_PRESSED)
+					selectionPanel.getStartButton().doClick();
+				return false;
+			}
+		});
+    	
+    }
+    
     /**
      * Muda as informações da tabela, chamado toda vez que o mundo selecionado é
      * alterado

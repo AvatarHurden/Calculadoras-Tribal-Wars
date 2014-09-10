@@ -37,15 +37,8 @@ public class CoordenadaPanel extends JPanel{
 	 * <br>Above these spaces there is a header with the name of choice
 	 * @param String Name of choice
 	 */
-	public CoordenadaPanel(String nome, OnChange onChange) {
-		
-		this(nome, 0, 0);
-		if (onChange == null)
-			this.onChange = new OnChange() {
-				public void run() {}
-			};
-		else
-			this.onChange = onChange;
+	public CoordenadaPanel(String nome, OnChange onChange) {	
+		this(nome, 0, 0, onChange);
 	}
 	
 	/**
@@ -54,7 +47,14 @@ public class CoordenadaPanel extends JPanel{
 	 * @param String Name of choice
 	 * @param x, y Valores iniciais
 	 */
-	public CoordenadaPanel(String nome, int x, int y) {
+	public CoordenadaPanel(String nome, int x, int y, OnChange onChange) {
+		
+		if (onChange == null)
+			this.onChange = new OnChange() {
+				public void run() {}
+			};
+		else
+			this.onChange = onChange;
 		
 		// Creates the textFields
 		this.x = makeCoordinateTextField(x);

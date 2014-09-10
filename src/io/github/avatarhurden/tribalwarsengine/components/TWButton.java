@@ -57,7 +57,6 @@ public class TWButton extends JButton implements MouseListener {
         setBorder(border);
         addMouseListener(this);
         setContentAreaFilled(false);
-
     }
     
     public TWButton(String label) {
@@ -84,9 +83,7 @@ public class TWButton extends JButton implements MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-
-        //Desenha o interior do botão
-
+        
         //Se estiver desativo
         if( !isEnabled() ){
             g2d.setColor( backgroundUnable );
@@ -165,7 +162,12 @@ public class TWButton extends JButton implements MouseListener {
     	else
     		return super.getMinimumSize();
     }
-
+    
+    @Override 
+    public void doClick() {
+    	isPressed = true;
+    	super.doClick();
+    }
 
     public void mouseClicked(MouseEvent e) {}
 

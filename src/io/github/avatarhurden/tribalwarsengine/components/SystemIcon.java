@@ -71,16 +71,16 @@ public class SystemIcon implements ActionListener {
         String action = e.getActionCommand();
         switch (action) {
             case "select_world_frame":
-                main.openWorldSelection();
+                Main.openWorldSelection();
                 break;
             case "main_window_frame":
-                main.openMainFrame();
+                Main.openMainFrame();
                 break;
             case "look_for_updates":
                 main.lookForUpdate();
                 break;
             case "exit":
-               Main.exitProgram();
+            	Main.exitProgram();
         }
     }
 

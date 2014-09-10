@@ -2,7 +2,6 @@ package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertEditor;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable;
 
 import java.util.ArrayList;
 import java.util.Comparator;

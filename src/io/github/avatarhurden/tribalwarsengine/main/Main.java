@@ -69,7 +69,8 @@ public class Main {
         mainFrame.dispose();
         selectWorldFrame.setVisible(true);
         currentFrame = selectWorldFrame;
-        
+
+        Configuration.get();
         WorldManager.get();
         selectWorldFrame.addWorldPanel();
         

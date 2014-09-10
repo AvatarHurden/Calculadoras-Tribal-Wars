@@ -28,7 +28,7 @@ public class WorldManager {
 	}
 	
 	private void loadConfigs() {
-		JSONArray json = downloader.getServerJSON("br", "http://www.tribalwars.com.br");
+		JSONArray json = downloader.getServerJSON("config/servers/br", "http://www.tribalwars.com.br");
 		
 		worlds = new ArrayList<World>();
 		for (int i = 0; i < json.length(); i++)
