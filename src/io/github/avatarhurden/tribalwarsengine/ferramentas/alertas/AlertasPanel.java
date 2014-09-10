@@ -5,6 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
+import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
@@ -24,7 +25,7 @@ import javax.swing.JScrollPane;
 public class AlertasPanel extends Ferramenta {
 
     AlertTable table;
-    PopupManager popups = new PopupManager();
+    AlertManager manager;
 
     public AlertasPanel() {
 
@@ -82,7 +83,7 @@ public class AlertasPanel extends Ferramenta {
         Dimension d = MainWindow.getInstance().getPreferredSize();
         d.setSize(d.getWidth() - 50, 570);
 
-        table = AlertManager.getInstance().getTable();
+        table = new AlertTable();
         
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(d);
@@ -104,47 +105,57 @@ public class AlertasPanel extends Ferramenta {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
 
+        ActionListener action = makeActionListener();
+        
         JButton addAlerta = new TWButton("Criar Novo");
-        addAlerta.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	
-            	AlertManager.getInstance().createAlert();
-            		
-            }
-        });
+        addAlerta.addActionListener(action);
+        addAlerta.setActionCommand("add");
 
         JButton editAlerta = new TWSimpleButton("Editar");
-        editAlerta.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-                if (table.getSelectedRow() == -1)
-                    return;
-                
-                int row = table.convertRowIndexToModel(table.getSelectedRow());
-                
-                Alert selected = table.getAlert(row);
-
-                AlertManager.getInstance().createAlert(selected, true);      
-            }
-        });
-
+        editAlerta.addActionListener(action);
+        editAlerta.setActionCommand("edit");
+        
         JButton deleteAlerta = new TWSimpleButton("Deletar");
-        deleteAlerta.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-                int row = table.convertRowIndexToModel(table.getSelectedRow());
-
-                AlertManager.getInstance().removeAlert(table.getAlert(row));
-            }
-        });
-
+        deleteAlerta.addActionListener(action);
+        deleteAlerta.setActionCommand("delete");
+        
         panel.add(addAlerta);
         panel.add(editAlerta);
         panel.add(deleteAlerta);
 
         return panel;
+    }
+    
+    private ActionListener makeActionListener() {
+    	
+    	return new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				int row = table.convertRowIndexToModel(table.getSelectedRow());
+				
+				switch (e.getActionCommand()) {
+				case "add":
+					AlertManager.getInstance().createAlert();
+					break;
+				case "edit":
+					if (row == -1)
+						return;
+                
+					Alert selected = table.getAlert(row);
+
+					AlertManager.getInstance().createAlert(selected, true);  
+				case "delete":
+	                AlertManager.getInstance().removeAlert(table.getAlert(row));
+				default:
+					break;
+				}
+				
+				table.changedAlert();
+				
+			}
+		};
+    	
     }
 
 }

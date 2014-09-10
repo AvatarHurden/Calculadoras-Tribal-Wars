@@ -88,7 +88,6 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridy = 0;
 		c.gridx = 0;
 		
-		
 		// Add reset button
 		c.anchor = GridBagConstraints.WEST;
 		add(tools.addResetPanel(getResetButtonAction()), c);
@@ -110,7 +109,6 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.gridx = 0;
 		c.gridy++;
 		c.gridwidth = 2;
-		c.gridheight = 2;
 		c.anchor = GridBagConstraints.NORTH;
 		add(armyEdit, c);
 		
@@ -121,12 +119,17 @@ public class AssistenteSaquePanel extends Ferramenta{
 		container.add(panelRecomendado);
 		
 		c.gridx += 2;
+		c.gridy = 0;
 		c.gridwidth = 1;
+		c.gridheight = 2;
+		c.insets = new Insets(25, 5, 5, 5);
 		add(container, c);
 		
 		// Add the panel that receives input for interval calculations 
 		c.gridy++;
 		c.gridx++;
+		c.gridheight = 1;
+		c.insets = new Insets(5, 5, 5, 5);
 		add(panelIntervalo, c);
 		
 		// Separar as duas funções

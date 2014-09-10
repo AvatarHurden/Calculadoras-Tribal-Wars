@@ -1,6 +1,8 @@
-package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
+package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
@@ -11,11 +13,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,19 +102,21 @@ public class PopupManager {
 		
 	}
 	
-	@SuppressWarnings("serial")
 	private class PopupGUI extends JDialog {
 		
 		private Thread closeThread;
+		
+		private Alert alerta;
 		
 		/**
 		 * Cria o JDialog do popup
 		 * @param alerta
 		 */
 		private PopupGUI(Alert alerta) {
-			
 			if (alerta == null)
 				return;
+			
+			this.alerta = alerta;
 			
 			setCloseTime();
 			
@@ -157,7 +160,7 @@ public class PopupManager {
 			c.gridy++;
 			c.gridwidth = 3;
 			c.fill = GridBagConstraints.HORIZONTAL;
-			add(makeSpoilerPanel(makeInfoPanel(alerta, getPreferredSize().width)), c);
+			add(makeSpoilerPanel(makeInfoPanel(getPreferredSize().width)), c);
 			
 			JLabel datelbl = new JLabel();
 			datelbl.setFont(datelbl.getFont().deriveFont((float) 15));
@@ -167,7 +170,7 @@ public class PopupManager {
 			c.gridy++;
 			add(datelbl, c);
 			
-			setSize(new Dimension(200,114));
+			setSize(new Dimension(240,114));
 			
 			addFocusListener();
 			
@@ -200,7 +203,8 @@ public class PopupManager {
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 			
 			c.anchor = GridBagConstraints.WEST;
-			panel.add(new JLabel("Tribal Wars Engine", icon, SwingConstants.LEFT), c);
+			panel.add(new JLabel("Tribal Wars Engine - " + alerta.getWorld().getPrettyName(),
+					icon, SwingConstants.LEFT), c);
 			
 			JLabel closelbl = new JLabel("X");
 			closelbl.addMouseListener(new MouseAdapter() {
@@ -259,17 +263,20 @@ public class PopupManager {
 			
 			final JLabel label = new JLabel(icon, SwingConstants.RIGHT);
 			label.setPreferredSize(new Dimension(getPreferredSize().width, 18));
+			label.setHorizontalTextPosition(SwingConstants.LEADING);
 			
 			label.addMouseListener(new MouseAdapter() {
 				
 				@Override
 				public void mouseExited(MouseEvent e) {
 					panel.setBackground(Cores.ALTERNAR_CLARO);
+					label.setText("");
 				}
 				
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					panel.setBackground(Cores.ALTERNAR_ESCURO);
+					label.setText("Mais Informações");
 				}
 				
 				@Override
@@ -298,7 +305,7 @@ public class PopupManager {
 		 * @param width do JPanel
 		 * @return JPanel
 		 */
-		private JPanel makeInfoPanel(Alert alerta, int width) {
+		private JPanel makeInfoPanel(int width) {
 			
 			JPanel panel = new JPanel();
 			panel.setOpaque(true);
@@ -517,17 +524,6 @@ public class PopupManager {
 		
 		private void addFocusListener() {
 			
-			addWindowFocusListener(new WindowFocusListener() {
-				
-				@Override
-				public void windowLostFocus(WindowEvent arg0) {
-					setCloseTime();
-				}
-				
-				@Override
-				public void windowGainedFocus(WindowEvent arg0) {}
-			});
-			
 			addMouseListener(new MouseAdapter() {
 				
 				@Override
@@ -536,8 +532,21 @@ public class PopupManager {
 						closeThread.interrupt();
 					}
 				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					if (isOutside(e.getLocationOnScreen()))
+							setCloseTime();
+				}
 			});
 			
+		}
+		
+		private boolean isOutside(Point point) {
+			return 	point.x < getLocationOnScreen().x ||
+					point.x > getLocationOnScreen().x + getWidth() ||
+					point.y < getLocationOnScreen().y ||
+					point.y > getLocationOnScreen().y + getHeight();
 		}
 		
 	}

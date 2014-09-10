@@ -1,4 +1,8 @@
-package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
+package io.github.avatarhurden.tribalwarsengine.managers;
+
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertEditor;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -39,7 +43,6 @@ public class AlertManager {
 	// Timer com o qual marcar as tasks
 	Timer timer;
 	
-	private AlertTable table;
 	private PopupManager popups;
 	
 	private AlertManager() {
@@ -112,7 +115,6 @@ public class AlertManager {
 
 		alerts.add(alerta);
 		
-		getTable().changedAlert();
 		addToSchedule(alerta);
 		
 	}
@@ -128,7 +130,6 @@ public class AlertManager {
 		alerts.remove(position);
 		alerts.add(position, alerta);
 		
-		getTable().changedAlert();
 		removeFromSchedule(oldAlerta);
 		addToSchedule(alerta);
 	}
@@ -141,7 +142,6 @@ public class AlertManager {
 	
 		alerts.remove(alerta);
 		
-		table.changedAlert();
 		removeFromSchedule(alerta);
 		
 	}
@@ -152,12 +152,6 @@ public class AlertManager {
 	
 	public List<Alert> getAlertList() {
 		return alerts;
-	}
-	
-	public AlertTable getTable() {
-		if (table == null)
-			table = new AlertTable();
-		return table;
 	}
 	
 	/**

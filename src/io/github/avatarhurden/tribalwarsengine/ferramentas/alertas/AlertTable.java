@@ -5,6 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
+import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
@@ -56,7 +57,6 @@ import org.json.JSONArray;
 
 import sun.swing.table.DefaultTableCellHeaderRenderer;
 
-@SuppressWarnings("serial")
 /**
  * Classe para representar, em uma JTable, objetos da classe Alert
  * 

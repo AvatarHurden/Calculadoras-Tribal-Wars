@@ -51,24 +51,10 @@ public class WorldFileManager {
 	
 	public JSONObject getWorldConfig() {
 		try {
-			return getConfigLocal();
-		} catch (Exception e) {
-			return tryGetConfigOnline();
-		}
-	}
-	
-	private JSONObject getConfigLocal() throws Exception {
-		JSONObject object = JSON.getJSON(folder+configFile);
-		
-		return object;
-	}
-	
-	private JSONObject tryGetConfigOnline() {
-		try {
 			return getConfigOnline();
 		} catch (Exception e) {
-			displayErrorMessageAndExit();
-			return null;
+			e.printStackTrace();
+			return tryGetConfigLocal();
 		}
 	}
 	
@@ -80,6 +66,21 @@ public class WorldFileManager {
 		saveWorldConfig(worldJson);
 		
 		return worldJson;
+	}
+	
+	private JSONObject tryGetConfigLocal() {
+		try {
+			return getConfigLocal();
+		} catch (Exception e) {
+			displayErrorMessageAndExit();
+			return null;
+		}
+	}
+
+	private JSONObject getConfigLocal() throws Exception {
+		JSONObject object = JSON.getJSON(folder+configFile);
+		
+		return object;
 	}
 	
 	private JSONObject getJSONFromNode(Node node) {
@@ -104,24 +105,9 @@ public class WorldFileManager {
 	
 	public JSONArray getUnitConfig() {
 		try {
-			return getLocalUnitConfig();
-		} catch (Exception e) {
-			return tryGetOnlineUnitConfig();
-		}
-	}
-	
-	private JSONArray getLocalUnitConfig() throws Exception {
-		JSONArray array = JSON.getJSON(folder+unitFile).getJSONArray("units");
-		
-		return array;
-	}
-	
-	private JSONArray tryGetOnlineUnitConfig() {
-		try {
 			return getOnlineUnitConfig();
 		} catch (Exception e) {
-			displayErrorMessageAndExit();
-			return null;
+			return tryGetLocalUnitConfig();
 		}
 	}
 	
@@ -132,6 +118,21 @@ public class WorldFileManager {
 		JSONArray array = getJSONArrayFromNode(doc.getDocumentElement());
 		
 		saveUnitConfig(array);
+		
+		return array;
+	}
+
+	private JSONArray tryGetLocalUnitConfig() {
+		try {
+			return getLocalUnitConfig();
+		} catch (Exception e) {
+			displayErrorMessageAndExit();
+			return null;
+		}
+	}
+	
+	private JSONArray getLocalUnitConfig() throws Exception {
+		JSONArray array = JSON.getJSON(folder+unitFile).getJSONArray("units");
 		
 		return array;
 	}
@@ -155,27 +156,12 @@ public class WorldFileManager {
 	
 	public JSONArray getBuildingConfig() {
 		try {
-			return getLocalBuildingConfig();
-		} catch (Exception e) {
-			return tryGetOnlineBuildingConfig();
-		}
-	}
-	
-	private JSONArray getLocalBuildingConfig() throws Exception {
-		JSONArray array = JSON.getJSON(folder+buildingFile).getJSONArray("buildings");
-		
-		return array;
-	}
-	
-	private JSONArray tryGetOnlineBuildingConfig() {
-		try {
 			return getOnlineBuildingConfig();
 		} catch (Exception e) {
-			displayErrorMessageAndExit();
-			return null;
+			return tryGetLocalBuildingConfig();
 		}
 	}
-	
+
 	private JSONArray getOnlineBuildingConfig() throws Exception {
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = docBuilder.parse(new URL(json.getString("address")+buildingFunction).openStream());
@@ -183,6 +169,21 @@ public class WorldFileManager {
 		JSONArray array = getJSONArrayFromNode(doc.getDocumentElement());
 		
 		saveBuildingConfig(array);
+		
+		return array;
+	}
+	
+	private JSONArray tryGetLocalBuildingConfig() {
+		try {
+			return getLocalBuildingConfig();
+		} catch (Exception e) {
+			displayErrorMessageAndExit();
+			return null;
+		}
+	}
+
+	private JSONArray getLocalBuildingConfig() throws Exception {
+		JSONArray array = JSON.getJSON(folder+buildingFile).getJSONArray("buildings");
 		
 		return array;
 	}

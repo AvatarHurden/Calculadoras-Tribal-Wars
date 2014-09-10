@@ -57,7 +57,6 @@ public class WorldManager {
     
     public void setSelectedWorld(World world) {
     	selectedWorld = world;
-    	selectedWorld.setInfo();
     }
     
     public void setSelectedWorld(String world) {

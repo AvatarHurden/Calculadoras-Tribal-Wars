@@ -89,7 +89,7 @@ public class AlertEditor extends JDialog{
 	/**
 	 * Cria um editor em branco.
 	 */
-	protected AlertEditor() {
+	public AlertEditor() {
 		
 		setResizable(false);
 		

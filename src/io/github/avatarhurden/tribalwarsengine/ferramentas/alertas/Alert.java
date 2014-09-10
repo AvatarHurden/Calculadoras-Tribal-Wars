@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 
 import java.util.Collections;
@@ -156,5 +157,9 @@ public class Alert {
     	retorno.addAll(avisos);
     	
         return retorno;
+    }
+    
+    public World getWorld() {
+    	return WorldManager.get().getWorldByName(worldName);
     }
 }
