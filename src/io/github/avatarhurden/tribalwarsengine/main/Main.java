@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.main;
 import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 import java.awt.Font;
@@ -108,6 +109,8 @@ public class Main {
     public static void exitProgram() {
     	
     	Configuration config = Configuration.get();
+    	
+    	AlertManager.getInstance().save();
     	
     	JSONObject location = new JSONObject();
     	location.put("x", currentFrame.getLocationOnScreen().x);

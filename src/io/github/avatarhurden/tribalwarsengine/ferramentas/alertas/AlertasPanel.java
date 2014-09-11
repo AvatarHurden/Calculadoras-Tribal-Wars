@@ -65,7 +65,7 @@ public class AlertasPanel extends Ferramenta {
 
             Date now = new Date();
 
-            alerta.setHorário(new Date(now.getTime() + (7-i) * 1000));
+            alerta.setHorário(new Date(now.getTime() + i * 100000));
 
             alerta.setRepete((long) (Math.random() * 100000000));
             
@@ -82,7 +82,7 @@ public class AlertasPanel extends Ferramenta {
 
         Dimension d = MainWindow.getInstance().getPreferredSize();
         d.setSize(d.getWidth() - 50, 570);
-
+        
         table = new AlertTable();
         
         JScrollPane scrollPane = new JScrollPane(table);
@@ -145,6 +145,7 @@ public class AlertasPanel extends Ferramenta {
 					Alert selected = table.getAlert(row);
 
 					AlertManager.getInstance().createAlert(selected, true);  
+					break;
 				case "delete":
 	                AlertManager.getInstance().removeAlert(table.getAlert(row));
 				default:

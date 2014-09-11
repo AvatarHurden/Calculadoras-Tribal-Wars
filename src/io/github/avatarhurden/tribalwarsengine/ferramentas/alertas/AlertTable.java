@@ -115,8 +115,13 @@ public class AlertTable extends JTable{
 		// Change the positions and widths of the columns
 		
 		// Default values, if there are no saved
-		int[] default_order = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
-		int[] default_widths = new int[] { 314, 86, 210, 210, 207, 219, 134, 108 };
+		int[] default_order = new int[] { 0, 7, 1, 8, 2, 3, 4, 5, 6 };
+		int[] default_widths = new int[] { 279, 76, 95, 144, 193, 193, 185, 217, 206 };
+		
+		int sum = 0;
+		for (int i = 0; i < default_widths.length; sum+= default_widths[i++]);
+		
+		System.out.println(sum);
 		
 		Configuration config = Configuration.get();
 		JSONArray order, widths;
@@ -573,6 +578,7 @@ public class AlertTable extends JTable{
 			case 5: return alerts.get(0).getHorário().getClass();
 			case 6: return alerts.get(0).getRepete().getClass();
 			case 7: return alerts.get(0).getNotas().getClass();
+			case 8 : return String.class;
 			default: return null;
 		}
 			
@@ -580,7 +586,7 @@ public class AlertTable extends JTable{
 
 		@Override
 		public int getColumnCount() {
-			return 8;
+			return 9;
 		}
 
 		@Override
@@ -595,8 +601,9 @@ public class AlertTable extends JTable{
 				case 5: return "Horário";
 				case 6: return "Repete";
 				case 7: return "Notas";
+				case 8: return "Mundo";
 				default: return null;
-			}
+			}	
 			
 		}
 
@@ -621,6 +628,7 @@ public class AlertTable extends JTable{
 				case 5: return alerts.get(row).getHorário();
 				case 6: return (alerts.get(row).getRepete() != null) ? alerts.get(row).getRepete() : 0;
 				case 7: return (alerts.get(row).getNotas() != null) ? alerts.get(row).getNotas() : "";
+				case 8: return alerts.get(row).getWorld().getPrettyName();
 				default: return alerts.get(row);
 			}
 			
@@ -639,7 +647,6 @@ public class AlertTable extends JTable{
 			
 			// The only one to be changed this way is the notes
 			if (column == 7)
-				
 				alerts.get(row).setNotas((String) obj);
 			
 			

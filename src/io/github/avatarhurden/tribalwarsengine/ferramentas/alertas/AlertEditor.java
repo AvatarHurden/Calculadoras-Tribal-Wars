@@ -2,10 +2,13 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
+import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.objects.World;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
@@ -62,6 +65,8 @@ public class AlertEditor extends JDialog{
 	// Qual o tipo do alerta
 	private JPanel[] tipos;
 	
+	private TWEComboBox<World> worldSelector;
+	
 	// Aldeia de origem
 	private CoordenadaPanel origemCoord;
 	private JTextField origemNome;
@@ -116,6 +121,9 @@ public class AlertEditor extends JDialog{
 		
 		c.gridy++;
 		panel.add(makeDataPanel(), c);
+		
+		c.gridy++;
+		panel.add(makeWorldPanel(), c);
 		
 		c.gridwidth = 1;
 		c.gridy++;
@@ -197,6 +205,10 @@ public class AlertEditor extends JDialog{
 				break;
 			}
 		
+		World world = alerta.getWorld();
+		if (world != null)
+			worldSelector.setSelectedItem(world);
+		
 		Aldeia origem = alerta.getOrigem();
 		if (origem != null) {
 			origemCoord.setCoordenadas(origem.x, origem.y);
@@ -263,6 +275,8 @@ public class AlertEditor extends JDialog{
 		for (int i = 0; i < 4; i++)
 			if (tipos[i].getBackground().equals(Cores.FUNDO_ESCURO))
 				alerta.setTipo(Tipo.values()[i]);
+		
+		alerta.setWorld((World) worldSelector.getSelectedItem());
 		
 		alerta.setOrigem(new Aldeia(origemNome.getText(), origemCoord.getCoordenadaX(), origemCoord.getCoordenadaY()));
 		
@@ -373,6 +387,24 @@ public class AlertEditor extends JDialog{
 			c.gridx++;
 			panel.add(tipos[i], c);
 		}
+		
+		return panel;
+	}
+	
+	private JPanel makeWorldPanel() {
+		
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Mundo"));
+
+		worldSelector = new TWEComboBox<World>();
+		
+		for (World w : WorldManager.get().getList())
+			worldSelector.addItem(w);
+	
+		worldSelector.setSelectedItem(WorldManager.getSelectedWorld());
+	
+		panel.add(worldSelector);
 		
 		return panel;
 	}

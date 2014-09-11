@@ -20,9 +20,9 @@ import org.json.JSONObject;
  */
 public class Configuration {
 	
-	private static final String folder = "config";
-    private static final String worldFolder = "config/servers";
-    private static final String alertFolder = "config/alerts";
+	public static final String folder = "config";
+    public static final String worldFolder = "config/servers";
+    public static final String alertFolder = "config/alerts";
 	private static final String configString = "config/config.json";
     
 
@@ -87,7 +87,7 @@ public class Configuration {
             config = JSON.getJSON(configFile);
            
         } catch (IOException e) {
-            JOptionPane.showMessageDialog( frame, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog( frame, "Não foi possível carregar o arquivo de configurações.\n Favor reiniciar o programa.", "Erro", JOptionPane.ERROR_MESSAGE);
             config = new JSONObject("{}");
             return;
         }

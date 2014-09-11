@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertEditor;
+import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +17,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * Classe que cuida de todos os alertas. Possui instância estática, à qual deve ser adicionado
  * qualquer alerta a ser criado.
@@ -24,6 +31,8 @@ import java.util.TreeSet;
  *
  */
 public class AlertManager {
+	
+	private AlertFileManager fileManager;
 
 	private static AlertManager instance = new AlertManager();
 	
@@ -34,8 +43,8 @@ public class AlertManager {
 	
 	// Conjunto de objetos que ligam alertas a stacks de datas, com os horários ainda não mostrados
 	private TreeSet<AlertStack> dates;
-	// Horário que o próximo TimerTask deve ser criado, para evitar ter muitos Threads rodando
-	Date nextTimerDate;
+	// Horário em que o último TimerTask marcado vai rodar, para evitar ter muitos Threads rodando
+	Date lastScheduledDate;
 	
 	// Mapa que liga alertas a tarefas rodando, para poder cancelar se necessário
 	private Map<Alert, TimerTask> tasksRodando = new HashMap<Alert, TimerTask>();
@@ -63,6 +72,27 @@ public class AlertManager {
 		};		
 
 		popups = new PopupManager();
+	
+		fileManager = new AlertFileManager(Configuration.alertFolder);
+		
+		loadSaved(fileManager.getAlertList());
+	}
+	
+	private void loadSaved(JSONArray array) {
+		Gson gson = new Gson();
+		
+		for (int i = 0; i < array.length(); i++)
+			addAlert(gson.fromJson(array.get(i).toString(), Alert.class));
+	}
+	
+	public void save() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JSONArray array = new JSONArray();
+		
+		for (Alert a : alerts)
+			array.put(new JSONObject(gson.toJson(a)));
+		
+		fileManager.saveAlertList(array);
 	}
 	
 	/**
@@ -173,8 +203,8 @@ public class AlertManager {
 
 		dates.add(stack);
 		
-		if (tasksRodando.isEmpty() || nextTimerDate == null 
-				|| (!avisos.isEmpty() && nextTimerDate.compareTo(avisos.peek()) > 0))
+		if (tasksRodando.isEmpty() || lastScheduledDate == null 
+				|| (!avisos.isEmpty() && lastScheduledDate.compareTo(avisos.peek()) > 0))
 			schedule(stack);
 		
 	}
@@ -231,7 +261,7 @@ public class AlertManager {
 			});
 			
 			timer.schedule(tasksRodando.get(a.alert), date);
-			nextTimerDate = date; 
+			lastScheduledDate = date; 
 		}
 	}
 	

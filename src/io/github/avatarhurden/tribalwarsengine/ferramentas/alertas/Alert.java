@@ -107,6 +107,10 @@ public class Alert {
 		});
     }
 
+    public void setWorld(World world) {
+    	worldName = world.getName();
+    }
+    
     public Tipo getTipo() {
         return tipo;
     }
