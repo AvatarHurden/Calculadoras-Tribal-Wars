@@ -13,11 +13,14 @@ import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,6 +48,7 @@ public class AlertasPanel extends Ferramenta {
             alerta.setNome("Nome" + i);
 
             alerta.setNotas(i + "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pellentesque rhoncus dignissim. Phasellus pulvinar ut nunc non congue. Quisque lacus eros, porta malesuada tempor quis, luctus in est. Maecenas in congue tellus, eu rhoncus nulla. Maecenas metus neque, varius in vulputate id, sodales a ante. Donec sit amet laoreet ligula. Vestibulum blandit commodo volutpat.");
+            alerta.setNotas("https://www.google.com.br/search?q=java+unite+array+of+strings&oq=java+unite+array+of+strings&aqs=chrome..69i57.3847j0j0&sourceid=chrome&es_sm=122&ie=UTF-8");
             alerta.setTipo(Tipo.values()[i % 4]);
             alerta.setOrigem(new Aldeia("Origem" + i, i * 111, i * 55));
             alerta.setDestino(new Aldeia("Destino" + i, i * 11, i * 555));
@@ -65,7 +69,7 @@ public class AlertasPanel extends Ferramenta {
 
             Date now = new Date();
 
-            alerta.setHorário(new Date(now.getTime() + i * 100000));
+            alerta.setHorário(new Date(now.getTime() + i * 1000));
 
             alerta.setRepete((long) (Math.random() * 100000000));
             
@@ -90,14 +94,38 @@ public class AlertasPanel extends Ferramenta {
         table.setFillsViewportHeight(true);
 
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(5, 5, 5, 5);
         c.gridx = 0;
         c.gridy = 0;
+        
+        c.anchor = GridBagConstraints.EAST;
+        add(makeOptionsButton(), c);
 
+        c.gridy++;
+        c.anchor = GridBagConstraints.CENTER;
         add(scrollPane, c);
 
         c.gridy++;
         add(makeButtonPanels(), c);
 
+    }
+    
+    private JButton makeOptionsButton() {
+    	
+    	JButton button = new TWSimpleButton();
+        button.setPreferredSize(new Dimension(20, 20));
+        
+    	button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+                AlertasPanel.class.getResource("/images/edit_icon.png"))));
+    	
+    	button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new AlertConfigEditor();
+			}
+		});
+    
+    	return button;
     }
 
     private JPanel makeButtonPanels() {
@@ -131,9 +159,12 @@ public class AlertasPanel extends Ferramenta {
     	return new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				
-				int row = table.convertRowIndexToModel(table.getSelectedRow());
-				
+				int row;
+				try {
+					row = table.convertRowIndexToModel(table.getSelectedRow());
+				} catch (Exception exc) {
+					row = -1;
+				}
 				switch (e.getActionCommand()) {
 				case "add":
 					AlertManager.getInstance().createAlert();
@@ -147,7 +178,8 @@ public class AlertasPanel extends Ferramenta {
 					AlertManager.getInstance().createAlert(selected, true);  
 					break;
 				case "delete":
-	                AlertManager.getInstance().removeAlert(table.getAlert(row));
+					AlertManager.getInstance().removeAlert(table.getAlert(row));
+					break;
 				default:
 					break;
 				}

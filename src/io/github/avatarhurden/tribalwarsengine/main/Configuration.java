@@ -78,7 +78,6 @@ public class Configuration {
 
     private void loadConfigJSON() {
         try {
-        	
         	createFolders();
         	
             if (!configFile.exists())

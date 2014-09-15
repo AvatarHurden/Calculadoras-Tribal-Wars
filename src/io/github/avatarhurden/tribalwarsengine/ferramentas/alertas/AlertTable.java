@@ -4,7 +4,6 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
-import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
@@ -118,16 +117,10 @@ public class AlertTable extends JTable{
 		int[] default_order = new int[] { 0, 7, 1, 8, 2, 3, 4, 5, 6 };
 		int[] default_widths = new int[] { 279, 76, 95, 144, 193, 193, 185, 217, 206 };
 		
-		int sum = 0;
-		for (int i = 0; i < default_widths.length; sum+= default_widths[i++]);
-		
-		System.out.println(sum);
-		
-		Configuration config = Configuration.get();
 		JSONArray order, widths;
 		
-		order = config.getConfig("column_order", new JSONArray(default_order));
-		widths = config.getConfig("column_width", new JSONArray(default_widths));
+		order = (JSONArray) AlertManager.getInstance().getConfig("column_order", new JSONArray(default_order));
+		widths = (JSONArray) AlertManager.getInstance().getConfig("column_width", new JSONArray(default_widths));
 		
 		TableColumn column[] = new TableColumn[order.length()];
 		
@@ -159,7 +152,7 @@ public class AlertTable extends JTable{
 				for (int i = 0; i < order.length; i++)
 					order[i] = getColumnModel().getColumn(i).getModelIndex();
 				
-				Configuration.get().setConfig("column_order", new JSONArray(order));
+				AlertManager.getInstance().setConfig("column_order", new JSONArray(order));
 				
 				
 			}
@@ -171,7 +164,7 @@ public class AlertTable extends JTable{
 				for (int i = 0; i < width.length; i++)
 					width[i] = getColumnModel().getColumn(i).getPreferredWidth();
 				
-				Configuration.get().setConfig("column_width", new JSONArray(width));
+				AlertManager.getInstance().setConfig("column_width", new JSONArray(width));
 			}
 			
 			@Override

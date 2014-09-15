@@ -12,12 +12,30 @@ public class AlertFileManager {
 	
 	private final String fileName = "/alerts.json";
 	private final String pastFileName = "/pastAlerts.json";
+	private final String configFileName = "/config.json";
 	
 	private String parentFolder;
 	
 	public AlertFileManager(String folder) {
 		parentFolder = folder;
 	}
+
+	public void saveConfig(JSONObject json) {
+		try {
+			JSON.createJSONFile(json, new File(parentFolder + configFileName));
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	public JSONObject getConfig() {
+		try {
+			return JSON.getJSON(new File(parentFolder + configFileName));
+		} catch (Exception e) {
+			return new JSONObject();
+		}
+	}
+	
 	
 	public void saveAlertList(JSONArray alerts) {
 		String file = parentFolder + fileName;

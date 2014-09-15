@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +34,7 @@ import com.google.gson.GsonBuilder;
 public class AlertManager {
 	
 	private AlertFileManager fileManager;
+	private JSONObject config;
 
 	private static AlertManager instance = new AlertManager();
 	
@@ -74,8 +76,10 @@ public class AlertManager {
 		popups = new PopupManager();
 	
 		fileManager = new AlertFileManager(Configuration.alertFolder);
-		
+
+		config = fileManager.getConfig();
 		loadSaved(fileManager.getAlertList());
+		loadPast(fileManager.getPastAlertList());
 	}
 	
 	private void loadSaved(JSONArray array) {
@@ -85,14 +89,28 @@ public class AlertManager {
 			addAlert(gson.fromJson(array.get(i).toString(), Alert.class));
 	}
 	
+	private void loadPast(JSONArray array) {
+		Gson gson = new Gson();
+		
+		for (int i = 0; i < array.length(); i++)
+			addAlert(gson.fromJson(array.get(i).toString(), Alert.class));
+	}
+	
 	public void save() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JSONArray array = new JSONArray();
+		JSONArray current = new JSONArray();
 		
 		for (Alert a : alerts)
-			array.put(new JSONObject(gson.toJson(a)));
+			current.put(new JSONObject(gson.toJson(a)));
 		
-		fileManager.saveAlertList(array);
+		JSONArray past = new JSONArray();
+		
+		for (Alert a : pastAlerts)
+			past.put(new JSONObject(gson.toJson(a)));
+		
+		fileManager.saveAlertList(current);
+		fileManager.savePastAlertList(past);
+		fileManager.saveConfig(config);
 	}
 	
 	/**
@@ -141,11 +159,7 @@ public class AlertManager {
 	 * @param alerta a ser adicionado
 	 */
 	public void addAlert(Alert alerta) {
-
-		alerts.add(alerta);
-		
 		addToSchedule(alerta);
-		
 	}
 	
 	/**
@@ -200,13 +214,12 @@ public class AlertManager {
 				it.remove();
 		
 		AlertStack stack = new AlertStack(alerta, avisos);
-
-		dates.add(stack);
+		
+		putAlertInList(stack);
 		
 		if (tasksRodando.isEmpty() || lastScheduledDate == null 
 				|| (!avisos.isEmpty() && lastScheduledDate.compareTo(avisos.peek()) > 0))
 			schedule(stack);
-		
 	}
 	
 	/**
@@ -251,6 +264,7 @@ public class AlertManager {
 					popups.showNewPopup(a.alert);
 					tasksRodando.remove(a.alert);
 					pastAlerts.add(a.alert);
+					alerts.remove(a.alert);
 					cancel();
 					if (next != null)
 						schedule(next);
@@ -291,6 +305,25 @@ public class AlertManager {
 		
 	}
 	
+	private void putAlertInList(AlertStack stack) {
+		
+		if (stack.dates.isEmpty()) {
+			
+			Date toDelete = new Date(System.currentTimeMillis() 
+					- TimeUnit.HOURS.toMillis(config.optInt("deletion_time", 1)));
+			
+			if (stack.alert.getHorário().after(toDelete))
+				pastAlerts.add(stack.alert);
+			else
+				System.out.println("before");
+		} else {
+			
+			alerts.add(stack.alert);
+			dates.add(stack);
+		
+		}
+	}
+	
 	/**
 	 * Cria um comparador entre aldeias. No comparador, o menor valor é aquele que possui um horário mais
 	 * cedo.
@@ -324,4 +357,19 @@ public class AlertManager {
 
 	}
 	
+	public JSONObject getConfig() {
+		return config;
+	}
+	
+	public Object getConfig(String name, Object value) {
+		try {
+			return config.get(name);
+		} catch (Exception e) {
+			return value;
+		}
+	}
+	
+	public void setConfig(String name, Object value) {
+		config.put(name, value);
+	}
 }

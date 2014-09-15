@@ -8,6 +8,7 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +35,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 
 /**
@@ -355,7 +358,7 @@ public class PopupManager {
 			} else
 				notesWidth = width;
 			
-			notas = makeNotasPanel(alerta.getNotas(), notesWidth);
+			notas = makeNotasPanel(alerta.getNotasParsed(), notesWidth);
 			
 			c.fill = GridBagConstraints.BOTH;
 			c.gridwidth = 2;
@@ -468,7 +471,20 @@ public class PopupManager {
 			c.fill = GridBagConstraints.BOTH;
 			
 			JTextPane notes = new JTextPane();
+			notes.setEditorKit(JTextPane.createEditorKitForContentType("text/html"));
 			notes.setText(nota);
+			
+			notes.addHyperlinkListener(new HyperlinkListener() {
+				public void hyperlinkUpdate(HyperlinkEvent e) {
+					if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+						if(Desktop.isDesktopSupported())
+							try {
+								Desktop.getDesktop().browse(e.getURL().toURI());
+							} catch (Exception exc) {
+								exc.printStackTrace();
+							}
+				}
+			});
 			
 			notes.setEditable(false);
 			notes.setOpaque(false);

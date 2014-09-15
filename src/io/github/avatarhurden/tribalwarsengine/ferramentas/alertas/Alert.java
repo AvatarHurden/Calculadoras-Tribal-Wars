@@ -122,6 +122,13 @@ public class Alert {
     public String getNotas() {
         return notas;
     }
+    
+    /**
+     * Retorna as notas com os links parseados em URLs
+     */
+    public String getNotasParsed() {
+    	return parseNotas();
+    }
 
     public Date getHorário() {
         return horário;
@@ -165,5 +172,20 @@ public class Alert {
     
     public World getWorld() {
     	return WorldManager.get().getWorldByName(worldName);
+    }
+    
+    private String parseNotas() {
+    	
+    	String[] words = notas.split(" ");
+    	String result = "";
+    	
+    	for (String s : words) {
+    		if (s.startsWith("http://") || s.startsWith("https://"))
+    			s = "<a href=\"" + s + "\">" + s + "</a>";
+    		
+    		result += " " + s;
+    	}
+    	
+    	return result;
     }
 }
