@@ -98,10 +98,11 @@ public class AlertasPanel extends Ferramenta {
         c.gridx = 0;
         c.gridy = 0;
         
-        c.anchor = GridBagConstraints.EAST;
+        c.gridx++;
+        c.anchor = GridBagConstraints.NORTHEAST;
         add(makeOptionsButton(), c);
 
-        c.gridy++;
+        c.gridx = 0;
         c.anchor = GridBagConstraints.CENTER;
         add(scrollPane, c);
 
@@ -167,7 +168,9 @@ public class AlertasPanel extends Ferramenta {
 				}
 				switch (e.getActionCommand()) {
 				case "add":
-					AlertManager.getInstance().createAlert();
+					Alert alerta = AlertManager.getInstance().createAlert();
+					if (alerta != null)
+						table.addAlert(alerta);
 					break;
 				case "edit":
 					if (row == -1)
@@ -175,17 +178,16 @@ public class AlertasPanel extends Ferramenta {
                 
 					Alert selected = table.getAlert(row);
 
-					AlertManager.getInstance().createAlert(selected, true);  
+					selected = AlertManager.getInstance().createAlert(selected, true);
+					table.editAlert(row, selected);
 					break;
 				case "delete":
 					AlertManager.getInstance().removeAlert(table.getAlert(row));
+					table.deleteAlert(row);
 					break;
 				default:
 					break;
 				}
-				
-				table.changedAlert();
-				
 			}
 		};
     	

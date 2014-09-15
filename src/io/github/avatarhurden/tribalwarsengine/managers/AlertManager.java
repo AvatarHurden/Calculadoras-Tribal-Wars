@@ -118,7 +118,7 @@ public class AlertManager {
 	 * esse Alert à lista é feita por essa função, dependendo se o usuário clicou em "salvar" ou
 	 * "cancelar"
 	 */
-	public void createAlert() {
+	public Alert createAlert() {
 		
 		AlertEditor editor = new AlertEditor();
 		
@@ -130,6 +130,7 @@ public class AlertManager {
 		if (alerta != null)
 			addAlert(alerta);
 		
+		return alerta;
 	}
 	
 	/**
@@ -137,7 +138,7 @@ public class AlertManager {
 	 * @param alerta pré-feito
 	 * @param existente, se ele já está estava incluído na lista ou não.
 	 */
-	public void createAlert(Alert oldAlerta, boolean existente) {
+	public Alert createAlert(Alert oldAlerta, boolean existente) {
 		
 		AlertEditor editor = new AlertEditor(oldAlerta);
 		
@@ -152,6 +153,7 @@ public class AlertManager {
 			else
 				addAlert(alerta);
 		
+		return alerta;
 	}
 	
 	/**
@@ -195,6 +197,10 @@ public class AlertManager {
 	
 	public List<Alert> getAlertList() {
 		return alerts;
+	}
+	
+	public List<Alert> getPastAlertList() {
+		return pastAlerts;
 	}
 	
 	/**
@@ -263,8 +269,11 @@ public class AlertManager {
 
 					popups.showNewPopup(a.alert);
 					tasksRodando.remove(a.alert);
+					
+					a.alert.setPast(true);
 					pastAlerts.add(a.alert);
 					alerts.remove(a.alert);
+					
 					cancel();
 					if (next != null)
 						schedule(next);
@@ -310,12 +319,13 @@ public class AlertManager {
 		if (stack.dates.isEmpty()) {
 			
 			Date toDelete = new Date(System.currentTimeMillis() 
-					- TimeUnit.HOURS.toMillis(config.optInt("deletion_time", 1)));
+					- TimeUnit.HOURS.toMillis(config.optInt("deletion_time", 24)));
 			
-			if (stack.alert.getHorário().after(toDelete))
+			if (stack.alert.getHorário().after(toDelete)) {
+				stack.alert.setPast(true);
 				pastAlerts.add(stack.alert);
-			else
-				System.out.println("before");
+			}
+
 		} else {
 			
 			alerts.add(stack.alert);

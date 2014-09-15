@@ -8,6 +8,7 @@ import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -22,6 +23,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -66,13 +68,15 @@ public class AlertTable extends JTable{
 	private List<Alert> alerts;
 	
 	protected AlertTable(List<Alert> alertas) {
-		
-		this.alerts = alertas;
-		
-	}	
+		this.alerts = alertas;	
+	}
+	
 	protected AlertTable() {
 		
-		alerts = AlertManager.getInstance().getAlertList();
+		alerts = new ArrayList<Alert>();
+
+		alerts.addAll(AlertManager.getInstance().getPastAlertList());
+		alerts.addAll(AlertManager.getInstance().getAlertList());
 		
 		setModel(new AlertTableModel());
 		
@@ -371,6 +375,22 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	protected void addAlert(Alert a) {
+		alerts.add(a);
+		changedAlert();
+	}
+	
+	protected void editAlert(int row, Alert a) {
+		alerts.remove(row);
+		alerts.add(row, a);
+		changedAlert();
+	}
+	
+	protected void deleteAlert(int row) {
+		alerts.remove(row);
+		changedAlert();
+	}
+	
 	/**
 	 * Retorna o alerta que está na posição <code>row</code>
 	 * @param row do alerta
@@ -536,15 +556,21 @@ public class AlertTable extends JTable{
 			
 			((JComponent) cell).setBorder(new EmptyBorder(0, 5, 0, 5));
 			
-			if (isSelected)
-				cell.setBackground(Cores.SEPARAR_CLARO);
-			else if (row % 2 == 0)
-				cell.setBackground(Cores.ALTERNAR_CLARO);
+			Color color;
+			if (((Alert) table.getValueAt(row, -1)).isPast())
+				color = Cores.getAlternar(row % 2).darker();
 			else
-				cell.setBackground(Cores.ALTERNAR_ESCURO);
-				
-			return cell;
+				color = Cores.getAlternar(row % 2);
 			
+			if (isSelected) {
+				if (((Alert) table.getValueAt(row, -1)).isPast())
+					cell.setBackground(Cores.SEPARAR_CLARO.darker());
+				else
+					cell.setBackground(Cores.SEPARAR_CLARO);
+			} else
+				cell.setBackground(color);
+			
+			return cell;
 		}
 		
 	}

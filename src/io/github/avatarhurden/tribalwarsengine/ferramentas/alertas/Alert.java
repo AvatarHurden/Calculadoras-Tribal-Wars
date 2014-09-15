@@ -41,6 +41,7 @@ public class Alert {
     }
     
     private String worldName;
+    private transient boolean past = false;
     
     private Tipo tipo;
     private String nome;
@@ -59,6 +60,10 @@ public class Alert {
      */
     public Alert() {
     	worldName = WorldManager.getSelectedWorld().getName();
+    }
+    
+    public void setPast(boolean past) {
+    	this.past = past;
     }
 
     public void setTipo(Tipo tipo) {
@@ -109,6 +114,10 @@ public class Alert {
 
     public void setWorld(World world) {
     	worldName = world.getName();
+    }
+    
+    public boolean isPast() {
+    	return past;
     }
     
     public Tipo getTipo() {
