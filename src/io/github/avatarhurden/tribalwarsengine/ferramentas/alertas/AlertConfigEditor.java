@@ -49,10 +49,10 @@ public class AlertConfigEditor extends JDialog{
 		c.insets = new Insets(5, 5, 5, 5);
 		
 		c.gridwidth = 3;
-		add(makeDeletePastPanel(), c);
+		add(makeShowPastPanel(), c);
 		
 		c.gridy++;
-//		add(makeTimeToDeletePanel(), c);
+		add(makeDeletePastPanel(), c);
 		
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.CENTER;
@@ -138,6 +138,32 @@ public class AlertConfigEditor extends JDialog{
 		return button;	
 	}
 	
+	public PropertyPanel makeShowPastPanel() {
+		
+		final JCheckBox check = new JCheckBox();
+		check.setOpaque(false);
+		
+		PropertyPanel panel = new PropertyPanel() {
+			protected void save() {
+				config.put("show_past", check.isSelected());
+			}
+			
+			protected void setValue() {
+				check.setSelected(config.optBoolean("show_past", false));
+			}
+			
+			protected void setDefault() {
+				check.setSelected(false);
+			}
+		};
+		
+		panel.add(check);
+		panel.add(new JLabel("Mostrar alertas antigos na tabela"));
+		
+		properties.put("show_past", panel);
+		return panel;
+	}
+	
 	public PropertyPanel makeDeletePastPanel() {
 
 		final JPanel timePanel = new JPanel();
@@ -154,7 +180,6 @@ public class AlertConfigEditor extends JDialog{
 		});	
 		
 		PropertyPanel panel = new PropertyPanel() {
-			
 			protected void save() {
 				config.put("delete_past", check.isSelected());
 				config.put("deletion_time", spinner.getValue());
@@ -170,7 +195,6 @@ public class AlertConfigEditor extends JDialog{
 				check.setSelected(true);
 				spinner.setValue(24);
 			}
-			
 		};
 		
 		panel.setLayout(new GridBagLayout());

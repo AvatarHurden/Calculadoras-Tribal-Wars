@@ -321,7 +321,7 @@ public class AlertManager {
 			Date toDelete = new Date(System.currentTimeMillis() 
 					- TimeUnit.HOURS.toMillis(config.optInt("deletion_time", 24)));
 			
-			if (stack.alert.getHorário().after(toDelete)) {
+			if (stack.alert.getHorário().after(toDelete) || !config.optBoolean("delete_past", true)) {
 				stack.alert.setPast(true);
 				pastAlerts.add(stack.alert);
 			}
