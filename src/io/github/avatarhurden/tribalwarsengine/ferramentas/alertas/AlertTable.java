@@ -75,7 +75,9 @@ public class AlertTable extends JTable{
 		
 		alerts = new ArrayList<Alert>();
 
-		alerts.addAll(AlertManager.getInstance().getPastAlertList());
+		if ((boolean) AlertManager.getInstance().getConfig("show_past", false))
+			alerts.addAll(AlertManager.getInstance().getPastAlertList());
+		
 		alerts.addAll(AlertManager.getInstance().getAlertList());
 		
 		setModel(new AlertTableModel());
@@ -375,18 +377,18 @@ public class AlertTable extends JTable{
 		
 	}
 	
-	protected void addAlert(Alert a) {
+	public void addAlert(Alert a) {
 		alerts.add(a);
 		changedAlert();
 	}
 	
-	protected void editAlert(int row, Alert a) {
+	public void editAlert(int row, Alert a) {
 		alerts.remove(row);
 		alerts.add(row, a);
 		changedAlert();
 	}
 	
-	protected void deleteAlert(int row) {
+	public void deleteAlert(int row) {
 		alerts.remove(row);
 		changedAlert();
 	}

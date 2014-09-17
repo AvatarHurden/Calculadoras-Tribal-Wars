@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWButton;
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 
@@ -98,13 +100,14 @@ public class AlertConfigEditor extends JDialog{
 	}
 	
 	public JButton makeSaveButton() {
-		JButton button = new JButton("Salvar");
+		JButton button = new TWButton("Salvar");
 		
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				for (PropertyPanel p : properties.values())
 					p.save();
+				dispose();
 			}
 		});
 		
@@ -112,7 +115,7 @@ public class AlertConfigEditor extends JDialog{
 	}
 	
 	public JButton makeDefaultButton() {
-		JButton button = new JButton("Restaurar Padrões");
+		JButton button = new TWSimpleButton("Restaurar Padrões");
 		
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -126,7 +129,7 @@ public class AlertConfigEditor extends JDialog{
 	}
 	
 	public JButton makeCancelButton() {
-	JButton button = new JButton("Cancelar");
+	JButton button = new TWSimpleButton("Cancelar");
 		
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -210,7 +213,8 @@ public class AlertConfigEditor extends JDialog{
 		
 		selectPanel.add(check);
 		selectPanel.add(new JLabel("Deletar alertas antigos"));
-		
+
+		c.insets = new Insets(5, 0, 0, 0);
 		panel.add(selectPanel, c);
 		
 		timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.X_AXIS));
@@ -218,11 +222,11 @@ public class AlertConfigEditor extends JDialog{
 		
 		timePanel.add(Box.createHorizontalStrut(30));
 		timePanel.add(new JLabel("Deletar alertas antigos depois de "));
-		
 		timePanel.add(spinner);
-		timePanel.add(new JLabel("horas"));
+		timePanel.add(new JLabel(" horas"));
 		
 		c.gridy++;
+		c.insets = new Insets(0, 5, 5, 0);
 		panel.add(timePanel, c);
 		
 		properties.put("delete_past", panel);

@@ -69,7 +69,7 @@ public class AlertasPanel extends Ferramenta {
 
             Date now = new Date();
 
-            alerta.setHorário(new Date(now.getTime() + i * 1000));
+            alerta.setHorário(new Date(now.getTime() + (1+i) * 6000));
 
             alerta.setRepete((long) (Math.random() * 100000000));
             
@@ -166,6 +166,7 @@ public class AlertasPanel extends Ferramenta {
 				} catch (Exception exc) {
 					row = -1;
 				}
+				
 				switch (e.getActionCommand()) {
 				case "add":
 					Alert alerta = AlertManager.getInstance().createAlert();
@@ -182,6 +183,9 @@ public class AlertasPanel extends Ferramenta {
 					table.editAlert(row, selected);
 					break;
 				case "delete":
+					if (row == -1)
+						return;	
+						
 					AlertManager.getInstance().removeAlert(table.getAlert(row));
 					table.deleteAlert(row);
 					break;

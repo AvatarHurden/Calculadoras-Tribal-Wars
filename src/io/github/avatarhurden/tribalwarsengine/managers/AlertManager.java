@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,7 +75,7 @@ public class AlertManager {
 
 		popups = new PopupManager();
 	
-		fileManager = new AlertFileManager(Configuration.alertFolder);
+		fileManager = new AlertFileManager(Configuration.alertFolder + "/br");
 
 		config = fileManager.getConfig();
 		loadSaved(fileManager.getAlertList());
@@ -99,14 +99,17 @@ public class AlertManager {
 	public void save() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JSONArray current = new JSONArray();
-		
-		for (Alert a : alerts)
-			current.put(new JSONObject(gson.toJson(a)));
-		
 		JSONArray past = new JSONArray();
 		
+		for (Alert a : alerts)
+			if (a.isPast())
+				past.put(new JSONObject(gson.toJson(a)));
+			else
+				current.put(new JSONObject(gson.toJson(a)));
+		
 		for (Alert a : pastAlerts)
-			past.put(new JSONObject(gson.toJson(a)));
+			if (!shouldDelete(a))
+				past.put(new JSONObject(gson.toJson(a)));
 		
 		fileManager.saveAlertList(current);
 		fileManager.savePastAlertList(past);
@@ -168,15 +171,9 @@ public class AlertManager {
 	 * Edita um Alert que está na lista dos existentes
 	 * @param alerta a ser modificado
 	 */
-	public void editAlert(Alert alerta, Alert oldAlerta) {
-		
-		int position = alerts.indexOf(oldAlerta);
-		
-		alerts.remove(position);
-		alerts.add(position, alerta);
-		
-		removeFromSchedule(oldAlerta);
-		addToSchedule(alerta);
+	public void editAlert(Alert alerta, Alert oldAlerta) {	
+		removeAlert(oldAlerta);
+		addAlert(alerta);
 	}
 	
 	/**
@@ -185,10 +182,11 @@ public class AlertManager {
 	 */
 	public void removeAlert(Alert alerta) {
 	
-		alerts.remove(alerta);
-		
-		removeFromSchedule(alerta);
-		
+		if (alerts.contains(alerta)) {
+			alerts.remove(alerta);
+			removeFromSchedule(alerta); 
+		} else if (pastAlerts.contains(alerta))
+			pastAlerts.remove(alerta);
 	}
 	
 	public static AlertManager getInstance() {
@@ -271,8 +269,8 @@ public class AlertManager {
 					tasksRodando.remove(a.alert);
 					
 					a.alert.setPast(true);
-					pastAlerts.add(a.alert);
-					alerts.remove(a.alert);
+					
+					transferToPast(a.alert, 60000);
 					
 					cancel();
 					if (next != null)
@@ -286,6 +284,22 @@ public class AlertManager {
 			timer.schedule(tasksRodando.get(a.alert), date);
 			lastScheduledDate = date; 
 		}
+	}
+	
+	private Thread transferToPast(final Alert a, final long sleep) {
+		
+		return new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(sleep);
+				} catch (Exception e) {}
+				pastAlerts.add(a);
+				alerts.remove(a);
+			}
+		});
+		
 	}
 	
 	/**
@@ -315,13 +329,9 @@ public class AlertManager {
 	}
 	
 	private void putAlertInList(AlertStack stack) {
-		
 		if (stack.dates.isEmpty()) {
-			
-			Date toDelete = new Date(System.currentTimeMillis() 
-					- TimeUnit.HOURS.toMillis(config.optInt("deletion_time", 24)));
-			
-			if (stack.alert.getHorário().after(toDelete) || !config.optBoolean("delete_past", true)) {
+					
+			if (!shouldDelete(stack.alert)) {
 				stack.alert.setPast(true);
 				pastAlerts.add(stack.alert);
 			}
@@ -332,6 +342,13 @@ public class AlertManager {
 			dates.add(stack);
 		
 		}
+	}
+	
+	private boolean shouldDelete(Alert a) {		
+		Date toDelete = new Date(System.currentTimeMillis() 
+				- TimeUnit.HOURS.toMillis(config.optInt("deletion_time", 24)));
+		
+		return a.getHorário().before(toDelete) && config.optBoolean("delete_past", true);
 	}
 	
 	/**

@@ -18,6 +18,9 @@ public class AlertFileManager {
 	
 	public AlertFileManager(String folder) {
 		parentFolder = folder;
+		
+		if (!new File(parentFolder).exists())
+			new File(parentFolder).mkdir();
 	}
 
 	public void saveConfig(JSONObject json) {

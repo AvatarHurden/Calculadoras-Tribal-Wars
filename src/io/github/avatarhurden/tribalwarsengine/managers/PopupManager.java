@@ -2,8 +2,8 @@ package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
@@ -471,7 +471,7 @@ public class PopupManager {
 			c.fill = GridBagConstraints.BOTH;
 			
 			JTextPane notes = new JTextPane();
-			notes.setEditorKit(JTextPane.createEditorKitForContentType("text/html"));
+			notes.setContentType("text/html");
 			notes.setText(nota);
 			
 			notes.addHyperlinkListener(new HyperlinkListener() {
