@@ -39,12 +39,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterEvent.Type;
+import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelListener;
@@ -55,8 +60,12 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import sun.swing.table.DefaultTableCellHeaderRenderer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Classe para representar, em uma JTable, objetos da classe Alert
@@ -75,8 +84,9 @@ public class AlertTable extends JTable{
 		
 		alerts = new ArrayList<Alert>();
 
-		if ((boolean) AlertManager.getInstance().getConfig("show_past", false))
-			alerts.addAll(AlertManager.getInstance().getPastAlertList());
+		if ((boolean) AlertManager.getInstance().getConfig("show_past", false)) {
+			alerts.addAll(AlertManager.getInstance().getPastAlertList());	
+		}
 		
 		alerts.addAll(AlertManager.getInstance().getAlertList());
 		
@@ -117,66 +127,18 @@ public class AlertTable extends JTable{
 		
 		changeHeader();
 		
-		// Change the positions and widths of the columns
-		
-		// Default values, if there are no saved
-		int[] default_order = new int[] { 0, 7, 1, 8, 2, 3, 4, 5, 6 };
-		int[] default_widths = new int[] { 279, 76, 95, 144, 193, 193, 185, 217, 206 };
-		
-		JSONArray order, widths;
-		
-		order = (JSONArray) AlertManager.getInstance().getConfig("column_order", new JSONArray(default_order));
-		widths = (JSONArray) AlertManager.getInstance().getConfig("column_width", new JSONArray(default_widths));
-		
-		TableColumn column[] = new TableColumn[order.length()];
-		
-		// Reordering the columns
-		for (int i = 0; i < column.length; i++)
-			 column[i] = columnModel.getColumn(order.getInt(i));
-		 
-		while (columnModel.getColumnCount() > 0) 
-			 columnModel.removeColumn(columnModel.getColumn(0));
-		 
-		for (int i = 0; i < column.length; i++)
-			 columnModel.addColumn(column[i]);
-		
-		// Putting the correct widths
-		for (int i = 0; i < widths.length(); i++)
-			getColumnModel().getColumn(i).setPreferredWidth(widths.getInt(i));
-					
-		getColumnModel().addColumnModelListener(new TableColumnModelListener() {
-			
-			public void columnSelectionChanged(ListSelectionEvent e) {}
-			
-			public void columnRemoved(TableColumnModelEvent e) {}
-			
-			@Override
-			public void columnMoved(TableColumnModelEvent e) {
-				
-				int[] order = new int[getColumnModel().getColumnCount()];
-				
-				for (int i = 0; i < order.length; i++)
-					order[i] = getColumnModel().getColumn(i).getModelIndex();
-				
-				AlertManager.getInstance().setConfig("column_order", new JSONArray(order));
-				
-				
-			}
-			
-			public void columnMarginChanged(ChangeEvent e) {
-				
-				int[] width = new int[getColumnModel().getColumnCount()];
-				
-				for (int i = 0; i < width.length; i++)
-					width[i] = getColumnModel().getColumn(i).getPreferredWidth();
-				
-				AlertManager.getInstance().setConfig("column_width", new JSONArray(width));
-			}
-			
-			@Override
-			public void columnAdded(TableColumnModelEvent e) {}
-		});
-		
+		positionColumns();		
+	}
+	
+	public void setStartingPosition(JScrollPane scroll) {
+		if ((boolean) AlertManager.getInstance().getConfig("show_past", false)) {
+			scroll.getVerticalScrollBar().setValue(getStartingPosition());
+			scroll.getVerticalScrollBar().setValue(getStartingPosition());
+		}
+	}
+	
+	public int getStartingPosition() {
+		return AlertManager.getInstance().getPastAlertList().size() * 52;
 	}
 	
 	/**
@@ -225,8 +187,32 @@ public class AlertTable extends JTable{
 			}
 		});
 		
+		sorter.addRowSorterListener(new RowSorterListener() {
+			@Override
+			public void sorterChanged(RowSorterEvent e) {
+				if (e.getType() == Type.SORT_ORDER_CHANGED) {
+					SortKey order = getRowSorter().getSortKeys().get(0);
+					
+					Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					AlertManager.getInstance().setConfig("sort_order", new JSONObject(gson.toJson(order)));
+				}
+			}
+		});
+		
 		setRowSorter(sorter);
 		
+		// Getting the saved order
+		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			JSONObject json = (JSONObject) AlertManager.getInstance().getConfig("sort_order", null);
+			SortKey order = gson.fromJson(json.toString(), SortKey.class);
+			
+			sorter.toggleSortOrder(order.getColumn());
+			if (order.getSortOrder() == SortOrder.DESCENDING)
+				sorter.toggleSortOrder(order.getColumn());
+		} catch (NullPointerException e) {
+			sorter.toggleSortOrder(5);
+		}
 	}
 	
 	/**
@@ -234,7 +220,6 @@ public class AlertTable extends JTable{
 	 * the note to be edited.
 	 */
 	private void addNoteClickListener() {
-		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 			    if (e.getClickCount() == 2) {
@@ -367,14 +352,71 @@ public class AlertTable extends JTable{
 		
 	}
 	
+	public void positionColumns() {
+		int[] default_order = new int[] { 0, 7, 1, 8, 2, 3, 4, 5, 6 };
+		int[] default_widths = new int[] { 279, 76, 95, 144, 193, 193, 185, 217, 206 };
+		
+		JSONArray order, widths;
+		
+		order = (JSONArray) AlertManager.getInstance().getConfig("column_order", new JSONArray(default_order));
+		widths = (JSONArray) AlertManager.getInstance().getConfig("column_width", new JSONArray(default_widths));
+		
+		TableColumn column[] = new TableColumn[order.length()];
+		
+		// Reordering the columns
+		for (int i = 0; i < column.length; i++)
+			 column[i] = columnModel.getColumn(order.getInt(i));
+		 
+		while (columnModel.getColumnCount() > 0) 
+			 columnModel.removeColumn(columnModel.getColumn(0));
+		 
+		for (int i = 0; i < column.length; i++)
+			 columnModel.addColumn(column[i]);
+		
+		// Putting the correct widths
+		for (int i = 0; i < widths.length(); i++)
+			getColumnModel().getColumn(i).setPreferredWidth(widths.getInt(i));
+					
+		getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+			
+			public void columnSelectionChanged(ListSelectionEvent e) {}
+			
+			public void columnRemoved(TableColumnModelEvent e) {}
+			
+			@Override
+			public void columnMoved(TableColumnModelEvent e) {
+				
+				int[] order = new int[getColumnModel().getColumnCount()];
+				
+				for (int i = 0; i < order.length; i++)
+					order[i] = getColumnModel().getColumn(i).getModelIndex();
+				
+				AlertManager.getInstance().setConfig("column_order", new JSONArray(order));
+				
+				
+			}
+			
+			public void columnMarginChanged(ChangeEvent e) {
+				
+				int[] width = new int[getColumnModel().getColumnCount()];
+				
+				for (int i = 0; i < width.length; i++)
+					width[i] = getColumnModel().getColumn(i).getPreferredWidth();
+				
+				AlertManager.getInstance().setConfig("column_width", new JSONArray(width));
+			}
+			
+			@Override
+			public void columnAdded(TableColumnModelEvent e) {}
+		});
+	}
+	
 	/**
 	 * Updates the table when there has been a change
 	 */
-	protected void changedAlert() {
-
+	public void changedAlert() {
 		((AlertTableModel) getModel()).fireTableDataChanged();
 		repaint();
-		
 	}
 	
 	public void addAlert(Alert a) {
@@ -388,9 +430,16 @@ public class AlertTable extends JTable{
 		changedAlert();
 	}
 	
-	public void deleteAlert(int row) {
+	public void removeAlert(int row) {
+		getRowSorter().rowsDeleted(row, row);
 		alerts.remove(row);
 		changedAlert();
+	}
+	
+	public void removePast(Alert a) {
+		if (!(boolean) AlertManager.getInstance().getConfig("show_past", false))
+			if (alerts.contains(a))
+				removeAlert(alerts.indexOf(a));
 	}
 	
 	/**

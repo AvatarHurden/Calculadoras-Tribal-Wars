@@ -41,7 +41,7 @@ public class AlertasPanel extends Ferramenta {
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         setLayout(gridBagLayout);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
 
             Alert alerta = new Alert();
 
@@ -79,7 +79,6 @@ public class AlertasPanel extends Ferramenta {
             
             AlertManager.getInstance().addAlert(alerta);
         }
-
     }
     
     protected void makeGUI() {
@@ -88,10 +87,12 @@ public class AlertasPanel extends Ferramenta {
         d.setSize(d.getWidth() - 50, 570);
         
         table = new AlertTable();
+        AlertManager.getInstance().setTable(table);
         
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(d);
         table.setFillsViewportHeight(true);
+        table.setStartingPosition(scrollPane);
 
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(5, 5, 5, 5);
@@ -123,6 +124,9 @@ public class AlertasPanel extends Ferramenta {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AlertConfigEditor();
+				
+				for (Alert a : AlertManager.getInstance().getPastAlertList())
+					table.removePast(a);
 			}
 		});
     
@@ -187,7 +191,7 @@ public class AlertasPanel extends Ferramenta {
 						return;	
 						
 					AlertManager.getInstance().removeAlert(table.getAlert(row));
-					table.deleteAlert(row);
+					table.removeAlert(row);
 					break;
 				default:
 					break;

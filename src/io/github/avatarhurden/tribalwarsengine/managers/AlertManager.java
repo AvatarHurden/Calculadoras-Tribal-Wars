@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertEditor;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class AlertManager {
 	Timer timer;
 	
 	private PopupManager popups;
+	private AlertTable table;
 	
 	private AlertManager() {
 		
@@ -76,7 +78,7 @@ public class AlertManager {
 		popups = new PopupManager();
 	
 		fileManager = new AlertFileManager(Configuration.alertFolder + "/br");
-
+		
 		config = fileManager.getConfig();
 		loadSaved(fileManager.getAlertList());
 		loadPast(fileManager.getPastAlertList());
@@ -270,7 +272,8 @@ public class AlertManager {
 					
 					a.alert.setPast(true);
 					
-					transferToPast(a.alert, 60000);
+					if (table != null)
+						table.changedAlert();
 					
 					cancel();
 					if (next != null)
@@ -278,6 +281,8 @@ public class AlertManager {
 					else
 						timer.cancel();
 					timer.purge();
+					
+					transferToPast(a.alert, 3).run();
 				}
 			});
 			
@@ -287,19 +292,22 @@ public class AlertManager {
 	}
 	
 	private Thread transferToPast(final Alert a, final long sleep) {
-		
 		return new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
 				try {
-					Thread.sleep(sleep);
+					Thread.sleep(sleep * 1000);
 				} catch (Exception e) {}
+				
 				pastAlerts.add(a);
 				alerts.remove(a);
+				
+				if (table != null)
+					table.removePast(a);
+				else
+					System.out.println("null");
 			}
 		});
-		
 	}
 	
 	/**
@@ -382,6 +390,10 @@ public class AlertManager {
 			}
 		};
 
+	}
+	
+	public void setTable(AlertTable table) {
+		this.table = table;
 	}
 	
 	public JSONObject getConfig() {
