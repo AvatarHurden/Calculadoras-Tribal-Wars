@@ -197,5 +197,15 @@ public class MainWindow extends JFrame {
             ferramentaSelecionada = ferramentas.get(0);
         }
     }
+    
+    public void selectPanel(int selected) {
+        for (Ferramenta i : ferramentas)
+            i.setSelected(false);
+
+        if (ferramentas.size() > selected) {
+            ferramentas.get(selected).setSelected(true);
+            ferramentaSelecionada = ferramentas.get(selected);
+        }
+    }
 
 }

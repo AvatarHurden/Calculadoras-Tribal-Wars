@@ -3,7 +3,9 @@ package io.github.avatarhurden.tribalwarsengine.managers;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
+import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 
@@ -62,7 +64,7 @@ public class PopupManager {
 				
 		openPopups = new ArrayList<PopupGUI>();
 		
-		scnMax = Toolkit.getDefaultToolkit().getScreenInsets(new PopupGUI(null).getGraphicsConfiguration());
+		scnMax = Toolkit.getDefaultToolkit().getScreenInsets(new PopupGUI(null, null).getGraphicsConfiguration());
 		
 		bottomBorder = scnMax.bottom;
 		rightBorder = scnMax.right;
@@ -72,9 +74,9 @@ public class PopupManager {
 		
 	}
 	
-	protected void showNewPopup(Alert alerta) {
+	protected void showNewPopup(Alert alerta, AlertTable table) {
 		
-		final PopupGUI popup = new PopupGUI(alerta);
+		final PopupGUI popup = new PopupGUI(alerta, table);
 		
 		openPopups.add(popup);
 		
@@ -110,16 +112,18 @@ public class PopupManager {
 		private Thread closeThread;
 		
 		private Alert alerta;
+		private AlertTable table;
 		
 		/**
 		 * Cria o JDialog do popup
 		 * @param alerta
 		 */
-		private PopupGUI(Alert alerta) {
+		private PopupGUI(Alert alerta, AlertTable table) {
 			if (alerta == null)
 				return;
 			
 			this.alerta = alerta;
+			this.table = table;
 			
 			setCloseTime();
 			
@@ -233,6 +237,18 @@ public class PopupManager {
 			c.anchor = GridBagConstraints.EAST;
 			c.gridx++;
 			panel.add(closelbl, c);
+			
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getClickCount() == 2) {
+						if (table != null)
+							table.selectAlert(alerta);
+						MainWindow.getInstance().selectPanel(7);
+						MainWindow.getInstance().toFront();
+					}
+				}
+			});
 			
 			return panel;
 		}

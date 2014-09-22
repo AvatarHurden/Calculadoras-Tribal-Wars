@@ -37,7 +37,7 @@ public class AlertManager {
 	private AlertFileManager fileManager;
 	private JSONObject config;
 
-	private static AlertManager instance = new AlertManager();
+	private static AlertManager instance;
 	
 	// Lista de alertas existentes
 	private List<Alert> alerts = new ArrayList<Alert>();
@@ -192,6 +192,8 @@ public class AlertManager {
 	}
 	
 	public static AlertManager getInstance() {
+		if (instance == null)
+			instance = new AlertManager();
 		return instance;
 	}
 	
@@ -267,7 +269,7 @@ public class AlertManager {
 				
 				public void run() {
 
-					popups.showNewPopup(a.alert);
+					popups.showNewPopup(a.alert, table);
 					tasksRodando.remove(a.alert);
 					
 					a.alert.setPast(true);
@@ -282,7 +284,7 @@ public class AlertManager {
 						timer.cancel();
 					timer.purge();
 					
-					transferToPast(a.alert, 3).run();
+					timer.schedule(transferToPast(a.alert), 60000);
 				}
 			});
 			
@@ -291,23 +293,17 @@ public class AlertManager {
 		}
 	}
 	
-	private Thread transferToPast(final Alert a, final long sleep) {
-		return new Thread(new Runnable() {
+	private TimerTask transferToPast(final Alert a) {
+		return new TimerTask() {
 			@Override
 			public void run() {
-				try {
-					Thread.sleep(sleep * 1000);
-				} catch (Exception e) {}
-				
 				pastAlerts.add(a);
 				alerts.remove(a);
 				
 				if (table != null)
 					table.removePast(a);
-				else
-					System.out.println("null");
 			}
-		});
+		};
 	}
 	
 	/**

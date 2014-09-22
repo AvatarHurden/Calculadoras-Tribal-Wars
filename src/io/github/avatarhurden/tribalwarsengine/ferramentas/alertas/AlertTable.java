@@ -137,7 +137,7 @@ public class AlertTable extends JTable{
 		}
 	}
 	
-	public int getStartingPosition() {
+	private int getStartingPosition() {
 		return AlertManager.getInstance().getPastAlertList().size() * 52;
 	}
 	
@@ -419,6 +419,11 @@ public class AlertTable extends JTable{
 		repaint();
 	}
 	
+	public void selectAlert(Alert a) {
+		if (alerts.contains(a)) 
+			setRowSelectionInterval(alerts.indexOf(a), alerts.indexOf(a));
+	}
+	
 	public void addAlert(Alert a) {
 		alerts.add(a);
 		changedAlert();
@@ -431,7 +436,14 @@ public class AlertTable extends JTable{
 	}
 	
 	public void removeAlert(int row) {
+		int selected = getSelectedRow();
+		clearSelection();
 		getRowSorter().rowsDeleted(row, row);
+		try {
+			setRowSelectionInterval(selected - 1, selected - 1);
+		} catch (Exception e) {
+			clearSelection();
+		}
 		alerts.remove(row);
 		changedAlert();
 	}

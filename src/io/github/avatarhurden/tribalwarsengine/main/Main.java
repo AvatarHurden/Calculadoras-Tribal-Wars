@@ -44,7 +44,6 @@ public class Main {
      * configurações
      */
     public static void openMainFrame() {
-    	
         mainFrame.packPanels(selectWorldFrame);
         selectWorldFrame.dispose();
         mainFrame.setVisible(true);
@@ -74,7 +73,6 @@ public class Main {
         Configuration.get();
         WorldManager.get();
         selectWorldFrame.addWorldPanel();
-        
     }
 
     /**
@@ -110,7 +108,9 @@ public class Main {
     	
     	Configuration config = Configuration.get();
     	
-    	AlertManager.getInstance().save();
+    	try {
+    		AlertManager.getInstance().save();
+    	} catch (Exception e) {}
     	
     	JSONObject location = new JSONObject();
     	location.put("x", currentFrame.getLocationOnScreen().x);
