@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
@@ -14,12 +15,14 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
@@ -27,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
@@ -75,6 +80,7 @@ import com.google.gson.GsonBuilder;
 public class AlertTable extends JTable{
 	
 	private List<Alert> alerts;
+	private List<Integer> oldRows;
 	
 	protected AlertTable(List<Alert> alertas) {
 		this.alerts = alertas;	
@@ -83,6 +89,7 @@ public class AlertTable extends JTable{
 	protected AlertTable() {
 		
 		alerts = new ArrayList<Alert>();
+		oldRows = new ArrayList<Integer>();
 
 		if ((boolean) AlertManager.getInstance().getConfig("show_past", false)) {
 			alerts.addAll(AlertManager.getInstance().getPastAlertList());	
@@ -111,7 +118,7 @@ public class AlertTable extends JTable{
 		/* Setting the renderers */
 		// This is the default, used by String and Tipo
 		setDefaultRenderer(Object.class, new CustomCellRenderer());
-		setDefaultRenderer(Date.class, new DateCellRenderer());
+		setDefaultRenderer(Date.class, new RescheduleCellRenderer());
 		setDefaultRenderer(Army.class, new TropaCellRenderer());
 		setDefaultRenderer(Long.class, new TimeCellRenderer());
 		getColumnModel().getColumn(7).setCellRenderer(new NotaCellRenderer());
@@ -220,6 +227,21 @@ public class AlertTable extends JTable{
 	 * the note to be edited.
 	 */
 	private void addNoteClickListener() {
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				final AlertTable target = (AlertTable) e.getSource();
+				  
+				final int clickrow = target.rowAtPoint(e.getPoint());
+				final int clickcolumn = target.columnAtPoint(e.getPoint());
+				
+				if (target.convertColumnIndexToModel(clickcolumn) == 5)
+					((RescheduleCellRenderer) target.getCellRenderer(clickrow, clickcolumn))
+						.updateButton(e.getLocationOnScreen(), false);
+			}
+		});
+		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 			    if (e.getClickCount() == 2) {
@@ -262,7 +284,7 @@ public class AlertTable extends JTable{
 			    		c.gridwidth = 2;
 			    		panel.add(nameLabel, c);
 			    		
-			    		final JTextArea notas = new JTextArea(alerts.get(clickrow).getNotas(), 5, 20);
+			    		final JTextArea notas = new JTextArea((String) getValueAt(clickrow, 7), 5, 20);
 			    		notas.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
 			    		notas.setLineWrap(true);
 			    		notas.setWrapStyleWord(true);
@@ -467,9 +489,8 @@ public class AlertTable extends JTable{
 	 * Renderer para a nota. Possui um desenho representativo, com um tooltip explicativo
 	 */
 	private class NotaCellRenderer extends CustomCellRenderer {
-		
 		public Component getTableCellRendererComponent (final JTable table, 
-				Object obj, boolean isSelected, boolean hasFocus, final int row, final int column) {
+				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
 			ImageIcon i = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 					AlertasPanel.class.getResource("/images/edit.png")));
@@ -484,18 +505,15 @@ public class AlertTable extends JTable{
 			label.setToolTipText("Clique duas vezes para ver e editar a nota");
 			
 			return label;
-			
 		}
-		
 	}
 	
 	/**
 	 * Renderer para o horário do alerta. Possui um simples DateFormat.
 	 */
 	private class DateCellRenderer extends CustomCellRenderer {
-		
 		public Component getTableCellRendererComponent (final JTable table, 
-				Object obj, boolean isSelected, boolean hasFocus, final int row, final int column) {
+				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
 			String date = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ").format((Date) obj);
 			
@@ -503,7 +521,62 @@ public class AlertTable extends JTable{
 					   table, date, isSelected, hasFocus, row, column);
 			
 			return cell;
+		}
+	}
+	
+	private class RescheduleCellRenderer extends CustomCellRenderer {
+		
+		private TWSimpleButton button;
+		
+		public Component getTableCellRendererComponent (final JTable table, 
+				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
+			if (((Date) obj).after(new Date()))
+				return new DateCellRenderer().getTableCellRendererComponent(
+						table, obj, isSelected, hasFocus, row, column);
+			
+			Component cell = super.getTableCellRendererComponent(
+					   table, obj, isSelected, hasFocus, row, column);
+			
+			Alert a = (Alert) getValueAt(row, -1);
+			TimeFormattedJLabel label = new TimeFormattedJLabel(false);
+			button = new TWSimpleButton("Remarcar");
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					System.out.println("clicked");
+				}
+			});
+			
+			JPanel panel = new JPanel();
+			panel.add(button);
+			panel.add(label);
+			panel.setBackground(cell.getBackground());
+			
+			label.setDate(new Date(((Date) obj).getTime() + a.getRepete()));
+			
+			if (!oldRows.contains(row))
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						changedAlert();
+					}
+				}, (Date) obj, 1000);
+			
+			if (!oldRows.contains(row))
+				oldRows.add(row);
+			
+			return panel;
+		}
+		
+		public void updateButton(Point p, boolean click) {
+			
+			MouseEvent e = new MouseEvent(button, 0, 0, 0, 100, 100, 1, false);
+			
+			if (button.contains(p))
+				button.getMouseListeners()[0].mouseClicked(e);
+			else
+				button.getMouseListeners()[0].mouseExited(e);
 		}
 		
 	}
@@ -513,7 +586,6 @@ public class AlertTable extends JTable{
 	 * Caso não haja, imprime cinco hífens
 	 */
 	private class TimeCellRenderer extends CustomCellRenderer {
-		
 		public Component getTableCellRendererComponent (JTable table, 
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
@@ -543,9 +615,7 @@ public class AlertTable extends JTable{
 					   table, time, isSelected, hasFocus, row, column);
 			
 			return cell;
-			
 		}
-		
 	}
 	
 	/**
@@ -554,7 +624,6 @@ public class AlertTable extends JTable{
 	 * todas as unidades presentes.
 	 */
 	private class TropaCellRenderer extends CustomCellRenderer {
-		
 		public Component getTableCellRendererComponent (JTable table, 
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
@@ -594,9 +663,7 @@ public class AlertTable extends JTable{
 				setToolTipText(tooltip);
 			
 			return cell;
-			
 		}
-		
 	}
 	
 	/**
@@ -650,20 +717,18 @@ public class AlertTable extends JTable{
 
 		@Override
 		public Class<?> getColumnClass(int column) {
-			
 			switch(column) {
-			case 0: return alerts.get(0).getNome().getClass();
-			case 1: return Alert.Tipo.class;
-			case 2: return Alert.Aldeia.class;
-			case 3: return Alert.Aldeia.class;
-			case 4: return Army.class;
-			case 5: return alerts.get(0).getHorário().getClass();
-			case 6: return alerts.get(0).getRepete().getClass();
-			case 7: return alerts.get(0).getNotas().getClass();
-			case 8 : return String.class;
-			default: return null;
-		}
-			
+				case 0: return alerts.get(0).getNome().getClass();
+				case 1: return Alert.Tipo.class;
+				case 2: return Alert.Aldeia.class;
+				case 3: return Alert.Aldeia.class;
+				case 4: return Army.class;
+				case 5: return alerts.get(0).getHorário().getClass();
+				case 6: return alerts.get(0).getRepete().getClass();
+				case 7: return alerts.get(0).getNotas().getClass();
+				case 8 : return String.class;
+				default: return null;
+			}
 		}
 
 		@Override
@@ -673,7 +738,6 @@ public class AlertTable extends JTable{
 
 		@Override
 		public String getColumnName(int column) {
-			
 			switch(column) {
 				case 0: return "Nome";
 				case 1: return "Tipo";
@@ -686,14 +750,12 @@ public class AlertTable extends JTable{
 				case 8: return "Mundo";
 				default: return null;
 			}	
-			
 		}
 
 		@Override
 		public int getRowCount() {
 			return alerts.size();
 		}
-
 
 		/**
 		 * Para valores entre 0 e 7 de coluna, retorna uma propriedade do alerta da linha correspondente.
@@ -726,15 +788,11 @@ public class AlertTable extends JTable{
 
 		@Override
 		public void setValueAt(Object obj, int row, int column) {
-			
 			// The only one to be changed this way is the notes
 			if (column == 7)
 				alerts.get(row).setNotas((String) obj);
-			
-			
 		}
 		
 	}
-	
 	
 }
