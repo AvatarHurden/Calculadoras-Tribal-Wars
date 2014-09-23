@@ -15,25 +15,25 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EventObject;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -60,6 +60,7 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -119,6 +120,7 @@ public class AlertTable extends JTable{
 		// This is the default, used by String and Tipo
 		setDefaultRenderer(Object.class, new CustomCellRenderer());
 		setDefaultRenderer(Date.class, new RescheduleCellRenderer());
+		setDefaultEditor(Date.class, new RescheduleCellEditor());
 		setDefaultRenderer(Army.class, new TropaCellRenderer());
 		setDefaultRenderer(Long.class, new TimeCellRenderer());
 		getColumnModel().getColumn(7).setCellRenderer(new NotaCellRenderer());
@@ -227,21 +229,6 @@ public class AlertTable extends JTable{
 	 * the note to be edited.
 	 */
 	private void addNoteClickListener() {
-		
-		addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				final AlertTable target = (AlertTable) e.getSource();
-				  
-				final int clickrow = target.rowAtPoint(e.getPoint());
-				final int clickcolumn = target.columnAtPoint(e.getPoint());
-				
-				if (target.convertColumnIndexToModel(clickcolumn) == 5)
-					((RescheduleCellRenderer) target.getCellRenderer(clickrow, clickcolumn))
-						.updateButton(e.getLocationOnScreen(), false);
-			}
-		});
-		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 			    if (e.getClickCount() == 2) {
@@ -441,6 +428,11 @@ public class AlertTable extends JTable{
 		repaint();
 	}
 	
+	public void changedAlert(int row) {
+		((AlertTableModel) getModel()).fireTableRowsUpdated(row, row);
+		repaint();
+	}
+	
 	public void selectAlert(Alert a) {
 		if (alerts.contains(a)) 
 			setRowSelectionInterval(alerts.indexOf(a), alerts.indexOf(a));
@@ -526,8 +518,6 @@ public class AlertTable extends JTable{
 	
 	private class RescheduleCellRenderer extends CustomCellRenderer {
 		
-		private TWSimpleButton button;
-		
 		public Component getTableCellRendererComponent (final JTable table, 
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
@@ -535,50 +525,75 @@ public class AlertTable extends JTable{
 				return new DateCellRenderer().getTableCellRendererComponent(
 						table, obj, isSelected, hasFocus, row, column);
 			
-			Component cell = super.getTableCellRendererComponent(
-					   table, obj, isSelected, hasFocus, row, column);
+			Component cell = new RescheduleCellEditor()
+				.getTableCellEditorComponent(table, obj, isSelected, row, column);
 			
-			Alert a = (Alert) getValueAt(row, -1);
-			TimeFormattedJLabel label = new TimeFormattedJLabel(false);
-			button = new TWSimpleButton("Remarcar");
-			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					System.out.println("clicked");
-				}
-			});
+			cell.setBackground( new DateCellRenderer().getTableCellRendererComponent(
+						table, obj, isSelected, hasFocus, row, column).getBackground());
 			
-			JPanel panel = new JPanel();
-			panel.add(button);
-			panel.add(label);
-			panel.setBackground(cell.getBackground());
-			
-			label.setDate(new Date(((Date) obj).getTime() + a.getRepete()));
-			
-			if (!oldRows.contains(row))
-				new Timer().schedule(new TimerTask() {
+			return cell;
+		}
+		
+	}
+	
+	private class RescheduleCellEditor extends AbstractCellEditor implements TableCellEditor {
+
+		private TWSimpleButton button;
+		private TimeFormattedJLabel label;
+		
+			@Override
+			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+				
+				Component cell = new CustomCellRenderer().getTableCellRendererComponent(
+						   table, value, true, true, row, column);
+				
+			 	Alert a = (Alert) getValueAt(row, -1);
+			 	
+				label = new TimeFormattedJLabel(false);
+				
+				button = new TWSimpleButton("Remarcar");
+				button.addActionListener(new ActionListener() {
 					@Override
-					public void run() {
-						changedAlert();
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.println("clicked");
 					}
-				}, (Date) obj, 1000);
-			
-			if (!oldRows.contains(row))
-				oldRows.add(row);
-			
-			return panel;
-		}
-		
-		public void updateButton(Point p, boolean click) {
-			
-			MouseEvent e = new MouseEvent(button, 0, 0, 0, 100, 100, 1, false);
-			
-			if (button.contains(p))
-				button.getMouseListeners()[0].mouseClicked(e);
-			else
-				button.getMouseListeners()[0].mouseExited(e);
-		}
-		
+				});
+				
+				JPanel panel = new JPanel();
+				panel.add(button);
+				panel.add(label);
+				panel.setBackground(cell.getBackground());
+				
+				label.setDate(new Date(new Date().getTime() + a.getRepete()));
+				
+				if (!oldRows.contains(row))
+					new Timer().schedule(new TimerTask() {
+						@Override
+						public void run() {
+							changedAlert(row);
+						}
+					}, (Date) value, 1000);
+				
+				if (!oldRows.contains(row))
+					oldRows.add(row);
+				
+				return panel;
+		    }
+
+		    @Override
+		    public Object getCellEditorValue() {
+		        return label.getDate();
+		    }
+
+		    @Override
+		    public boolean isCellEditable(EventObject anEvent) {
+		        return true;
+		    }
+
+		    @Override
+		    public boolean shouldSelectCell(EventObject anEvent) {
+		        return true;
+		    }
 	}
 	
 	/**
@@ -718,14 +733,14 @@ public class AlertTable extends JTable{
 		@Override
 		public Class<?> getColumnClass(int column) {
 			switch(column) {
-				case 0: return alerts.get(0).getNome().getClass();
+				case 0: return String.class;
 				case 1: return Alert.Tipo.class;
 				case 2: return Alert.Aldeia.class;
 				case 3: return Alert.Aldeia.class;
 				case 4: return Army.class;
-				case 5: return alerts.get(0).getHorário().getClass();
-				case 6: return alerts.get(0).getRepete().getClass();
-				case 7: return alerts.get(0).getNotas().getClass();
+				case 5: return Date.class;
+				case 6: return long.class;
+				case 7: return String.class;
 				case 8 : return String.class;
 				default: return null;
 			}
@@ -779,8 +794,11 @@ public class AlertTable extends JTable{
 		}
 
 		@Override
-		public boolean isCellEditable(int i, int j) {
-			return false;
+		public boolean isCellEditable(int row, int column) {
+			if (column == 5 && oldRows.contains(row))
+				return true;
+			else
+				return false;
 		}
 
 		@Override
