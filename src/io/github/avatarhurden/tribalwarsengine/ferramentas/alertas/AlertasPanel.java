@@ -71,7 +71,7 @@ public class AlertasPanel extends Ferramenta {
 
             alerta.setHorário(new Date(now.getTime() + (1+i) * 6000));
 
-            alerta.setRepete((long) (Math.random() * 100000000));
+            alerta.setRepete((long) 10000);
             
             ArrayList<Date> avisos = new ArrayList<Date>();
             avisos.add(new Date(alerta.getHorário().getTime() - 10000));
@@ -124,9 +124,8 @@ public class AlertasPanel extends Ferramenta {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AlertConfigEditor();
-				
-				for (Alert a : AlertManager.getInstance().getPastAlertList())
-					table.removePast(a);
+			
+				table.managePast();
 			}
 		});
     

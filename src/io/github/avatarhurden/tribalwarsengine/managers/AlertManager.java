@@ -65,11 +65,12 @@ public class AlertManager {
 			
 			public boolean remove(Object o){
 				
-				if (o instanceof Alert)
+				if (o instanceof Alert) {
 					for (AlertStack s : this)
 						if (s.alert.equals(o))
 							return super.remove(s);
-				
+					return false;
+				}
 				return super.remove(o);
 			}
 			
@@ -218,7 +219,7 @@ public class AlertManager {
 		// Remove todos os avisos que já deveriam ter sido mostrados (ou seja, Dates do passado)
 		Iterator<Date> it = avisos.iterator();
 		while (it.hasNext())
-			if (it.next().compareTo(new Date()) < 1)
+			if (it.next().before(new Date()))
 				it.remove();
 		
 		AlertStack stack = new AlertStack(alerta, avisos);
@@ -235,7 +236,6 @@ public class AlertManager {
 	 * @param alerta
 	 */
 	private void removeFromSchedule(Alert alerta) {
-		
 		dates.remove(alerta);
 		
 		for (Entry<Alert, TimerTask> e : tasksRodando.entrySet())
@@ -243,7 +243,6 @@ public class AlertManager {
 				e.getValue().cancel();
 		
 		timer.purge();
-		
 	}
 	
 	/**
@@ -342,6 +341,7 @@ public class AlertManager {
 
 		} else {
 			
+			stack.alert.setPast(false);
 			alerts.add(stack.alert);
 			dates.add(stack);
 		

@@ -209,6 +209,7 @@ public class AlertTable extends JTable{
 		});
 		
 		setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
 		
 		// Getting the saved order
 		try {
@@ -468,6 +469,15 @@ public class AlertTable extends JTable{
 				removeAlert(alerts.indexOf(a));
 	}
 	
+	public void managePast() {
+		if (!(boolean) AlertManager.getInstance().getConfig("show_past", false))
+			for (Alert a : AlertManager.getInstance().getPastAlertList())
+				removePast(a);
+		else
+			for (Alert a : AlertManager.getInstance().getPastAlertList())
+				addAlert(a);
+	}
+	
 	/**
 	 * Retorna o alerta que está na posição <code>row</code>
 	 * @param row do alerta
@@ -542,7 +552,8 @@ public class AlertTable extends JTable{
 		private TimeFormattedJLabel label;
 		
 			@Override
-			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+			public Component getTableCellEditorComponent(JTable table, Object value, 
+					boolean isSelected, final int row, int column) {
 				
 				Component cell = new CustomCellRenderer().getTableCellRendererComponent(
 						   table, value, true, true, row, column);
@@ -555,11 +566,17 @@ public class AlertTable extends JTable{
 				button.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						System.out.println("clicked");
+						Alert a = (Alert) getValueAt(row, -1);
+						a.setHorário(label.getDate());
+						AlertManager.getInstance().editAlert(a, a);
+						oldRows.remove((Object) row);
+						changedAlert();
+						getRowSorter().allRowsChanged();
+						fireEditingStopped();
 					}
 				});
 				
-				JPanel panel = new JPanel();
+				JPanel panel = new JPanel(); 
 				panel.add(button);
 				panel.add(label);
 				panel.setBackground(cell.getBackground());
