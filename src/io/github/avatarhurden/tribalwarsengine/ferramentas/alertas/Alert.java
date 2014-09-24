@@ -183,6 +183,10 @@ public class Alert {
     	return WorldManager.get().getWorldByName(worldName);
     }
     
+    public void reschedule() {
+    	horário = new Date(new Date().getTime() + repete);
+    }
+    
     private String parseNotas() {
     	
     	String[] words = notas.split(" ");

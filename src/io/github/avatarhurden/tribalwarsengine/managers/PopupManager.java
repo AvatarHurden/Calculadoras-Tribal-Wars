@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.managers;
 
+import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
@@ -12,16 +13,20 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -64,7 +69,7 @@ public class PopupManager {
 				
 		openPopups = new ArrayList<PopupGUI>();
 		
-		scnMax = Toolkit.getDefaultToolkit().getScreenInsets(new PopupGUI(null, null).getGraphicsConfiguration());
+		scnMax = Toolkit.getDefaultToolkit().getScreenInsets(new PopupGUI(null, null, null).getGraphicsConfiguration());
 		
 		bottomBorder = scnMax.bottom;
 		rightBorder = scnMax.right;
@@ -74,9 +79,9 @@ public class PopupManager {
 		
 	}
 	
-	protected void showNewPopup(Alert alerta, AlertTable table) {
+	protected void showNewPopup(Alert alerta, AlertTable table, Date date) {
 		
-		final PopupGUI popup = new PopupGUI(alerta, table);
+		final PopupGUI popup = new PopupGUI(alerta, table, date);
 		
 		openPopups.add(popup);
 		
@@ -118,7 +123,7 @@ public class PopupManager {
 		 * Cria o JDialog do popup
 		 * @param alerta
 		 */
-		private PopupGUI(Alert alerta, AlertTable table) {
+		private PopupGUI(Alert alerta, AlertTable table, Date time) {
 			if (alerta == null)
 				return;
 			
@@ -169,20 +174,14 @@ public class PopupManager {
 			c.fill = GridBagConstraints.HORIZONTAL;
 			add(makeSpoilerPanel(makeInfoPanel(getPreferredSize().width)), c);
 			
-			JLabel datelbl = new JLabel();
-			datelbl.setFont(datelbl.getFont().deriveFont((float) 15));
-			datelbl.setText(new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(alerta.getHorário()));
-			
-			c.gridwidth = 1;
 			c.gridy++;
-			add(datelbl, c);
+			add(makeDatePanel(alerta, time), c);
 			
-			setSize(new Dimension(240,114));
+			setSize(new Dimension(240, 130));
 			
 			addFocusListener();
 			
 			setCloseTime();
-			
 		}
 		
 		/**
@@ -306,9 +305,7 @@ public class PopupManager {
 					panel.add(spoiler, c);
 					
 					pack();
-					
 					showOnScreen();
-					
 				}
 			});
 
@@ -372,7 +369,7 @@ public class PopupManager {
 					destino.getPreferredSize().width, tropas.getPreferredSize().width };
 			
 			} else
-				notesWidth = width;
+				notesWidth = width - 20;
 			
 			notas = makeNotasPanel(alerta.getNotasParsed(), notesWidth);
 			
@@ -510,11 +507,35 @@ public class PopupManager {
 			scroll.setBorder(new EmptyBorder(0, 0, 0, 0));
 			scroll.getViewport().setOpaque(false);
 			scroll.setOpaque(false);
-			scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width, 100));
+			scroll.setPreferredSize(new Dimension(notes.getPreferredSize().width, 100));
 			
 			panel.add(scroll, c);
 			
 			panel.setPreferredSize(new Dimension(width, panel.getPreferredSize().height));
+			
+			return panel;
+		}
+		
+		private JPanel makeDatePanel(Alert a, Date date) {
+			JPanel panel = new JPanel();
+			panel.setOpaque(false);
+			panel.setLayout(new FlowLayout());
+			
+			JLabel datelbl = new JLabel();
+			datelbl.setFont(datelbl.getFont().deriveFont((float) 15));
+			datelbl.setText(new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(alerta.getHorário()));
+			panel.add(datelbl);
+			
+			if (date.equals(alerta.getHorário())) {
+				TWSimpleButton button = new TWSimpleButton("Remarcar");
+				button.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						AlertManager.getInstance().rescheduleAlert(alerta);
+					}
+				});
+				panel.add(button);
+			}
 			
 			return panel;
 		}

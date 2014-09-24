@@ -81,7 +81,7 @@ import com.google.gson.GsonBuilder;
 public class AlertTable extends JTable{
 	
 	private List<Alert> alerts;
-	private List<Integer> oldRows;
+	private List<Alert> oldRows;
 	
 	protected AlertTable(List<Alert> alertas) {
 		this.alerts = alertas;	
@@ -90,7 +90,7 @@ public class AlertTable extends JTable{
 	protected AlertTable() {
 		
 		alerts = new ArrayList<Alert>();
-		oldRows = new ArrayList<Integer>();
+		oldRows = new ArrayList<Alert>();
 
 		if ((boolean) AlertManager.getInstance().getConfig("show_past", false)) {
 			alerts.addAll(AlertManager.getInstance().getPastAlertList());	
@@ -426,6 +426,7 @@ public class AlertTable extends JTable{
 	 */
 	public void changedAlert() {
 		((AlertTableModel) getModel()).fireTableDataChanged();
+		getRowSorter().allRowsChanged();
 		repaint();
 	}
 	
@@ -476,6 +477,11 @@ public class AlertTable extends JTable{
 		else
 			for (Alert a : AlertManager.getInstance().getPastAlertList())
 				addAlert(a);
+	}
+	
+	public void rescheduledAlert(Alert a) {
+		oldRows.remove(a);
+		changedAlert();
 	}
 	
 	/**
@@ -567,11 +573,7 @@ public class AlertTable extends JTable{
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						Alert a = (Alert) getValueAt(row, -1);
-						a.setHorário(label.getDate());
-						AlertManager.getInstance().editAlert(a, a);
-						oldRows.remove((Object) row);
-						changedAlert();
-						getRowSorter().allRowsChanged();
+						AlertManager.getInstance().rescheduleAlert(a);
 						fireEditingStopped();
 					}
 				});
@@ -583,7 +585,7 @@ public class AlertTable extends JTable{
 				
 				label.setDate(new Date(new Date().getTime() + a.getRepete()));
 				
-				if (!oldRows.contains(row))
+				if (!oldRows.contains(a))
 					new Timer().schedule(new TimerTask() {
 						@Override
 						public void run() {
@@ -591,8 +593,8 @@ public class AlertTable extends JTable{
 						}
 					}, (Date) value, 1000);
 				
-				if (!oldRows.contains(row))
-					oldRows.add(row);
+				if (!oldRows.contains(a))
+					oldRows.add(a);
 				
 				return panel;
 		    }
@@ -812,7 +814,7 @@ public class AlertTable extends JTable{
 
 		@Override
 		public boolean isCellEditable(int row, int column) {
-			if (column == 5 && oldRows.contains(row))
+			if (column == 5 && oldRows.contains(getValueAt(row, -1)))
 				return true;
 			else
 				return false;

@@ -62,6 +62,10 @@ public class AlertEditor extends JDialog{
 	// Data do alerta
 	private JSpinner spinnerDate, spinnerHour;
 	
+	// Repetição do alerta
+	private JSpinner spinnerRepeat;
+	private IntegerFormattedTextField textRepeat;
+	
 	// Qual o tipo do alerta
 	private JPanel[] tipos;
 	
@@ -121,6 +125,9 @@ public class AlertEditor extends JDialog{
 		
 		c.gridy++;
 		panel.add(makeDataPanel(), c);
+		
+		c.gridy++;
+		panel.add(makeRepetePanel(), c);
 		
 		c.gridy++;
 		panel.add(makeWorldPanel(), c);
@@ -186,6 +193,13 @@ public class AlertEditor extends JDialog{
 		if (hora != null) {
 			spinnerDate.setValue(hora);
 			spinnerHour.setValue(hora);
+		}
+		
+		long repeat = alerta.getRepete();
+		if (repeat != 0) {
+			textRepeat.setText(String.valueOf(repeat / (24*60*60*1000)));
+			spinnerRepeat.setValue(new Date(repeat));
+			// Constantes para zerar as horas, visto que Date começa às 21:00
 		}
 		
 		Tipo tipo = alerta.getTipo();
@@ -271,6 +285,12 @@ public class AlertEditor extends JDialog{
 		time += ((Date) spinnerHour.getModel().getValue()).getTime()%(24*3600*1000);
 
 		alerta.setHorário(new Date(time));
+		
+		long repeat;
+		repeat = ((Date) spinnerRepeat.getModel().getValue()).getTime()%(24*3600*1000);
+		repeat += textRepeat.getValue() * 24*60*60*1000;
+		
+		alerta.setRepete(repeat);
 		
 		for (int i = 0; i < 4; i++)
 			if (tipos[i].getBackground().equals(Cores.FUNDO_ESCURO))
@@ -442,8 +462,29 @@ public class AlertEditor extends JDialog{
 	
 	private JPanel makeRepetePanel() {
 		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_ESCURO), "Intervalo"));
+		panel.setLayout(new GridBagLayout());
 		
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy = 0;
+		c.gridx = 0;
+		c.insets = new Insets(5, 5, 5, 5);
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
+
+		textRepeat = new IntegerFormattedTextField(null);
 		
+		spinnerRepeat = new JSpinner(new SpinnerDateModel());
+		spinnerRepeat.setEditor(new JSpinner.DateEditor(spinnerRepeat, "HH:mm:ss"));
+		
+		panel.add(textRepeat, c);
+		
+		c.gridx++;
+		panel.add(new JLabel("dias"), c);
+		
+		c.gridy++;
+		panel.add(spinnerRepeat);
 		
 		return panel;
 	}
@@ -473,7 +514,8 @@ public class AlertEditor extends JDialog{
 		
 		origemNome = new JTextField(5);
 		
-		c.gridx++;
+		c.insets = new Insets(0, 5, 5, 0);
+		c.gridy++;
 		panel.add(origemNome, c);
 		
 		villageComponents.add(panel);
@@ -505,8 +547,9 @@ public class AlertEditor extends JDialog{
 		panel.add(destinoCoord, c);
 		
 		destinoNome = new JTextField(5);
-		
-		c.gridx++;
+
+		c.insets = new Insets(0, 5, 5, 0);
+		c.gridy++;
 		panel.add(destinoNome, c);
 
 		villageComponents.add(panel);

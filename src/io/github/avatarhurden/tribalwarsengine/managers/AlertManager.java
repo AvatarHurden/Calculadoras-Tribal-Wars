@@ -184,7 +184,6 @@ public class AlertManager {
 	 * @param alerta a ser removido
 	 */
 	public void removeAlert(Alert alerta) {
-	
 		if (alerts.contains(alerta)) {
 			alerts.remove(alerta);
 			removeFromSchedule(alerta); 
@@ -252,7 +251,7 @@ public class AlertManager {
 	 */
 	private void schedule(final AlertStack a) {
 		
-		Date date = a.getDate();
+		final Date date = a.getDate();
 		
 		if (date == null) {
 			dates.remove(a);
@@ -268,7 +267,7 @@ public class AlertManager {
 				
 				public void run() {
 
-					popups.showNewPopup(a.alert, table);
+					popups.showNewPopup(a.alert, table, date);
 					tasksRodando.remove(a.alert);
 					
 					a.alert.setPast(true);
@@ -303,6 +302,13 @@ public class AlertManager {
 					table.removePast(a);
 			}
 		};
+	}
+	
+	public void rescheduleAlert(Alert a) {
+		a.reschedule();
+		editAlert(a, a);
+		if (table != null)
+			table.rescheduledAlert(a);
 	}
 	
 	/**
