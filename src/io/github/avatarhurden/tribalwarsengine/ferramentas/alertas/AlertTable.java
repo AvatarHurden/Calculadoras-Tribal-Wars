@@ -31,7 +31,6 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.ImageIcon;
@@ -628,17 +627,9 @@ public class AlertTable extends JTable{
 			
 			if (value > 0) {
 			
-				long d = TimeUnit.MILLISECONDS.toDays(value);
-				long h = TimeUnit.MILLISECONDS.toHours(value-TimeUnit.DAYS.toMillis(d));
-				long m = TimeUnit.MILLISECONDS.toMinutes(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h));
-				long s = TimeUnit.MILLISECONDS.toSeconds(value-TimeUnit.DAYS.toMillis(d)-TimeUnit.HOURS.toMillis(h)-TimeUnit.MINUTES.toMillis(m));
-			
-				if (d > 0)
-					time = (String.format("%dd %02d:%02d:%02d", d, h, m, s));
-				else
-					time = (String.format("%02d:%02d:%02d", h, m, s));
-				
-				setHorizontalAlignment(JLabel.LEADING);
+				TimeFormattedJLabel label = new TimeFormattedJLabel(false);
+				label.setTime(value);
+				time = label.getText();
 				
 			} else {
 				time = "-----";
@@ -758,7 +749,7 @@ public class AlertTable extends JTable{
 				case 3: return Alert.Aldeia.class;
 				case 4: return Army.class;
 				case 5: return Date.class;
-				case 6: return long.class;
+				case 6: return Long.class;
 				case 7: return String.class;
 				case 8 : return String.class;
 				default: return null;
@@ -779,7 +770,7 @@ public class AlertTable extends JTable{
 				case 3: return "Destino";
 				case 4: return "Tropas";
 				case 5: return "Horário";
-				case 6: return "Repete";
+				case 6: return "Intervalo";
 				case 7: return "Notas";
 				case 8: return "Mundo";
 				default: return null;

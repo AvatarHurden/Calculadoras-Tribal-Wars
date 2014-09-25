@@ -40,6 +40,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -122,15 +123,15 @@ public class AlertEditor extends JDialog{
 		
 		c.gridy++;
 		panel.add(makeTipoPanel(), c);
+
+		c.gridy++;
+		panel.add(makeWorldPanel(), c);
 		
 		c.gridy++;
 		panel.add(makeDataPanel(), c);
 		
 		c.gridy++;
 		panel.add(makeRepetePanel(), c);
-		
-		c.gridy++;
-		panel.add(makeWorldPanel(), c);
 		
 		c.gridwidth = 1;
 		c.gridy++;
@@ -198,7 +199,7 @@ public class AlertEditor extends JDialog{
 		long repeat = alerta.getRepete();
 		if (repeat != 0) {
 			textRepeat.setText(String.valueOf(repeat / (24*60*60*1000)));
-			spinnerRepeat.setValue(new Date(repeat));
+			spinnerRepeat.setValue(new Date(3*60*60*1000 + repeat));
 			// Constantes para zerar as horas, visto que Date começa às 21:00
 		}
 		
@@ -287,9 +288,9 @@ public class AlertEditor extends JDialog{
 		alerta.setHorário(new Date(time));
 		
 		long repeat;
-		repeat = ((Date) spinnerRepeat.getModel().getValue()).getTime()%(24*3600*1000);
+		repeat = ((Date) spinnerRepeat.getModel().getValue()).getTime();
+		repeat -= 3*60*60*1000;
 		repeat += textRepeat.getValue() * 24*60*60*1000;
-		
 		alerta.setRepete(repeat);
 		
 		for (int i = 0; i < 4; i++)
@@ -471,11 +472,14 @@ public class AlertEditor extends JDialog{
 		c.gridx = 0;
 		c.insets = new Insets(5, 5, 5, 5);
 		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.HORIZONTAL;
 
-		textRepeat = new IntegerFormattedTextField(null);
+		textRepeat = new IntegerFormattedTextField(0, 3, null);
+		textRepeat.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		spinnerRepeat = new JSpinner(new SpinnerDateModel());
+		Date min = new Date(3*60*60000);
+		Date max = new Date(27*60*60000);
+		
+		spinnerRepeat = new JSpinner(new SpinnerDateModel(min, min, max, 0));
 		spinnerRepeat.setEditor(new JSpinner.DateEditor(spinnerRepeat, "HH:mm:ss"));
 		
 		panel.add(textRepeat, c);
@@ -512,7 +516,7 @@ public class AlertEditor extends JDialog{
 		
 		panel.add(origemCoord, c);
 		
-		origemNome = new JTextField(5);
+		origemNome = new JTextField(9);
 		
 		c.insets = new Insets(0, 5, 5, 0);
 		c.gridy++;
@@ -546,7 +550,7 @@ public class AlertEditor extends JDialog{
 		
 		panel.add(destinoCoord, c);
 		
-		destinoNome = new JTextField(5);
+		destinoNome = new JTextField(9);
 
 		c.insets = new Insets(0, 5, 5, 0);
 		c.gridy++;
