@@ -41,7 +41,7 @@ public class AlertasPanel extends Ferramenta {
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         setLayout(gridBagLayout);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
 
             Alert alerta = new Alert();
 

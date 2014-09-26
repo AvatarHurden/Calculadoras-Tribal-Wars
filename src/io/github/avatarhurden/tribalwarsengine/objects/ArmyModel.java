@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 public class ArmyModel implements EditableObject {
 
 	private JSONObject json;
-	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private Gson gson = new GsonBuilder().create();
 	
 	/**
 	 * Construtor com as informações do modelo já criadas. Para gerar um modelo vazio,

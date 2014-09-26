@@ -107,7 +107,7 @@ public class ServerFileManager {
 		
 		try {
 			File servers = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), folder+fileName);
-			JSON.createJSONFile(object, servers);
+			JSON.createJSONFile(object, servers, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

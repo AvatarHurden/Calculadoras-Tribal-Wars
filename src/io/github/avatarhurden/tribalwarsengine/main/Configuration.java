@@ -70,7 +70,7 @@ public class Configuration {
         	
         	createFolders();
         	
-            JSON.createJSONFile(config, configFile);
+            JSON.createJSONFile(config, configFile, true);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Não foi possivel salvar o arquivo de configuração.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -81,7 +81,7 @@ public class Configuration {
         	createFolders();
         	
             if (!configFile.exists())
-            	JSON.createJSONFile(new JSONObject("{}"), configFile);
+            	JSON.createJSONFile(new JSONObject("{}"), configFile, true);
             
             config = JSON.getJSON(configFile);
            

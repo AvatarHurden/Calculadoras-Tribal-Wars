@@ -25,7 +25,7 @@ public class AlertFileManager {
 
 	public void saveConfig(JSONObject json) {
 		try {
-			JSON.createJSONFile(json, new File(parentFolder + configFileName));
+			JSON.createJSONFile(json, new File(parentFolder + configFileName), true);
 		} catch (Exception e) {
 			
 		}
@@ -47,7 +47,7 @@ public class AlertFileManager {
 		json.put("alerts", alerts);
 		
 		try {
-			JSON.createJSONFile(json, new File(file));
+			JSON.createJSONFile(json, new File(file), false);
 		} catch (Exception e) {}
 	}
 	
@@ -69,7 +69,7 @@ public class AlertFileManager {
 		json.put("alerts", alerts);
 		
 		try {
-			JSON.createJSONFile(json, new File(file));
+			JSON.createJSONFile(json, new File(file), false);
 		} catch (Exception e) {}
 	}
 	

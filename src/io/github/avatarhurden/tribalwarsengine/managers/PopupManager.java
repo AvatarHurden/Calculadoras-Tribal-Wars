@@ -532,7 +532,7 @@ public class PopupManager {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						AlertManager.getInstance().rescheduleAlert(alerta);
-						table.selectAlert(a);
+						table.selectAlert(alerta);
 					}
 				});
 				panel.add(button);

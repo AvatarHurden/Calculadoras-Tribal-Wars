@@ -226,14 +226,14 @@ public class WorldFileManager {
 	public void saveBasicConfig(JSONObject json) {
 		try {
 			File config = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), folder+basicFile);
-			JSON.createJSONFile(json, config);
+			JSON.createJSONFile(json, config, true);
 		} catch (Exception e) {}
 	}
 	
 	private void saveWorldConfig(JSONObject json) {
 		try {
 			File config = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), folder+configFile);
-			JSON.createJSONFile(json, config);
+			JSON.createJSONFile(json, config, true);
 		} catch (Exception e) {}
 	}
 	
@@ -242,7 +242,7 @@ public class WorldFileManager {
 			JSONObject unitObject = new JSONObject();
 			unitObject.put("units", json);
 			File config = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), folder+unitFile);
-			JSON.createJSONFile(unitObject, config);
+			JSON.createJSONFile(unitObject, config, true);
 		} catch (Exception e) {}
 	}
 	
@@ -251,7 +251,7 @@ public class WorldFileManager {
 			JSONObject buildingObject = new JSONObject();
 			buildingObject.put("buildings", building);	
 			File buildingConfig = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile(), folder+buildingFile);
-			JSON.createJSONFile(buildingObject, buildingConfig);
+			JSON.createJSONFile(buildingObject, buildingConfig, true);
 		} catch (Exception e) {}
 	}
 	
@@ -260,7 +260,7 @@ public class WorldFileManager {
 		obj.put("armyModels", json);
 		
 		try {
-			JSON.createJSONFile(obj, new File(folder+armyModelFile));
+			JSON.createJSONFile(obj, new File(folder+armyModelFile), false);
 		} catch (Exception e) {}
 	}
 	
@@ -269,7 +269,7 @@ public class WorldFileManager {
 		obj.put("buildingModels", json);
 		
 		try {
-			JSON.createJSONFile(obj, new File(folder+buildingModelFile));
+			JSON.createJSONFile(obj, new File(folder+buildingModelFile), false);
 		} catch (Exception e) {}
 	}
 	

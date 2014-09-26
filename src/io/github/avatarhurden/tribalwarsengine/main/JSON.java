@@ -52,6 +52,7 @@ public class JSON {
         while ((cp = reader.read()) != -1) {
             sb.append((char) cp);
         }
+        reader.close();
         return new JSONObject(sb.toString());
     }
     
@@ -97,13 +98,16 @@ public class JSON {
      * @param file File
      * @throws IOException
      */
-    public static void createJSONFile(JSONObject json, File file) throws IOException {
+    public static void createJSONFile(JSONObject json, File file, boolean readable) throws IOException {
         if (!file.exists()) {
             file.createNewFile();
         }
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.append(json.toString(4));
+        if (readable)
+        	writer.append(json.toString(4));
+        else
+        	writer.append(json.toString());
         writer.flush();
         writer.close();
     }

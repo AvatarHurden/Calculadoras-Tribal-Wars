@@ -100,7 +100,7 @@ public class AlertManager {
 	}
 	
 	public void save() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().create();
 		JSONArray current = new JSONArray();
 		JSONArray past = new JSONArray();
 		
