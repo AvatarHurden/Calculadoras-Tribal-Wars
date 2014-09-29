@@ -201,7 +201,7 @@ public class AlertConfigEditor extends JDialog{
 	
 	public PropertyPanel makeDeletePastPanel() {
 
-		PropertyPanel timePanel = new PropertyPanel() {
+		final PropertyPanel timePanel = new PropertyPanel() {
 			JSpinner spinner;
 			
 			protected void setValueSelf() {
@@ -288,6 +288,8 @@ public class AlertConfigEditor extends JDialog{
 			c.anchor = GridBagConstraints.WEST;
 			c.gridx = 0;
 			c.gridy = 0;
+			
+			setGUI();
 		}
 		
 		protected void save() {

@@ -196,8 +196,8 @@ public class AlertEditor extends JDialog{
 			spinnerHour.setValue(hora);
 		}
 		
-		long repeat = alerta.getRepete();
-		if (repeat != 0) {
+		Long repeat = alerta.getRepete();
+		if (repeat != null) {
 			textRepeat.setText(String.valueOf(repeat / (24*60*60*1000)));
 			spinnerRepeat.setValue(new Date(3*60*60*1000 + repeat));
 			// Constantes para zerar as horas, visto que Date começa às 21:00

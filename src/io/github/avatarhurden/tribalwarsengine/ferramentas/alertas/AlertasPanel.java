@@ -41,7 +41,7 @@ public class AlertasPanel extends Ferramenta {
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         setLayout(gridBagLayout);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 0; i++) {
 
             Alert alerta = new Alert();
 
@@ -172,9 +172,7 @@ public class AlertasPanel extends Ferramenta {
 				
 				switch (e.getActionCommand()) {
 				case "add":
-					Alert alerta = AlertManager.getInstance().createAlert();
-					if (alerta != null)
-						table.addAlert(alerta);
+					AlertManager.getInstance().createAlert();
 					break;
 				case "edit":
 					if (row == -1)

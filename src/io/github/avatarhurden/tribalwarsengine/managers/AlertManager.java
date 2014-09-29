@@ -158,9 +158,11 @@ public class AlertManager {
 		if (alerta != null)
 			if (existente)
 				editAlert(oldAlerta, alerta);
-			else
+			else {
 				addAlert(alerta);
-		
+				if (table != null)
+					table.addAlert(alerta);
+			}
 		return alerta;
 	}
 	

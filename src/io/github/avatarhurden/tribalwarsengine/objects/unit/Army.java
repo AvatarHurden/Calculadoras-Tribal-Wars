@@ -166,7 +166,11 @@ public class Army {
 	}
 	
 	public int getQuantidade(String name) {
-		return getTropa(name).getQuantity();
+		try {
+			return getTropa(name).getQuantity();
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 
 	public int getQuantidade(Unit unidade) {

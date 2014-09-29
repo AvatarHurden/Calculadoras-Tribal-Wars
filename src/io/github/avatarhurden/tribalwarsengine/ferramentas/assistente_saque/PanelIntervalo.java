@@ -129,6 +129,10 @@ public class PanelIntervalo extends JPanel{
 		return coordenadas;
 	}
 	
+	protected TimeFormattedJLabel getIntervalLabel() {
+		return respostaLabel;
+	}
+	
 	/**
 	 * Sets the panel with a format time (value given in milliseconds)
 	 * @param millis

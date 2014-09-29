@@ -151,6 +151,9 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.fill = GridBagConstraints.NONE;
 		add(panelHorário, c);
 		
+		c.gridy++;
+		add(tools.addAlertCreatorPanel(panelHorário.getDateLabel(), panelIntervalo.getIntervalLabel(),
+				panelHorário.getCoordenadaOrigem(), panelIntervalo.getCoordenadaDestino(), armyEdit), c);
 	}
 	
 	private ActionListener getResetButtonAction() {

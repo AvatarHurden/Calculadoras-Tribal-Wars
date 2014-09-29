@@ -303,6 +303,10 @@ public class PanelHorário extends JPanel{
 		return coordenadas;
 	}
 	
+	protected TimeFormattedJLabel getDateLabel() {
+		return respostaLabel;
+	}
+	
 	protected void resetAll() {
 		
 		coordenadas.reset();

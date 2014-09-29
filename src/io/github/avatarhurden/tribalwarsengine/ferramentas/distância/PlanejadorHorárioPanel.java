@@ -37,7 +37,9 @@ public class PlanejadorHorárioPanel extends JPanel {
 
     private JPanel topPanel, bottomPanel;
     private boolean inputTop = true;
-
+    
+    private JPanel topButton, bottomButton;
+    
     private OnChange onChange;
 
     public PlanejadorHorárioPanel(OnChange onChange) {
@@ -162,9 +164,8 @@ public class PlanejadorHorárioPanel extends JPanel {
         bottomPanel.setBorder(new MatteBorder(0, 1, 1, 1, Cores.SEPARAR_ESCURO));
 
         panel.add(bottomPanel);
-
+        
         return panel;
-
     }
 
     private void invertInOut() {
@@ -199,7 +200,9 @@ public class PlanejadorHorárioPanel extends JPanel {
             bottomPanel.add(hourSpinner);
 
             inputTop = false;
-
+            topButton.setVisible(true);
+            bottomButton.setVisible(false);
+            
         } else {
 
             bottomPanel.remove(dateSpinner);
@@ -213,12 +216,12 @@ public class PlanejadorHorárioPanel extends JPanel {
             bottomPanel.add(respostaLabel);
 
             inputTop = true;
+            topButton.setVisible(false);
+            bottomButton.setVisible(true);
 
         }
 
         repaint();
-
-
     }
 
     protected void changeDate(long tempo) {
@@ -236,12 +239,20 @@ public class PlanejadorHorárioPanel extends JPanel {
             respostaLabel.setDate(new Date(input - tempo));
         else
             respostaLabel.setDate(new Date(input + tempo));
-
-
     }
     
     protected TimeFormattedJLabel getDateLabel() {
     	return respostaLabel;
+    }
+    
+    protected void setButtons(JPanel top, JPanel bottom) {
+    	topButton = top;
+    	bottomButton = bottom;
+    	
+    	if (inputTop)
+    		topButton.setVisible(false);
+    	else
+    		bottomButton.setVisible(false);
     }
 
 }

@@ -425,7 +425,8 @@ public class AlertTable extends JTable{
 	 */
 	public void changedAlert() {
 		((AlertTableModel) getModel()).fireTableDataChanged();
-		getRowSorter().allRowsChanged();
+		if (getRowSorter().getViewRowCount() > 0)
+			getRowSorter().allRowsChanged();
 		repaint();
 	}
 	
@@ -560,11 +561,15 @@ public class AlertTable extends JTable{
 			public Component getTableCellEditorComponent(JTable table, Object value, 
 					boolean isSelected, final int row, int column) {
 				
+				Alert a = (Alert) getValueAt(row, -1);
+				
+				if (a.getRepete() == null)
+					return new CustomCellRenderer().getTableCellRendererComponent(
+							   table, null, true, true, row, column);
+				
 				Component cell = new CustomCellRenderer().getTableCellRendererComponent(
 						   table, value, true, true, row, column);
 				
-			 	Alert a = (Alert) getValueAt(row, -1);
-			 	
 				label = new TimeFormattedJLabel(false);
 				
 				button = new TWSimpleButton("Remarcar");

@@ -99,17 +99,30 @@ public class DistânciaPanel extends Ferramenta {
 		//Foi a única maneira que achei pra fazer funcionar
 		c.insets = new Insets(40, 5, 5, 5);
 		add(createTimePanel(), c);
-		
+
 		c.gridy++;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.SOUTH;
 		c.gridwidth = 2;
 		c.insets = new Insets(5, 5, 5, 5);
 		add(planejadorHorárioPanel = new PlanejadorHorárioPanel(onChange), c);
+	
+		JPanel topButton = tools.addAlertCreatorPanel(planejadorHorárioPanel.getDateLabel(), 
+				null, aldeiaOrigem, aldeiaDestino, armyEdit);
+
+		JPanel bottomButton = tools.addAlertCreatorPanel(planejadorHorárioPanel.getDateLabel(), 
+				null, aldeiaOrigem, aldeiaDestino, armyEdit);
+		
+		planejadorHorárioPanel.setButtons(topButton, bottomButton);
 		
 		c.gridx += 2;
-		//add(tools.addAlertCreatorPanel(planejadorHorárioPanel.getDateLabel(), aldeiaOrigem, 
-		//		aldeiaDestino, null), c);
+		c.anchor = GridBagConstraints.NORTH;
+		c.insets = new Insets(76, 5, 5, 5);
+		add(topButton, c);
+		
+		c.anchor = GridBagConstraints.SOUTH;
+		c.insets = new Insets(5, 5, 13, 5);
+		add(bottomButton, c);
 	}
 
 	protected void calculateDistanceAndTimes() {

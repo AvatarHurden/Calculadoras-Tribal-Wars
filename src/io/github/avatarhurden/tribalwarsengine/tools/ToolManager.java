@@ -1,17 +1,14 @@
 package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
-import io.github.avatarhurden.tribalwarsengine.components.IntegerFormattedTextField;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -22,6 +19,7 @@ import config.Lang;
  * Panel on top of every ferramenta with the following functionality:
  * <br>- Reset the values
  * <br>- Apply and edit ModeloTropas
+ * <br>- Create alerts
  *
  * @author Arthur
  */
@@ -73,13 +71,13 @@ public class ToolManager {
      * @param tropas mapa ligando as tropas aos seus textFields
      * @return Um JPanel com o botão
      */
-    public JPanel addAlertCreatorPanel(TimeFormattedJLabel datelbl, CoordenadaPanel origem,
-    		CoordenadaPanel destino, Map<Unit, IntegerFormattedTextField> tropas) {
+    public JPanel addAlertCreatorPanel(TimeFormattedJLabel datelbl, TimeFormattedJLabel intervallbl,
+    		CoordenadaPanel origem, CoordenadaPanel destino, ArmyEditPanel army) {
     	
     	JPanel panel = new JPanel();
     	panel.setOpaque(false);
     	
-    	panel.add(new AlertCreatorPanel(datelbl, origem, destino, tropas));
+    	panel.add(new AlertCreatorPanel(datelbl, intervallbl, origem, destino, army));
     	
     	return panel;
     }
