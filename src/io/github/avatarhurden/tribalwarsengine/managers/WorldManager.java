@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.managers;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Server;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
 
@@ -28,7 +29,10 @@ public class WorldManager {
 	}
 	
 	private void loadConfigs() {
-		JSONArray json = downloader.getServerJSON("config/servers/br", "http://www.tribalwars.com.br");
+		Server server = Server.getServer(Configuration.get().getConfig("server", "br"));
+		Configuration.get().setConfig("server", server.getName());
+		
+		JSONArray json = downloader.getServerJSON(server);
 		
 		worlds = new ArrayList<World>();
 		for (int i = 0; i < json.length(); i++)

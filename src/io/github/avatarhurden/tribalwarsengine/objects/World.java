@@ -1,5 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Server;
+import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldFileManager;
 import io.github.avatarhurden.tribalwarsengine.objects.building.Building;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
@@ -27,7 +29,8 @@ public class World {
 	
 	public World(JSONObject worldInfo) {
 		this.worldInfo = worldInfo;
-		downloader = new WorldFileManager("config/servers/br", worldInfo);
+		Server selectedServer = Server.getServer(Configuration.get().getConfig("server", "br"));
+		downloader = new WorldFileManager("config/servers/" + selectedServer.getName(), worldInfo);
 		
 		// Caso o mundo seja speed, carrega todas as informações para atualização,
 		// devido à curta duração de cada mundo

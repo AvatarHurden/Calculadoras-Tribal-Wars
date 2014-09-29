@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.managers;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Server;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.main.JSON;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
@@ -20,12 +21,12 @@ public class ServerFileManager {
 	private final String phpFunction = "/backend/get_servers.php";
 	private final String fileName = "/worlds.json";
 	
-	public JSONArray getServerJSON(String folder, String url) {
+	public JSONArray getServerJSON(Server server) {
 		try {
-			return getServerOnline(folder, url);
+			return getServerOnline("config/servers/" + server.getName(), server.getURL());
 		} catch (Exception e) {
 			e.printStackTrace();
-			return tryGetServerLocal(folder);
+			return tryGetServerLocal("config/servers/" + server.getName());
 		}
 	}
 	

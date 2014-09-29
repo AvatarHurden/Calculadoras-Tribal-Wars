@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -173,6 +172,10 @@ public class AlertConfigEditor extends JDialog{
 				check.setSelected(false);
 				pastLoot.setSelected(true);
 			}
+
+			protected void setGUI() {
+				
+			}
 		};
 		
 		panel.setLayout(new GridBagLayout());
@@ -198,70 +201,70 @@ public class AlertConfigEditor extends JDialog{
 	
 	public PropertyPanel makeDeletePastPanel() {
 
-		final JSpinner spinner = new JSpinner(new SpinnerNumberModel(24, 0, 999, 1));
-		
-		final JCheckBox check = new JCheckBox();
-		check.setOpaque(false);
-
-		final PropertyPanel timePanel = new PropertyPanel() {
+		PropertyPanel timePanel = new PropertyPanel() {
+			JSpinner spinner;
 			
-			@Override
 			protected void setValueSelf() {
 				spinner.setValue(config.optInt("deletion_time", 24));
-				enableComponents(this, check.isSelected());
 			}
 			
-			@Override
 			protected void setDefaultSelf() {
 				spinner.setValue(24);
 				enableComponents(this, false);
 			}
 			
-			@Override
 			protected void saveSelf() {
 				config.put("deletion_time", spinner.getValue());
 			}
+
+			protected void setGUI() {
+				spinner = new JSpinner(new SpinnerNumberModel(24, 0, 999, 1));
+				
+				JPanel childPanel = new JPanel();
+				childPanel.setOpaque(false);
+				
+				childPanel.add(new JLabel("Deletar alertas antigos depois de "));
+				childPanel.add(spinner);
+				childPanel.add(new JLabel(" horas"));
+				
+				add(childPanel);
+			}
 		};
 		
-		check.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				enableComponents(timePanel, check.isSelected());
-			}
-		});	
-		
 		PropertyPanel panel = new PropertyPanel() {
+			JCheckBox check;
+			
 			protected void saveSelf() {
 				config.put("delete_past", check.isSelected());
 			}
 			
 			protected void setValueSelf() {
 				check.setSelected(config.optBoolean("delete_past", true));
+				enableComponents(timePanel, check.isSelected());
 			}
 			
 			protected void setDefaultSelf() {
 				check.setSelected(true);
 			}
-		};
-		
-		JPanel selectPanel = new JPanel();
-		selectPanel.setLayout(new BoxLayout(selectPanel, BoxLayout.X_AXIS));
-		selectPanel.setOpaque(false);
-		
-		selectPanel.add(check);
-		selectPanel.add(new JLabel("Deletar alertas antigos"));
 
-		panel.add(selectPanel);
+			protected void setGUI() {
+				check = new JCheckBox();
+				check.setOpaque(false);
+				check.addItemListener(new ItemListener() {
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						enableComponents(timePanel, check.isSelected());
+					}
+				});	
 				
-		JPanel childPanel = new JPanel();
-		childPanel.setOpaque(false);
-		
-		childPanel.add(new JLabel("Deletar alertas antigos depois de "));
-		childPanel.add(spinner);
-		childPanel.add(new JLabel(" horas"));
-		
-		timePanel.add(childPanel);
-		panel.addChild(timePanel);
+				JPanel selectPanel = new JPanel();
+				selectPanel.add(check);
+				selectPanel.add(new JLabel("Deletar alertas antigos"));
+				
+				add(selectPanel);
+				addChild(timePanel);
+			}
+		};
 		
 		properties.put("delete_past", panel);
 		return panel;
@@ -310,6 +313,8 @@ public class AlertConfigEditor extends JDialog{
 		}
 		
 		protected abstract void setDefaultSelf();
+		
+		protected abstract void setGUI();
 		
 		protected void add(JPanel panel) {
 			c.insets = new Insets(5, 0, 0, 0);

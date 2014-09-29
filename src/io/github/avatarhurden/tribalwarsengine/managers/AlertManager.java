@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.managers;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Server;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertEditor;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable;
@@ -78,7 +79,8 @@ public class AlertManager {
 
 		popups = new PopupManager();
 	
-		fileManager = new AlertFileManager(Configuration.alertFolder + "/br");
+		Server selectedServer = Server.getServer(Configuration.get().getConfig("server", "br"));
+		fileManager = new AlertFileManager(Configuration.alertFolder + "/" + selectedServer.getName());
 		
 		config = fileManager.getConfig();
 		loadSaved(fileManager.getAlertList());
