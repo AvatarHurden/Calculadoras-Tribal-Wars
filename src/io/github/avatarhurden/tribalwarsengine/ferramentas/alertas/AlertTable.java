@@ -82,21 +82,11 @@ public class AlertTable extends JTable{
 	private List<Alert> alerts;
 	private List<Alert> oldRows;
 	
-	protected AlertTable(List<Alert> alertas) {
-		this.alerts = alertas;	
-	}
-	
 	protected AlertTable() {
 		
 		alerts = new ArrayList<Alert>();
 		oldRows = new ArrayList<Alert>();
-
-		if ((boolean) AlertManager.getInstance().getConfig("show_past", false)) {
-			alerts.addAll(AlertManager.getInstance().getPastAlertList());	
-		}
-		
-		alerts.addAll(AlertManager.getInstance().getAlertList());
-		
+			
 		setModel(new AlertTableModel());
 		
 		setBackground(Cores.FUNDO_CLARO);
@@ -135,7 +125,7 @@ public class AlertTable extends JTable{
 		
 		changeHeader();
 		
-		positionColumns();		
+		positionColumns();			
 	}
 	
 	public void setStartingPosition(JScrollPane scroll) {
@@ -425,8 +415,7 @@ public class AlertTable extends JTable{
 	 */
 	public void changedAlert() {
 		((AlertTableModel) getModel()).fireTableDataChanged();
-		if (getRowSorter().getViewRowCount() > 0)
-			getRowSorter().allRowsChanged();
+		getRowSorter().allRowsChanged();
 		repaint();
 	}
 	
@@ -441,8 +430,10 @@ public class AlertTable extends JTable{
 	}
 	
 	public void addAlert(Alert a) {
-		alerts.add(a);
-		changedAlert();
+		if (!alerts.contains(a)) {
+			alerts.add(a);
+			changedAlert();
+		}
 	}
 	
 	public void editAlert(int row, Alert a) {
@@ -537,7 +528,9 @@ public class AlertTable extends JTable{
 		public Component getTableCellRendererComponent (final JTable table, 
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
-			if (((Date) obj).after(new Date()))
+			Alert a = (Alert) getValueAt(row, -1);
+			
+			if (((Date) obj).after(new Date()) || a.getRepete() == 0)
 				return new DateCellRenderer().getTableCellRendererComponent(
 						table, obj, isSelected, hasFocus, row, column);
 			

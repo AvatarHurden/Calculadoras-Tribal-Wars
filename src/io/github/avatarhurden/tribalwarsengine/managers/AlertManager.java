@@ -135,7 +135,7 @@ public class AlertManager {
 		
 		Alert alerta = editor.getAlerta();
 		
-		if (alerta != null)
+		if (alerta != null) 
 			addAlert(alerta);
 		
 		return alerta;
@@ -158,11 +158,9 @@ public class AlertManager {
 		if (alerta != null)
 			if (existente)
 				editAlert(oldAlerta, alerta);
-			else {
+			else
 				addAlert(alerta);
-				if (table != null)
-					table.addAlert(alerta);
-			}
+		
 		return alerta;
 	}
 	
@@ -171,7 +169,25 @@ public class AlertManager {
 	 * @param alerta a ser adicionado
 	 */
 	public void addAlert(Alert alerta) {
-		addToSchedule(alerta);
+		Stack<Date> avisos = alerta.getAvisos();
+		// Aparecem avisos tanto nos alertas quanto no horário real
+		avisos.add(0, alerta.getHorário());
+		
+		// Remove todos os avisos que já deveriam ter sido mostrados (ou seja, Dates do passado)
+		Iterator<Date> it = avisos.iterator();
+		while (it.hasNext())
+			if (it.next().before(new Date()))
+				it.remove();
+		
+		AlertStack stack = new AlertStack(alerta, avisos);
+		
+		putAlertInList(stack);
+		
+		if (shouldActivate(alerta)) {
+			addToSchedule(stack);
+			if (table != null)
+				table.addAlert(alerta);
+		}
 	}
 	
 	/**
@@ -202,35 +218,29 @@ public class AlertManager {
 	}
 	
 	public List<Alert> getAlertList() {
-		return alerts;
+		List<Alert> list = new ArrayList<Alert>();
+		for (Alert a : alerts)
+			if (shouldActivate(a))
+				list.add(a);
+		return list;
 	}
 	
 	public List<Alert> getPastAlertList() {
-		return pastAlerts;
+		List<Alert> list = new ArrayList<Alert>();
+		for (Alert a : pastAlerts)
+			if (shouldActivate(a))
+				list.add(a);
+		return list;
 	}
 	
 	/**
 	 * Adiciona o Alert à dates e, se necessário, inicia um TimerTask para ele
 	 * @param alerta
 	 */
-	private void addToSchedule(Alert alerta) {
-		
-		Stack<Date> avisos = alerta.getAvisos();
-		// Aparecem avisos tanto nos alertas quanto no horário real
-		avisos.add(0, alerta.getHorário());
-		
-		// Remove todos os avisos que já deveriam ter sido mostrados (ou seja, Dates do passado)
-		Iterator<Date> it = avisos.iterator();
-		while (it.hasNext())
-			if (it.next().before(new Date()))
-				it.remove();
-		
-		AlertStack stack = new AlertStack(alerta, avisos);
-		
-		putAlertInList(stack);
+	private void addToSchedule(AlertStack stack) {
 		
 		if (tasksRodando.isEmpty() || lastScheduledDate == null 
-				|| (!avisos.isEmpty() && lastScheduledDate.compareTo(avisos.peek()) > 0))
+				|| (!stack.dates.isEmpty() && lastScheduledDate.compareTo(stack.dates.peek()) > 0))
 			schedule(stack);
 	}
 	
@@ -365,6 +375,14 @@ public class AlertManager {
 		return a.getHorário().before(toDelete) && config.optBoolean("delete_past", true);
 	}
 	
+	private boolean shouldActivate(Alert a) {
+		if (config.optBoolean("show_only_selected", false))
+			if (!a.getWorld().equals(WorldManager.getSelectedWorld()))
+					return false;
+		
+		return true;
+	}
+	
 	/**
 	 * Cria um comparador entre aldeias. No comparador, o menor valor é aquele que possui um horário mais
 	 * cedo.
@@ -400,6 +418,10 @@ public class AlertManager {
 	
 	public void setTable(AlertTable table) {
 		this.table = table;
+		for (Alert a : alerts)
+			if (shouldActivate(a))
+				table.addAlert(a);
+		table.managePast();
 	}
 	
 	public JSONObject getConfig() {

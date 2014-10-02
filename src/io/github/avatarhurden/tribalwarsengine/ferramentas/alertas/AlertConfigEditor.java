@@ -16,9 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -34,13 +32,13 @@ import org.json.JSONObject;
 
 public class AlertConfigEditor extends JDialog{
 
-	private Map<String, PropertyPanel> properties;
+	private List<PropertyPanel> properties;
 	private JSONObject config;
 	
 	public AlertConfigEditor() {
 		
 		config = AlertManager.getInstance().getConfig();
-		properties = new HashMap<String, PropertyPanel>();
+		properties = new ArrayList<PropertyPanel>();
 		
 		getContentPane().setBackground(Cores.FUNDO_CLARO);
 		setLayout(new GridBagLayout());
@@ -53,6 +51,9 @@ public class AlertConfigEditor extends JDialog{
 		
 		c.gridwidth = 3;
 		add(makeShowPastPanel(), c);
+		
+		c.gridy++;
+		add(makeShowWorldPanel(), c);
 		
 		c.gridy++;
 		add(makeDeletePastPanel(), c);
@@ -68,7 +69,7 @@ public class AlertConfigEditor extends JDialog{
 		c.gridx++;
 		add(makeCancelButton(), c);
 		
-		for (PropertyPanel p : properties.values())
+		for (PropertyPanel p : properties)
 			p.setValue();
 
 		setModal(true);
@@ -106,7 +107,7 @@ public class AlertConfigEditor extends JDialog{
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (PropertyPanel p : properties.values())
+				for (PropertyPanel p : properties)
 					p.save();
 				dispose();
 			}
@@ -121,7 +122,7 @@ public class AlertConfigEditor extends JDialog{
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (PropertyPanel p : properties.values())
+				for (PropertyPanel p : properties)
 					p.setDefault();
 			}
 		});
@@ -194,8 +195,44 @@ public class AlertConfigEditor extends JDialog{
 		c.gridx++;
 		panel.add(new JLabel("Manter alertas antigos de saque na tabela"), c);
 		
+		properties.add(panel);
+		return panel;
+	}
+	
+	public PropertyPanel makeShowWorldPanel() {
 		
-		properties.put("show_past", panel);
+		PropertyPanel panel = new PropertyPanel() {
+			JCheckBox check;
+			
+			@Override
+			protected void setValueSelf() {
+				check.setSelected(config.optBoolean("show_only_selected", false));
+			}
+			
+			@Override
+			protected void setGUI() {
+				check = new JCheckBox();
+				check.setOpaque(false);
+				
+				JPanel selectPanel = new JPanel();
+				selectPanel.add(check);
+				selectPanel.add(new JLabel("Mostrar apenas alertas do mundo selecionado"));
+				
+				add(selectPanel);
+			}
+			
+			@Override
+			protected void setDefaultSelf() {
+				check.setSelected(false);
+			}
+			
+			@Override
+			protected void saveSelf() {
+				config.put("show_only_selected", check.isSelected());
+			}
+		};
+		
+		properties.add(panel);
 		return panel;
 	}
 	
@@ -221,7 +258,6 @@ public class AlertConfigEditor extends JDialog{
 				spinner = new JSpinner(new SpinnerNumberModel(24, 0, 999, 1));
 				
 				JPanel childPanel = new JPanel();
-				childPanel.setOpaque(false);
 				
 				childPanel.add(new JLabel("Deletar alertas antigos depois de "));
 				childPanel.add(spinner);
@@ -266,7 +302,7 @@ public class AlertConfigEditor extends JDialog{
 			}
 		};
 		
-		properties.put("delete_past", panel);
+		properties.add(panel);
 		return panel;
 	}	
 	
@@ -319,7 +355,9 @@ public class AlertConfigEditor extends JDialog{
 		protected abstract void setGUI();
 		
 		protected void add(JPanel panel) {
-			c.insets = new Insets(5, 0, 0, 0);
+			panel.setOpaque(false);
+
+			c.insets = new Insets(0, 0, 0, 0);
 			add(panel, c);
 			c.gridy++;
 		}

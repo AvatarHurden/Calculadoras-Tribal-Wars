@@ -526,7 +526,7 @@ public class PopupManager {
 			datelbl.setText(new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(alerta.getHorário()));
 			panel.add(datelbl);
 			
-			if (date.equals(alerta.getHorário())) {
+			if (date.equals(alerta.getHorário()) && a.getRepete() > 0) {
 				TWSimpleButton button = new TWSimpleButton("Remarcar");
 				button.addActionListener(new ActionListener() {
 					@Override
