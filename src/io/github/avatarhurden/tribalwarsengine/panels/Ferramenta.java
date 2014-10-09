@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.SoftBevelBorder;
 
-@SuppressWarnings("serial")
 /**
  * Adiciona a tab para a inserção na MainWindow
  */
@@ -58,22 +57,15 @@ public abstract class Ferramenta extends JPanel {
 
             }
         });
-
+        
+        tab.setMaximumSize(tab.getPreferredSize());
     }
 
     // Methods to be used by the tool section
 
     public void changeSelection() {
-
         tools.refresh();
-
-        frame.ferramentaSelecionada.setSelected(false);
-
-        setSelected(true);
-        frame.ferramentaSelecionada = Ferramenta.this;
-
-        frame.pack();
-
+        frame.selectPanel(frame.ferramentas.indexOf(this));
     }
 
     public boolean isSelected() {
@@ -113,14 +105,12 @@ public abstract class Ferramenta extends JPanel {
      * @return Color não utilizada
      */
     public Color getNextColor() {
-
-        if (corEscuraUsada) {
-            corEscuraUsada = false;
+    	corEscuraUsada = !corEscuraUsada;
+    	
+        if (!corEscuraUsada)
             return Cores.ALTERNAR_CLARO;
-        } else {
-            corEscuraUsada = true;
-            return Cores.ALTERNAR_ESCURO;
-        }
+        else
+        	return Cores.ALTERNAR_ESCURO;
     }
     
     protected abstract void makeGUI();

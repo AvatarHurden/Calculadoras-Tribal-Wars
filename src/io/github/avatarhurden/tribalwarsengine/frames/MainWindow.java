@@ -80,52 +80,51 @@ public class MainWindow extends JFrame {
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 
         manager.addKeyEventDispatcher(new KeyEventDispatcher() {
-            public boolean dispatchKeyEvent(KeyEvent e) {
-
+            public boolean dispatchKeyEvent(KeyEvent e) {	
                 if (e.getKeyCode() == KeyEvent.VK_TAB && e.isControlDown())
                     // Only do this once per key press
                     if (e.getID() == KeyEvent.KEY_PRESSED) {
-
+                    	
+                    	// Shift reverses the flow
+                    	if (e.isShiftDown()) {
+                    		if (ferramentas.indexOf(ferramentaSelecionada) == 0)
+                                ferramentas.get(ferramentas.size() - 1).changeSelection();
+                            else
+                                ferramentas.get(ferramentas.indexOf(ferramentaSelecionada) - 1).changeSelection();
+                    	} else {
                         // If it is not the last tool, go to the next one. Otherwise, go to first
-                        if (ferramentas.indexOf(ferramentaSelecionada) < ferramentas.size() - 1)
-                            ferramentas.get(ferramentas.indexOf(ferramentaSelecionada) + 1).changeSelection();
-                        else
-                            ferramentas.get(0).changeSelection();
-
+                    		if (ferramentas.indexOf(ferramentaSelecionada) < ferramentas.size() - 1)
+                    			ferramentas.get(ferramentas.indexOf(ferramentaSelecionada) + 1).changeSelection();
+                    		else
+                    			ferramentas.get(0).changeSelection();
+                    	}
                     }
 
-                if (e.isControlDown() && e.getID() == KeyEvent.KEY_PRESSED) {
+                if (!e.isShiftDown() && e.isControlDown() && e.getID() == KeyEvent.KEY_PRESSED) {
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_1:
                             ferramentas.get(0).changeSelection();
                             break;
                         case KeyEvent.VK_2:
-                            if (ferramentas.size() >= 2)
-                                ferramentas.get(1).changeSelection();
+                            ferramentas.get(1).changeSelection();
                             break;
                         case KeyEvent.VK_3:
-                            if (ferramentas.size() >= 3)
-                                ferramentas.get(2).changeSelection();
+                            ferramentas.get(2).changeSelection();
                             break;
                         case KeyEvent.VK_4:
-                            if (ferramentas.size() >= 4)
-                                ferramentas.get(3).changeSelection();
+                            ferramentas.get(3).changeSelection();
                             break;
                         case KeyEvent.VK_5:
-                            if (ferramentas.size() >= 5)
-                                ferramentas.get(4).changeSelection();
+                            ferramentas.get(4).changeSelection();
                             break;
                         case KeyEvent.VK_6:
-                            if (ferramentas.size() >= 6)
-                                ferramentas.get(5).changeSelection();
+                            ferramentas.get(5).changeSelection();
                             break;
                         case KeyEvent.VK_7:
-                            if (ferramentas.size() >= 7)
-                                ferramentas.get(6).changeSelection();
+                            ferramentas.get(6).changeSelection();
                             break;
                         case KeyEvent.VK_8:
-                            if (ferramentas.size() >= 8)
-                                ferramentas.get(7).changeSelection();
+                            ferramentas.get(7).changeSelection();
                             break;
                         // On ctrl-9, go to last tool
                         case KeyEvent.VK_9:
@@ -133,7 +132,6 @@ public class MainWindow extends JFrame {
                             break;
                     }
                 }
-
 
                 return false;
             }
