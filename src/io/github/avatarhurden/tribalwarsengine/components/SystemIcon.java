@@ -64,6 +64,10 @@ public class SystemIcon implements ActionListener {
                 Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/images/Icon.png"))
         );
     }
+    
+    public TrayIcon getIcon() {
+    	return trayIcon;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

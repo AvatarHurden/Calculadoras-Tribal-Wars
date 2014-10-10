@@ -296,26 +296,17 @@ public class AlertManager {
 						timer.cancel();
 					timer.purge();
 					
-					timer.schedule(transferToPast(a.alert), 60000);
+					pastAlerts.add(a.alert);
+					alerts.remove(a.alert);
+					
+					if (table != null)
+						table.removePast(a.alert);
 				}
 			});
 			
 			timer.schedule(tasksRodando.get(a.alert), date);
 			lastScheduledDate = date; 
 		}
-	}
-	
-	private TimerTask transferToPast(final Alert a) {
-		return new TimerTask() {
-			@Override
-			public void run() {
-				pastAlerts.add(a);
-				alerts.remove(a);
-				
-				if (table != null)
-					table.removePast(a);
-			}
-		};
 	}
 	
 	public void rescheduleAlert(Alert a) {

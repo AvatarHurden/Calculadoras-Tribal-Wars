@@ -84,14 +84,17 @@ public class AlertasPanel extends Ferramenta {
     protected void makeGUI() {
 
         Dimension d = MainWindow.getInstance().getPreferredSize();
-        d.setSize(d.getWidth() - 50, 570);
+        d.setSize(d.getWidth() - 50, 520);
+        
+        JScrollPane scrollPane = new JScrollPane();
+        AlertTableFilter filter = new AlertTableFilter(scrollPane);
         
         table = new AlertTable();
+        table.setFillsViewportHeight(true);
         AlertManager.getInstance().setTable(table);
         
-        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setViewportView(table);
         scrollPane.setPreferredSize(d);
-        table.setFillsViewportHeight(true);
         table.setStartingPosition(scrollPane);
 
         GridBagConstraints c = new GridBagConstraints();
@@ -99,10 +102,14 @@ public class AlertasPanel extends Ferramenta {
         c.gridx = 0;
         c.gridy = 0;
         
+        c.anchor = GridBagConstraints.WEST;
+        add(filter, c);
+        
         c.gridx++;
         c.anchor = GridBagConstraints.NORTHEAST;
         add(makeOptionsButton(), c);
-
+        
+        c.gridy++;
         c.gridx = 0;
         c.anchor = GridBagConstraints.CENTER;
         add(scrollPane, c);

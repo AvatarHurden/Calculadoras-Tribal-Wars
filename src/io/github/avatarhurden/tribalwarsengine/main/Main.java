@@ -7,6 +7,7 @@ import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 
 import java.awt.Font;
+import java.awt.SystemTray;
 import java.io.IOException;
 import java.net.URL;
 
@@ -32,7 +33,7 @@ public class Main {
     private static String REMOTE_URL = "https://raw.githubusercontent.com/AvatarHurden/Tribal-Wars-Engine/master/last_update.json";
 
     private static JFrame currentFrame;
-    private SystemIcon trayicon;
+    private static SystemIcon trayIcon;
     
     public static void main(String[] args) {
     	new Main().init(args);
@@ -56,7 +57,7 @@ public class Main {
         Font oldLabelFont = UIManager.getFont("Label.font");
         UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
 
-        trayicon = new SystemIcon(this);
+        trayIcon = new SystemIcon(this);
         mainFrame = MainWindow.getInstance();
         selectWorldFrame = SelectWorldFrame.getInstance();
         openWorldSelection();
@@ -117,6 +118,8 @@ public class Main {
     	location.put("y", currentFrame.getLocationOnScreen().y);
     	
     	config.setConfig("location", location);
+    	
+    	SystemTray.getSystemTray().remove(trayIcon.getIcon());
     	
     	System.exit(-1);
     }

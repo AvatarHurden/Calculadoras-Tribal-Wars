@@ -95,6 +95,11 @@ public class SelectWorldFrame extends JFrame {
         setResizable(false);
 
         JSONObject location = Configuration.get().getConfig("location", new JSONObject());
+        if (location.optInt("x", 0) < 0)
+        	location.put("x", 0);
+        if (location.optInt("y", 0) < 0)
+        	location.put("y", 0);
+        
         setLocation(location.optInt("x", 0), location.optInt("y", 0));
     }
 
