@@ -2,16 +2,22 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
+import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -20,20 +26,38 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class AlertTableFilter extends JPanel{
 
+	private TableRowSorter<TableModel> sorter;
 	private JScrollPane tablePane;
 	private TWSimpleButton filtrar;
 	private JPanel filtersPanel;
 	
-	private JTextField name;
+	private JTextField nameField;
 	private JCheckBox geral, apoio, ataque, saque;
 	private JCheckBox selectedWorld;
+	private ArmyEditPanel army;
+	
+	private OnChange onChange;
 	
 	public AlertTableFilter(JScrollPane pane) {
+		
+		onChange = new OnChange() {
+			@Override
+			public void run() {
+				army.saveValues();
+				setFilter();
+			}
+		};
+		
 		setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		setBackground(Cores.FUNDO_CLARO);
 		
@@ -47,13 +71,16 @@ public class AlertTableFilter extends JPanel{
 		add(filtersPanel);
 	}
 	
+	public void setSorter(TableRowSorter<? extends TableModel> rowSorter) {
+		this.sorter = (TableRowSorter<TableModel>) rowSorter;
+	}
+	
 	private JPanel makeSwitchPanel() {
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		
-		filtrar = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                AlertasPanel.class.getResource("/images/up_arrow.png"))));
+		filtrar = new TWSimpleButton(new ImageIcon(Imagens.getImage("down_arrow.png")));
 		
 		filtrar.addActionListener(new ActionListener() {
 			@Override
@@ -65,13 +92,11 @@ public class AlertTableFilter extends JPanel{
 				
 				if (!filtersPanel.isVisible()) {
 					filtersPanel.setVisible(true);
-					filtrar.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                AlertasPanel.class.getResource("/images/down_arrow.png"))));
+					filtrar.setIcon(new ImageIcon(Imagens.getImage("up_arrow.png")));
 					tablePane.setPreferredSize(new Dimension(width, height - diff));
 				} else {
 					filtersPanel.setVisible(false);
-					filtrar.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			                AlertasPanel.class.getResource("/images/up_arrow.png"))));
+					filtrar.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
 					tablePane.setPreferredSize(new Dimension(width, height + diff));
 				}
 				
@@ -99,6 +124,11 @@ public class AlertTableFilter extends JPanel{
 		c.gridx++;
 		panel.add(makeTipoPanel(), c);
 		
+		c.gridx++;
+		c.gridheight = 2;
+		panel.add(makeArmyPanel(), c);
+
+		c.gridheight = 1;
 		c.gridx = 0;
 		c.gridy++;
 		panel.add(makeSelectedWorldPanel(), c);
@@ -111,8 +141,22 @@ public class AlertTableFilter extends JPanel{
 		panel.setOpaque(false);
 		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_CLARO), "Nome"));
 		
-		name = new JTextField(15);
-		panel.add(name);
+		nameField = new JTextField(15);
+		nameField.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				onChange.run();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				onChange.run();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {}
+		});
+		panel.add(nameField);
 		
 		return panel;
 	}
@@ -124,12 +168,39 @@ public class AlertTableFilter extends JPanel{
 	
 		geral = new JCheckBox("Geral");
 		geral.setOpaque(false);
+		geral.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				onChange.run();
+			}
+		});
+		
 		ataque = new JCheckBox("Ataque");
 		ataque.setOpaque(false);
+		ataque.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				onChange.run();
+			}
+		});
+		
 		apoio = new JCheckBox("Apoio");
 		apoio.setOpaque(false);
+		apoio.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				onChange.run();
+			}
+		});
+		
 		saque = new JCheckBox("Saque");
 		saque.setOpaque(false);
+		saque.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				onChange.run();
+			}
+		});
 		
 		panel.add(geral);
 		panel.add(ataque);
@@ -146,8 +217,28 @@ public class AlertTableFilter extends JPanel{
 		
 		selectedWorld = new JCheckBox("Apenas o mundo atual");
 		selectedWorld.setOpaque(false);
+		selectedWorld.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				onChange.run();
+			}
+		});
 		
 		panel.add(selectedWorld);
+		
+		return panel;
+	}
+	
+	private JPanel makeArmyPanel() {
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		panel.setBorder(new TitledBorder(new LineBorder(Cores.SEPARAR_CLARO), "Tropas"));
+		
+		army = new Army().getEditPanelSelectionNoHeader(onChange, 30);
+		//Custom(onChange, 30, false, true, true, true, false);
+		army.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
+		
+		panel.add(army);
 		
 		return panel;
 	}
@@ -170,12 +261,40 @@ public class AlertTableFilter extends JPanel{
 		}
 	}
 	
-	private boolean isName(String name) {
-		return true;
+	private boolean hasArmy(Army a) {
+		boolean res = true;
+		
+		for (Troop t : army.getArmy().getTropas())
+			if (t.getQuantity() > 0) {
+				if (a == null) {
+					res = false;
+					break;
+				} else
+					res = a.getQuantidade(t.getName()) > 0;
+			}
+				
+		return res;
 	}
 	
-	public boolean include(Alert a) {
-		return isSelectedType(a.getTipo()) && isName(a.getNome());	
+	public void setFilter() {
+		
+		RowFilter<TableModel, Integer> filter = new RowFilter<TableModel, Integer>() {
+
+			@Override
+			public boolean include(
+					javax.swing.RowFilter.Entry<? extends TableModel, ? extends Integer> entry) {
+				boolean toAdd = true;
+				
+				toAdd &= RowFilter.regexFilter(nameField.getText(), 0).include(entry);
+				toAdd &= isSelectedType((Tipo) entry.getValue(1));
+				toAdd &= hasArmy((Army) entry.getValue(4));
+				
+				return toAdd;
+			}
+		};
+		
+		sorter.setRowFilter(filter);
+		
 	}
 	
 }

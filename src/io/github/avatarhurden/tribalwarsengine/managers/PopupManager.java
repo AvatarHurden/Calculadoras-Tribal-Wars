@@ -2,10 +2,10 @@ package io.github.avatarhurden.tribalwarsengine.managers;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
@@ -203,8 +203,7 @@ public class PopupManager {
 			c.gridx = 0;
 			c.gridy = 0;
 			
-			Image image = Toolkit.getDefaultToolkit().getImage(
-					AlertasPanel.class.getResource("/images/Icon.png"));
+			Image image = Imagens.getImage("Icon.png");
 			
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 			
@@ -275,8 +274,7 @@ public class PopupManager {
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.anchor = GridBagConstraints.WEST;
 			
-			Image image = Toolkit.getDefaultToolkit().getImage(
-					AlertasPanel.class.getResource("/images/down_arrow.png"));
+			Image image = Imagens.getImage("down_arrow.png");
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(12, 12, Image.SCALE_SMOOTH));
 			
 			final JLabel label = new JLabel(icon, SwingConstants.RIGHT);

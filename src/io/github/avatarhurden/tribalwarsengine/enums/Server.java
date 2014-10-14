@@ -1,9 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.enums;
 
-import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
-
 import java.awt.Image;
-import java.awt.Toolkit;
 
 public enum Server {
 	
@@ -59,8 +56,7 @@ public enum Server {
 	}
 	
 	public Image getFlag() {
-		return Toolkit.getDefaultToolkit().getImage(
-                AlertasPanel.class.getResource("/images/flag_" + name + ".png"));
+		return Imagens.getImage("flag_" + name + ".png");
 	}
 	
 	public static Server getServer(String name) {

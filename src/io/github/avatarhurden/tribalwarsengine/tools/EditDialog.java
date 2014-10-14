@@ -3,7 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
-import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.objects.EditableObject;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.EditPanelCreator;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
@@ -14,7 +14,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -336,8 +335,7 @@ public class EditDialog extends JDialog {
         c.gridx++;
         rightPanel.add(saveButton, c);
 
-        upButton = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/up_arrow.png"))));
+        upButton = new TWSimpleButton(new ImageIcon(Imagens.getImage("up_arrow.png")));
         
         upButton.setPreferredSize(new Dimension(50,
         		saveButton.getPreferredSize().height));
@@ -373,8 +371,7 @@ public class EditDialog extends JDialog {
 
         rightPanel.add(upButton, c);
 
-        downButton = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
+        downButton = new TWSimpleButton(new ImageIcon(Imagens.getImage("down_arrow.png")));
 
         downButton.setPreferredSize(new Dimension(50,
         		upButton.getPreferredSize().height));
@@ -522,9 +519,8 @@ public class EditDialog extends JDialog {
         private boolean isSaved = true;
 
         // The symbol to be added to the objectName when it is unsaved
-        private JLabel unsavedSignal = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/asterísco_vermelho.png"))));
-
+        private JLabel unsavedSignal = new JLabel(new ImageIcon(Imagens.getImage("asterisco_vermelho.png")));
+        
         // Object with the function that will be called when any one the Property's
         // "textFields" are changed
         private OnChange onChange;

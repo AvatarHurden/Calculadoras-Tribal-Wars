@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.listeners.TWEWindowListener;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.panels.SelectWorldPanel;
@@ -12,7 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
@@ -55,8 +55,7 @@ public class SelectWorldFrame extends JFrame {
 
         addWindowListener(new TWEWindowListener());
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/icon.png")));
+        setIconImage(Imagens.getImage("icon.png"));
         
         setGUI();
 
@@ -116,8 +115,7 @@ public class SelectWorldFrame extends JFrame {
         * Irei criar um classe só pra carregar os recursos de forma estatica,
         * Assim, poderemos manter o projeto mais organizado e mover todos os pacotes para dentro da SRC
         */
-        lblTítulo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/logo_engine_centralized.png"))));
+        lblTítulo.setIcon(new ImageIcon(Imagens.getImage("logo_engine_centralized.png")));
 
        return lblTítulo;
     }
@@ -135,8 +133,7 @@ public class SelectWorldFrame extends JFrame {
         c.gridx = 0;
         c.gridy = 0;
         
-        loadingPanel.add(new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/loading.gif")))), c);
+        loadingPanel.add(new JLabel(new ImageIcon(Imagens.getImage("loading.gif"))), c);
         
         c.gridy++;
     	loadingPanel.add(new JLabel("Carregando Mundos..."), c);

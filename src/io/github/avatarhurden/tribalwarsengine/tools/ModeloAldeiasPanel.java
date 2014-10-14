@@ -2,16 +2,15 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
-import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
-import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.BuildingBlockModel;
+import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -84,8 +83,7 @@ public class ModeloAldeiasPanel extends JPanel {
 
         final JButton button = new TWSimpleButton();
 
-        button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/down_arrow.png"))));
+        button.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
 
         button.setPreferredSize(new Dimension(20, 20));
 
@@ -144,8 +142,7 @@ public class ModeloAldeiasPanel extends JPanel {
 
         final JButton button = new TWSimpleButton();
 
-        button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/edit_icon.png"))));
+        button.setIcon(new ImageIcon(Imagens.getImage("edit_icon.png")));
 
         button.setPreferredSize(new Dimension(20, 20));
 

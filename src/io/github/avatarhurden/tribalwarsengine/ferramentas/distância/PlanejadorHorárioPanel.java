@@ -3,7 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.distância;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
-import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Dimension;
@@ -11,7 +11,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -74,8 +73,7 @@ public class PlanejadorHorárioPanel extends JPanel {
          c.fill = GridBagConstraints.HORIZONTAL;
          add(makeInputPanel(), c);
          
-         JButton invert = new TWSimpleButton(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                 SelectWorldFrame.class.getResource("/images/switch_arrow.png"))));
+         JButton invert = new TWSimpleButton(new ImageIcon(Imagens.getImage("switch_arrow.png")));
          
          invert.setPreferredSize(new Dimension(54,26));
          

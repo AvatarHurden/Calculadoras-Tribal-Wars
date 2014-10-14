@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
@@ -14,7 +15,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,6 +24,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class AlertasPanel extends Ferramenta {
 
@@ -41,7 +43,7 @@ public class AlertasPanel extends Ferramenta {
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         setLayout(gridBagLayout);
 
-        for (int i = 0; i < 0; i++) {
+        for (int i = 0; i < 10; i++) {
 
             Alert alerta = new Alert();
 
@@ -64,12 +66,11 @@ public class AlertasPanel extends Ferramenta {
                 map.addTropa(map.getUnit("sword"), 100, 1);
                 map.addTropa(map.getUnit("axe"), 100, 1);
                 alerta.setArmy(map);
-
             }
 
             Date now = new Date();
 
-            alerta.setHorário(new Date(now.getTime() + (1+i) * 6000));
+            alerta.setHorário(new Date(now.getTime() + (1+i) * 100000));
 
             alerta.setRepete((long) 10000);
             
@@ -92,6 +93,7 @@ public class AlertasPanel extends Ferramenta {
         table = new AlertTable();
         table.setFillsViewportHeight(true);
         AlertManager.getInstance().setTable(table);
+        filter.setSorter((TableRowSorter<? extends TableModel>) table.getRowSorter());
         
         scrollPane.setViewportView(table);
         scrollPane.setPreferredSize(d);
@@ -124,8 +126,7 @@ public class AlertasPanel extends Ferramenta {
     	JButton button = new TWSimpleButton();
         button.setPreferredSize(new Dimension(20, 20));
         
-    	button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                AlertasPanel.class.getResource("/images/edit_icon.png"))));
+    	button.setIcon(new ImageIcon(Imagens.getImage("edit_icon.png")));
     	
     	button.addActionListener(new ActionListener() {
 			@Override

@@ -1,6 +1,7 @@
 package io.github.avatarhurden.tribalwarsengine.frames;
 
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertasPanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.AssistenteSaquePanel;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.dados_de_unidade.DadosDeUnidadePanel;
@@ -18,7 +19,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,6 @@ import javax.swing.border.LineBorder;
 
 import config.Lang;
 
-@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
     //instancia da janela, para chamados estaticos
@@ -53,8 +52,7 @@ public class MainWindow extends JFrame {
         // Setting the visuals for the frame
         setTitle(Lang.Titulo.toString());
         setPreferredSize(dimension);
-        setIconImage(Toolkit.getDefaultToolkit().getImage(
-                SelectWorldFrame.class.getResource("/images/Icon.png")));
+        setIconImage(Imagens.getImage("Icon.png"));
 
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
         setBackground(Cores.FUNDO_CLARO);

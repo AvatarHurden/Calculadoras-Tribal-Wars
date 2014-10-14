@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
@@ -16,7 +17,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -491,8 +491,7 @@ public class AlertTable extends JTable{
 		public Component getTableCellRendererComponent (final JTable table, 
 				Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
 			
-			ImageIcon i = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-					AlertasPanel.class.getResource("/images/edit.png")));
+			ImageIcon i = new ImageIcon(Imagens.getImage("edit.png"));
 			
 			Component cell = super.getTableCellRendererComponent(
 					   table, obj, isSelected, hasFocus, row, column);

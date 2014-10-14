@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.components;
 
+import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
 
 import java.awt.*;
@@ -60,9 +61,7 @@ public class SystemIcon implements ActionListener {
     }
 
     private TrayIcon getTrayIcon() {
-        return new java.awt.TrayIcon(
-                Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/images/Icon.png"))
-        );
+        return new java.awt.TrayIcon(Imagens.getImage("Icon.png"));
     }
     
     public TrayIcon getIcon() {
