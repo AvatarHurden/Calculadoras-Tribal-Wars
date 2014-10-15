@@ -168,9 +168,10 @@ public class AlertTable extends JTable{
 				// The smallest are the ones with least different units
 				if (amount1 > amount2)  return 1;
 				else if (amount2 > amount1) return -1;
+				else if (amount1 == 0 && amount2 == 0) return 0;
 				else {
 					
-					// For alerts with same different units, we compare the amount of every individual unit
+					// For alerts with same #of different units, we compare the amount of every individual unit
 					for (Troop t : a1.getTropas())
 						// O segundo mapa tem a unidade, com menos quantidade
 						if (a2.contains(t.getName()) && a2.getQuantidade(t.getUnit()) < t.getQuantity()) 

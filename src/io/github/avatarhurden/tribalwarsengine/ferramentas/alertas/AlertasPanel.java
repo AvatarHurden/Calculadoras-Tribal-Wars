@@ -24,8 +24,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 public class AlertasPanel extends Ferramenta {
 
@@ -88,12 +86,12 @@ public class AlertasPanel extends Ferramenta {
         d.setSize(d.getWidth() - 50, 520);
         
         JScrollPane scrollPane = new JScrollPane();
-        AlertTableFilter filter = new AlertTableFilter(scrollPane);
+        AlertTableFilter filter = new AlertTableFilter();
         
         table = new AlertTable();
         table.setFillsViewportHeight(true);
         AlertManager.getInstance().setTable(table);
-        filter.setSorter((TableRowSorter<? extends TableModel>) table.getRowSorter());
+        filter.setSorter(table.getRowSorter());
         
         scrollPane.setViewportView(table);
         scrollPane.setPreferredSize(d);

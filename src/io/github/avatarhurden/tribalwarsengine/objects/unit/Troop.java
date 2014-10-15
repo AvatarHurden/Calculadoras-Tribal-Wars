@@ -36,7 +36,7 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit.UnitType;
 		}
 		
 		public String getName() {
-			return unidade.getName();
+			return name;
 		}
 		
 		public int getQuantity() {

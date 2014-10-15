@@ -4,30 +4,38 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable.AlertTableModel;
+import io.github.avatarhurden.tribalwarsengine.main.Main;
+import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Dialog.ModalExclusionType;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
 import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -36,10 +44,9 @@ import javax.swing.table.TableRowSorter;
 
 public class AlertTableFilter extends JPanel{
 
-	private TableRowSorter<TableModel> sorter;
-	private JScrollPane tablePane;
+	private TableRowSorter<AlertTableModel> sorter;
 	private TWSimpleButton filtrar;
-	private JPanel filtersPanel;
+	private JDialog dialog;
 	
 	private JTextField nameField;
 	private JCheckBox geral, apoio, ataque, saque;
@@ -48,7 +55,7 @@ public class AlertTableFilter extends JPanel{
 	
 	private OnChange onChange;
 	
-	public AlertTableFilter(JScrollPane pane) {
+	public AlertTableFilter() {
 		
 		onChange = new OnChange() {
 			@Override
@@ -63,16 +70,14 @@ public class AlertTableFilter extends JPanel{
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		filtersPanel = makeFilterPanel();
-		filtersPanel.setVisible(false);
-		tablePane = pane;
+		makeFilterDialog();
 		
 		add(makeSwitchPanel());
-		add(filtersPanel);
 	}
 	
-	public void setSorter(TableRowSorter<? extends TableModel> rowSorter) {
-		this.sorter = (TableRowSorter<TableModel>) rowSorter;
+	@SuppressWarnings("unchecked")
+	public void setSorter(RowSorter<? extends TableModel> rowSorter) {
+		this.sorter = (TableRowSorter<AlertTableModel>) rowSorter;
 	}
 	
 	private JPanel makeSwitchPanel() {
@@ -86,19 +91,14 @@ public class AlertTableFilter extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int width = tablePane.getPreferredSize().width;
-				int height = tablePane.getPreferredSize().height;
-				int diff = filtersPanel.getPreferredSize().height;
-				
-				if (!filtersPanel.isVisible()) {
-					filtersPanel.setVisible(true);
+				if (!dialog.isVisible()) {
 					filtrar.setIcon(new ImageIcon(Imagens.getImage("up_arrow.png")));
-					tablePane.setPreferredSize(new Dimension(width, height - diff));
-				} else {
-					filtersPanel.setVisible(false);
+					dialog.setLocation(getLocationOnScreen().x, 
+							getLocationOnScreen().y + 30);
+				} else 
 					filtrar.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
-					tablePane.setPreferredSize(new Dimension(width, height + diff));
-				}
+
+				dialog.setVisible(!dialog.isVisible());
 				
 			}
 		});
@@ -109,10 +109,31 @@ public class AlertTableFilter extends JPanel{
 		return panel;
 	}
 	
+	private void makeFilterDialog() {
+		dialog = new JDialog(Main.getCurrentFrame(), false);
+		dialog.setUndecorated(true);
+		dialog.getContentPane().setBackground(Cores.FUNDO_CLARO);
+		
+		dialog.add(makeFilterPanel());
+		dialog.pack();
+		dialog.setVisible(false);
+		
+		dialog.addWindowFocusListener(new WindowFocusListener() {
+			@Override
+			public void windowLostFocus(WindowEvent arg0) {
+				dialog.setVisible(false);
+			}
+			
+			@Override
+			public void windowGainedFocus(WindowEvent arg0) {}
+		});
+	}
+	
 	private JPanel makeFilterPanel() {
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new GridBagLayout());
+		panel.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 5, 5);
@@ -276,6 +297,13 @@ public class AlertTableFilter extends JPanel{
 		return res;
 	}
 	
+	private boolean isSelectedWorld(String name) {
+		if (selectedWorld.isSelected())
+			return name.equals(WorldManager.getSelectedWorld().getPrettyName());
+		
+		return true;
+	}
+	
 	public void setFilter() {
 		
 		RowFilter<TableModel, Integer> filter = new RowFilter<TableModel, Integer>() {
@@ -288,6 +316,7 @@ public class AlertTableFilter extends JPanel{
 				toAdd &= RowFilter.regexFilter(nameField.getText(), 0).include(entry);
 				toAdd &= isSelectedType((Tipo) entry.getValue(1));
 				toAdd &= hasArmy((Army) entry.getValue(4));
+				toAdd &= isSelectedWorld((String) entry.getValue(8));
 				
 				return toAdd;
 			}

@@ -124,4 +124,8 @@ public class Main {
     	System.exit(-1);
     }
 
+    public static JFrame getCurrentFrame() {
+    	return currentFrame;
+    }
+    
 }
