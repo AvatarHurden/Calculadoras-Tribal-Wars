@@ -34,13 +34,6 @@ public class AlertasPanel extends Ferramenta {
 
         super("Alertas");
 
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[]{400};
-        gridBagLayout.rowHeights = new int[]{0, 0, 0};
-        gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-        setLayout(gridBagLayout);
-
         for (int i = 0; i < 10; i++) {
 
             Alert alerta = new Alert();
@@ -96,13 +89,20 @@ public class AlertasPanel extends Ferramenta {
         scrollPane.setViewportView(table);
         scrollPane.setPreferredSize(d);
         table.setStartingPosition(scrollPane);
+        
+    	GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[]{400};
+        gridBagLayout.rowHeights = new int[]{0, 0, 0};
+        gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+        setLayout(gridBagLayout);
 
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(5, 5, 5, 5);
         c.gridx = 0;
         c.gridy = 0;
         
-        c.anchor = GridBagConstraints.WEST;
+        c.anchor = GridBagConstraints.NORTHWEST;
         add(filter, c);
         
         c.gridx++;

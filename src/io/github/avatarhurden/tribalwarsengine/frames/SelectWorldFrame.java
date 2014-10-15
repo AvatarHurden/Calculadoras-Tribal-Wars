@@ -47,7 +47,6 @@ public class SelectWorldFrame extends JFrame {
      * - Botão para abrir o "MainWindow"
      */
     public SelectWorldFrame() {
-    	
     	setPreferredSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
     	
         getContentPane().setBackground(Cores.ALTERNAR_ESCURO);
@@ -58,7 +57,6 @@ public class SelectWorldFrame extends JFrame {
         setIconImage(Imagens.getImage("icon.png"));
         
         setGUI();
-
     }
 
     public static SelectWorldFrame getInstance() {
@@ -80,10 +78,12 @@ public class SelectWorldFrame extends JFrame {
         c.insets = new Insets(10, 5, 10, 5);
         add(makeLogoLabel(), c);
 
+        loadingPanel = new JPanel();
+        loadingPanel.setOpaque(false);
         c.gridx = 0;
         c.gridy = 1;
         c.insets = new Insets(0, 5, 20, 5);
-        add(makeLoadingPanel(), c);
+        add(loadingPanel, c);
 
         c.gridy = 2;
         c.anchor = GridBagConstraints.EAST;
@@ -119,27 +119,6 @@ public class SelectWorldFrame extends JFrame {
 
        return lblTítulo;
     }
-    
-    private JPanel makeLoadingPanel() {
-    	loadingPanel = new JPanel(new GridBagLayout());
-    	loadingPanel.setPreferredSize(new Dimension(824, 370));
-    	
-    	loadingPanel.setBackground(Cores.FUNDO_CLARO);
-        loadingPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.CENTER;
-        c.insets = new Insets(5, 5, 5, 5);
-        c.gridx = 0;
-        c.gridy = 0;
-        
-        loadingPanel.add(new JLabel(new ImageIcon(Imagens.getImage("loading.gif"))), c);
-        
-        c.gridy++;
-    	loadingPanel.add(new JLabel("Carregando Mundos..."), c);
-    	
-    	return loadingPanel;
-    }
 
     private JTextPane makeAuthorPane() {
     	JTextPane lblAuthor = new JTextPane();
@@ -168,7 +147,7 @@ public class SelectWorldFrame extends JFrame {
         
         // Tabela de informações
         informationTable = new WorldInfoPanel();
-        informationTable.changeProperties();
+//        informationTable.changeProperties();
         
         c.gridy = 1;
         c.insets = new Insets(25, 5, 25, 5);
@@ -209,7 +188,7 @@ public class SelectWorldFrame extends JFrame {
         c.insets = new Insets(0, 5, 20, 5);
         remove(loadingPanel);
         add(worldPanel, c);
-        
+
         updateWorldInfoPanel();
 
         addKeyListener();
@@ -237,9 +216,12 @@ public class SelectWorldFrame extends JFrame {
      * Muda as informações da tabela, chamado toda vez que o mundo selecionado é
      * alterado
      */
-
     public void updateWorldInfoPanel() {
         informationTable.changeProperties();
+    }
+    
+    public void setInitializationPanel(JPanel panel) {
+    	loadingPanel.add(panel);
     }
 
 }

@@ -171,7 +171,7 @@ public class AlertTable extends JTable{
 				else if (amount1 == 0 && amount2 == 0) return 0;
 				else {
 					
-					// For alerts with same #of different units, we compare the amount of every individual unit
+					// For alerts with same different units, we compare the amount of every individual unit
 					for (Troop t : a1.getTropas())
 						// O segundo mapa tem a unidade, com menos quantidade
 						if (a2.contains(t.getName()) && a2.getQuantidade(t.getUnit()) < t.getQuantity()) 
@@ -440,7 +440,7 @@ public class AlertTable extends JTable{
 	public void editAlert(int row, Alert a) {
 		alerts.remove(row);
 		alerts.add(row, a);
-		changedAlert();
+		changedAlert(row);
 	}
 	
 	public void removeAlert(int row) {

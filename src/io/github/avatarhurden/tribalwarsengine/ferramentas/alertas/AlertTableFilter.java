@@ -16,10 +16,10 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Dialog.ModalExclusionType;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
@@ -95,6 +95,7 @@ public class AlertTableFilter extends JPanel{
 					filtrar.setIcon(new ImageIcon(Imagens.getImage("up_arrow.png")));
 					dialog.setLocation(getLocationOnScreen().x, 
 							getLocationOnScreen().y + 30);
+					
 				} else 
 					filtrar.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
 
@@ -117,11 +118,23 @@ public class AlertTableFilter extends JPanel{
 		dialog.add(makeFilterPanel());
 		dialog.pack();
 		dialog.setVisible(false);
+		dialog.setAlwaysOnTop(true);
+		
+		Main.getCurrentFrame().addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				dialog.setLocation(getLocationOnScreen().x, 
+						getLocationOnScreen().y + 30);
+			}
+		});
 		
 		dialog.addWindowFocusListener(new WindowFocusListener() {
 			@Override
 			public void windowLostFocus(WindowEvent arg0) {
-				dialog.setVisible(false);
+				if (Main.getCurrentFrame().hasFocus())
+					dialog.setAlwaysOnTop(true);
+				else
+					dialog.setAlwaysOnTop(false);
 			}
 			
 			@Override

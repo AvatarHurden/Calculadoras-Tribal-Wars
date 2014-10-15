@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.managers;
 
+import io.github.avatarhurden.tribalwarsengine.components.ProgressStatus;
 import io.github.avatarhurden.tribalwarsengine.enums.Server;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
@@ -17,6 +18,14 @@ public class WorldManager {
 	private List<World> worlds;
 	private World selectedWorld;
 	
+	private ProgressStatus bar;
+	
+	public static void initialize(ProgressStatus bar) {
+		instance = new WorldManager();
+		instance.bar = bar;
+		instance.loadConfigs();
+	}
+	
 	public static WorldManager get() {
 		if (instance == null)
 			instance = new WorldManager();
@@ -25,18 +34,28 @@ public class WorldManager {
 	
 	private WorldManager() {
 		downloader = new ServerFileManager();
-		loadConfigs();
 	}
 	
 	private void loadConfigs() {
 		Server server = Server.getServer(Configuration.get().getConfig("server", "br"));
 		Configuration.get().setConfig("server", server.getName());
 		
-		JSONArray json = downloader.getServerJSON(server);
+		bar.setMessage("Baixando lista de Mundos");
+		bar.incrementProgress(10);
+		
+		JSONArray worldList;
+		try {
+			worldList = downloader.getServerConfigOnline(server);
+		} catch (Exception e) {
+			worldList = downloader.tryGetServerConfigLocal(server);
+		}
 		
 		worlds = new ArrayList<World>();
-		for (int i = 0; i < json.length(); i++)
-			worlds.add(new World(json.getJSONObject(i)));
+		for (int i = 0; i < worldList.length(); i++) {
+			bar.listIncrement(i, worldList.length(), 80);
+			bar.setMessage("Carregando " + worldList.getJSONObject(i).getString("name"));
+			worlds.add(new World(worldList.getJSONObject(i)));
+		}
 	}
 	
 	public World getDefaultWorld() {

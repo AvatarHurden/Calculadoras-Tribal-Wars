@@ -23,18 +23,17 @@ public class ServerFileManager {
 	
 	public JSONArray getServerJSON(Server server) {
 		try {
-			return getServerOnline("config/servers/" + server.getName(), server.getURL());
+			return getServerConfigOnline(server);
 		} catch (Exception e) {
-			e.printStackTrace();
-			return tryGetServerLocal("config/servers/" + server.getName());
+			return tryGetServerConfigLocal(server);
 		}
 	}
 	
-	private JSONArray getServerOnline(String folder, String url) throws Exception{
+	public JSONArray getServerConfigOnline(Server server) throws Exception{
 		
-		URLConnection conn = new URL(url+phpFunction).openConnection();
+		URLConnection conn = new URL(server.getURL() + phpFunction).openConnection();
 		
-		if (new File(folder+fileName).exists()) {
+		if (new File("config/servers/" + server.getName() + fileName).exists()) {
 			conn.setConnectTimeout(2 * 1000);
 			conn.setReadTimeout(5 * 1000);
 		}
@@ -50,14 +49,14 @@ public class ServerFileManager {
 		
 		JSONArray array = decodeOnlineText(builder.toString());
 		
-		saveServerJSON(folder, array);
+		saveServerJSON("config/servers/" + server.getName(), array);
 		
 		return array;
 	}
 	
-	private JSONArray tryGetServerLocal(String folder) {
+	public JSONArray tryGetServerConfigLocal(Server server) {
 		try {
-			return getServerLocal(folder);
+			return getServerLocal("config/servers/" + server.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 			displayErrorMessageAndExit();

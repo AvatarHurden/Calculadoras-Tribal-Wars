@@ -4,7 +4,7 @@ import io.github.avatarhurden.tribalwarsengine.components.SystemIcon;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
 import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
-import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
+import io.github.avatarhurden.tribalwarsengine.panels.Initialization;
 
 import java.awt.Font;
 import java.awt.SystemTray;
@@ -60,7 +60,10 @@ public class Main {
         trayIcon = new SystemIcon(this);
         mainFrame = MainWindow.getInstance();
         selectWorldFrame = SelectWorldFrame.getInstance();
-        openWorldSelection();
+        selectWorldFrame.setVisible(true);
+        currentFrame = selectWorldFrame;
+        
+        selectWorldFrame.setInitializationPanel(new Initialization().getPanel());    
     }
 
     /**
@@ -71,8 +74,6 @@ public class Main {
         selectWorldFrame.setVisible(true);
         currentFrame = selectWorldFrame;
 
-        Configuration.get();
-        WorldManager.get();
         selectWorldFrame.addWorldPanel();
     }
 
