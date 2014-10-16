@@ -34,6 +34,8 @@ public class WorldFileManager {
 	private String folder;
 	private JSONObject json;
 	
+	private boolean hasConnection = true;
+	
 	public WorldFileManager(String parentFolder, JSONObject json) {
 		this.json = json;
 	
@@ -50,12 +52,15 @@ public class WorldFileManager {
 	// World info section
 	
 	public JSONObject getWorldConfig() {
-		try {
-			return getConfigOnline();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (hasConnection)
+			try {
+				return getConfigOnline();
+			} catch (Exception e) {
+				hasConnection = false;
+				return tryGetConfigLocal();
+			}
+		else
 			return tryGetConfigLocal();
-		}
 	}
 	
 	private JSONObject getConfigOnline() throws Exception {
@@ -104,11 +109,15 @@ public class WorldFileManager {
 	// Unit info section
 	
 	public JSONArray getUnitConfig() {
-		try {
-			return getOnlineUnitConfig();
-		} catch (Exception e) {
+		if (hasConnection)
+			try {
+				return getOnlineUnitConfig();
+			} catch (Exception e) {
+				hasConnection = false;
+				return tryGetLocalUnitConfig();
+			}
+		else
 			return tryGetLocalUnitConfig();
-		}
 	}
 	
 	private JSONArray getOnlineUnitConfig() throws Exception {
@@ -155,11 +164,15 @@ public class WorldFileManager {
 	// Building info section
 	
 	public JSONArray getBuildingConfig() {
-		try {
-			return getOnlineBuildingConfig();
-		} catch (Exception e) {
+		if (hasConnection)
+			try {
+				return getOnlineBuildingConfig();
+			} catch (Exception e) {
+				hasConnection = false;
+				return tryGetLocalBuildingConfig();
+			}
+		else
 			return tryGetLocalBuildingConfig();
-		}
 	}
 
 	private JSONArray getOnlineBuildingConfig() throws Exception {

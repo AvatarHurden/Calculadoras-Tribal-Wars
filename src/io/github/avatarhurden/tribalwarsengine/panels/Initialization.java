@@ -35,22 +35,6 @@ public class Initialization {
 		progressBar = new ProgressStatus();
 		
 		makePanel();
-		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				progressBar.setProgress(10);
-				progressBar.setMessage("Carregando Configurações");
-				Configuration.get();
-				
-				progressBar.setProgress(30);
-				progressBar.setMessage("Carregando Mundos");
-				WorldManager.initialize(progressBar);
-				
-				progressBar.setProgress(100);
-				Main.openWorldSelection();
-			}
-		}).start();
 	}
 	
 	private void makePanel() {
@@ -72,6 +56,46 @@ public class Initialization {
         
         c.gridy++;
         panel.add(progressBar, c);
+	}
+	
+	public void initializeProgram() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				progressBar.setProgress(10);
+				progressBar.setMessage("Carregando Configurações");
+				Configuration.get();
+				
+				progressBar.setProgress(30);
+				progressBar.setSubProgressEnd(80);
+				progressBar.setMessage("Carregando Mundos");
+				WorldManager.initialize(progressBar);
+				
+				progressBar.setProgress(100);
+				progressBar.setMessage("Criando Interface");
+				Main.openWorldSelection();
+			}
+		}).start();
+	}
+	
+	public void initializeWorld() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				progressBar.setProgress(50);
+				progressBar.setMessage("Carregando Mundo");
+				progressBar.setSubProgressEnd(80);
+				WorldManager.getSelectedWorld().setInfo(progressBar);
+				
+				progressBar.setProgress(90);
+				progressBar.setMessage("Carregando Alertas");
+				AlertManager.initialize();
+
+				progressBar.setProgress(100);
+				progressBar.setMessage("Criando Interface");
+				Main.openMainFrame();
+			}
+		}).start();
 	}
 	
 	public JPanel getPanel() {

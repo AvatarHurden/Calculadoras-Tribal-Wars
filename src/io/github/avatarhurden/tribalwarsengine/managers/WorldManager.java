@@ -18,12 +18,9 @@ public class WorldManager {
 	private List<World> worlds;
 	private World selectedWorld;
 	
-	private ProgressStatus bar;
-	
 	public static void initialize(ProgressStatus bar) {
 		instance = new WorldManager();
-		instance.bar = bar;
-		instance.loadConfigs();
+		instance.loadConfigs(bar);
 	}
 	
 	public static WorldManager get() {
@@ -36,12 +33,12 @@ public class WorldManager {
 		downloader = new ServerFileManager();
 	}
 	
-	private void loadConfigs() {
+	private void loadConfigs(ProgressStatus bar) {
 		Server server = Server.getServer(Configuration.get().getConfig("server", "br"));
 		Configuration.get().setConfig("server", server.getName());
 		
 		bar.setMessage("Baixando lista de Mundos");
-		bar.incrementProgress(10);
+		bar.setProgress(20);
 		
 		JSONArray worldList;
 		try {
@@ -52,10 +49,12 @@ public class WorldManager {
 		
 		worlds = new ArrayList<World>();
 		for (int i = 0; i < worldList.length(); i++) {
-			bar.listIncrement(i, worldList.length(), 80);
+			bar.listIncrement(i, worldList.length(), 100);
 			bar.setMessage("Carregando " + worldList.getJSONObject(i).getString("name"));
 			worlds.add(new World(worldList.getJSONObject(i)));
 		}
+		
+		bar.endSubProgress();
 	}
 	
 	public World getDefaultWorld() {

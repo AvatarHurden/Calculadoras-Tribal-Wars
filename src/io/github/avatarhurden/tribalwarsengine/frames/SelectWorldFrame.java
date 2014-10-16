@@ -34,7 +34,7 @@ public class SelectWorldFrame extends JFrame {
     public WorldInfoPanel informationTable;
     private SelectWorldPanel selectionPanel;
 
-    private JPanel loadingPanel;
+    private JPanel contentPanel;
     private static final SelectWorldFrame instance = new SelectWorldFrame();
 
     private final int MAX_WIDTH = 1024;
@@ -78,12 +78,12 @@ public class SelectWorldFrame extends JFrame {
         c.insets = new Insets(10, 5, 10, 5);
         add(makeLogoLabel(), c);
 
-        loadingPanel = new JPanel();
-        loadingPanel.setOpaque(false);
+        contentPanel = new JPanel();
+        contentPanel.setOpaque(false);
         c.gridx = 0;
         c.gridy = 1;
         c.insets = new Insets(0, 5, 20, 5);
-        add(loadingPanel, c);
+        add(contentPanel, c);
 
         c.gridy = 2;
         c.anchor = GridBagConstraints.EAST;
@@ -181,13 +181,8 @@ public class SelectWorldFrame extends JFrame {
     public void addWorldPanel() {
     	JPanel worldPanel = makeSelectionPanel();
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridwidth = 3;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.insets = new Insets(0, 5, 20, 5);
-        remove(loadingPanel);
-        add(worldPanel, c);
+        contentPanel.removeAll();
+        contentPanel.add(worldPanel);
 
         updateWorldInfoPanel();
 
@@ -221,7 +216,9 @@ public class SelectWorldFrame extends JFrame {
     }
     
     public void setInitializationPanel(JPanel panel) {
-    	loadingPanel.add(panel);
+    	contentPanel.removeAll();
+    	contentPanel.add(panel);
+    	contentPanel.repaint();
     }
 
 }

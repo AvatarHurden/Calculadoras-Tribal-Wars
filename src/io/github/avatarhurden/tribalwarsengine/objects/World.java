@@ -1,5 +1,6 @@
 package io.github.avatarhurden.tribalwarsengine.objects;
 
+import io.github.avatarhurden.tribalwarsengine.components.ProgressStatus;
 import io.github.avatarhurden.tribalwarsengine.enums.Server;
 import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldFileManager;
@@ -35,24 +36,40 @@ public class World {
 		// Caso o mundo seja speed, carrega todas as informações para atualização,
 		// devido à curta duração de cada mundo
 		if (worldInfo.getString("name").substring(2).contains("s"))
-			setInfo();
+			setInfo(new ProgressStatus());
 		
 		setBasicInfo();
 	}
 
-	public void setInfo() {
+	public void setInfo(ProgressStatus bar) {
+		
+		bar.setProgress(20);
+		bar.setMessage("Carregando Configurações");
 		if (world == null)
 			world = new WorldInfo(downloader.getWorldConfig());
+
+		bar.setProgress(40);
+		bar.setMessage("Carregando Unidades");
 		if (units == null)
 			setUnits(downloader.getUnitConfig());
+
+		bar.setProgress(60);
+		bar.setMessage("Carregando Edifícios");
 		if (buildings == null)
 			setBuildings(downloader.getBuildingConfig());
+		
+		bar.setProgress(80);
+		bar.setMessage("Carregando Modelos");
 		if (buildingModels == null)
 			setBuildingModels(downloader.getBuildingModels());
 		if (armyModels == null)
 			setArmyModels(downloader.getArmyModels());
-		
+
+		bar.setProgress(100);
+		bar.setMessage("Salvando Configurações");
 		makeBasicInfo();
+		
+		bar.endSubProgress();
 	}
 
 	private void setUnits(JSONArray array) {
@@ -83,7 +100,7 @@ public class World {
 		try {
 			basicInfo = downloader.getBasicConfig();
 		} catch (Exception e) {
-			setInfo();
+			setInfo(new ProgressStatus());
 		}
 	}
 	

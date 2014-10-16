@@ -35,10 +35,46 @@ public class Main {
     private static JFrame currentFrame;
     private static SystemIcon trayIcon;
     
+    private static Initialization initializer;
+    
     public static void main(String[] args) {
     	new Main().init(args);
     }
 
+    public void init(String[] args) {
+        lookForUpdate();
+                
+        Font oldLabelFont = UIManager.getFont("Label.font");
+        UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
+        
+        trayIcon = new SystemIcon(this);
+        mainFrame = MainWindow.getInstance();
+        selectWorldFrame = SelectWorldFrame.getInstance();
+        selectWorldFrame.setVisible(true);
+        currentFrame = selectWorldFrame;
+        
+        initializer = new Initialization();
+        initializer.initializeProgram();
+        
+        selectWorldFrame.setInitializationPanel(initializer.getPanel());    
+    }
+
+    public static void loadWorld() {
+    	initializer.initializeWorld();
+    	selectWorldFrame.setInitializationPanel(initializer.getPanel());
+    }
+    
+    /**
+     * Cria e mostra o frame de seleção de mundo
+     */
+    public static void openWorldSelection() {
+        mainFrame.dispose();
+        selectWorldFrame.setVisible(true);
+        currentFrame = selectWorldFrame;
+
+        selectWorldFrame.addWorldPanel();
+    }
+    
     /**
      * Cria e mostra o frame de ferramentas, fechando o frame de seleção de
      * mundo e salvando todas as configurações de mundo na pasta de
@@ -49,32 +85,6 @@ public class Main {
         selectWorldFrame.dispose();
         mainFrame.setVisible(true);
         currentFrame = mainFrame;
-    }
-
-    public void init(String[] args) {
-        lookForUpdate();
-                
-        Font oldLabelFont = UIManager.getFont("Label.font");
-        UIManager.put("Label.font", oldLabelFont.deriveFont(Font.PLAIN));
-
-        trayIcon = new SystemIcon(this);
-        mainFrame = MainWindow.getInstance();
-        selectWorldFrame = SelectWorldFrame.getInstance();
-        selectWorldFrame.setVisible(true);
-        currentFrame = selectWorldFrame;
-        
-        selectWorldFrame.setInitializationPanel(new Initialization().getPanel());    
-    }
-
-    /**
-     * Cria e mostra o frame de seleção de mundo
-     */
-    public static void openWorldSelection() {
-        mainFrame.dispose();
-        selectWorldFrame.setVisible(true);
-        currentFrame = selectWorldFrame;
-
-        selectWorldFrame.addWorldPanel();
     }
 
     /**

@@ -50,9 +50,21 @@ public class ProgressStatus extends JPanel {
 		setProgress(bar.progress + (upper - bar.progress) * counter / size);
 	}
 	
+	public void setSubProgressEnd(int end) {
+		bar.isSub = true;
+		bar.startSub = bar.progress;
+		bar.endSub = end;
+	}
+	
+	public void endSubProgress() {
+		bar.isSub = false;
+	}
+	
 	private class ProgressBar extends JPanel {
 		
 		private double progress;
+		private double startSub, endSub;
+		private boolean isSub = false;
 		
 		private ProgressBar() {
 			setOpaque(false);
@@ -73,8 +85,15 @@ public class ProgressStatus extends JPanel {
 		}
 		
 		private void setProgress(double progress) {
-			if (progress >= 0 && progress <= 100)
-				this.progress = progress;
+			double prog = progress;
+			if (isSub) {
+				prog = startSub + (endSub - startSub) * progress / 100;
+				if (prog >= endSub)
+					isSub = false;
+			}
+			
+			if (prog >= 0 && prog <= 100)
+				this.progress = prog;
 			repaint();
 		}
 	}

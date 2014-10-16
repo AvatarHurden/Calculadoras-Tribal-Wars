@@ -86,6 +86,17 @@ public class AlertManager {
 		loadSaved(fileManager.getAlertList());
 		loadPast(fileManager.getPastAlertList());
 	}
+
+	public static void initialize() {
+		if (instance == null)
+			instance = new AlertManager();
+	}
+	
+	public static AlertManager getInstance() {
+		if (instance == null)
+			instance = new AlertManager();
+		return instance;
+	}
 	
 	private void loadSaved(JSONArray array) {
 		Gson gson = new Gson();
@@ -209,12 +220,6 @@ public class AlertManager {
 			removeFromSchedule(alerta); 
 		} else if (pastAlerts.contains(alerta))
 			pastAlerts.remove(alerta);
-	}
-	
-	public static AlertManager getInstance() {
-		if (instance == null)
-			instance = new AlertManager();
-		return instance;
 	}
 	
 	public List<Alert> getAlertList() {
