@@ -5,6 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
 import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -145,55 +146,32 @@ public class AlertConfigEditor extends JDialog{
 	
 	public PropertyPanel makeShowPastPanel() {
 		
-		final JCheckBox check = new JCheckBox();
-		final JCheckBox pastLoot = new JCheckBox();
-		check.setOpaque(false);
-		pastLoot.setOpaque(false);
-		
-		check.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent arg0) {
-				if (check.isSelected())
-					pastLoot.setSelected(true);
-			}
-		});
-		
 		PropertyPanel panel = new PropertyPanel() {
+			JCheckBox check;
+			
 			protected void saveSelf() {
 				config.put("show_past", check.isSelected());
-				config.put("show_past_loot", check.isSelected());
 			}
 			
 			protected void setValueSelf() {
 				check.setSelected(config.optBoolean("show_past", false));
-				check.setSelected(config.optBoolean("show_past_loot", true));
 			}
 			
 			protected void setDefaultSelf() {
 				check.setSelected(false);
-				pastLoot.setSelected(true);
 			}
 
 			protected void setGUI() {
+				check = new JCheckBox();
+				check.setOpaque(false);
 				
+				JPanel selectPanel = new JPanel();
+				selectPanel.add(check);
+				selectPanel.add(new JLabel("Mostrar alertas antigos"));
+				
+				add(selectPanel);
 			}
 		};
-		
-		panel.setLayout(new GridBagLayout());
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		
-		panel.add(check, c);
-		c.gridx++;
-		panel.add(new JLabel("Manter alertas antigos na tabela"), c);
-		
-		c.gridy++;
-		c.gridx = 0;
-		panel.add(pastLoot, c);
-		c.gridx++;
-		panel.add(new JLabel("Manter alertas antigos de saque na tabela"), c);
 		
 		properties.add(panel);
 		return panel;
@@ -203,6 +181,7 @@ public class AlertConfigEditor extends JDialog{
 		
 		PropertyPanel panel = new PropertyPanel() {
 			JCheckBox check;
+			JLabel warning;
 			
 			@Override
 			protected void setValueSelf() {
@@ -214,9 +193,43 @@ public class AlertConfigEditor extends JDialog{
 				check = new JCheckBox();
 				check.setOpaque(false);
 				
+				check.addItemListener(new ItemListener() {
+					@Override
+					public void itemStateChanged(ItemEvent arg0) {
+						warning.setVisible(check.isSelected() != config.optBoolean("show_only_selected", false));
+					}
+				});
+				
 				JPanel selectPanel = new JPanel();
-				selectPanel.add(check);
-				selectPanel.add(new JLabel("Mostrar apenas alertas do mundo selecionado"));
+				selectPanel.setLayout(new GridBagLayout());
+				
+				GridBagConstraints c = new GridBagConstraints();
+				c.gridx = 0;
+				c.gridy = 0;
+				
+				selectPanel.add(check, c);
+				
+				c.gridx++;
+				selectPanel.add(new JLabel("Carregar apenas alertas do mundo selecionado"), c);
+				
+				JLabel info = new JLabel("?");
+				info.setFont(info.getFont().deriveFont((float) 9.0));
+				info.setForeground(Color.gray);
+				
+				info.setToolTipText("Se ativado, apenas os alertas do mundo atual serão ativados."
+						+ "Isso significa que não serão mostrados os popups de alertas de outros mundos.");
+				
+				c.gridx++;
+				selectPanel.add(info, c);
+				
+				warning = new JLabel("É preciso reiniciar o programa para a mudança fazer efeito");
+				warning.setForeground(Color.red);
+				warning.setVisible(false);
+				
+				c.gridy++;
+				c.gridx = 0;
+				c.gridwidth = 3;
+				selectPanel.add(warning, c);
 				
 				add(selectPanel);
 			}

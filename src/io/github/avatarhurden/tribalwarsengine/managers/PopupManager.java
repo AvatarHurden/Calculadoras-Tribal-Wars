@@ -344,26 +344,26 @@ public class PopupManager {
 			
 			if (!alerta.getTipo().equals(Tipo.Geral)) {
 			
-			origem = makeAldeiaPanel("Origem", alerta.getOrigem().toString());
+				origem = makeAldeiaPanel("Origem", alerta.getOrigem().toString());
 			
-			c.gridwidth = 1;
-			panel.add(origem, c);
+				c.gridwidth = 1;
+				panel.add(origem, c);
 			
-			destino = makeAldeiaPanel("Destino", alerta.getDestino().toString());
+				destino = makeAldeiaPanel("Destino", alerta.getDestino().toString());
 			
-			c.gridx++;
-			panel.add(destino, c);
+				c.gridx++;
+				panel.add(destino, c);
 			
-			tropas = makeTropasPanel(alerta.getArmy());
+				tropas = makeTropasPanel(alerta.getArmy());
 			
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.gridheight = 2;
-			c.gridx++;
-			panel.add(tropas, c);
+				c.fill = GridBagConstraints.HORIZONTAL;
+				c.gridheight = 2;
+				c.gridx++;
+				panel.add(tropas, c);
 			
-			notesWidth = origem.getPreferredSize().width + destino.getPreferredSize().width + 5;
+				notesWidth = origem.getPreferredSize().width + destino.getPreferredSize().width + 5;
 			
-			gridBagLayout.columnWidths = new int[] { origem.getPreferredSize().width, 
+				gridBagLayout.columnWidths = new int[] { origem.getPreferredSize().width, 
 					destino.getPreferredSize().width, tropas.getPreferredSize().width };
 			
 			} else
@@ -425,7 +425,7 @@ public class PopupManager {
 			
 			for (Troop t : army.getTropas())
 				if (t.getQuantity() > 0 ) {
-					String temp = t.getUnit().getPrettyName() + ": " + t.getQuantity();
+					String temp = t.getPrettyName() + ": " + t.getQuantity();
 					s += temp + "<br>";
 					if (temp.length() > maxLine.length())
 						maxLine = temp;

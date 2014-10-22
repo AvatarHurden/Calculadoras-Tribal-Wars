@@ -6,6 +6,7 @@ import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.AlertTable.AlertTableModel;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
+import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
@@ -60,7 +61,7 @@ public class AlertTableFilter extends JPanel{
 		onChange = new OnChange() {
 			@Override
 			public void run() {
-				army.saveValues();
+//				army.saveValues();
 				setFilter();
 			}
 		};
@@ -158,9 +159,9 @@ public class AlertTableFilter extends JPanel{
 		c.gridx++;
 		panel.add(makeTipoPanel(), c);
 		
-		c.gridx++;
-		c.gridheight = 2;
-		panel.add(makeArmyPanel(), c);
+//		c.gridx++;
+//		c.gridheight = 2;
+//		panel.add(makeArmyPanel(), c);
 
 		c.gridheight = 1;
 		c.gridx = 0;
@@ -251,6 +252,12 @@ public class AlertTableFilter extends JPanel{
 		
 		selectedWorld = new JCheckBox("Apenas o mundo atual");
 		selectedWorld.setOpaque(false);
+		
+		if ((boolean) AlertManager.getInstance().getConfig("show_only_selected", false)) {
+			selectedWorld.setSelected(true);
+			selectedWorld.setEnabled(false);
+		}
+		
 		selectedWorld.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -328,7 +335,7 @@ public class AlertTableFilter extends JPanel{
 				
 				toAdd &= RowFilter.regexFilter(nameField.getText(), 0).include(entry);
 				toAdd &= isSelectedType((Tipo) entry.getValue(1));
-				toAdd &= hasArmy((Army) entry.getValue(4));
+//				toAdd &= hasArmy((Army) entry.getValue(4));
 				toAdd &= isSelectedWorld((String) entry.getValue(8));
 				
 				return toAdd;

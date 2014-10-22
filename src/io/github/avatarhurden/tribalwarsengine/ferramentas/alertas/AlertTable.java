@@ -665,7 +665,7 @@ public class AlertTable extends JTable{
 				
 			for (Troop t : army.getTropas())
 				if (t.getQuantity() > 0) {
-					tooltip += t.getUnit().getPrettyName() + ": " + t.getQuantity() +"<br>";
+					tooltip += t.getPrettyName() + ": " + t.getQuantity() +"<br>";
 					lines++;
 					if (lines <= 3)
 						escrita = tooltip;

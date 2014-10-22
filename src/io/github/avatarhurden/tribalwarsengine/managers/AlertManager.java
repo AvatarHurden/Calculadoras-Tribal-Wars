@@ -372,9 +372,9 @@ public class AlertManager {
 	}
 	
 	private boolean shouldActivate(Alert a) {
-//		if (config.optBoolean("show_only_selected", false))
-//			if (!a.getWorld().equals(WorldManager.getSelectedWorld()))
-//					return false;
+		if (config.optBoolean("show_only_selected", false))
+			if (!a.getWorld().equals(WorldManager.getSelectedWorld()))
+					return false;
 		
 		return true;
 	}

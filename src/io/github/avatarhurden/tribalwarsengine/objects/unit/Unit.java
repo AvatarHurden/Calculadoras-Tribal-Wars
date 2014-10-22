@@ -3,11 +3,45 @@ package io.github.avatarhurden.tribalwarsengine.objects.unit;
 import org.json.JSONObject;
 
 public class Unit {
+
+	public static String getPrettyName(String name) {
+		switch (name) {
+		case "spear":
+			return "Lanceiro";
+		case "sword":
+			return "Espadachim";
+		case "axe":
+			return "Bárbaro";
+		case "archer":
+			return "Arqueiro";
+		case "spy":
+			return "Explorador";
+		case "light":
+			return "Cavalaria Leve";
+		case "marcher":
+			return "Arqueiro a Cavalo";
+		case "heavy":
+			return "Cavalaria Pesada";
+		case "ram":
+			return "Aríete";
+		case "catapult":
+			return "Catapulta";
+		case "knight":
+			return "Paladino";
+		case "snob":
+			return "Nobre";
+		case "militia":
+			return "Milícia";
+		default:
+			return "";
+		}
+	}
 	
 	public enum UnitType { General, Cavalry, Archer, unspecified };
 	
 	private JSONObject json;
 
+	
 	public Unit(JSONObject json) {
 		this.json = json;
 	}
@@ -64,40 +98,7 @@ public class Unit {
 	}
 	
 	public String getPrettyName() {
-		switch (json.getString("name")) {
-		case "spear":
-			return "Lanceiro";
-		case "sword":
-			return "Espadachim";
-		case "axe":
-			return "Bárbaro";
-		case "archer":
-			return "Arqueiro";
-		case "spy":
-			return "Explorador";
-		case "light":
-			return "Cavalaria Leve";
-		case "marcher":
-			return "Arqueiro a Cavalo";
-		case "heavy":
-			return "Cavalaria Pesada";
-		case "ram":
-			return "Aríete";
-		case "catapult":
-			return "Catapulta";
-		case "knight":
-			return "Paladino";
-		case "snob":
-			return "Nobre";
-		case "militia":
-			return "Milícia";
-		default:
-			return "";
-		}
-	}
-	
-	public String toString() {
-		return getPrettyName();
+		return getPrettyName(json.getString("name"));
 	}
 	
 	public String getName() {
@@ -124,5 +125,8 @@ public class Unit {
 			return UnitType.unspecified;
 		}
 	}
-		
+
+	public String toString() {
+		return getPrettyName();
+	}
 }
