@@ -38,7 +38,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
 
         this.selectWorldFrame = selectWorldFrame;
 
-        int height = selectWorldFrame.informationTable.getPreferredSize().height - 80;
+        int height = 234;
         
         setOpaque(false);
 
@@ -55,8 +55,6 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         constraints.gridy = 0;
 
         selectionBox = new TWEComboBox<World>();
-
-        setSelectionBox();
 
         constraints.gridy = 1;
         constraints.anchor = GridBagConstraints.CENTER;
@@ -89,14 +87,12 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         constraints.anchor = GridBagConstraints.CENTER;
         add(startButton, constraints);
 
-        changePadrãoButton();
-
         editButton.setFocusable(false);
 
         selectWorldFrame.getRootPane().setDefaultButton(startButton);
     }
 
-    private void setSelectionBox() {
+    public void setSelectionBox() {
         WorldManager manager = WorldManager.get();
         for (World s : manager.getList())
         	selectionBox.addItem(s);
@@ -114,7 +110,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
 		});
     }
 
-    private void changePadrãoButton() {
+    public void changePadrãoButton() {
         if (WorldManager.get().getDefaultWorld().equals(WorldManager.getSelectedWorld()))
         	padrãoButton.setEnabled(false);
         else {

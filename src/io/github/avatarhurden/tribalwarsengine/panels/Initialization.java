@@ -76,6 +76,8 @@ public class Initialization {
 				Main.openWorldSelection();
 			}
 		}).start();
+		
+		
 	}
 	
 	public void initializeWorld() {
@@ -87,15 +89,22 @@ public class Initialization {
 				progressBar.setSubProgressEnd(80);
 				WorldManager.getSelectedWorld().setInfo(progressBar);
 				
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Main.openMainFrame();
+					}
+				}).start();
+				
 				progressBar.setProgress(90);
 				progressBar.setMessage("Carregando Alertas");
 				AlertManager.initialize();
 
 				progressBar.setProgress(100);
 				progressBar.setMessage("Criando Interface");
-				Main.openMainFrame();
 			}
 		}).start();
+
 	}
 	
 	public JPanel getPanel() {

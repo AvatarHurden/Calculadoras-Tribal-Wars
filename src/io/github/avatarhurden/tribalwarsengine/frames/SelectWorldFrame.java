@@ -57,6 +57,9 @@ public class SelectWorldFrame extends JFrame {
         setIconImage(Imagens.getImage("icon.png"));
         
         setGUI();
+        
+        // Lista dos mundos com o botão para iniciar
+        selectionPanel = new SelectWorldPanel(this);
     }
 
     public static SelectWorldFrame getInstance() {
@@ -163,9 +166,6 @@ public class SelectWorldFrame extends JFrame {
 
         c.gridx = 2;
         c.insets = new Insets(25, 5, 25, 5);
-
-        // Lista dos mundos com o botão para inciar
-        selectionPanel = new SelectWorldPanel(this);
         
         panel.add(selectionPanel, c);
         
@@ -179,8 +179,12 @@ public class SelectWorldFrame extends JFrame {
      * @param c GridBagConstraints para adicionar
      */
     public void addWorldPanel() {
+    	
     	JPanel worldPanel = makeSelectionPanel();
-
+    	
+    	selectionPanel.setSelectionBox();
+    	selectionPanel.changePadrãoButton();
+    	
         contentPanel.removeAll();
         contentPanel.add(worldPanel);
 
