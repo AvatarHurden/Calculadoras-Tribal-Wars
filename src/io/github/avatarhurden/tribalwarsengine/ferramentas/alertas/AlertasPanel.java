@@ -79,7 +79,7 @@ public class AlertasPanel extends Ferramenta {
         d.setSize(d.getWidth() - 50, 520);
         
         JScrollPane scrollPane = new JScrollPane();
-        AlertTableFilter filter = new AlertTableFilter();
+        AlertTableFilter filter = new AlertTableFilter(this);
         
         table = new AlertTable();
         table.setFillsViewportHeight(true);

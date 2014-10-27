@@ -114,5 +114,5 @@ public abstract class Ferramenta extends JPanel {
     }
     
     protected abstract void makeGUI();
-
+    
 }

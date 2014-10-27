@@ -11,6 +11,7 @@ import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
+import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.FlowLayout;
@@ -23,6 +24,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
@@ -45,8 +47,10 @@ import javax.swing.table.TableRowSorter;
 
 public class AlertTableFilter extends JPanel{
 
+	private Ferramenta parent;
+	
 	private TableRowSorter<AlertTableModel> sorter;
-	private TWSimpleButton filtrar;
+	private TWSimpleButton filterButton;
 	private JDialog dialog;
 	
 	private JTextField nameField;
@@ -56,7 +60,9 @@ public class AlertTableFilter extends JPanel{
 	
 	private OnChange onChange;
 	
-	public AlertTableFilter() {
+	public AlertTableFilter(Ferramenta parent) {
+		
+		this.parent = parent;
 		
 		onChange = new OnChange() {
 			@Override
@@ -86,26 +92,26 @@ public class AlertTableFilter extends JPanel{
 		panel.setOpaque(false);
 		panel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		
-		filtrar = new TWSimpleButton(new ImageIcon(Imagens.getImage("down_arrow.png")));
+		filterButton = new TWSimpleButton(new ImageIcon(Imagens.getImage("down_arrow.png")));
 		
-		filtrar.addActionListener(new ActionListener() {
+		filterButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
 				if (!dialog.isVisible()) {
-					filtrar.setIcon(new ImageIcon(Imagens.getImage("up_arrow.png")));
+					filterButton.setIcon(new ImageIcon(Imagens.getImage("up_arrow.png")));
 					dialog.setLocation(getLocationOnScreen().x, 
 							getLocationOnScreen().y + 30);
 					
 				} else 
-					filtrar.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
+					filterButton.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
 
 				dialog.setVisible(!dialog.isVisible());
 				
 			}
 		});
 		
-		panel.add(filtrar);
+		panel.add(filterButton);
 		panel.add(new JLabel("Filtros"));
 		
 		return panel;
@@ -139,8 +145,28 @@ public class AlertTableFilter extends JPanel{
 			}
 			
 			@Override
-			public void windowGainedFocus(WindowEvent arg0) {}
+			public void windowGainedFocus(WindowEvent arg0) {
+				//Main.getCurrentFrame().requestFocus();
+			}
 		});
+		
+		Main.getCurrentFrame().addWindowListener(new WindowAdapter() {
+			
+			public void windowActivated(WindowEvent arg0) {
+				dialog.setAlwaysOnTop(true);
+			}
+			
+			public void windowDeactivated(WindowEvent arg0) {
+				dialog.setAlwaysOnTop(false);
+			}
+		});
+		
+		parent.addComponentListener(new ComponentAdapter() {
+			public void componentHidden(ComponentEvent arg0) {
+				if (dialog.isVisible())
+					filterButton.doClick();
+			}
+		});	
 	}
 	
 	private JPanel makeFilterPanel() {
