@@ -165,8 +165,8 @@ public class TWButton extends JButton implements MouseListener {
     
     @Override 
     public void doClick() {
-    	isPressed = true;
     	super.doClick();
+    	mouseExited(null);
     }
 
     public void mouseClicked(MouseEvent e) {}

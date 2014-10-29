@@ -103,7 +103,7 @@ public class AlertasPanel extends Ferramenta {
         c.gridy = 0;
         
         c.anchor = GridBagConstraints.NORTHWEST;
-        add(filter, c);
+        add(filter.getEditor(), c);
         
         c.gridx++;
         c.anchor = GridBagConstraints.NORTHEAST;
