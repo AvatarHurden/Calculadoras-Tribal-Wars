@@ -39,9 +39,8 @@ public class AlertasPanel extends Ferramenta {
             Alert alerta = new Alert();
 
             alerta.setNome("Nome" + i);
-
             alerta.setNotas(i + "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pellentesque rhoncus dignissim. Phasellus pulvinar ut nunc non congue. Quisque lacus eros, porta malesuada tempor quis, luctus in est. Maecenas in congue tellus, eu rhoncus nulla. Maecenas metus neque, varius in vulputate id, sodales a ante. Donec sit amet laoreet ligula. Vestibulum blandit commodo volutpat.");
-            alerta.setNotas("https://en.tribalwars2.com/game.php?world=en1&character_id=60369");
+            alerta.setNotas(i + "");
             alerta.setTipo(Tipo.values()[i % 4]);
             alerta.setOrigem(new Aldeia("Origem" + i, i * 111, i * 55));
             alerta.setDestino(new Aldeia("Destino" + i, i * 11, i * 555));
@@ -89,6 +88,7 @@ public class AlertasPanel extends Ferramenta {
         scrollPane.setViewportView(table);
         scrollPane.setPreferredSize(d);
         table.setStartingPosition(scrollPane);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(11);
         
     	GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{400};

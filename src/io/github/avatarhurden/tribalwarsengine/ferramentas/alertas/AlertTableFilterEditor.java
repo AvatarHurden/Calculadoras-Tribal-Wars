@@ -29,7 +29,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -84,16 +83,18 @@ public class AlertTableFilterEditor extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				if (!dialog.isVisible()) {
-					filterButton.setIcon(new ImageIcon(Imagens.getImage("up_arrow.png")));
+				if (dialog.isVisible()) {
+					dialog.setAlwaysOnTop(false);
+					dialog.setVisible(false);
+					filterButton.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
+				} else {
+					dialog.setAlwaysOnTop(true);
+					dialog.setVisible(true);
 					dialog.setLocation(getLocationOnScreen().x, 
 							getLocationOnScreen().y + 30);
+					filterButton.setIcon(new ImageIcon(Imagens.getImage("up_arrow.png")));
+				}
 					
-				} else 
-					filterButton.setIcon(new ImageIcon(Imagens.getImage("down_arrow.png")));
-
-				dialog.setVisible(!dialog.isVisible());
-				
 			}
 		});
 		
@@ -111,7 +112,7 @@ public class AlertTableFilterEditor extends JPanel {
 		dialog.add(makeFilterPanel());
 		dialog.pack();
 		dialog.setVisible(false);
-		dialog.setAlwaysOnTop(true);
+		dialog.setAlwaysOnTop(false);
 		
 		Main.getCurrentFrame().addComponentListener(new ComponentAdapter() {
 			@Override
@@ -121,26 +122,13 @@ public class AlertTableFilterEditor extends JPanel {
 			}
 		});
 		
-		dialog.addWindowFocusListener(new WindowFocusListener() {
-			@Override
-			public void windowLostFocus(WindowEvent arg0) {
-				if (Main.getCurrentFrame().hasFocus())
-					dialog.setAlwaysOnTop(true);
-				else
-					dialog.setAlwaysOnTop(false);
-			}
-			
-			@Override
-			public void windowGainedFocus(WindowEvent arg0) {
-				//Main.getCurrentFrame().requestFocus();
-			}
-		});
 		
 		Main.getCurrentFrame().addWindowListener(new WindowAdapter() {
 			
 			public void windowActivated(WindowEvent arg0) {
-				dialog.setAlwaysOnTop(true);
-			}
+				if (dialog.isVisible())
+					dialog.setAlwaysOnTop(true);
+			}	
 			
 			public void windowDeactivated(WindowEvent arg0) {
 				dialog.setAlwaysOnTop(false);

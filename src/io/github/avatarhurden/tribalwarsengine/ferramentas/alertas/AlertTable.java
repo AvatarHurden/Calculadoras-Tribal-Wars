@@ -13,16 +13,12 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,21 +30,16 @@ import java.util.TimerTask;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.RowSorterEvent;
@@ -125,7 +116,7 @@ public class AlertTable extends JTable{
 		
 		changeHeader();
 		
-		positionColumns();			
+		positionColumns();
 	}
 	
 	public void setStartingPosition(JScrollPane scroll) {
@@ -223,102 +214,25 @@ public class AlertTable extends JTable{
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 			    if (e.getClickCount() == 2) {
-			
-			      final AlertTable target = (AlertTable) e.getSource();
-			      
-			      final int clickrow = target.convertRowIndexToModel(target.getSelectedRow());
-			      final int clickcolumn = target.getSelectedColumn();
-			      
-			      Rectangle cell = target.getCellRect(clickrow, clickcolumn, false);
-			      
-			      // Only does this if the selected column is the notes column
-			      if (target.convertColumnIndexToModel(clickcolumn) == 7) {
-			      	
-			      		final JDialog dialog = new JDialog();
-			      		dialog.setUndecorated(true);
-			      		dialog.setFocusable(true);
-			      		
-			      		GridBagConstraints c = new GridBagConstraints();
-			      		c.insets = new Insets(5, 5, 5, 5);
-			      		c.gridx = 0;
-			      		c.gridy = 0;
-			      		
-			      		JPanel panel = new JPanel();
-			    		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-			    		panel.setOpaque(true);
-			    		panel.setBackground(Cores.FUNDO_CLARO);
-			    		
-			    		GridBagLayout gridBagLayout = new GridBagLayout();
-			    		gridBagLayout.columnWidths = new int[] { 118, 118 };
-			    		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
-			    		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-			    		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-			    		panel.setLayout(gridBagLayout);
-			    		
-			    		JLabel nameLabel = new JLabel("Notas");
-			    		nameLabel.setBorder(new MatteBorder(0, 0, 1, 0, Cores.SEPARAR_CLARO));
-			    		
-			    		c.anchor = GridBagConstraints.WEST;
-			    		c.gridwidth = 2;
-			    		panel.add(nameLabel, c);
-			    		
-			    		final JTextArea notas = new JTextArea((String) getValueAt(clickrow, 7), 5, 20);
-			    		notas.setBorder(new LineBorder(Cores.SEPARAR_CLARO));
-			    		notas.setLineWrap(true);
-			    		notas.setWrapStyleWord(true);
-			    		
-			    		c.gridy++;
-			    		panel.add(notas, c);
-			      		
-			    		JButton salvar = new TWSimpleButton("Salvar");
-			    		salvar.addActionListener(new ActionListener() {
-			    			public void actionPerformed(ActionEvent e) {
-			    				target.setValueAt(notas.getText(), clickrow, clickcolumn);
-			    				dialog.dispose();
-			    			}
-			    		});
-			    		
-			    		JButton cancelar = new TWSimpleButton("Cancelar");
-			    		cancelar.addActionListener(new ActionListener() {
-			    			public void actionPerformed(ActionEvent e) {
-			    				dialog.dispose();
-			    			}
-			    		});
-			    		
-			    		c.gridwidth = 1;
-			    		c.gridy++;
-			    		c.anchor = GridBagConstraints.EAST;
-			    		panel.add(salvar, c);
-			    		
-			    		c.gridx++;
-			    		c.anchor = GridBagConstraints.WEST;
-			    		panel.add(cancelar, c);
-			    
-			    		JScrollPane scroll = new JScrollPane(panel);
-			    		scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width+16, scroll.getPreferredSize().height));
-			    		scroll.setOpaque(false);
-			    		
-			    		dialog.add(scroll);
-			    		
-			    		dialog.addWindowFocusListener(new WindowFocusListener() {
-							
-							public void windowLostFocus(WindowEvent e) {
-								dialog.dispose();
-								}
-							
-							public void windowGainedFocus(WindowEvent e) {}
-						});
-			    		
-			    		dialog.pack();
-			    		
-			    		dialog.setLocation((int)cell.getCenterX() + target.getLocationOnScreen().x - dialog.getPreferredSize().width/2, 
-			    				(int)cell.getCenterY() + target.getLocationOnScreen().y - dialog.getPreferredSize().height/2);
-			    		
-			    		dialog.setVisible(true);
-			    		
-			      	}   	
+			    	
+			    	AlertTable table = (AlertTable) e.getSource();
+			    	
+			    	int row = table.getSelectedRow();
+				    int column = table.getSelectedColumn();
+			    	
+				    if (table.convertColumnIndexToModel(column) == 7) {
+					    Rectangle cell = table.getCellRect(row, column, false);
+					    
+					    Point point = new Point((int) cell.getCenterX() + table.getLocationOnScreen().x, 
+					    		(int) cell.getCenterY() + table.getLocationOnScreen().y);
+					    
+					    Alert a = (Alert) table.getValueAt(row, -1);
+					    
+				    	new AlertNoteEditor(a, point);
+				    }
+		    		
 			    }
-			  }
+			}
 		});
 		
 	}
@@ -785,7 +699,6 @@ public class AlertTable extends JTable{
 		 * Para qualquer outro valor de coluna, retorna o alerta em si.
 		 */
 		public Object getValueAt(int row, int column) {
-			
 			switch(column) {
 				case 0: return (alerts.get(row).getNome() != null) ? alerts.get(row).getNome() : "";
 				case 1: return (alerts.get(row).getTipo() != null) ? alerts.get(row).getTipo() : Tipo.Geral;
@@ -798,7 +711,6 @@ public class AlertTable extends JTable{
 				case 8: return alerts.get(row).getWorld().getPrettyName();
 				default: return alerts.get(row);
 			}
-			
 		}
 
 		@Override

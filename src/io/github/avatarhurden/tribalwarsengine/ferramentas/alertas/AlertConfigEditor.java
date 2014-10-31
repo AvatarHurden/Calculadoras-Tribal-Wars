@@ -35,6 +35,7 @@ public class AlertConfigEditor extends JDialog{
 
 	private List<PropertyPanel> properties;
 	private JSONObject config;
+	private JLabel warning;
 	
 	public AlertConfigEditor() {
 		
@@ -59,16 +60,13 @@ public class AlertConfigEditor extends JDialog{
 		c.gridy++;
 		add(makeDeletePastPanel(), c);
 		
-		c.gridwidth = 1;
+		c.gridy++;
+		add(makeWarningLabel(), c);
+		
+		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridy++;
-		add(makeSaveButton(), c);
-		
-		c.gridx++;
-		add(makeDefaultButton(), c);
-		
-		c.gridx++;
-		add(makeCancelButton(), c);
+		add(makeButtonPanel(), c);
 		
 		for (PropertyPanel p : properties)
 			p.setValue();
@@ -102,7 +100,18 @@ public class AlertConfigEditor extends JDialog{
     	config.put("location", location);
 	}
 	
-	public JButton makeSaveButton() {
+	private JPanel makeButtonPanel() {
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		
+		panel.add(makeSaveButton());
+		panel.add(makeDefaultButton());
+		panel.add(makeCancelButton());
+		
+		return panel;
+	}
+	
+	private JButton makeSaveButton() {
 		JButton button = new TWButton("Salvar");
 		
 		button.addActionListener(new ActionListener() {
@@ -117,7 +126,7 @@ public class AlertConfigEditor extends JDialog{
 		return button;
 	}
 	
-	public JButton makeDefaultButton() {
+	private JButton makeDefaultButton() {
 		JButton button = new TWSimpleButton("Restaurar Padrões");
 		
 		button.addActionListener(new ActionListener() {
@@ -131,8 +140,8 @@ public class AlertConfigEditor extends JDialog{
 		return button;
 	}
 	
-	public JButton makeCancelButton() {
-	JButton button = new TWSimpleButton("Cancelar");
+	private JButton makeCancelButton() {
+		JButton button = new TWSimpleButton("Cancelar");
 		
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -144,7 +153,14 @@ public class AlertConfigEditor extends JDialog{
 		return button;	
 	}
 	
-	public PropertyPanel makeShowPastPanel() {
+	private JLabel makeWarningLabel() {
+		warning = new JLabel("É preciso reiniciar o programa para as mudanças fazerem efeito.");
+		warning.setForeground(getContentPane().getBackground());
+		
+		return warning;
+	}
+	
+	private PropertyPanel makeShowPastPanel() {
 		
 		PropertyPanel panel = new PropertyPanel() {
 			JCheckBox check;
@@ -177,11 +193,10 @@ public class AlertConfigEditor extends JDialog{
 		return panel;
 	}
 	
-	public PropertyPanel makeShowWorldPanel() {
+	private PropertyPanel makeShowWorldPanel() {
 		
 		PropertyPanel panel = new PropertyPanel() {
 			JCheckBox check;
-			JLabel warning;
 			
 			@Override
 			protected void setValueSelf() {
@@ -196,40 +211,23 @@ public class AlertConfigEditor extends JDialog{
 				check.addItemListener(new ItemListener() {
 					@Override
 					public void itemStateChanged(ItemEvent arg0) {
-						warning.setVisible(check.isSelected() != config.optBoolean("show_only_selected", false));
+						warning.setForeground(Color.red);
 					}
 				});
 				
 				JPanel selectPanel = new JPanel();
-				selectPanel.setLayout(new GridBagLayout());
+				selectPanel.add(check);
 				
-				GridBagConstraints c = new GridBagConstraints();
-				c.gridx = 0;
-				c.gridy = 0;
-				
-				selectPanel.add(check, c);
-				
-				c.gridx++;
-				selectPanel.add(new JLabel("Carregar apenas alertas do mundo selecionado"), c);
+				selectPanel.add(new JLabel("Carregar apenas alertas do mundo selecionado"));
 				
 				JLabel info = new JLabel("?");
 				info.setFont(info.getFont().deriveFont((float) 9.0));
 				info.setForeground(Color.gray);
 				
-				info.setToolTipText("Se ativado, apenas os alertas do mundo atual serão ativados."
-						+ "Isso significa que não serão mostrados os popups de alertas de outros mundos.");
+				info.setToolTipText("<html>Se ativado, apenas os alertas do mundo atual serão ativados.<br>"
+						+ "Isso significa que não serão mostrados os popups de alertas de outros mundos.</html>");
 				
-				c.gridx++;
-				selectPanel.add(info, c);
-				
-				warning = new JLabel("É preciso reiniciar o programa para a mudança fazer efeito");
-				warning.setForeground(Color.red);
-				warning.setVisible(false);
-				
-				c.gridy++;
-				c.gridx = 0;
-				c.gridwidth = 3;
-				selectPanel.add(warning, c);
+				selectPanel.add(info);
 				
 				add(selectPanel);
 			}
@@ -249,7 +247,7 @@ public class AlertConfigEditor extends JDialog{
 		return panel;
 	}
 	
-	public PropertyPanel makeDeletePastPanel() {
+	private PropertyPanel makeDeletePastPanel() {
 
 		final PropertyPanel timePanel = new PropertyPanel() {
 			JSpinner spinner;

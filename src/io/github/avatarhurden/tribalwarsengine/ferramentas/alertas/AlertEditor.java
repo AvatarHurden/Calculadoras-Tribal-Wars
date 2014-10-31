@@ -266,6 +266,9 @@ public class AlertEditor extends JDialog{
 			}
 		
 		scroll.getVerticalScrollBar().setValue(0);
+		
+		// Permite a atualização do Caret nas notas
+		((DefaultCaret)notas.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 	}
 	
 	/**
