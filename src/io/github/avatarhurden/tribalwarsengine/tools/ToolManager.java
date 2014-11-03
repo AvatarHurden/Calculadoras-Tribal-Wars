@@ -3,6 +3,7 @@ package io.github.avatarhurden.tribalwarsengine.tools;
 import io.github.avatarhurden.tribalwarsengine.components.CoordenadaPanel;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.components.TimeFormattedJLabel;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.objects.building.BuildingBlock.BuildingsEditPanel;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army.ArmyEditPanel;
 
@@ -77,7 +78,29 @@ public class ToolManager {
     	JPanel panel = new JPanel();
     	panel.setOpaque(false);
     	
-    	panel.add(new AlertCreatorPanel(datelbl, intervallbl, origem, destino, army));
+    	panel.add(new AlertCreatorPanel(datelbl, intervallbl, origem, destino, army, null));
+    	
+    	return panel;
+    }
+    
+    /**
+     * Cria um panel com um botão que, quando clicado, cria um novo Alert com as informações
+     * presentes na ferramenta
+     * 
+     * @param datelbl com a data do alerta
+     * @param origem com a aldeia de origem do alerta
+     * @param destino com a aldeia de destino do alerta
+     * @param tropas mapa ligando as tropas aos seus textFields
+     * @param type tipo para o alerta a ser criado
+     * @return Um JPanel com o botão
+     */
+    public JPanel addAlertCreatorPanel(TimeFormattedJLabel datelbl, TimeFormattedJLabel intervallbl,
+    		CoordenadaPanel origem, CoordenadaPanel destino, ArmyEditPanel army, Tipo type) {
+    	
+    	JPanel panel = new JPanel();
+    	panel.setOpaque(false);
+    	
+    	panel.add(new AlertCreatorPanel(datelbl, intervallbl, origem, destino, army, type));
     	
     	return panel;
     }

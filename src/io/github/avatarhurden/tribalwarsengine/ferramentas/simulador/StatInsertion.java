@@ -51,12 +51,14 @@ public class StatInsertion extends JPanel {
 	}
 
 	private Tipo tipo;
+	
+	private OnChange onChange;
 
 	private InputInfo info;
 
 	private Army army;
 	private ArmyEditPanel armyEdit;
-	
+
 	private JCheckBox religião, noite;
 
 	private JTextField sorte, moral, muralha, edifício;
@@ -71,26 +73,22 @@ public class StatInsertion extends JPanel {
 	 * @param tipo
 	 *            Se o panel é de atacante ou defensor
 	 */
-	public StatInsertion(Tipo tipo, InputInfo info, ToolManager tool) {
-		
+	public StatInsertion(Tipo tipo, InputInfo info, ToolManager tool, OnChange onChange) {
+
 		this.tipo = tipo;
+		this.onChange = onChange;
 		this.info = info;
-		
+
 		if (tipo.equals(Tipo.Atacante))
 			army = new Army(Army.getAttackingUnits());
 		else
 			army = new Army(Army.getAvailableUnits());
-		
-		if (WorldManager.getSelectedWorld().getWorld().getResearchSystemLevels()> 1)
-			armyEdit = army.getEditPanelFull(new OnChange() {
-				public void run() {
-				}
-			}, 26);
+
+		if (WorldManager.getSelectedWorld().getWorld()
+				.getResearchSystemLevels() > 1)
+			armyEdit = army.getEditPanelFull(onChange, 26);
 		else {
-			armyEdit = army.getEditPanelFullNoHeader(new OnChange() {
-				public void run() {
-				}
-			}, 26);
+			armyEdit = army.getEditPanelFullNoHeader(onChange, 26);
 			armyEdit.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
 		}
 		setLayout(new GridBagLayout());
@@ -100,27 +98,27 @@ public class StatInsertion extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		
+
 		c.insets = new Insets(5, 0, 5, 0);
 		c.anchor = GridBagConstraints.EAST;
 		add(tool.addModelosTropasPanel(true, armyEdit), c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.NORTH;
-		
+
 		c.insets = new Insets(5, 0, 5, 0);
 		c.gridy++;
 		add(addTipoPanel(), c);
-		
+
 		// Adding the space to allow for militia on defensive side
 		if (tipo == Tipo.Atacante && Army.containsUnit("militia"))
 			c.insets = new Insets(0, 0, 31, 0);
 		else
 			c.insets = new Insets(0, 0, 5, 0);
-		
+
 		c.gridy++;
 		add(addUnitPanel(), c);
-		
+
 		c.insets = new Insets(5, 0, 0, 0);
 		// Diferenciando os diferentes tipos de inserção
 
@@ -129,19 +127,19 @@ public class StatInsertion extends JPanel {
 			add(addReligião(), c);
 			c.insets = new Insets(0, 0, 0, 0);
 		}
-		
+
 		if (WorldManager.getSelectedWorld().getWorld().isPaladinWorld()) {
 			c.gridy++;
 			add(addItemPaladino(), c);
 			c.insets = new Insets(0, 0, 0, 0);
 		}
-		
-//		if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
-//			c.gridy++;
-//			add(addBandeira(), c);
-//			c.insets = new Insets(0, 0, 0, 0);
-//		}
-		
+
+		// if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
+		// c.gridy++;
+		// add(addBandeira(), c);
+		// c.insets = new Insets(0, 0, 0, 0);
+		// }
+
 		if (tipo == Tipo.Atacante) {
 
 			if (WorldManager.getSelectedWorld().getWorld().isMoralWorld()) {
@@ -175,21 +173,21 @@ public class StatInsertion extends JPanel {
 		JPanel panel = new JPanel();
 		panel.setBackground(Cores.FUNDO_ESCURO);
 		panel.setBorder(new LineBorder(Cores.SEPARAR_ESCURO));
-		
+
 		panel.add(new JLabel(tipo.toString()));
-		
+
 		panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 30));
-		
+
 		return panel;
 	}
-	
+
 	private JPanel addUnitPanel() {
 
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		
+
 		GridBagLayout layout = new GridBagLayout();
-		layout.columnWidths = new int[] { };
+		layout.columnWidths = new int[] {};
 		layout.rowHeights = new int[] { 0 };
 		layout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		layout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -198,9 +196,9 @@ public class StatInsertion extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		
+
 		panel.add(armyEdit, c);
-		
+
 		return panel;
 	}
 
@@ -227,6 +225,12 @@ public class StatInsertion extends JPanel {
 
 		// Creating the checkbox to select option
 		religião = new JCheckBox();
+		religião.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onChange.run();
+			}
+		});
 		religião.setBackground(Cores.getAlternar(loop));
 
 		c.gridx++;
@@ -264,6 +268,12 @@ public class StatInsertion extends JPanel {
 
 		// Creating the checkbox to select option
 		noite = new JCheckBox();
+		noite.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onChange.run();
+			}
+		});
 		noite.setBackground(Cores.getAlternar(loop));
 
 		c.gridx++;
@@ -302,32 +312,33 @@ public class StatInsertion extends JPanel {
 		sorte = new JTextField(3);
 		sorte.setHorizontalAlignment(SwingConstants.CENTER);
 		sorte.setDocument(new PlainDocument() {
-
 			@Override
 			public void insertString(int offset, String str, AttributeSet attr)
 					throws BadLocationException {
 				if (str == null)
 					return;
+				
+				onChange.run();
 
 				// Permite a entrada somente de números e sinais e no máximo 3
 				// dígitos
 				if ((getLength() + str.length()) <= 3
 						&& (Character.isDigit(str.charAt(0)) || str.charAt(0) == '-')) {
-						super.insertString(offset, str, attr);
-						
-				if (!super.getText(0, getLength()).equals("-") &&
-						Math.abs(Integer.parseInt(getText(0, getLength()))) > 25) {
-					
-					if (super.getText(0, 1).equals("-")) {
-						super.remove(1, getLength()-1);
-						super.insertString(1, "25", attr);
-					} else {
-						super.remove(0, getLength());
-						super.insertString(0, "25", attr);
-					}
-					
-				}
+					super.insertString(offset, str, attr);
 
+					if (!super.getText(0, getLength()).equals("-")
+							&& Math.abs(Integer
+									.parseInt(getText(0, getLength()))) > 25) {
+
+						if (super.getText(0, 1).equals("-")) {
+							super.remove(1, getLength() - 1);
+							super.insertString(1, "25", attr);
+						} else {
+							super.remove(0, getLength());
+							super.insertString(0, "25", attr);
+						}
+
+					}
 
 				}
 			}
@@ -365,9 +376,9 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Moral.toString()), c);
 
 		// Creating the checkbox to select option
-		moral = new IntegerFormattedTextField(0, 3, 100, null);
+		moral = new IntegerFormattedTextField(0, 3, 100, onChange);
 		moral.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		c.gridx++;
 		panel.add(moral, c);
 
@@ -400,9 +411,9 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Muralha.toString()), c);
 
 		// Creating the checkbox to select option
-		muralha = new IntegerFormattedTextField(0, 2, 20, null);
+		muralha = new IntegerFormattedTextField(0, 2, 20, onChange);
 		muralha.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		c.gridx++;
 		panel.add(muralha, c);
 
@@ -436,9 +447,9 @@ public class StatInsertion extends JPanel {
 		panel.add(new JLabel(Lang.Edificio.toString()), c);
 
 		// Creating the checkbox to select option
-		edifício = new IntegerFormattedTextField(0, 2, null);
+		edifício = new IntegerFormattedTextField(0, 2, onChange);
 		edifício.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		c.gridx++;
 		panel.add(edifício, c);
 
@@ -476,25 +487,28 @@ public class StatInsertion extends JPanel {
 
 		// Creating the checkbox to select option
 		item = new JComboBox<ItemPaladino>(ItemPaladino.values());
-		
+
 		item.setRenderer(new DefaultListCellRenderer() {
-			
-			 @Override
-			 public Component getListCellRendererComponent(JList<?> list, Object value,
-			        int index, boolean isSelected, boolean cellHasFocus) {
-				 
-				 JComponent comp = (JComponent) super.getListCellRendererComponent(list,
-			                value, index, isSelected, cellHasFocus);
-				 
-				 if (index > -1 && index < ItemPaladino.values().length)
-				 list.setToolTipText(ItemPaladino.values()[index].getDescription());
-				 
-				 return comp;
-				 
-			 }
-			
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list,
+					Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+
+				JComponent comp = (JComponent) super
+						.getListCellRendererComponent(list, value, index,
+								isSelected, cellHasFocus);
+
+				if (index > -1 && index < ItemPaladino.values().length)
+					list.setToolTipText(ItemPaladino.values()[index]
+							.getDescription());
+
+				return comp;
+
+			}
+
 		});
-		
+
 		item.setFont(new Font(getFont().getName(), getFont().getStyle(), 11));
 
 		item.addActionListener(new ActionListener() {
@@ -502,7 +516,7 @@ public class StatInsertion extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				item.setToolTipText(((ItemPaladino) item.getSelectedItem())
 						.getDescription());
-
+				onChange.run();
 			}
 		});
 
@@ -568,7 +582,7 @@ public class StatInsertion extends JPanel {
 
 		// Quantidade de tropas
 		armyEdit.saveValues();
-		
+
 		if (tipo == Tipo.Atacante)
 			info.setArmyAttacker(army);
 		else
@@ -612,21 +626,21 @@ public class StatInsertion extends JPanel {
 
 		// Bandeira
 
-//		if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
-//
-//			if (tipo == Tipo.Atacante)
-//				info.setBandeiraAtacante((Bandeira) bandeira.getSelectedItem());
-//			else
-//				info.setBandeiraDefensor((Bandeira) bandeira.getSelectedItem());
-//
-//		} else {
-//
-//			if (tipo == Tipo.Atacante)
-//				info.setBandeiraAtacante(new Bandeira(CategoriaBandeira.NULL, 0));
-//			else
-//				info.setBandeiraDefensor(new Bandeira(CategoriaBandeira.NULL, 0));
-//
-//		}
+		// if (Mundo_Reader.MundoSelecionado.hasBandeira()) {
+		//
+		// if (tipo == Tipo.Atacante)
+		// info.setBandeiraAtacante((Bandeira) bandeira.getSelectedItem());
+		// else
+		// info.setBandeiraDefensor((Bandeira) bandeira.getSelectedItem());
+		//
+		// } else {
+		//
+		// if (tipo == Tipo.Atacante)
+		// info.setBandeiraAtacante(new Bandeira(CategoriaBandeira.NULL, 0));
+		// else
+		// info.setBandeiraDefensor(new Bandeira(CategoriaBandeira.NULL, 0));
+		//
+		// }
 
 		// Moral e Sorte
 
@@ -669,14 +683,14 @@ public class StatInsertion extends JPanel {
 	}
 
 	public void resetValues() {
-	
+
 		armyEdit.resetComponents();
-		
+
 		if (religião != null)
 			religião.setSelected(false);
 		if (noite != null)
 			noite.setSelected(false);
-		
+
 		if (tipo == Tipo.Atacante) {
 			sorte.setText("");
 			if (moral != null)
@@ -685,11 +699,11 @@ public class StatInsertion extends JPanel {
 			muralha.setText("");
 			edifício.setText("");
 		}
-		
+
 		if (item != null)
 			item.setSelectedIndex(0);
 		if (bandeira != null)
 			bandeira.setSelectedIndex(0);
 	}
-	
+
 }

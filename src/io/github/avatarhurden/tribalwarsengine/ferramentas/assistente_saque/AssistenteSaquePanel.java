@@ -2,6 +2,7 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque;
 
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Cores;
+import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.NoIntervalException;
 import io.github.avatarhurden.tribalwarsengine.ferramentas.assistente_saque.Cálculo.SameDateException;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
@@ -132,6 +133,11 @@ public class AssistenteSaquePanel extends Ferramenta{
 		c.insets = new Insets(5, 5, 5, 5);
 		add(panelIntervalo, c);
 		
+		c.gridy++;
+		add(tools.addAlertCreatorPanel(null, panelIntervalo.getIntervalLabel(),
+				panelHorário.getCoordenadaOrigem(), panelIntervalo.getCoordenadaDestino(),
+				armyEdit, Tipo.Saque), c);
+		
 		// Separar as duas funções
 		
 		JSeparator separator = new JSeparator(JSeparator.VERTICAL);
@@ -153,7 +159,8 @@ public class AssistenteSaquePanel extends Ferramenta{
 		
 		c.gridy++;
 		add(tools.addAlertCreatorPanel(panelHorário.getDateLabel(), panelIntervalo.getIntervalLabel(),
-				panelHorário.getCoordenadaOrigem(), panelIntervalo.getCoordenadaDestino(), armyEdit), c);
+				panelHorário.getCoordenadaOrigem(), panelIntervalo.getCoordenadaDestino(),
+				armyEdit, Tipo.Saque), c);
 	}
 	
 	private ActionListener getResetButtonAction() {

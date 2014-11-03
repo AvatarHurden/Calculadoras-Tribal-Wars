@@ -433,7 +433,19 @@ public class AlertTable extends JTable{
 			Component cell = super.getTableCellRendererComponent(
 					   table, date, isSelected, hasFocus, row, column);
 			
-			return cell;
+			JPanel panel = new JPanel();
+			
+			JLabel time = new JLabel(date.substring(0, 8));
+			time.setFont(time.getFont().deriveFont((float) 14.0));
+			
+			JLabel datelbl = new JLabel(date.substring(9));
+			datelbl.setForeground(Color.gray);
+			
+			panel.add(time);
+			panel.add(datelbl);
+			panel.setBackground(cell.getBackground());
+			
+			return panel;
 		}
 	}
 	

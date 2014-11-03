@@ -5,6 +5,7 @@ import io.github.avatarhurden.tribalwarsengine.enums.ItemPaladino;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
+import io.github.avatarhurden.tribalwarsengine.tools.property_classes.OnChange;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -35,15 +36,28 @@ public class SimuladorPanel extends Ferramenta {
 
 		super(Lang.FerramentaSimulador.toString());
 		
+		OnChange onChange = new OnChange() {
+			@Override
+			public void run() {
+				statAtacante.setInputInfo();
+
+				statDefensor.setInputInfo();
+
+				cálculo.calculate();
+
+				display.setValues();
+			}
+		};
+		
 		input = new InputInfo();
 		
 		output = new OutputInfo();
 		
 		cálculo = new Cálculo(input, output);
 		
-		statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante, input, tools);
+		statAtacante = new StatInsertion(StatInsertion.Tipo.Atacante, input, tools, onChange);
 		
-		statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor, input, tools);
+		statDefensor = new StatInsertion(StatInsertion.Tipo.Defensor, input, tools, onChange);
 		
 		display = new ResultTroopDisplay(output);
 		
@@ -121,19 +135,14 @@ public class SimuladorPanel extends Ferramenta {
 
 			public void actionPerformed(ActionEvent arg0) {
 
-				statAtacante.setInputInfo();
 
-				statDefensor.setInputInfo();
-
-				cálculo.calculate();
-
-				display.setValues();
 
 			}
 		});
 		
 		c.anchor = GridBagConstraints.SOUTH;
-		add(button, c);
+		c.gridy++;
+		//add(button, c);
 
 	}
 

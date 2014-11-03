@@ -117,7 +117,8 @@ public class AlertTableFilterEditor extends JPanel {
 		Main.getCurrentFrame().addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent e) {
-				dialog.setLocation(getLocationOnScreen().x, 
+				if (dialog.isVisible())
+					dialog.setLocation(getLocationOnScreen().x, 
 						getLocationOnScreen().y + 30);
 			}
 		});

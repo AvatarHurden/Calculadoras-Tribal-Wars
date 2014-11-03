@@ -13,7 +13,6 @@ import io.github.avatarhurden.tribalwarsengine.objects.unit.Troop;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -517,12 +516,23 @@ public class PopupManager {
 		private JPanel makeDatePanel(Alert a, Date date) {
 			JPanel panel = new JPanel();
 			panel.setOpaque(false);
-			panel.setLayout(new FlowLayout());
+			panel.setLayout(new GridBagLayout());
 			
-			JLabel datelbl = new JLabel();
-			datelbl.setFont(datelbl.getFont().deriveFont((float) 15));
-			datelbl.setText(new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(alerta.getHorário()));
-			panel.add(datelbl);
+			GridBagConstraints c = new GridBagConstraints();
+			c.insets = new Insets(0, 0, 0, 0);
+			c.gridx = 0;
+			c.gridy = 0;
+			
+			JLabel timelbl = new JLabel(new SimpleDateFormat("HH:mm:ss").format(alerta.getHorário()));
+			timelbl.setFont(timelbl.getFont().deriveFont((float) 14.0));
+			
+			panel.add(timelbl, c);
+			
+			JLabel datelbl = new JLabel(new SimpleDateFormat("dd/MM/yyyy").format(alerta.getHorário()));
+			datelbl.setForeground(Color.gray);
+			
+			c.gridy++;
+			panel.add(datelbl, c);
 			
 			if (date.equals(alerta.getHorário()) && a.getRepete() > 0) {
 				TWSimpleButton button = new TWSimpleButton("Remarcar");
@@ -533,7 +543,13 @@ public class PopupManager {
 						table.selectAlert(alerta);
 					}
 				});
-				panel.add(button);
+				c.insets = new Insets(0, 20, 0, 0);
+				c.anchor = GridBagConstraints.EAST;
+				c.fill = GridBagConstraints.HORIZONTAL;
+				c.gridy = 0;
+				c.gridx++;
+				c.gridheight = 2;
+				panel.add(button, c);
 			}
 			
 			return panel;

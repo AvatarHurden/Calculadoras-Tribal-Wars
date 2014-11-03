@@ -26,8 +26,10 @@ public class AlertCreatorPanel extends TWSimpleButton implements ActionListener 
 	private CoordenadaPanel origem, destino;
 	private ArmyEditPanel armyEdit;
 	
+	private Tipo tipo;
+	
 	public AlertCreatorPanel(TimeFormattedJLabel datelbl, TimeFormattedJLabel intervallbl,
-			CoordenadaPanel origem, CoordenadaPanel destino, ArmyEditPanel armyEdit) {
+			CoordenadaPanel origem, CoordenadaPanel destino, ArmyEditPanel armyEdit, Tipo tipo) {
 		
 		super("Marcar Alerta");
 		
@@ -36,6 +38,7 @@ public class AlertCreatorPanel extends TWSimpleButton implements ActionListener 
 		this.origem = origem;
 		this.destino = destino;
 		this.armyEdit = armyEdit;
+		this.tipo = tipo;
 		
 		addActionListener(this);
 	}
@@ -59,7 +62,10 @@ public class AlertCreatorPanel extends TWSimpleButton implements ActionListener 
 		if (armyEdit != null)
 			alert.setArmy(armyEdit.getArmy());
 		
-		alert.setTipo(decideTipo());
+		if (tipo == null)
+			alert.setTipo(decideTipo());
+		else
+			alert.setTipo(tipo);
 		
 		alert.setAvisos(new ArrayList<Date>());
 		
