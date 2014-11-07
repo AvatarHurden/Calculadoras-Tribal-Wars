@@ -153,10 +153,8 @@ public class AlertTableFilterEditor extends JPanel {
 						MouseEvent e = (MouseEvent) event;
 						if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getClickCount() == 2)
 							if (dialog.isVisible())
-								filterButton.doClick();
-							
+								filterButton.doClick();	
 					}
-						
 			}
 		}, AWTEvent.MOUSE_EVENT_MASK);
 		
