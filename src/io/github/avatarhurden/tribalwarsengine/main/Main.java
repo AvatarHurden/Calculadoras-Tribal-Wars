@@ -83,6 +83,7 @@ public class Main {
     public static void openMainFrame() {
         mainFrame.packPanels(selectWorldFrame);
         selectWorldFrame.dispose();
+        mainFrame.setExtendedState(JFrame.NORMAL);
         mainFrame.setVisible(true);
         currentFrame = mainFrame;
     }

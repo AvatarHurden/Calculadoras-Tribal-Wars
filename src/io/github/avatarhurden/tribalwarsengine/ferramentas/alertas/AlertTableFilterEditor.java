@@ -147,6 +147,7 @@ public class AlertTableFilterEditor extends JPanel {
 			@Override
 			public void eventDispatched(AWTEvent event) {
 				if (event instanceof MouseEvent)
+					if (event.getSource() instanceof Component)
 					if (SwingUtilities.isDescendingFrom(
 							(Component) event.getSource(), parent)) {
 						MouseEvent e = (MouseEvent) event;

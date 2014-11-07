@@ -41,6 +41,8 @@ public class MainWindow extends JFrame {
     //as dimensoes abaixo são as mesmas da GUI do selecionar_mundo
     private final int MAX_WIDTH = 1024;
     private final int MAX_HEIGHT = 700;
+    
+    private boolean hasPanels = false;
 
     /**
      * Frame que contém todas as ferramentas
@@ -142,9 +144,11 @@ public class MainWindow extends JFrame {
      * mas somente se não tiver nenhum panel!
      */
     public void packPanels(Component parent) {
-    	if (body.getComponents().length > 1)
+    	if (hasPanels)
             return;
         
+    	hasPanels = true;
+    	
         addPanel(new RecrutamentoPanel());
         addPanel(new DadosDeUnidadePanel());
         addPanel(new PontosPanel());

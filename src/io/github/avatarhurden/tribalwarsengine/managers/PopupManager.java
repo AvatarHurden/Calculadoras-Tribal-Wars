@@ -32,6 +32,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -243,6 +244,7 @@ public class PopupManager {
 							table.selectAlert(alerta);
 						MainWindow.getInstance().selectPanel(7);
 						MainWindow.getInstance().toFront();
+						MainWindow.getInstance().setExtendedState(JFrame.NORMAL);
 					}
 				}
 			});

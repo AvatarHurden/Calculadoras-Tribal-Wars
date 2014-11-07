@@ -3,9 +3,15 @@ package io.github.avatarhurden.tribalwarsengine.components;
 import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
 
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SystemIcon implements ActionListener {
     private Main main;
@@ -23,12 +29,16 @@ public class SystemIcon implements ActionListener {
         MenuItem item = new MenuItem("Escolher Mundos");
         item.setActionCommand("select_world_frame");
         item.addActionListener(this);
-        popup.add(item);
+        /*TODO for this to work, I need to be able to remove all the running alerts and whatnot.
+         * For that to be possible, I need to redo how the system works (first try with threads).
+         * So, only in the next version will this be possible.
+         */
+        //popup.add(item);
 
         item = new MenuItem("Janela principal");
         item.setActionCommand("main_window_frame");
         item.addActionListener(this);
-        // popup.add(item);
+        popup.add(item);
 
         item = new MenuItem("Procurar por atualizações");
         item.setActionCommand("look_for_updates");
@@ -41,23 +51,21 @@ public class SystemIcon implements ActionListener {
         popup.add(item);
 
         trayIcon.setPopupMenu(popup);
-
+        
+        trayIcon.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2)
+					Main.openMainFrame();
+			}
+		});
+        
         try {
             SystemTray.getSystemTray().add(trayIcon);
         }
         //Se não conseguir criar o icone no sistema... Faz nada :(
         catch (AWTException e) {
         }
-
-//        /*
-//        Adiciona um hook para remover o icone quando o app for fechado!
-//         */
-//        Runtime.getRuntime().addShutdownHook(new Thread() {
-//            @Override
-//            public void run() {
-//                SystemTray.getSystemTray().remove(trayIcon);
-//            }
-//        });
     }
 
     private TrayIcon getTrayIcon() {
