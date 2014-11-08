@@ -24,6 +24,8 @@ Ainda em desenvolvimento, possui 6 ferramentas prontas. São elas:
 
 -   Simulador: Simula uma batalha entre dois exércitos.
 
+-   Alertas: O programa alerta o usuário em horários marcados, para que nada seja esquecido ou perdido.
+
 Para mais informações e tutoriais completos, visite
 
 www.github.com/AvatarHurden/Tribal-Wars-Engine/wiki
