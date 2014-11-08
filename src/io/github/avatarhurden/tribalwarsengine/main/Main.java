@@ -68,7 +68,8 @@ public class Main {
      * Cria e mostra o frame de seleção de mundo
      */
     public static void openWorldSelection() {
-        mainFrame.dispose();
+    	if (mainFrame.isVisible())
+    		mainFrame.setVisible(false);
         selectWorldFrame.setVisible(true);
         currentFrame = selectWorldFrame;
 
