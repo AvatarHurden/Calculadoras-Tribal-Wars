@@ -3,12 +3,8 @@ package io.github.avatarhurden.tribalwarsengine.ferramentas.alertas;
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
 import io.github.avatarhurden.tribalwarsengine.enums.Imagens;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Aldeia;
-import io.github.avatarhurden.tribalwarsengine.ferramentas.alertas.Alert.Tipo;
 import io.github.avatarhurden.tribalwarsengine.frames.MainWindow;
 import io.github.avatarhurden.tribalwarsengine.managers.AlertManager;
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Army;
-import io.github.avatarhurden.tribalwarsengine.objects.unit.Unit;
 import io.github.avatarhurden.tribalwarsengine.panels.Ferramenta;
 
 import java.awt.Dimension;
@@ -17,8 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,45 +25,8 @@ public class AlertasPanel extends Ferramenta {
     AlertManager manager;
 
     public AlertasPanel() {
-
         super("Alertas");
 
-        for (int i = 0; i < 10; i++) {
-
-            Alert alerta = new Alert();
-
-            alerta.setNome("Nome" + i);
-            alerta.setNotas(i + "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pellentesque rhoncus dignissim. Phasellus pulvinar ut nunc non congue. Quisque lacus eros, porta malesuada tempor quis, luctus in est. Maecenas in congue tellus, eu rhoncus nulla. Maecenas metus neque, varius in vulputate id, sodales a ante. Donec sit amet laoreet ligula. Vestibulum blandit commodo volutpat.");
-            alerta.setNotas(i + "");
-            alerta.setTipo(Tipo.values()[i % 4]);
-            alerta.setOrigem(new Aldeia("Origem" + i, i * 111, i * 55));
-            alerta.setDestino(new Aldeia("Destino" + i, i * 11, i * 555));
-
-            if (i > 0) {
-                Army map = new Army();
-                for (Unit u : Army.getAttackingUnits())
-                    map.addTropa(u, (int) (Math.random() * 100 + 1), 1);
-                alerta.setArmy(map);
-            } else {
-                Army map = new Army();
-                map.addTropa(map.getUnit("spear"), 100, 1);
-                map.addTropa(map.getUnit("sword"), 100, 1);
-                map.addTropa(map.getUnit("axe"), 100, 1);
-                alerta.setArmy(map);
-            }
-
-            Date now = new Date();
-
-            alerta.setHorário(new Date(now.getTime() + (1+i) * 100000));
-
-            alerta.setRepete((long) 10000);
-            
-            ArrayList<Date> avisos = new ArrayList<Date>();
-            avisos.add(new Date(alerta.getHorário().getTime() - 10000));
-            alerta.setAvisos(new ArrayList<Date>());
-            
-            AlertManager.getInstance().addAlert(alerta);
-        }
     }
     
     protected void makeGUI() {

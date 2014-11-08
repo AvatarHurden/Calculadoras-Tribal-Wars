@@ -54,7 +54,7 @@ public class SelectWorldFrame extends JFrame {
 
         addWindowListener(new TWEWindowListener());
 
-        setIconImage(Imagens.getImage("icon.png"));
+        setIconImage(Imagens.getImage("Icon.png"));
         
         setGUI();
         
