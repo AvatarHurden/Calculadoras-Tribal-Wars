@@ -58,14 +58,16 @@ public class WorldManager {
 	}
 	
 	public World getDefaultWorld() {
-		String def = Configuration.get().getConfig("default_world_br", "");
+		String def = Configuration.get().getConfig("default_world_" + 
+				Configuration.get().getConfig("server", "br"), "");
 			if (def.equals(""))
 				return worlds.get(0);
 	        return getWorldByName(def);
 	}
 	
 	public void setDefaultWorld(World world) {
-		Configuration.get().setConfig("default_world_br", world.getName());
+		Configuration.get().setConfig("default_world_" + 
+				Configuration.get().getConfig("server", "br"), world.getName());
 	}
 	
     public World getWorldByName(String name) {

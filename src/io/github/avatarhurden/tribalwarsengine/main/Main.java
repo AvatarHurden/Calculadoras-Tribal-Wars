@@ -27,7 +27,7 @@ import org.json.JSONObject;
  */
 public class Main {
 
-    public static double VERSION = 1.201; //Versão atual do TWE
+    public static double VERSION = 1.210; //Versão atual do TWE
     private static SelectWorldFrame selectWorldFrame;
     private static MainWindow mainFrame;
     private static String REMOTE_URL = "https://raw.githubusercontent.com/AvatarHurden/Tribal-Wars-Engine/master/last_update.json";
@@ -53,10 +53,14 @@ public class Main {
         selectWorldFrame.setVisible(true);
         currentFrame = selectWorldFrame;
         
-        initializer = new Initialization();
-        initializer.initializeProgram();
-        
-        selectWorldFrame.setInitializationPanel(initializer.getPanel());    
+        loadServer();
+    }
+    
+    public static void loadServer() {
+    	initializer = new Initialization();
+    	initializer.initializeProgram();
+           
+    	selectWorldFrame.setInitializationPanel(initializer.getPanel());    
     }
 
     public static void loadWorld() {

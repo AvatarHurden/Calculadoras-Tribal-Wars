@@ -14,13 +14,13 @@ import javax.swing.ListCellRenderer;
  * @author Wesley Nascimento
  */
 public class TWEComboBox<K> extends JComboBox<K>{
-
+	
     public TWEComboBox() {
         this.setRenderer(new TWEComboBoxRenderer());
         setBackground(Cores.FUNDO_ESCURO);
         setForeground(Color.DARK_GRAY);
-    }
-
+    }    
+    
     //Render desse combo!
     private class TWEComboBoxRenderer extends JLabel implements ListCellRenderer<K> {
 
@@ -31,8 +31,8 @@ public class TWEComboBox<K> extends JComboBox<K>{
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
+        	setForeground(Color.DARK_GRAY);
             setText(value.toString());
-            setForeground(Color.DARK_GRAY);
             
             if (index % 2 == 0)
                 setBackground(Cores.ALTERNAR_CLARO);

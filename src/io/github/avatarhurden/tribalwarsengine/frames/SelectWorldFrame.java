@@ -37,6 +37,8 @@ public class SelectWorldFrame extends JFrame {
     private JPanel contentPanel;
     private static final SelectWorldFrame instance = new SelectWorldFrame();
 
+    private KeyEventDispatcher dispatcher;
+    
     private final int MAX_WIDTH = 1024;
     private final int MAX_HEIGHT = 700;
     /**
@@ -195,20 +197,25 @@ public class SelectWorldFrame extends JFrame {
         selectionPanel.getComboBox().requestFocus();
     }
     
-    private void addKeyListener() {
-    	
+    public void addKeyListener() {
     	KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     	
-    	manager.addKeyEventDispatcher(new KeyEventDispatcher() {
-			
-			@Override
-			public boolean dispatchKeyEvent(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getID() == KeyEvent.KEY_PRESSED)
-					selectionPanel.getStartButton().doClick();
-				return false;
-			}
-		});
+    	if (dispatcher == null)
+    		dispatcher = new KeyEventDispatcher() {	
+				@Override
+				public boolean dispatchKeyEvent(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getID() == KeyEvent.KEY_PRESSED)
+						selectionPanel.getStartButton().doClick();
+					return false;
+				}
+    		};
     	
+    	manager.addKeyEventDispatcher(dispatcher);
+    }
+    
+    public void removeKeyListener() {
+    	KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+    	manager.removeKeyEventDispatcher(dispatcher);
     }
     
     /**

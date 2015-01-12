@@ -222,8 +222,7 @@ public class BuildingBlock {
 		if (!contains(ed.getName()))
 			return 1;
 		else
-			return 2.0/3.0*Math.pow(1.06, -getLevel(ed.getName())); 
-		
+			return 2.0/3.0 * Math.pow(1.06, -getLevel(ed.getName()));
 	}
 	
 	public double getWallBonusFlat() {

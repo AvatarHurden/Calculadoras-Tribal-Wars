@@ -55,9 +55,8 @@ public class TroopLevelComboBox extends JComboBox<Integer>{
 			setOpaque(true);
 		}
 		
-		@SuppressWarnings("rawtypes")
 		@Override
-		public Component getListCellRendererComponent(JList list, Integer value,
+		public Component getListCellRendererComponent(JList<? extends Integer> list, Integer value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			
             setText(String.valueOf(value));

@@ -1,9 +1,12 @@
 package io.github.avatarhurden.tribalwarsengine.panels;
 
+import io.github.avatarhurden.tribalwarsengine.components.ServerComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWButton;
 import io.github.avatarhurden.tribalwarsengine.components.TWEComboBox;
 import io.github.avatarhurden.tribalwarsengine.components.TWSimpleButton;
+import io.github.avatarhurden.tribalwarsengine.enums.Server;
 import io.github.avatarhurden.tribalwarsengine.frames.SelectWorldFrame;
+import io.github.avatarhurden.tribalwarsengine.main.Configuration;
 import io.github.avatarhurden.tribalwarsengine.main.Main;
 import io.github.avatarhurden.tribalwarsengine.managers.WorldManager;
 import io.github.avatarhurden.tribalwarsengine.objects.World;
@@ -17,12 +20,16 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JPanel;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import config.Lang;
 
 public class SelectWorldPanel extends JPanel implements ActionListener {
 
     private TWEComboBox<World> selectionBox;
+    private ServerComboBox serverSelection;
+    private boolean changeServer = false;
     private TWButton startButton;
     private TWSimpleButton padrãoButton;
     private TWSimpleButton editButton;
@@ -54,6 +61,12 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
         constraints.gridx = 0;
         constraints.gridy = 0;
 
+        serverSelection = new ServerComboBox();
+        setServerSelection();
+        
+        constraints.anchor = GridBagConstraints.NORTHEAST;
+        add(serverSelection, constraints);
+        
         selectionBox = new TWEComboBox<World>();
 
         constraints.gridy = 1;
@@ -93,6 +106,7 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
     }
 
     public void setSelectionBox() {
+    	selectionBox.removeAllItems();
         WorldManager manager = WorldManager.get();
         for (World s : manager.getList())
         	selectionBox.addItem(s);
@@ -108,6 +122,34 @@ public class SelectWorldPanel extends JPanel implements ActionListener {
 				}
 			}
 		});
+    }
+    
+    public void setServerSelection() {
+    	serverSelection.setSelectedItem(Server.getServer(Configuration.get().getConfig("server", "br")));
+        serverSelection.addPopupMenuListener(new PopupMenuListener() {
+			
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				SelectWorldFrame.getInstance().removeKeyListener();	
+				changeServer = true;
+			}
+			
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				SelectWorldFrame.getInstance().addKeyListener();
+				if (Configuration.get().getConfig("server", "br").equals(serverSelection.getSelectedItem().toString())
+						|| !changeServer)
+					return;
+				Configuration.get().setConfig("server", serverSelection.getSelectedItem().toString());
+				Main.loadServer();
+			}
+			
+			@Override
+			public void popupMenuCanceled(PopupMenuEvent e) {
+				changeServer = false;
+			}
+		});
+        
     }
 
     public void changePadrãoButton() {

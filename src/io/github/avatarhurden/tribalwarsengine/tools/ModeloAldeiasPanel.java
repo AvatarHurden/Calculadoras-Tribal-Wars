@@ -110,11 +110,10 @@ public class ModeloAldeiasPanel extends JPanel {
     protected void makePopupMenu() {
 
         popup = new JPopupMenu();
-
+        
         // Adds all the models to the dropdown menu
         for (BuildingBlockModel i : WorldManager.getSelectedWorld().getBuildingModelList())
             popup.add(makeMenuItem(i));
-
 
     }
 
@@ -125,9 +124,7 @@ public class ModeloAldeiasPanel extends JPanel {
         item.setName(i.getName());
 
         item.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent a) {
-            	
             	
             	buildingsEdit.setValues(i.getBuildings());
 
